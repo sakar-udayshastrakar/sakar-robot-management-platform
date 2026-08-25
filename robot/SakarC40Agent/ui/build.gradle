@@ -1,0 +1,25 @@
+apply plugin: 'com.android.library'
+
+android {
+    namespace 'com.sakarrobotics.c40agent.ui'
+    compileSdk 34
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 34
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    implementation project(':robot')
+    implementation project(':sdk')
+    implementation project(':diagnostics')
+    implementation project(':telemetry')
+    implementation project(':logging')
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+}

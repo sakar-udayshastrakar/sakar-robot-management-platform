@@ -1,0 +1,29 @@
+// Top-level build file for SakarC40Agent.
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.5.0'
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        // AGP refuses to bundle a direct local .aar file() dependency into
+        // another AAR (":sdk" is a library module). Resolving the vendored
+        // peanut-sdk-release.aar through a flatDir repo instead makes it a
+        // normal, packageable dependency. Declared for allprojects because
+        // consumers of :sdk (e.g. :app) also need to resolve it.
+        flatDir {
+            dirs "${rootProject.projectDir}/sdk/libs"
+        }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

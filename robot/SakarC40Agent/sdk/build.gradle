@@ -1,0 +1,57 @@
+apply plugin: 'com.android.library'
+
+// Load local, git-ignored credentials. See secrets.properties.example.
+// Falls back to safe empty placeholders so the project still compiles
+// without real credentials (required for CI / this diagnostic build).
+def secretsFile = rootProject.file('secrets.properties')
+def secrets = new Properties()
+if (secretsFile.exists()) {
+    secretsFile.withInputStream { secrets.load(it) }
+}
+def secretOrEmpty = { String key -> secrets.getProperty(key, '') }
+
+android {
+    namespace 'com.sakarrobotics.c40agent.sdk'
+    compileSdk 34
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 34
+
+        buildConfigField 'String', 'APP_ID', "\"${secretOrEmpty('APP_ID')}\""
+        buildConfigField 'String', 'APP_SECRET', "\"${secretOrEmpty('APP_SECRET')}\""
+        buildConfigField 'String', 'LINK_TYPE', "\"${secrets.getProperty('LINK_TYPE', 'DEFAULT')}\""
+        buildConfigField 'String', 'LINK_HOST', "\"${secretOrEmpty('LINK_HOST')}\""
+        buildConfigField 'int', 'LINK_PORT', secrets.getProperty('LINK_PORT', '0')
+    }
+
+    buildFeatures {
+        buildConfig true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+}
+
+dependencies {
+    // The actual Keenon Peanut SDK, copied read-only from
+    // peanut-sdk-v1.3.0/libs/peanut-sdk-release.aar (v1.5.0-bate1, per its
+    // own AndroidManifest). Never modify this file - see COMPATIBILITY_REPORT.md.
+    implementation(name: 'peanut-sdk-release', ext: 'aar')
+
+    // Confirmed required by the SDK's bundled CoAP (californium) libraries,
+    // per the SDK vendor's own SampleApp/app/build.gradle.
+    implementation 'org.slf4j:slf4j-api:1.7.25'
+    implementation 'com.google.code.gson:gson:2.8.6'
+
+    implementation project(':logging')
+    implementation project(':telemetry')
+}

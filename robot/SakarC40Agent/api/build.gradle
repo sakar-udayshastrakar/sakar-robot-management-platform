@@ -1,0 +1,10 @@
+// This module is a placeholder for the FUTURE Sakar Backend integration
+// surface (see architecture diagram in README.md). It intentionally
+// contains no networking code (no REST/MQTT/WebSocket) - see
+// api/README.md for details.
+apply plugin: 'java-library'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}

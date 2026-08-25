@@ -1,0 +1,104 @@
+# ============================================================
+# Sakar Robot Management Platform — root .gitignore
+# ============================================================
+# Deliberately uses precise, well-known credential-file patterns rather than
+# broad wildcards like "*secret*"/"*password*" — those would also hide
+# legitimate source files this project will eventually need to write (e.g. a
+# PasswordResetController or a SecretRotationService). Precision here matters
+# as much as coverage.
+
+# ---- Environment files — NEVER commit ----
+.env
+.env.*
+!.env.example
+
+# ---- Application/agent secret config — NEVER commit ----
+secrets.properties
+application-secrets.yml
+application-secrets.yaml
+application-local.yml
+application-local.yaml
+mqtt-credentials.properties
+mqtt-credentials.yml
+db-credentials.properties
+db-credentials.yml
+!secrets.properties.example
+!application-secrets.example.yml
+
+# ---- Keys, certificates, keystores — NEVER commit ----
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.crt
+*.csr
+id_rsa
+id_rsa.pub
+*jwt-signing-key*
+
+# ---- Android / Gradle (robot/SakarC40Agent and any future Android module) ----
+**/build/
+**/.gradle/
+**/.idea/
+*.iml
+local.properties
+**/captures/
+**/.externalNativeBuild/
+**/.cxx/
+*.apk
+*.aab
+
+# Vendor SDK binary — do not commit unless an approved licensing/distribution
+# policy explicitly allows it (see docs/security/SAKAR_SECURITY_REQUIREMENTS.md
+# Section 13). The .aar is required locally for the Android build to resolve,
+# but is intentionally excluded from version control here.
+robot/SakarC40Agent/sdk/libs/*.aar
+
+# ---- Node / React (web/) ----
+node_modules/
+dist/
+.next/
+.turbo/
+*.tsbuildinfo
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ---- Flutter / Dart (mobile/) ----
+mobile/.dart_tool/
+mobile/.flutter-plugins
+mobile/.flutter-plugins-dependencies
+mobile/.packages
+**/*.g.dart
+
+# ---- Java / Spring Boot (backend/) ----
+backend/target/
+backend/out/
+*.class
+*.jar
+!gradle/wrapper/gradle-wrapper.jar
+
+# ---- Database ----
+*.sql.bak
+*.dump
+
+# ---- Infrastructure ----
+*.tfstate
+*.tfstate.*
+.terraform/
+docker-compose.override.yml
+
+# ---- IDE / OS ----
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# ---- Logs / temp ----
+*.log
+logs/
+tmp/
+*.tmp

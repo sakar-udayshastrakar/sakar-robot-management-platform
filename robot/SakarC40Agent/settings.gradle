@@ -1,0 +1,12 @@
+rootProject.name = 'SakarC40Agent'
+
+include ':app'
+include ':sdk'
+include ':robot'
+include ':navigation'
+include ':charging'
+include ':telemetry'
+include ':diagnostics'
+include ':logging'
+include ':ui'
+include ':api'
