@@ -28,6 +28,8 @@
 | R16 | Insider threat (a Sakar staff member misuses legitimate elevated access) | Medium | `REQUIREMENT` | Least-privilege RBAC, mandatory audit logging of every sensitive action, step-up authentication specifically for unlock | Periodic audit-log review process; alerting on privilege changes and new admin users |
 | R17 | Backup compromise (stolen or leaked backup exposes historical operational/customer data) | High | `REQUIREMENT` | Encrypted backups with separately-managed keys, storage location distinct from production | Backup security review; confirm backup access requires credentials distinct from production access |
 | R18 | Dependency vulnerability (a third-party library used by backend/web/mobile/agent has a known CVE) | Medium | `REQUIREMENT` | Dependency vulnerability scanning integrated into the CI/CD pipeline, defined patch cadence | Automated scanning report reviewed before each release |
+| R19 | Keenon Open Platform credential exposure (`client_id`/`client_secret`/access token reaching a frontend, log, or committed file) | Critical | `REQUIREMENT` | Server-side-only custody via the Keenon Integration Adapter, secret-manager storage, no vendor error passthrough (`SAKAR_SECURITY_REQUIREMENTS.md` §13.A) | Secret-scan of the repository/build artifacts before every release; credential-custody review at implementation |
+| R20 | Stale/hardcoded vendor configuration values (area IDs, map IDs, scene codes) causing a command to target the wrong area or fail silently | Medium | `REQUIREMENT` | Sync the live Keenon area/config list per robot rather than compiling any ID into application code (`SAKAR_ROBOT_PLATFORM_MASTER_REQUIREMENTS.md` Part 40, `SAKAR_LIVE_API_VALIDATION_MATRIX.md` §7) | Code review gate against hardcoded vendor IDs; periodic reconciliation of synced config against the vendor's current list |
 
 ## Risk-to-Threat Cross-Reference
 
@@ -51,6 +53,8 @@
 | R16 | T3 |
 | R17 | T14 |
 | R18 | T7 |
+| R19 | T11 |
+| R20 | T11 |
 
 ## Gate Dependency
 
@@ -63,6 +67,7 @@
 | R12, R13 | G8 |
 | R14, R15 | G9 |
 | R16 | G1, G2 (ongoing operational control, not a one-time gate) |
+| R19, R20 | G5, G6 (secrets-management and vendor-integration controls verified before production credential issuance) |
 
 ## Register Maintenance Rules
 

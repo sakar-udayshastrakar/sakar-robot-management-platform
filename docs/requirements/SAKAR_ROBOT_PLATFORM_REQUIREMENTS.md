@@ -10,7 +10,7 @@
 
 ## 0. Product Vision
 
-Sakar Robotics will own and operate a platform that sits between Sakar's robots (starting with Keenon C40/C40 S) and Sakar's customers, so that **Sakar — not the robot vendor — is the primary system of record** for robot data, control, and access. Concretely, Sakar owns:
+**Sakar CleanBot 5000 Plus** is the first target product, while the **Sakar Robot Management Platform** is designed as a multi-robot platform. Sakar Robotics will own and operate a platform that sits between Sakar's robots (starting with Sakar CleanBot 5000 Plus, initially built on the Keenon C40/C40 S hardware platform) and Sakar's customers, so that **Sakar — not the robot vendor — is the primary system of record** for robot data, control, and access. Concretely, Sakar owns:
 
 robot data · telemetry · history · authentication · authorization · commands · lock/unlock · users · configuration · analytics · logs · alerts · fleet management.
 
@@ -24,7 +24,7 @@ This is **CONFIRMED achievable in principle**: the Peanut SDK technical study pr
 |---|---|---|---|
 | 1 | Mobile Application | Customer/Sakar staff phones (Android/iOS) | Sakar Backend only |
 | 2 | Web Application | Browser | Sakar Backend only |
-| 3 | Robot Android Tablet Application ("SakarC40Agent") | Robot's onboard Android computer | Peanut SDK (local) + Sakar Backend (remote, HTTPS) |
+| 3 | Robot Android Tablet Application (Sakar Robot Agent — currently `SakarC40Agent`) | Robot's onboard Android computer | Peanut SDK (local) + Sakar Backend (remote, HTTPS) |
 | 4 | Sakar Cloud/Backend | Sakar-owned infrastructure | All of the above; optionally Keenon Cloud REST API as a secondary/comparison data source only |
 
 **Explicit non-goal:** none of the four applications route robot data through Keenon Cloud as their primary path. The existing, separately-audited Keenon Cloud REST API (`KEENON_C40_CLOUD_API_AUDIT.md`) remains available as a secondary source (e.g., historical cleaning logs already accumulated there — 697 records `CONFIRMED` present for the current fleet) but is not the system Sakar builds its product on.
@@ -136,7 +136,7 @@ Robot offline · low battery · critical error · robot locked · robot unlocked
 
 ---
 
-## 4. Robot Android Tablet Application ("SakarC40Agent") Requirements
+## 4. Robot Android Tablet Application (Sakar Robot Agent) Requirements
 
 ### 4.1 Role
 Runs on the robot's onboard Android computer. Bridges the local Peanut SDK link to the remote Sakar Backend. This is an **evolution of the existing `SakarC40Agent` codebase**, not a new project — its current architecture (`PeanutSdkBridge` as the sole SDK chokepoint, `C40RobotController` as the safety-gated facade, `OperatingMode` as the only existing safety gate) is the correct foundation and should be extended, not replaced.
@@ -186,7 +186,7 @@ Agent receives authorized commands from Sakar Backend (§14 Robot Agent API), va
 
 ### 5.1 Remote Lock System (CRITICAL)
 
-**Flow:** Sakar Admin → Sakar Backend → Authorized Command → SakarC40Agent → Peanut SDK → C40.
+**Flow:** Sakar Admin → Sakar Backend → Authorized Command → Sakar Robot Agent → Peanut SDK → C40.
 
 **What is proven vs. not**, restated here because this is the single most important requirement in the whole document:
 
@@ -417,17 +417,17 @@ Sakar
 
 ## Executive Decision
 
-1. **What are we building?** A Sakar-owned Robot Management Platform (mobile app, web app, robot tablet agent, and Sakar Cloud backend) that makes Sakar — not Keenon — the primary system of record for robot data, control, and access, starting with the Keenon C40/C40 S.
-2. **What applications are required?** Four: Mobile Application, Web Application, Robot Android Tablet Application (evolved from the existing `SakarC40Agent`), and the Sakar Cloud/Backend.
-3. **What runs on the robot?** `SakarC40Agent`, talking to the Peanut SDK locally (serial/CoAP/HTTP per `LinkType`, all `CONFIRMED` local-only) and forwarding telemetry/receiving commands from the Sakar Backend over authenticated HTTPS (or the protocol chosen in the Architecture document).
+1. **What are we building?** A Sakar-owned Robot Management Platform (mobile app, web app, robot tablet agent, and Sakar Cloud backend) that makes Sakar — not Keenon — the primary system of record for robot data, control, and access, starting with the first product, **Sakar CleanBot 5000 Plus**, built on the Keenon C40/C40 S hardware platform.
+2. **What applications are required?** Four: Mobile Application, Web Application, Robot Android Tablet Application (the Sakar Robot Agent, evolved from the existing `SakarC40Agent`), and the Sakar Cloud/Backend.
+3. **What runs on the robot?** The Sakar Robot Agent (currently `SakarC40Agent`), talking to the Peanut SDK locally (serial/CoAP/HTTP per `LinkType`, all `CONFIRMED` local-only) and forwarding telemetry/receiving commands from the Sakar Backend over authenticated HTTPS (or the protocol chosen in the Architecture document).
 4. **What runs on Sakar Cloud?** Authentication, User, Organization, Robot Registry, Robot Command, Telemetry, Task, Map, Alert, Notification, Audit, and Analytics services (logical services; see Architecture document for the practical initial deployment shape).
 5. **What runs on mobile?** A read-heavy monitoring and permission-gated control client for the same Sakar Backend APIs the web app uses — no direct robot connection, ever.
 6. **What runs on web?** The primary administrative surface: fleet/organization/site/robot management, live monitoring, maps, tasks, cleaning, the dedicated Lock Management module, alerts, analytics, users/roles, and audit logs.
-7. **Where is robot data stored?** Primarily in Sakar's own database, populated by `SakarC40Agent`'s forwarding of locally-read SDK telemetry. Keenon Cloud remains available as a secondary source (e.g., its already-accumulated 697 cleaning-history records) but is not the platform's primary store.
+7. **Where is robot data stored?** Primarily in Sakar's own database, populated by the Sakar Robot Agent's forwarding of locally-read SDK telemetry. Keenon Cloud remains available as a secondary source (e.g., its already-accumulated 697 cleaning-history records) but is not the platform's primary store.
 8. **Is Keenon Cloud required?** Not for the core product's primary data path. It is **not proven eliminated as a dependency for everything** — the SDK's OTA subsystem and the separate stock Keenon application were both explicitly flagged as unverified, and this document does not claim otherwise.
 9. **What does Peanut SDK provide?** Confirmed local access to battery, charging, motor status/health, runtime state, work mode, odometer, robot IP, navigation status, emergency-button state, door state, map data, and 65 named event/telemetry topics — plus an SDK-level motor lock/unlock API whose physical effect is unconfirmed.
-10. **How does remote lock work (as designed)?** Sakar Admin → Sakar Backend (authorizes) → SakarC40Agent (validates + gates) → Peanut SDK `MotorComponent.enable(MOTOR_ENABLE_LOCK)` → C40. The API chain is buildable today; its physical guarantee is not yet established.
+10. **How does remote lock work (as designed)?** Sakar Admin → Sakar Backend (authorizes) → Sakar Robot Agent (validates + gates) → Peanut SDK `MotorComponent.enable(MOTOR_ENABLE_LOCK)` → C40. The API chain is buildable today; its physical guarantee is not yet established.
 11. **What remains unverified?** Real-robot position data; the full payload schema of ~49 of the SDK's 65 event topics; whether the motor lock persists across app restart/reboot/link-loss; whether the stock Keenon app or any unmanaged process can override the lock; whether any component (OTA, stock app) sends data to Keenon Cloud outside what this study examined.
 12. **What must be physically tested?** The full 15-test plan in `PEANUT_SDK_C40_TECHNICAL_STUDY.md` §11, most critically: motor lock's physical effect, its persistence across restart/reboot/disconnect, navigation-under-lock behavior, and direct stock-app-vs-lock interaction.
-13. **What is the MVP?** Robot registration, authentication, monitoring, telemetry, errors, history, the Sakar Backend core services, the Sakar Database core schema, SakarC40Agent telemetry forwarding, secure agent↔backend communication, the lock/unlock **architecture** (not yet the physically-certified guarantee), and audit logging — see §9 for the full P0 list.
+13. **What is the MVP?** Robot registration, authentication, monitoring, telemetry, errors, history, the Sakar Backend core services, the Sakar Database core schema, Sakar Robot Agent telemetry forwarding, secure agent↔backend communication, the lock/unlock **architecture** (not yet the physically-certified guarantee), and audit logging — see §9 for the full P0 list.
 14. **What should developers build first?** Phase 0: physical C40 SDK validation (resolve every `REQUIRES PHYSICAL C40 TEST` item above) — before any dependent feature is built on an assumption. See `SAKAR_ROBOT_PLATFORM_ROADMAP.md`.

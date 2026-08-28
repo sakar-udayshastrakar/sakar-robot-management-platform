@@ -1,6 +1,6 @@
 # robot/
 
-Contains `SakarC40Agent` — the robot-resident Android application that bridges the Peanut SDK (local, on-robot) to Sakar Cloud (remote).
+Contains `SakarC40Agent` — the current concrete implementation of the generic **Sakar Robot Agent** role, the robot-resident Android application that bridges the Peanut SDK (local, on-robot) to Sakar Cloud (remote). It targets the first product, **Sakar CleanBot 5000 Plus**, built on the Keenon C40 / C40 S hardware platform. See [`docs/architecture/SAKAR_ROBOT_PLATFORM_NAMING_AND_MODEL_STRATEGY.md`](../docs/architecture/SAKAR_ROBOT_PLATFORM_NAMING_AND_MODEL_STRATEGY.md) for naming conventions and future multi-robot-model plans.
 
 ## SakarC40Agent/
 

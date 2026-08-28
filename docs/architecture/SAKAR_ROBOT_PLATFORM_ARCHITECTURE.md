@@ -2,6 +2,8 @@
 
 Companion to `SAKAR_ROBOT_PLATFORM_REQUIREMENTS.md`. Design document only — nothing here has been implemented, and no existing project has been modified.
 
+**Terminology note:** this document describes the platform generically. "Sakar Robot Agent" below refers to the conceptual robot-resident agent role — the current concrete implementation of that role is the `SakarC40Agent` Android module (see `robot/SakarC40Agent/`), built against the Keenon C40 / C40 S reference hardware for the first product, **Sakar CleanBot 5000 Plus**. Future robot models get their own agent implementation of the same role; see [SAKAR_ROBOT_PLATFORM_NAMING_AND_MODEL_STRATEGY.md](SAKAR_ROBOT_PLATFORM_NAMING_AND_MODEL_STRATEGY.md).
+
 ---
 
 ## 1. System Context
@@ -13,7 +15,7 @@ Companion to `SAKAR_ROBOT_PLATFORM_REQUIREMENTS.md`. Design document only — no
         │                       │                        │
         ▼                       ▼                        ▼
    Mobile App              Web Portal              Robot Tablet
-  (Android/iOS)           (Admin/Web)            (SakarC40Agent)
+  (Android/iOS)           (Admin/Web)          (Sakar Robot Agent)
         │                       │                        │
         └───────────────────────┼───────────────┐        │
                                 ▼                │        │
@@ -36,7 +38,7 @@ Companion to `SAKAR_ROBOT_PLATFORM_REQUIREMENTS.md`. Design document only — no
                                                            C40
 ```
 
-Mobile and Web never talk to the robot or the Peanut SDK directly — they only ever talk to the Sakar Backend. The Robot Tablet (`SakarC40Agent`) is the **only** component that talks to the Peanut SDK, and it talks to the Sakar Backend as a client, not the other way around at the transport level (the backend pushes commands to the agent over whichever channel §4 selects, but the agent initiates the underlying connection — important for NAT/firewall reasons, see §4).
+Mobile and Web never talk to the robot or the Peanut SDK directly — they only ever talk to the Sakar Backend. The Robot Tablet (Sakar Robot Agent — currently `SakarC40Agent`) is the **only** component that talks to the Peanut SDK, and it talks to the Sakar Backend as a client, not the other way around at the transport level (the backend pushes commands to the agent over whichever channel §4 selects, but the agent initiates the underlying connection — important for NAT/firewall reasons, see §4).
 
 The existing, separately-audited **Keenon Cloud REST API** is explicitly *not* in this diagram as a primary path. It may be called by the Backend as an optional secondary data source (e.g., to pull already-accumulated historical cleaning logs) — this is a deliberate, isolated integration, not a dependency of the core platform.
 
@@ -72,7 +74,7 @@ Telemetry ingestion is high-volume and write-heavy (many robots, frequent heartb
 
 ### 2.3 Data flow — Telemetry (agent → dashboard)
 ```
-SakarC40Agent (reads Peanut SDK locally)
+Sakar Robot Agent (reads Peanut SDK locally)
    → HTTPS/WebSocket to API Gateway
       → Telemetry Service (validates, persists to robot_telemetry/robot_status)
          → Alert Service (evaluates thresholds; may create robot_alerts)
@@ -88,7 +90,7 @@ Web/Mobile UI (user with required permission clicks Lock/Navigate/etc.)
       → Robot Command Service
          → Audit Service (records the request regardless of outcome)
          → Command Security check (§REQUIREMENTS §5.4: expiry, nonce, scope)
-         → Realtime channel (§4) → SakarC40Agent
+         → Realtime channel (§4) → Sakar Robot Agent
             → PeanutSdkBridge → Peanut SDK → C40
          ← Command acknowledgement/result → Robot Command Service
       → Audit Service (records the result)
@@ -107,7 +109,7 @@ Web/Mobile UI (user with required permission clicks Lock/Navigate/etc.)
 RBAC as specified in `SAKAR_ROBOT_PLATFORM_REQUIREMENTS.md` §5.2, enforced at the API Gateway (coarse: is this token valid, does this role exist) and again at the service layer (fine: does this specific robot/org fall within this user's granted scope, per §5.3's hierarchy). **Never rely on gateway-level checks alone** — a compromised or misconfigured gateway rule must not be the only thing standing between a user and cross-tenant data.
 
 ### 3.3 Robot identity and credentials
-Each robot is registered with a unique identity (serial number / `mftCode`, `CONFIRMED` available from the existing Keenon Cloud robot-list data) plus a Sakar-issued credential (e.g., an agent-specific API key or mTLS client certificate) stored in `robot_credentials`, used by `SakarC40Agent` to authenticate to the Sakar Backend — **independent of, and unrelated to, the Peanut SDK's own `AppId`/`Secret` license**, which only governs SDK-to-robot communication and has no per-user or per-organization concept (per the SDK study's finding that the SDK license is an entitlement check, not an authorization system).
+Each robot is registered with a unique identity (serial number / `mftCode`, `CONFIRMED` available from the existing Keenon Cloud robot-list data) plus a Sakar-issued credential (e.g., an agent-specific API key or mTLS client certificate) stored in `robot_credentials`, used by the Sakar Robot Agent (currently `SakarC40Agent`) to authenticate to the Sakar Backend — **independent of, and unrelated to, the Peanut SDK's own `AppId`/`Secret` license**, which only governs SDK-to-robot communication and has no per-user or per-organization concept (per the SDK study's finding that the SDK license is an entitlement check, not an authorization system).
 
 ### 3.4 Command security implementation
 Every command object (§REQUIREMENTS §5.4) is validated by the Robot Command Service before dispatch and again by the Agent before execution (defense in depth):
@@ -128,7 +130,7 @@ See `SAKAR_ROBOT_PLATFORM_REQUIREMENTS.md` §10-equivalent content, technical de
 - **Secure updates**: agent app updates should be signed and delivered through a controlled channel (e.g., Android's managed-configuration/EMM update path under device-owner mode, or a Sakar-controlled update mechanism) — not sideloading.
 - **Unauthorized app prevention**: a direct consequence of kiosk/device-owner mode — do not treat this as a separate, softer control; treat "no other app can run" as the actual requirement, since "no other app *should* run" is exactly the assumption the SDK study showed is not otherwise enforced.
 
-**Explicit statement required by the source task:** application-level locking alone (a toggle inside `SakarC40Agent`) is **not** assumed sufficient. OS-level enforcement is the recommended primary control, with the application-level `enable()` call as the actual mechanism that achieves the lock state on the robot once OS-level enforcement ensures only the authorized agent can invoke it.
+**Explicit statement required by the source task:** application-level locking alone (a toggle inside the Sakar Robot Agent) is **not** assumed sufficient. OS-level enforcement is the recommended primary control, with the application-level `enable()` call as the actual mechanism that achieves the lock state on the robot once OS-level enforcement ensures only the authorized agent can invoke it.
 
 ---
 
@@ -162,7 +164,7 @@ Rationale:
 ```
 Robot generates state (motor, battery, navigation, etc.)
    ↓  (local SDK read — CONFIRMED local-only per PEANUT_SDK_C40_TECHNICAL_STUDY.md §7)
-SakarC40Agent  (reads via PeanutSdkBridge)
+Sakar Robot Agent  (reads via PeanutSdkBridge)
    ↓  (authenticated HTTPS/MQTT — Sakar-controlled channel)
 Sakar Backend  (Telemetry Service validates + persists)
    ↓
@@ -189,4 +191,73 @@ Sakar Dashboard (Web/Mobile query via API Gateway)
 
 ## 6. Multi-Robot-Model Extensibility
 
-Although the initial and only target is Keenon C40/C40 S, the architecture must not hardcode C40-specific assumptions into the Robot Registry or Telemetry Service schemas. Concretely: `robots` references a `robot_models` entity (see `SAKAR_ROBOT_PLATFORM_DATABASE.md`), and the Telemetry Service's ingestion contract is a generic key/value or JSON-document shape (not a rigid, C40-specific fixed-column table) so that a future robot model with a different vendor SDK can be onboarded by adding a new agent implementation and a new `robot_models` row, without a schema migration across the whole platform. This is a design constraint, not a feature to build now.
+The first target product, **Sakar CleanBot 5000 Plus**, is initially built on the Keenon C40 / C40 S hardware platform, but the Sakar Robot Management Platform itself is designed as a multi-robot platform. Concretely, the architecture must not hardcode C40-specific assumptions into the Robot Registry or Telemetry Service schemas. Concretely: `robots` references a `robot_models` entity (see `SAKAR_ROBOT_PLATFORM_DATABASE.md`), and the Telemetry Service's ingestion contract is a generic key/value or JSON-document shape (not a rigid, C40-specific fixed-column table) so that a future robot model with a different vendor SDK can be onboarded by adding a new agent implementation and a new `robot_models` row, without a schema migration across the whole platform. This is a design constraint, not a feature to build now.
+
+---
+
+## 7. Current Tested Path vs. Target Sakar Architecture
+
+**This distinction must be preserved in every summary of this document — do not collapse the two into one diagram.**
+
+**Current tested path** (`KEENON-CLOUD DEPENDENT` — see `SAKAR_ROBOT_PLATFORM_MASTER_REQUIREMENTS.md` Part 10/40 and `SAKAR_LIVE_API_VALIDATION_MATRIX.md`). This is the only path exercised by the newly supplied live API evidence:
+
+```
+External Client (Postman / test harness)
+        |
+        v
+Keenon Cloud / Open Platform   (https://cloud.robotkeenon.com)
+        |
+        v
+Robot (Keenon C40 S)
+```
+
+**Target Sakar production architecture** (not yet built, not yet physically validated end-to-end):
+
+```
+Sakar Web / Mobile
+        |
+        v
+Sakar API
+        |
+        v
+Sakar Platform
+        |
+        v
+Robot Integration / Robot Adapter
+        |
+        v
+Sakar Robot Agent  (where applicable — see §8 capability mapping)
+        |
+        v
+Robot
+```
+
+Keenon Cloud must **not** be represented as the primary Sakar application backend in any architecture summary, pitch, or customer-facing material. At the same time, this document does **not** claim Keenon Cloud has been eliminated — the current tested path depends entirely on it, and it remains a legitimate secondary/adapter-level integration (§8) until the Sakar-owned local path (Sakar Robot Agent → Peanut SDK, per §1/§5) is physically validated for the same capability set.
+
+---
+
+## 8. Robot Adapter Layer (Cloud-Side Capability Abstraction)
+
+Full requirement text and the capability-command list live in `SAKAR_ROBOT_PLATFORM_MASTER_REQUIREMENTS.md` §6.A; this section gives the architectural placement. This is distinct from, and complementary to, the on-device `RobotAdapter` concept described in `SAKAR_ROBOT_PLATFORM_NAMING_AND_MODEL_STRATEGY.md` §6 (which isolates vendor-SDK calls *inside* a single Sakar Robot Agent instance) — the layer below is the **cloud-side** abstraction that lets the Robot Command Service (§2.1) dispatch to *either* a local agent-mediated robot *or* a cloud-mediated vendor integration without its own code caring which:
+
+```
+                    Sakar Platform
+                         |
+                   Sakar Cloud / API
+                         |
+                 Robot Abstraction
+                         |
+              Robot Adapter Layer
+                         |
+          +--------------+--------------+
+          |              |              |
+          v              v              v
+    Keenon Adapter   Sakar Adapter   Other Adapter
+          |              |              |
+          v              v              v
+     Keenon Robots   Sakar Robots   Future Robots
+```
+
+The Robot Command Service (§2.1) speaks only the generic capability commands (`GET_STATUS`, `GET_BATTERY`, `GET_TELEMETRY`, `START_TASK`, `STOP_TASK`, `PAUSE_TASK`, `RESUME_TASK`, `RETURN_TO_DOCK`, `LOCK`, `UNLOCK`) to this layer. **Today, the concrete `Keenon Adapter` implementation available is a Keenon-Cloud-backed adapter** (§7) — it satisfies `GET_STATUS`/`GET_BATTERY`/`GET_TELEMETRY` (partial)/`START_TASK`/`RETURN_TO_DOCK` per the live evidence, and returns `UNSUPPORTED_CAPABILITY` for `LOCK`/`UNLOCK` (Keenon Cloud does not expose motor control at all — that capability, if ever supported, can only come from a local Peanut-SDK-backed adapter path, Part 11). A future local-agent-backed `Keenon Adapter` variant, a `Sakar Adapter` for a Sakar-branded/non-Keenon robot, and any third-party `Other Adapter` all implement the same generic command interface — onboarding one requires a new `robot_models` row and a new adapter implementation, never a change to the Robot Command Service, the database schema, or the public API (`SAKAR_ROBOT_PLATFORM_API_SPEC.md`).
+
+**Unsupported-capability rule:** if a robot model's `robot_models.capabilities` flags do not include a requested capability, the adapter layer returns `UNSUPPORTED_CAPABILITY` and the Web/Mobile UI must not render that control for that robot — server-driven, not inferred client-side from the robot's model name.

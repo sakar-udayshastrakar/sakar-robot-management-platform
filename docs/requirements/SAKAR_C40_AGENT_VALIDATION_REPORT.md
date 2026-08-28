@@ -1,5 +1,7 @@
 # SakarC40Agent — Phase 0 Validation Report
 
+**Naming note:** `SakarC40Agent` is the current concrete implementation of the generic **Sakar Robot Agent** role, built for the first product, **Sakar CleanBot 5000 Plus**, against the Keenon C40 / C40 S reference hardware — see [`docs/architecture/SAKAR_ROBOT_PLATFORM_NAMING_AND_MODEL_STRATEGY.md`](../architecture/SAKAR_ROBOT_PLATFORM_NAMING_AND_MODEL_STRATEGY.md).
+
 **Status:** describes the CURRENT state only. Compares the existing `SakarC40Agent` implementation (copied under `robot/SakarC40Agent`) against the approved documentation (`docs/requirements/`, `docs/security/`, `docs/architecture/`, `docs/api/`). No new feature was implemented. No physical C40 was connected. No Peanut SDK file was modified.
 
 **Companion documents:** `docs/architecture/SAKAR_C40_AGENT_ARCHITECTURE.md` (current architecture), `docs/security/SAKAR_C40_AGENT_SECURITY_AUDIT.md` (current security findings).

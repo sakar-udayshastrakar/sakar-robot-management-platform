@@ -1,5 +1,7 @@
 # SakarC40Agent — Security Audit (Phase 0)
 
+**Naming note:** `SakarC40Agent` is the current concrete implementation of the generic **Sakar Robot Agent** role, built for the first product, **Sakar CleanBot 5000 Plus**, against the Keenon C40 / C40 S reference hardware — see [`docs/architecture/SAKAR_ROBOT_PLATFORM_NAMING_AND_MODEL_STRATEGY.md`](../architecture/SAKAR_ROBOT_PLATFORM_NAMING_AND_MODEL_STRATEGY.md).
+
 **Status:** documents CURRENT findings only. **No security hardening was implemented in this phase** — per the task instructions, only genuine compilation problems would have been fixed, and none existed (the build succeeded unmodified). Every item below is a finding to carry into a future implementation phase, cross-referenced against `docs/security/SAKAR_SECURITY_REQUIREMENTS.md`.
 
 **Scope:** `robot/SakarC40Agent` source only (10 Gradle modules, ~19 Java files). The external Peanut SDK (`peanut-sdk-v1.3.0`, `peanut-sdk-release.aar`) was not modified and was treated as a read-only vendor dependency, exactly as in the earlier `PEANUT_SDK_C40_TECHNICAL_STUDY.md`.
