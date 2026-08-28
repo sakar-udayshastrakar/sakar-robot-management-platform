@@ -25,7 +25,7 @@ Each phase lists: objective, dependencies, deliverables, acceptance criteria, an
 
 ---
 
-## Phase 1 — SakarC40Agent Telemetry
+## Phase 1 — Sakar Robot Agent Telemetry
 
 **Objective:** extend the existing `SakarC40Agent` (not replace it) to forward already-read telemetry to a Sakar Backend endpoint, using Phase 0's confirmed `LinkType` and data values.
 

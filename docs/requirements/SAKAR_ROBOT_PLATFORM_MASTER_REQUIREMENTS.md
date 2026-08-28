@@ -3,8 +3,8 @@
 <h1 class="cover-title">Sakar Robot Management Platform</h1>
 <div class="cover-subtitle">Master Requirements &amp; Technical Specification — Security-First Edition</div>
 <div class="cover-meta">
-<p>Version 2.0</p>
-<p>Date: 2026-08-26</p>
+<p>Version 2.1</p>
+<p>Date: 2026-08-28</p>
 <p>Classification: Internal — Product &amp; Engineering &amp; Security</p>
 <p>Status: Requirements / Design Document — No software implemented, no existing source code modified</p>
 </div>
@@ -34,7 +34,7 @@
 - Part 18 — Security Risk Register
 - Part 19 — Authentication &amp; RBAC
 - Part 20 — Robot Command Security
-- Part 21 — Android / SakarC40Agent Security
+- Part 21 — Android / Sakar Robot Agent Security
 - Part 22 — Network Security
 - Part 23 — MQTT Security
 - Part 24 — WebSocket Security
@@ -53,6 +53,7 @@
 - Part 37 — Open Questions
 - Part 38 — Physical C40 Validation Plan
 - Part 39 — Final Recommendation
+- Part 40 — Latest Live API Validation Evidence
 
 <pdf:nextpage />
 
@@ -61,11 +62,13 @@
 | Field | Value |
 |---|---|
 | Document title | Sakar Robot Management Platform — Master Requirements & Technical Specification (Security-First Edition) |
-| Version | 2.0 |
-| Date | 2026-08-26 |
+| Version | 2.1 |
+| Date | 2026-08-28 |
 | Owner | Sakar Robotics — Product, Engineering & Security |
 | Status | Draft for review — requirements/design only, nothing implemented |
-| Initial target robot | Keenon C40 / C40 S |
+| Product | Sakar CleanBot 5000 Plus |
+| Platform | Sakar Robot Management Platform |
+| Initial hardware reference | Keenon C40 / C40 S |
 | Physical C40 tested during authoring | **NO** |
 | Physical Keenon network traffic captured during authoring | **NO** |
 | Existing source code modified during authoring | **NO** (`SakarC40Agent`, Peanut SDK, `peanut-sdk-release.aar`, backend/frontend/mobile/Android source, database schema, MQTT/WebSocket implementation, Docker deployment config, API implementation — none touched) |
@@ -74,12 +77,16 @@
 
 **Change summary since v1.0:** this revision adds a complete, production-grade security architecture and security hardening specification (Parts 16–29, 35, 38) at the explicit request of a security-architecture review. No requirement from v1.0 was removed; the platform's 20-part structure is expanded to 39 parts. Where the security review's role/permission model (Part 19) refines the provisional role list used in earlier drafts of Part 7 (Applications), Part 19 is the authoritative source going forward — a mapping note is given at the top of Part 19.
 
+**Change summary for v2.1 (this revision):** incorporates a newly supplied live API testing reference (`SAKAR_KEENON_C40S_LIVE_API_TESTING_REFERENCE.pdf` — Postman/cURL evidence against the real Keenon Open Platform, store `C00715655`, robot `94:BA:06:CA:99:F3`). This adds Part 40 ("Latest Live API Validation Evidence") and updates Part 10 with newly confirmed findings (sweep mode 105, recharge command, temporary cleaning command, a successfully logged Lobby cleaning run, and the live area-ID/state-semantics findings). It also adds §6.A (Robot Capability Abstraction) formalizing the capability-flag model referenced elsewhere in this document. No claim in Part 11 (Remote Lock/Unlock) changes as a result of this evidence — the supplied testing reference does not exercise lock/unlock and does not establish any physical robot behavior. Every new claim added in this revision is graded using the vocabulary below and, where the evidence is a successful API response rather than an observed physical/logged outcome, is explicitly distinguished as "API accepted" rather than "robot executed" or "verified in history."
+
 **Two distinct grading vocabularies are used throughout this document — do not conflate them:**
 
 1. **Technical/robot-capability grading** (used for claims about what the C40, the Peanut SDK, or Keenon Cloud actually do): `CONFIRMED` (proven by a live API test, decompiled bytecode, or direct source read), `LIKELY` (strongly implied, not directly proven), `UNKNOWN` (not established either way), `REQUIRES PHYSICAL C40 TEST` (cannot be resolved without hardware access), `REQUIRES NETWORK TEST` (cannot be resolved without a physical network packet capture), `REQUIRES VENDOR SUPPORT` (cannot be resolved without Keenon providing information Sakar does not have access to). No claim in this document states that the C40 physically supports a capability merely because the Peanut SDK exposes an API for it.
 2. **Security control status** (used for every security control specified in Parts 16–29 and 35): `PLANNED`, `REQUIREMENT`, `DESIGN COMPLETE`, `IMPLEMENTATION PENDING`, `REQUIRES PHYSICAL C40 TEST`, `REQUIRES NETWORK TEST`, `REQUIRES VENDOR SUPPORT`, `UNKNOWN`. The status `IMPLEMENTED` is deliberately never used anywhere in this document, because this is a documentation-only exercise — nothing described here has been built.
 
 **Primary source material** (read and incorporated before writing): `SakarC40Agent` source tree (read-only); `peanut-sdk-v1.3.0` including the decompiled `peanut-sdk-release.aar` (read-only); `PEANUT_SDK_C40_TECHNICAL_STUDY.md`; `PEANUT_SDK_C40_API_MATRIX.md`; `KEENON_C40_CLOUD_API_AUDIT.md`; `KEENON_C40_API_TEST_RESULTS.json`; `Peanut SDK v1.3.0 English.docx`; `Open Platform Document V2.4.pdf`; the v1.0 edition of this master document. A project-wide search for any existing "KRLog" documentation, screenshots, or notes returned **no results** — Part 12 (SRELS) is therefore a Sakar-owned design from first principles, not a port of any examined Keenon specification. No file in `SakarC40Agent`, `peanut-sdk-v1.3.0`, the backend/frontend/mobile projects, the database schema, or any Docker/CI configuration was modified while producing this revision; only this document, its companion documents, and the PDF-generation script were touched.
+
+**Additional source material incorporated in v2.1:** `SAKAR_KEENON_C40S_LIVE_API_TESTING_REFERENCE.pdf` — a Postman/cURL testing reference prepared from the Keenon Open Platform V2.4 documentation together with live API responses captured against `https://cloud.robotkeenon.com` for store `C00715655` ("Sakar robotics office"), robot `94:BA:06:CA:99:F3` ("Demo Piece", Keenon model C40 S). See Part 40 for the full evidence breakdown and grading. This file is archived alongside this document at `docs/requirements/SAKAR_KEENON_C40S_LIVE_API_TESTING_REFERENCE.pdf`; no additional physical robot access, network capture, or source-code read was performed to produce this revision.
 
 ---
 
@@ -112,11 +119,12 @@
 # Part 4 — Product Vision
 
 ```
-        Keenon C40 / C40 S  (first target robot; architecture is model-agnostic)
+        Sakar CleanBot 5000 Plus  (first target product)
+        Keenon C40 / C40 S        (initial hardware platform; architecture is model-agnostic)
                  |
                  v
           SakarC40Agent            <- existing project, extended (not replaced)
-     (Robot Android Tablet App)
+   (Robot Android Tablet App — Sakar Robot Agent)
                  |
                  v
            Peanut SDK               <- local only (CONFIRMED — see Part 10)
@@ -124,7 +132,7 @@
      (local serial / CoAP / HTTP link to the robot's own controller)
 
 
-          SakarC40Agent
+          Sakar Robot Agent
                  |
                  v   (authenticated, encrypted, mutually-suspicious channel — Part 15/22/23)
              Sakar Cloud
@@ -139,9 +147,9 @@ Web Application        Mobile Application
 (never talks to the robot directly — Part 16)
 ```
 
-**Vision statement.** Sakar Robotics operates a single robot management platform that any Sakar-deployed robot — starting with the Keenon C40/C40 S — reports into, and that any authorized Sakar or customer user monitors and controls through, with Sakar's own infrastructure as the primary store of record, Sakar's own authorization model as the sole gate on control commands, and Sakar's own security controls as the boundary between "authorized" and "everyone else."
+**Vision statement.** Sakar Robotics operates a single robot management platform that any Sakar-deployed robot — starting with **Sakar CleanBot 5000 Plus**, built on the Keenon C40/C40 S hardware platform — reports into, and that any authorized Sakar or customer user monitors and controls through, with Sakar's own infrastructure as the primary store of record, Sakar's own authorization model as the sole gate on control commands, and Sakar's own security controls as the boundary between "authorized" and "everyone else."
 
-**Design principle:** the platform must never assume the robot vendor's cloud is reachable, correctly configured, or willing to expose a capability Sakar needs next quarter — and it must never assume a network boundary, an authentication token, or a device is trustworthy without verifying it. Every capability this document specifies is built on what `SakarC40Agent`/Peanut SDK can do *locally*, forwarded to Sakar's own backend, guarded by the controls in Parts 16–29.
+**Design principle:** the platform must never assume the robot vendor's cloud is reachable, correctly configured, or willing to expose a capability Sakar needs next quarter — and it must never assume a network boundary, an authentication token, or a device is trustworthy without verifying it. Every capability this document specifies is built on what the Sakar Robot Agent (currently `SakarC40Agent`)/Peanut SDK can do *locally*, forwarded to Sakar's own backend, guarded by the controls in Parts 16–29.
 
 ---
 
@@ -201,7 +209,77 @@ Web Application        Mobile Application
 
 **Core architectural principle (repeated because it is load-bearing for the whole security model):** the web and mobile applications are clients of Sakar Cloud's API **only**. Neither one ever holds a robot's address, credentials, or a direct connection of any kind. Every robot interaction — read or write — is mediated by Sakar Cloud, which is the single point where authentication, authorization, tenancy, and command-security controls (Parts 19–20) are enforced. This is what makes the security architecture in Part 16 tractable: there is exactly one trust boundary between "the internet" and "a physical robot," not four.
 
-**Layered view:** presentation (web/mobile) -> application/API (Sakar Cloud) -> robot-facing edge (SakarC40Agent, one instance per robot) -> vendor SDK (Peanut SDK, local-only) -> hardware (C40). Each layer only trusts the layer immediately below it after that layer has proven its identity (Part 19 for users, Part 21 for agents/devices, Part 23 for MQTT clients).
+**Layered view:** presentation (web/mobile) -> application/API (Sakar Cloud) -> robot-facing edge (Sakar Robot Agent, one instance per robot) -> vendor SDK (Peanut SDK, local-only) -> hardware (C40). Each layer only trusts the layer immediately below it after that layer has proven its identity (Part 19 for users, Part 21 for agents/devices, Part 23 for MQTT clients).
+
+## 6.A Robot Capability Abstraction and Adapter Layer (multi-robot/multi-vendor)
+
+**This is a core architecture requirement, not a C40-specific feature.** The platform must not be designed as a Keenon-C40-only system. Sakar Cloud communicates with any robot only through a generic capability abstraction — never through vendor-specific calls leaking into the Robot Command Service, the public API (Part 14), or the Web/Mobile clients.
+
+```
+                    Sakar Platform
+                         |
+                   Sakar Cloud / API
+                         |
+                 Robot Abstraction
+                         |
+              Robot Adapter Layer
+                         |
+          +--------------+--------------+
+          |              |              |
+          v              v              v
+    Keenon Adapter   Sakar Adapter   Other Adapter
+          |              |              |
+          v              v              v
+     Keenon Robots   Sakar Robots   Future Robots
+```
+
+**Generic robot capability commands** exposed by the abstraction (the Robot Command Service, Part 8, dispatches only these — never a vendor-specific verb):
+
+```
+GET_STATUS
+GET_BATTERY
+GET_TELEMETRY
+START_TASK
+STOP_TASK
+PAUSE_TASK
+RESUME_TASK
+RETURN_TO_DOCK
+LOCK
+UNLOCK
+```
+
+**Capability model.** Not every robot supports every capability. Capabilities are grouped and stored per robot model (`robot_models.capabilities`, Part 13/`SAKAR_ROBOT_PLATFORM_DATABASE.md` §6), not assumed globally:
+
+```
+Robot
+  |
+  +-- TELEMETRY
+  +-- CLEANING
+  +-- NAVIGATION
+  +-- CHARGING
+  +-- MAP
+  +-- TASK_MANAGEMENT
+  +-- LOCK
+  +-- UNLOCK
+```
+
+**Unsupported-capability behavior (required):** if a robot model's capability flags do not include a capability a client requests, the Robot Command Service returns a defined error (`UNSUPPORTED_CAPABILITY`), and the Web/Mobile UI must not render the corresponding control for that robot at all — this is a server-driven UI-gating requirement, not a client-side guess based on robot model name matching.
+
+**Mapping the current, live-tested integration onto this model (Part 40 evidence):** the Keenon C40 S integration exercised to date is one concrete `Keenon Adapter` implementation, reached today via Keenon Cloud (`KEENON-CLOUD DEPENDENT`, Part 10) rather than via a Sakar-owned local agent path for every capability. The mapping is:
+
+| Generic capability | Current Keenon C40 S evidence |
+|---|---|
+| `GET_STATUS` | `CONFIRMED` — `scene/v1/robot/status` |
+| `GET_BATTERY` | `CONFIRMED` — `custom/robot/battery/level` |
+| `GET_TELEMETRY` | Partial — cleaning status/area/mode endpoints `CONFIRMED`; full telemetry stream is the local Peanut SDK path (Part 9/10), not this Cloud path |
+| `START_TASK` (temporary cleaning) | `CONFIRMED` accepted — `custom/clean/robot/strategy/temporary/task`, code `610000`/`CleanStrategyTemporary` |
+| `STOP_TASK` | `CONFIRMED` API exists — `custom/clean/robot/finish/task` (not exercised in the supplied live evidence; see Part 40) |
+| `PAUSE_TASK` | `CONFIRMED` API exists — `custom/clean/robot/pause/task` (not exercised in the supplied live evidence; see Part 40) |
+| `RESUME_TASK` | Not present in the supplied Keenon Open Platform surface — `UNKNOWN` |
+| `RETURN_TO_DOCK` | `CONFIRMED` accepted — `custom/clean/robot/recharge/task`, code `610000`/`CleanRobotRechargeTask` |
+| `LOCK` / `UNLOCK` | Not established by this evidence at all — see Part 11; remains `REQUIRES PHYSICAL C40 TEST` via the Peanut SDK path, not the Keenon Cloud path (Keenon Cloud does not expose motor lock) |
+
+This table illustrates the abstraction, it does not replace Part 40's full grading. A future `Sakar Adapter` (for a Sakar-branded or non-Keenon robot) and any `Other Adapter` (third-party vendor) implement the same generic command set against their own vendor protocol, so the Robot Command Service, database schema, and public API never need to change to onboard them — only a new `robot_models` row and a new adapter implementation are required (`SAKAR_ROBOT_PLATFORM_ARCHITECTURE.md` §6, `SAKAR_ROBOT_PLATFORM_NAMING_AND_MODEL_STRATEGY.md` §6).
 
 ---
 
@@ -414,7 +492,7 @@ Web Application        Mobile Application
 
 **Role-based access:** identical RBAC model as web (Part 19) — the mobile app is a client of the same authorization service, not a separately-privileged surface.
 
-## 7.C Robot Android Tablet Application — "SakarC40Agent"
+## 7.C Robot Android Tablet Application — Sakar Robot Agent
 
 Runs directly on the C40's onboard Android computer. This is the existing project, extended.
 
@@ -471,7 +549,7 @@ Runs directly on the C40's onboard Android computer. This is the existing projec
                      | Auth / RBAC    |
                      | Org / Site     |
                      | Robot Registry |
-                     | Telemetry      |---- MQTT broker ---- SakarC40Agent (per robot)
+                     | Telemetry      |---- MQTT broker ---- Sakar Robot Agent (per robot)
                      | Commands       |---- WebSocket ------ Web / Mobile clients
                      | Tasks/Cleaning |
                      | Maps           |
@@ -495,7 +573,7 @@ Runs directly on the C40's onboard Android computer. This is the existing projec
 Robot (Keenon C40 / C40 S)
         |
         v
-SakarC40Agent  (reads via Peanut SDK, locally — CONFIRMED local-only per the SDK study)
+Sakar Robot Agent  (reads via Peanut SDK, locally — CONFIRMED local-only per the SDK study)
         |
         v  (authenticated, encrypted uplink — Part 15/22/23)
 Sakar Backend
@@ -533,7 +611,7 @@ Sakar Database   <-- PRIMARY, AUTHORITATIVE STORE
 
 | Capability | Keenon Cloud | Peanut SDK (local) | Sakar Platform (recommended primary) |
 |---|---|---|---|
-| Battery | `CONFIRMED` live | `CONFIRMED` (bytecode) | **Peanut SDK** via SakarC40Agent — direct, no cloud round-trip |
+| Battery | `CONFIRMED` live | `CONFIRMED` (bytecode) | **Peanut SDK** via the Sakar Robot Agent — direct, no cloud round-trip |
 | Online/status | `CONFIRMED` live | `CONFIRMED` (heartbeat/runtime) | **Peanut SDK** for real-time |
 | Position | `CONFIRMED` empty for current fleet | API exists, untested | **Peanut SDK**, pending Part 38-style physical validation |
 | Navigation | Not confirmed for C40 in Cloud audit | `CONFIRMED` API | **Peanut SDK**, pending physical test |
@@ -559,6 +637,20 @@ Sakar Database   <-- PRIMARY, AUTHORITATIVE STORE
 | Any other Android-OS-level or background-service network traffic on the tablet | `UNKNOWN`; `REQUIRES NETWORK TEST` |
 
 **Governing rule for every document derived from this one:** "zero Keenon outbound communication" may not be claimed — to a customer, to leadership, or in marketing material — until the physical network test in Part 22/38 has been performed and its results reviewed. This rule is restated in Part 22 and Part 38 and must not be weakened in any summary of this document.
+
+**v2.1 update — current tested integration path is `KEENON-CLOUD DEPENDENT`.** The live API testing reference (Part 40) confirms the *only* path exercised to date is:
+
+```
+External Client (Postman)
+        |
+        v
+Keenon Open Platform / Keenon Cloud   (https://cloud.robotkeenon.com)
+        |
+        v
+Robot (Keenon C40 S, robot_sn 94:BA:06:CA:99:F3)
+```
+
+This is a `CONFIRMED`, working integration path — store list, robot list, robot status, battery, cleaning status, area list, cleaning modes, return/charging points, cleaning logs, temporary cleaning task, and recharge task were all exercised against this exact path (Part 40). It is explicitly **not** the recommended Sakar production architecture (Part 6/8), and it must not be described as "the Sakar backend" or "the Sakar platform" in any document — it is the vendor's own cloud, reached directly. Status for this path going forward: **KEENON-CLOUD DEPENDENT** — every capability confirmed via this path remains dependent on Keenon Cloud's availability, schema, and rate limits until the Sakar-owned production path (Sakar Web/Mobile -> Sakar API -> Sakar Platform -> Robot Integration/Adapter -> Sakar Robot Agent where applicable -> Robot) is physically validated end-to-end. This document does **not** claim Keenon Cloud has been eliminated as a dependency — only that it must not be treated as the primary Sakar application backend going forward.
 
 ---
 
@@ -588,7 +680,7 @@ Sakar Web / Mobile
 Sakar Backend  (authenticates user, authorizes ROBOT_LOCK/ROBOT_UNLOCK scope, requires step-up auth for unlock, issues signed command)
     |
     v  (authenticated command channel — Part 15/20/22/23)
-SakarC40Agent  (validates command: freshness, nonce, scope, signature)
+Sakar Robot Agent  (validates command: freshness, nonce, scope, signature)
     |
     v
 Peanut SDK   ->  MotorComponent.enable(callback, MOTOR_ENABLE_LOCK=1 / MOTOR_ENABLE_UNLOCK=0)
@@ -788,7 +880,7 @@ Every endpoint requires: authentication (bearer JWT), authorization (permission 
 Sakar Cloud
     |  MQTT (telemetry/events, robot->cloud) + WebSocket (commands/live push, cloud->client) + HTTPS (request/response, both directions)
     |
-SakarC40Agent
+Sakar Robot Agent
     |  (local — CONFIRMED private-only, Part 10)
 Peanut SDK
     |
@@ -849,9 +941,9 @@ C40
                      +-----------+-----------+
                                  |
                                  v
-                        +----------------+
-                        |  SakarC40Agent   |  (per robot; authenticates to MQTT/backend independently)
-                        +--------+-------+
+                        +--------------------+
+                        | Sakar Robot Agent  |  (per robot; authenticates to MQTT/backend independently)
+                        +---------+----------+
                                  |
                                  v  (local only — Part 10)
                         +----------------+
@@ -872,7 +964,7 @@ C40
 | Nginx | TLS termination, request routing, coarse rate limiting | `REQUIREMENT` |
 | Sakar Backend | Enforces authentication, RBAC, tenancy, command security (Parts 19-20) | `REQUIREMENT` |
 | Private network segmentation | PostgreSQL, Redis, MQTT broker, and monitoring have **no public network exposure** — reachable only from the backend and, for MQTT, from authenticated robot agents | `REQUIREMENT` |
-| SakarC40Agent | Enforces local command validation before ever calling the Peanut SDK (Part 20/21) | `REQUIREMENT` |
+| Sakar Robot Agent (currently `SakarC40Agent`) | Enforces local command validation before ever calling the Peanut SDK (Part 20/21) | `REQUIREMENT` |
 | Peanut SDK / C40 | The physical boundary — everything above exists to protect this | N/A (vendor component) |
 
 **Explicit non-goal, stated as a control:** neither the web application nor the mobile application is ever granted network reachability to any robot, any MQTT broker topic outside its own authorized scope, or any agent directly. This is enforced by network segmentation (this diagram) and by application-layer authorization (Part 19), redundantly — either control failing alone must not be sufficient to violate this principle.
@@ -926,6 +1018,8 @@ The full standalone register (with mitigation detail and validation notes) is ma
 | R16 | Insider threat (Sakar staff misuse) | Medium | `REQUIREMENT` | Least-privilege RBAC, audit logging, step-up auth for unlock | Audit review process |
 | R17 | Backup compromise | High | `REQUIREMENT` | Encrypted backups, access-controlled storage (Part 27) | Backup security review |
 | R18 | Dependency vulnerability | Medium | `REQUIREMENT` | Dependency scanning, patch cadence, CI/CD gate (Part 29) | Automated scanning |
+| R19 | Keenon Open Platform credential exposure | Critical | `REQUIREMENT` | Server-side-only credential custody, secret manager, no vendor error passthrough (Part 26/40, `SAKAR_SECURITY_REQUIREMENTS.md` §13.A) | Secret-scan before every release |
+| R20 | Stale/hardcoded vendor configuration values (area/map/scene IDs) | Medium | `REQUIREMENT` | Sync live vendor config per robot, never compile an ID into application code (Part 40) | Code review gate; periodic reconciliation |
 
 **Formal risk register maintenance requirement:** this register must be reviewed at every security acceptance gate (Part 35) and updated with the outcome of each physical/network test as it completes — a risk does not leave this register by being deleted, only by being re-graded with evidence attached.
 
@@ -1028,7 +1122,7 @@ SAKAR BACKEND
 SECURE MQTT / HTTPS
   |
   v
-SAKAR C40 AGENT
+SAKAR ROBOT AGENT
   |
   v
 LOCAL COMMAND VALIDATION
@@ -1057,9 +1151,9 @@ C40
 
 ---
 
-# Part 21 — Android / SakarC40Agent Security
+# Part 21 — Android / Sakar Robot Agent Security
 
-**These are requirements only. None of the following has been implemented; `SakarC40Agent`'s existing source code was read-only during this review and was not modified.**
+**These are requirements only. None of the following has been implemented; `SakarC40Agent`'s (the current Sakar Robot Agent implementation) existing source code was read-only during this review and was not modified.**
 
 | Control | Requirement | Status |
 |---|---|---|
@@ -1353,7 +1447,7 @@ Each robot's credential is scoped by ACL to only its own four topics (publish on
 |---|---|---|---|---|---|
 | 0 | Physical C40 SDK validation | Resolved `LinkType`; confirmed/refuted lock physical effect (Part 38); confirmed/refuted position data; confirmed/refuted lock persistence; stock-app interaction result | Physical C40 access | Robot unavailable, SDK behaves unexpectedly | Every `REQUIRES PHYSICAL C40 TEST` row in this document resolved |
 | 0.5 | Physical Keenon network validation | Packet-capture results for Part 22.A | Isolated VLAN test setup, physical C40 access | Test environment doesn't reflect production network conditions | Part 22.A table fully populated with real findings |
-| 1 | SakarC40Agent extension | Telemetry-forwarding capability added; agent-side command reception scaffold; Part 21 controls designed | Phase 0 findings | Extending existing code without breaking current diagnostic functionality | Agent forwards a defined telemetry set to a test backend reliably |
+| 1 | Sakar Robot Agent extension | Telemetry-forwarding capability added; agent-side command reception scaffold; Part 21 controls designed | Phase 0 findings | Extending existing code without breaking current diagnostic functionality | Agent forwards a defined telemetry set to a test backend reliably |
 | 2 | Sakar Cloud Backend | Core services: Auth, Robot Registry, Telemetry, Command; Part 19/20 controls designed | Phase 1 | Over-scoping into premature microservices | Backend ingests telemetry; issues a signed command the agent can validate |
 | 3 | Database | Full schema per Part 13 deployed; Part 26 secrets-management posture in place | Phase 2 | Schema churn if built before requirements stabilize | All Part 13 tables exist with defined indexes/retention |
 | 4 | SRELS | SRELS tables + ingestion (Part 12) | Phase 3 | Conflating log types back into one table under time pressure | Timeline (Part 12.F) renders correctly across all six log categories |
@@ -1500,3 +1594,57 @@ Build the platform in the order Part 33 specifies, starting with **Phase 0 — p
 **The remote lock feature — the platform's headline safety capability — must not be represented to any customer, internal stakeholder, or marketing material as production-ready until all ten conditions in Part 11/38 are physically confirmed**, and Gate G8 (Part 35) is signed off. **No claim that Keenon Cloud communication has been eliminated may be made until Gate G9 (Part 35) is signed off.** The commercial and safety cost of overclaiming either of these is asymmetric: a delayed feature is a schedule problem; a lock that doesn't actually lock, or a data-residency claim that turns out to be false, is a safety incident and a trust incident respectively. Build the honesty into the product from day one — visible maturity flags, gates that block launch rather than get waived quietly — rather than retrofitting it after a customer or an auditor discovers the gap.
 
 **Next phase: Security Requirements Review and Approval** — this document, `SAKAR_SECURITY_REQUIREMENTS.md`, and `SAKAR_SECURITY_RISK_REGISTER.md` are ready for that review. No implementation should begin until that review is complete.
+
+---
+
+# Part 40 — Latest Live API Validation Evidence
+
+**Source:** `SAKAR_KEENON_C40S_LIVE_API_TESTING_REFERENCE.pdf` (Postman/cURL testing reference, prepared from the supplied Keenon Open Platform V2.4 documentation and live API responses). Archived at `docs/requirements/SAKAR_KEENON_C40S_LIVE_API_TESTING_REFERENCE.pdf`. Full field-by-field breakdown is maintained separately in `SAKAR_LIVE_API_VALIDATION_MATRIX.md`; this Part summarizes and grades the same evidence for the master document.
+
+**Test environment (as reported in the source document):** Keenon Store ID `C00715655` ("Sakar robotics office"), Robot Name "Demo Piece", Robot ID/SN `94:BA:06:CA:99:F3`, Keenon Model C40 S, Scene `dTW2N7` ("SR Cleaning"), Map ID `4c0075859805496eb452187b3cd91107`, Charging Point `39` ("1_Charging pile"), base URL `https://cloud.robotkeenon.com`.
+
+**Governing grading rule for this Part (do not weaken in any derived summary):** a successful API receipt (HTTP 200 / code `610000`) confirms the request was **accepted** by Keenon Cloud. It does not, by itself, confirm the robot **physically executed** the operation, and it does not confirm the operation was **verified in the robot's own history/logs** — those are three distinct claims, graded separately below. Where the supplied evidence includes a corresponding log entry (e.g., the Lobby cleaning run), all three levels are marked; where it does not, only the levels the evidence actually supports are marked.
+
+**Classification vocabulary used in this Part:** `CONFIRMED` (directly demonstrated by this live test), `DOCUMENTED` (present in the vendor's Open Platform V2.4 documentation but not exercised in this test), `REQUIRES PHYSICAL TEST` (requires robot-side/hardware validation beyond an API response), `KEENON-CLOUD DEPENDENT` (currently demonstrated only through Keenon Cloud, not through a Sakar-owned path), `UNKNOWN` (insufficient evidence either way).
+
+## 40.A Capability Findings
+
+| Capability | Endpoint (Keenon Open Platform) | API Accepted | Robot Physically Executed | Verified in History/Logs | Status |
+|---|---|---|---|---|---|
+| Store list | `GET /api/open/data/v1/store/list` | `CONFIRMED` | N/A (read-only) | N/A | `CONFIRMED` / `KEENON-CLOUD DEPENDENT` |
+| Robot list | `GET /api/open/data/v1/store/robot/list` | `CONFIRMED` | N/A (read-only) | N/A | `CONFIRMED` / `KEENON-CLOUD DEPENDENT` |
+| Robot status | `GET /api/open/scene/v1/robot/status` | `CONFIRMED` (documented, part of the verification flow) | N/A (read-only) | N/A | `CONFIRMED` / `KEENON-CLOUD DEPENDENT` |
+| Battery | `GET /api/open/custom/robot/battery/level` | `CONFIRMED` | N/A (read-only) | N/A | `CONFIRMED` / `KEENON-CLOUD DEPENDENT` |
+| Cleaning status | `GET /api/open/custom/clean/robot/status` | `CONFIRMED` | N/A (read-only) | N/A | `CONFIRMED` / `KEENON-CLOUD DEPENDENT` |
+| Area list | `GET /api/open/custom/clean/robot/area/list` | `CONFIRMED` | N/A (read-only) | N/A | `CONFIRMED` / `KEENON-CLOUD DEPENDENT` |
+| Cleaning modes | `GET /api/open/custom/clean/robot/strategy/clean/model` | `CONFIRMED` — mode 105 ("Sweep") confirmed among 5 documented modes | N/A (read-only) | N/A | `CONFIRMED` / `KEENON-CLOUD DEPENDENT` |
+| Return/charging points | `GET /api/open/custom/clean/robot/strategy/back/point` | `CONFIRMED` | N/A (read-only) | N/A | `CONFIRMED` / `KEENON-CLOUD DEPENDENT` |
+| Cleaning logs | `GET /api/open/custom/clean/log/list` | `CONFIRMED` | N/A (read-only) | N/A | `CONFIRMED` / `KEENON-CLOUD DEPENDENT` |
+| Temporary cleaning task | `POST /api/open/custom/clean/robot/strategy/temporary/task` | `CONFIRMED` — code `610000`, `bizType CleanStrategyTemporary` | `CONFIRMED` for the Lobby run specifically (see 40.B) — **not** generalized to every invocation | `CONFIRMED` for the Lobby run specifically (log entry with `cleanArea 13.24`, `cleanTiming 229s`, `mState 1`, `failDescCode 0`) | `CONFIRMED` / `KEENON-CLOUD DEPENDENT` |
+| Finish/stop task | `POST /api/open/custom/clean/robot/finish/task` | `DOCUMENTED` — cURL provided; no accepted response captured in this evidence | `UNKNOWN` | `UNKNOWN` | `DOCUMENTED` |
+| Pause task | `POST /api/open/custom/clean/robot/pause/task` | `DOCUMENTED` — cURL provided; no accepted response captured in this evidence | `UNKNOWN` | `UNKNOWN` | `DOCUMENTED` |
+| Recharge task | `POST /api/open/custom/clean/robot/recharge/task` | `CONFIRMED` — code `610000`, `bizType CleanRobotRechargeTask` | `REQUIRES PHYSICAL TEST` — no log/telemetry confirmation of physical docking supplied | `UNKNOWN` — no corresponding log entry supplied for this specific call | `CONFIRMED` (API accepted only) / `KEENON-CLOUD DEPENDENT` |
+
+**Do not upgrade "Finish/stop task" or "Pause task" beyond `DOCUMENTED`** based on this evidence — the source document supplies the cURL request for both but no accepted-response evidence; treat them the same as any other vendor-documented-but-untested endpoint elsewhere in this master document.
+
+## 40.B Named Findings (verbatim from the source document, graded)
+
+| Finding | Evidence | Grading |
+|---|---|---|
+| Store and robot list working | Store `C00715655` contains the tested C40 S robot | `CONFIRMED` |
+| Sweep mode 105 | Confirmed among the 5 documented cleaning modes (101 Sweep & Mop, 102 Water Suction, 103 Sweep & Vacuum, 104 Sweep & Push, 105 Sweep) | `CONFIRMED` |
+| Recharge command accepted | Code `610000` / `CleanRobotRechargeTask` | `CONFIRMED` (API accepted; physical docking `REQUIRES PHYSICAL TEST`) |
+| Temporary cleaning command accepted | Code `610000` / `CleanStrategyTemporary` | `CONFIRMED` (API accepted) |
+| Successful Lobby cleaning | Logged: `cleanArea 13.24`, `cleanTiming 229 sec`, `mState 1`, `failDescCode 0` | `CONFIRMED` — this is the one operation in this evidence set confirmed at all three levels (accepted, executed, verified in logs) |
+| Earlier Conference-carpet area-ID issue | Initial area ID was stale/wrong; current area mapping supplies a corrected Conference-carpet ID | `CONFIRMED` — see the "current area IDs must not be hardcoded" requirement below |
+| Historical supply failure | Repeated prior logs showed `failDesc 467` ("no clean water added") | `CONFIRMED` as a historical/prior finding, not a current-session result |
+| Current robot state semantics (V2.4) | `mainState 3` = Work, `subState 42` = Cleaning, `subState 44` = Returning | `DOCUMENTED` (from Keenon Open Platform V2.4) |
+
+**Current area IDs must not be hardcoded.** The live area mapping observed during this test (Conference carpet, Work area, Lobby, each with a live Keenon area ID) is configuration data, not a constant. Any Sakar implementation must sync the current area list per robot/store and maintain a mapping to Sakar's own site/area records (`SAKAR_ROBOT_PLATFORM_DATABASE.md` `maps`/`map_points`) — never compile a specific area ID into application code, exactly as the source document itself warns.
+
+## 40.C What This Evidence Does Not Establish
+
+- It does not exercise, and therefore does not confirm or deny, anything about `LOCK`/`UNLOCK` (Part 11) — Keenon Cloud does not expose a motor-lock capability at all (Part 10), and this evidence is entirely a Keenon Cloud (not Peanut SDK) test.
+- It does not constitute a physical robot test in the sense Part 38 defines — no operator observation of physical robot behavior is recorded here beyond what the cleaning log implies for the Lobby run.
+- It does not change the `KEENON-CLOUD DEPENDENT` status of this integration path (Part 10) — the entire test was performed against `https://cloud.robotkeenon.com`, not against a Sakar-owned backend or a local Peanut SDK link.
+- It does not authorize treating `client_id`/`client_secret`/access tokens as anything other than server-side-only secrets — see `SAKAR_SECURITY_REQUIREMENTS.md` §13.A, added in this revision.

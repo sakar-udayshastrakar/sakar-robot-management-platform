@@ -8,6 +8,8 @@
 
 **Scope note on the underlying robot platform:** this document's robot-specific claims (Sections 8, 11, 19) are grounded in `PEANUT_SDK_C40_TECHNICAL_STUDY.md`, `PEANUT_SDK_C40_API_MATRIX.md`, `KEENON_C40_CLOUD_API_AUDIT.md`, and `KEENON_C40_API_TEST_RESULTS.json`. An SDK API existing is never treated as proof that the physical C40 behaves as expected — every such claim is graded `CONFIRMED` / `LIKELY` / `UNKNOWN` / `REQUIRES PHYSICAL C40 TEST` / `REQUIRES NETWORK TEST` / `REQUIRES VENDOR SUPPORT`.
 
+**Terminology note:** "Sakar Robot Agent" below refers to the generic robot-resident agent role; the current concrete implementation of that role is the `SakarC40Agent` Android module, built for the first product, **Sakar CleanBot 5000 Plus**, against the Keenon C40 / C40 S reference hardware.
+
 ---
 
 ## Section 1 — Security Architecture
@@ -47,9 +49,9 @@
                      +-----------+-----------+
                                  |
                                  v
-                        +----------------+
-                        |  SakarC40Agent   |  (per robot; authenticates to MQTT/backend independently)
-                        +--------+-------+
+                        +--------------------+
+                        | Sakar Robot Agent  |  (per robot; authenticates to MQTT/backend independently)
+                        +---------+----------+
                                  |
                                  v  (local only — Section 8)
                         +----------------+
@@ -68,7 +70,7 @@
 | Nginx | TLS termination, request routing, coarse rate limiting | `REQUIREMENT` |
 | Sakar Backend | Enforces authentication, RBAC, tenancy, command security | `REQUIREMENT` |
 | Private network segmentation | PostgreSQL, Redis, MQTT broker, and monitoring have no public network exposure | `REQUIREMENT` |
-| SakarC40Agent | Enforces local command validation before calling the Peanut SDK | `REQUIREMENT` |
+| Sakar Robot Agent (currently `SakarC40Agent`) | Enforces local command validation before calling the Peanut SDK | `REQUIREMENT` |
 | Peanut SDK / C40 | The physical boundary everything above protects | N/A (vendor component) |
 
 **Non-goal, stated as a control:** neither the web nor the mobile application is ever granted network reachability to any robot, any MQTT topic outside its authorized scope, or any agent directly — enforced redundantly by network segmentation and application-layer authorization (Section 4).
@@ -102,7 +104,7 @@
 
 ## Section 3 — Security Risk Register
 
-See `SAKAR_SECURITY_RISK_REGISTER.md` for the full standalone register with mitigation and validation detail. Eighteen risks are tracked (R01–R18), spanning cloud/database compromise, credential/token theft, command forgery/replay, cross-tenant access, MQTT/WebSocket/Android/agent compromise, stock-app lock bypass, unresolved OTA/Keenon network traffic, insider threat, backup compromise, and dependency vulnerabilities.
+See `SAKAR_SECURITY_RISK_REGISTER.md` for the full standalone register with mitigation and validation detail. Twenty risks are tracked (R01–R20), spanning cloud/database compromise, credential/token theft, command forgery/replay, cross-tenant access, MQTT/WebSocket/Android/agent compromise, stock-app lock bypass, unresolved OTA/Keenon network traffic, insider threat, backup compromise, dependency vulnerabilities, and (added following live Keenon Open Platform API testing, §13.A) vendor-credential exposure and stale hardcoded vendor configuration values.
 
 *(Master document reference: Part 18.)*
 
@@ -174,7 +176,7 @@ See `SAKAR_SECURITY_RISK_REGISTER.md` for the full standalone register with miti
 ```
 USER -> AUTHENTICATION -> RBAC -> TENANT/SITE AUTHORIZATION -> COMMAND VALIDATION ->
 COMMAND EXPIRATION -> NONCE/REPLAY PROTECTION -> SECURE TRANSPORT -> SAKAR BACKEND ->
-SECURE MQTT/HTTPS -> SAKAR C40 AGENT -> LOCAL COMMAND VALIDATION -> PEANUT SDK -> C40
+SECURE MQTT/HTTPS -> SAKAR ROBOT AGENT -> LOCAL COMMAND VALIDATION -> PEANUT SDK -> C40
 ```
 
 **Every command conceptually contains:** `command_id`, `robot_id`, `user_id`, `timestamp`, `expiration`, `nonce`, `command_type`, `request_id`, and an authorization context.
@@ -237,9 +239,9 @@ Six categories are deliberately separated: Application Logs, Robot Events, Robot
 
 ---
 
-## Section 8 — Android / SakarC40Agent Security
+## Section 8 — Android / Sakar Robot Agent Security
 
-**These are requirements only. `SakarC40Agent`'s existing source was read-only during this review and was not modified.**
+**These are requirements only. `SakarC40Agent`'s (the current Sakar Robot Agent implementation) existing source was read-only during this review and was not modified.**
 
 | Control | Requirement | Status |
 |---|---|---|
@@ -376,7 +378,25 @@ sakar/{organization}/{site}/{robot}/ack
 
 **Self-check applied to this document:** no credential, token, or secret value from any prior audit appears anywhere in this document or its companions — verified by direct text search before publication.
 
-*(Master document reference: Part 26.)*
+### 13.A Vendor (Keenon Open Platform) Credential & API Handling
+
+Added following the newly supplied live Keenon Open Platform API testing reference (`SAKAR_ROBOT_PLATFORM_MASTER_REQUIREMENTS.md` Part 40). The tested integration authenticates to `https://cloud.robotkeenon.com` via OAuth `client_credentials` (`client_id`/`client_secret` → bearer `access_token`) — the same custody rules that apply to every other production secret in this section apply here without exception:
+
+| Control | Requirement | Status |
+|---|---|---|
+| Keenon credentials server-side only | `client_id`/`client_secret` and the resulting `access_token` are never sent to, stored in, or reachable from the Web application, mobile application, or any other frontend — held only by the backend-side Keenon Integration Adapter (`SAKAR_ROBOT_PLATFORM_ARCHITECTURE.md` §8) | `REQUIREMENT` |
+| OAuth client_secret never reaches frontend | Same as above, stated explicitly for this specific credential given the Postman testing reference exercised it directly | `REQUIREMENT` |
+| Access tokens not stored in frontend source | The bearer `access_token` returned by `/api/open/oauth/token` is cached only in backend-controlled storage (e.g., the secret manager or a short-lived server-side cache), never in a mobile bundle, browser storage, or React source | `REQUIREMENT` |
+| Keenon-specific IDs treated as internal integration data | Store ID, robot SN/ID, scene code, map ID, area IDs, and charging-point IDs (all exercised in the live test) are internal integration data — external users see only the corresponding Sakar-issued `robots`/`sites`/`organizations` identifiers, never the raw Keenon values | `REQUIREMENT` |
+| Vendor API credentials in a secret manager | `client_id`/`client_secret` for Keenon Open Platform are stored in the same secret manager as every other production secret (this Section, top-level table) — not in a `.env` file, Postman environment export, or config file committed to any repository | `REQUIREMENT` |
+| External users see Sakar identifiers only | Consistent with the API vendor-neutrality boundary (`SAKAR_ROBOT_PLATFORM_API_SPEC.md`, "Vendor integration boundary") — no Keenon endpoint path, field name, or status code (e.g., `610000`, `CleanStrategyTemporary`) is ever surfaced through a Sakar client-facing API or UI | `REQUIREMENT` |
+| Organization/site authorization enforced on vendor-backed data | Data retrieved via the Keenon Adapter is subject to the same `Organization -> Site -> Robot` authorization hierarchy (Part 19) as data from any other adapter — a vendor-backed robot is not a lower-authorization-bar robot | `REQUIREMENT` |
+| Vendor API failures do not expose credentials/errors | A Keenon Open Platform error response (including any embedded diagnostic detail) is never relayed verbatim to a Web/Mobile client — the backend translates it to the generic error model (`SAKAR_ROBOT_PLATFORM_API_SPEC.md` §1.12) before responding | `REQUIREMENT` |
+| Vendor API request/response audited | Every call to a Keenon Open Platform endpoint that changes robot state (`START_TASK`/`STOP_TASK`/`PAUSE_TASK`/`RETURN_TO_DOCK` equivalents) is recorded in `robot_commands`/`audit_logs` exactly as any other command would be (Part 12.D/12.E) — a vendor-mediated command is not exempt from the command audit trail | `REQUIREMENT` |
+
+**Explicit note on the placeholders in the source testing document:** the supplied `SAKAR_KEENON_C40S_LIVE_API_TESTING_REFERENCE.pdf` itself states that access tokens, client secrets, and credentials are represented as placeholders (`{{token}}`, `{{client_id}}`, `{{client_secret}}`) — no real credential value was present in that document, and none is reproduced here. A workspace-wide secret scan performed while producing this revision found no real Keenon credential, access token, or API key anywhere in this repository (see the Final Report of the task that produced this revision).
+
+*(Master document reference: Part 26, Part 40.)*
 
 ---
 

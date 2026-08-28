@@ -10,7 +10,12 @@ No backend, web, mobile, robot-control, MQTT, REST API, WebSocket, or remote-loc
 
 ## Project Purpose
 
-Sakar Robotics is building a platform so that Sakar — not the robot vendor (Keenon) — is the primary system of record for robot data, telemetry, history, authentication, authorization, commands, lock/unlock, users, configuration, analytics, logs, alerts, and fleet management, starting with the Keenon C40 / C40 S. The full rationale, architecture, and security model are specified in `docs/requirements/SAKAR_ROBOT_PLATFORM_MASTER_REQUIREMENTS.md`.
+Sakar Robotics is building a platform so that Sakar — not the robot vendor (Keenon) — is the primary system of record for robot data, telemetry, history, authentication, authorization, commands, lock/unlock, users, configuration, analytics, logs, alerts, and fleet management, starting with the first product, **Sakar CleanBot 5000 Plus**, built on the Keenon C40 / C40 S hardware platform. The full rationale, architecture, and security model are specified in `docs/requirements/SAKAR_ROBOT_PLATFORM_MASTER_REQUIREMENTS.md`. See [`docs/architecture/SAKAR_ROBOT_PLATFORM_NAMING_AND_MODEL_STRATEGY.md`](docs/architecture/SAKAR_ROBOT_PLATFORM_NAMING_AND_MODEL_STRATEGY.md) for the full product/platform/agent naming strategy.
+
+**Live API testing status (added following the latest live evidence — see `SAKAR_ROBOT_PLATFORM_MASTER_REQUIREMENTS.md` Part 40 and `docs/requirements/SAKAR_LIVE_API_VALIDATION_MATRIX.md`):**
+- **CURRENT:** a live API integration against the Keenon Open Platform (`https://cloud.robotkeenon.com`) has been tested for the Keenon C40 S / Sakar CleanBot 5000 Plus — store list, robot list, robot status, battery, cleaning status, area list, cleaning modes, return/charging points, cleaning logs, a temporary cleaning task (confirmed accepted and, for the Lobby run specifically, confirmed complete via logs), and a recharge command (confirmed accepted). This path is **KEENON-CLOUD DEPENDENT** — it is not the Sakar-owned production path.
+- **TARGET:** a Sakar-owned, multi-robot platform (`docs/architecture/SAKAR_ROBOT_PLATFORM_ARCHITECTURE.md` §7/§8) reached as Sakar Web/Mobile → Sakar API → Sakar Platform → Robot Integration/Robot Adapter → Sakar Robot Agent (where applicable) → Robot.
+- **NOT YET PROVEN:** a fully local Sakar Robot Agent → Sakar Cloud → Robot path operating without any Keenon Cloud dependency. This remains unproven regardless of the API testing above, exactly as before this revision.
 
 ## Project Structure
 
@@ -40,7 +45,7 @@ sakar robotics web/
 | Sakar Cloud (backend) | `backend/` | Not yet implemented |
 | Web application | `web/` | Not yet implemented |
 | Mobile application | `mobile/` | Not yet implemented |
-| Robot Android tablet agent (`SakarC40Agent`) | `robot/SakarC40Agent/` | Existing project, copied in as-is; not yet extended with the new telemetry-forwarding/command-reception capability described in the master requirements |
+| Robot Android tablet agent — Sakar Robot Agent (currently `SakarC40Agent`) | `robot/SakarC40Agent/` | Existing project, copied in as-is; not yet extended with the new telemetry-forwarding/command-reception capability described in the master requirements |
 
 **Core architecture rule:** the web and mobile applications communicate with Sakar Cloud only. Neither ever connects to a robot directly — enforced by network segmentation and application-layer authorization once the backend is built (master requirements, Part 16).
 

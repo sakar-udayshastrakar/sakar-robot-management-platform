@@ -1,0 +1,84 @@
+package com.sakarrobotics.cloud.robot.registry;
+
+import java.util.List;
+import java.util.UUID;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.sakarrobotics.cloud.common.error.ApiException;
+import com.sakarrobotics.cloud.common.error.SakarErrorCode;
+import com.sakarrobotics.cloud.security.UserPrincipal;
+import com.sakarrobotics.cloud.security.access.TenantAccessGuard;
+
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+public class RobotService {
+
+    private final RobotRepository robotRepository;
+    private final RobotModelRepository robotModelRepository;
+    private final TenantAccessGuard tenantAccessGuard;
+
+    @Transactional
+    public Robot register(UUID organizationId, UUID siteId, UUID robotModelId, String name,
+            String serialNumber, String externalRobotId) {
+        if (robotRepository.existsBySerialNumber(serialNumber)) {
+            throw new ApiException(SakarErrorCode.DUPLICATE_SERIAL_NUMBER,
+                    "A robot with serial number " + serialNumber + " is already registered");
+        }
+        robotModelRepository.findById(robotModelId)
+                .orElseThrow(() -> new ApiException(SakarErrorCode.ROBOT_MODEL_NOT_FOUND,
+                        "Robot model not found: " + robotModelId));
+
+        Robot robot = new Robot();
+        robot.setOrganizationId(organizationId);
+        robot.setSiteId(siteId);
+        robot.setRobotModelId(robotModelId);
+        robot.setName(name);
+        robot.setSerialNumber(serialNumber);
+        robot.setExternalRobotId(externalRobotId);
+        robot.setStatus(RobotLifecycleStatus.REGISTERED);
+        return robotRepository.save(robot);
+    }
+
+    /**
+     * Resolves a robot the caller may see. Deliberately raises the same
+     * {@code ROBOT_NOT_FOUND} (404) whether the robot doesn't exist at all
+     * or exists in an organization outside the caller's scope — never a 403
+     * — so a client cannot distinguish "not found" from "not yours" and
+     * enumerate cross-tenant robot ids (SAKAR_ROBOT_PLATFORM_API_SPEC.md
+     * §1.12).
+     */
+    public Robot getAccessibleOrThrow(UserPrincipal principal, UUID robotId) {
+        Robot robot = robotRepository.findById(robotId)
+                .orElseThrow(() -> new ApiException(SakarErrorCode.ROBOT_NOT_FOUND, "Robot not found: " + robotId));
+        if (!tenantAccessGuard.hasOrganizationAccess(principal, robot.getOrganizationId())) {
+            throw new ApiException(SakarErrorCode.ROBOT_NOT_FOUND, "Robot not found: " + robotId);
+        }
+        return robot;
+    }
+
+    public Page<Robot> listAccessible(UserPrincipal principal, int page, int pageSize) {
+        List<UUID> orgIds = tenantAccessGuard.accessibleOrganizationIds(principal);
+        PageRequest pageRequest = PageRequest.of(page, pageSize);
+        return orgIds == null ? robotRepository.findAll(pageRequest) : robotRepository.findByOrganizationIdIn(orgIds, pageRequest);
+    }
+
+    @Transactional
+    public Robot activate(UserPrincipal principal, UUID robotId) {
+        Robot robot = getAccessibleOrThrow(principal, robotId);
+        robot.setStatus(RobotLifecycleStatus.ACTIVE);
+        return robotRepository.save(robot);
+    }
+
+    @Transactional
+    public Robot deactivate(UserPrincipal principal, UUID robotId) {
+        Robot robot = getAccessibleOrThrow(principal, robotId);
+        robot.setStatus(RobotLifecycleStatus.DEACTIVATED);
+        return robotRepository.save(robot);
+    }
+}

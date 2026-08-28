@@ -1,0 +1,104 @@
+spring:
+  application:
+    name: sakar-cloud-backend
+
+  datasource:
+    url: ${SAKAR_DB_URL:jdbc:postgresql://localhost:5432/sakar_cloud}
+    username: ${SAKAR_DB_USERNAME:sakar}
+    password: ${SAKAR_DB_PASSWORD:sakar}
+    hikari:
+      maximum-pool-size: ${SAKAR_DB_POOL_SIZE:10}
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: false
+        jdbc:
+          time_zone: UTC
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: false
+
+  data:
+    redis:
+      host: ${SAKAR_REDIS_HOST:localhost}
+      port: ${SAKAR_REDIS_PORT:6379}
+      password: ${SAKAR_REDIS_PASSWORD:}
+
+  jackson:
+    default-property-inclusion: non_null
+
+server:
+  port: ${SAKAR_SERVER_PORT:8080}
+  error:
+    include-message: always
+    include-binding-errors: always
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: when-authorized
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    disable-swagger-default-url: true
+
+sakar:
+  bootstrap:
+    admin-enabled: ${SAKAR_BOOTSTRAP_ADMIN:false}
+    admin-email: ${SAKAR_BOOTSTRAP_ADMIN_EMAIL:admin@sakarrobotics.local}
+
+  security:
+    jwt:
+      # NEVER a real production secret in source. Overridden via SAKAR_JWT_SECRET
+      # env var / secret manager in every deployed environment (Part 26).
+      secret: ${SAKAR_JWT_SECRET:dev-only-insecure-secret-change-me-dev-only-insecure-secret}
+      issuer: sakar-cloud-backend
+      access-token-ttl-seconds: ${SAKAR_JWT_ACCESS_TTL:900}
+      refresh-token-ttl-seconds: ${SAKAR_JWT_REFRESH_TTL:1209600}
+    login:
+      max-attempts: 5
+      lockout-window-seconds: 900
+      lockout-duration-seconds: 900
+    step-up:
+      ttl-seconds: 300
+
+  command:
+    default-expiration-seconds: 45
+
+  integration:
+    keenon:
+      # Current tested integration path is KEENON-CLOUD DEPENDENT (Master
+      # Requirements Part 10/40). Credentials are never hardcoded and never
+      # committed; supplied only via environment / secrets manager.
+      enabled: ${SAKAR_KEENON_ENABLED:false}
+      base-url: ${SAKAR_KEENON_BASE_URL:https://cloud.robotkeenon.com}
+      client-id: ${SAKAR_KEENON_CLIENT_ID:}
+      client-secret: ${SAKAR_KEENON_CLIENT_SECRET:}
+      connect-timeout-ms: 5000
+      read-timeout-ms: 8000
+
+  mqtt:
+    enabled: ${SAKAR_MQTT_ENABLED:false}
+    broker-url: ${SAKAR_MQTT_BROKER_URL:tcp://localhost:1883}
+    client-id-prefix: sakar-cloud-
+    username: ${SAKAR_MQTT_USERNAME:}
+    password: ${SAKAR_MQTT_PASSWORD:}
+    qos: 1
+
+logging:
+  level:
+    com.sakarrobotics.cloud: INFO
+    org.springframework.security: INFO

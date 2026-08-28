@@ -4,7 +4,9 @@ Companion to `SAKAR_ROBOT_PLATFORM_ARCHITECTURE.md` and `SAKAR_ROBOT_PLATFORM_DA
 
 Two API surfaces are specified:
 1. **§1 — Public/Client REST API** (Mobile + Web → Sakar Backend)
-2. **§2 — Robot Agent API** (SakarC40Agent ↔ Sakar Backend, internal)
+2. **§2 — Robot Agent API** (Sakar Robot Agent ↔ Sakar Backend, internal)
+
+**Vendor integration boundary (added following live Keenon Open Platform API testing — see `SAKAR_ROBOT_PLATFORM_MASTER_REQUIREMENTS.md` Part 40 and `SAKAR_LIVE_API_VALIDATION_MATRIX.md`):** every endpoint in §1 below is vendor-neutral by design — it names a robot, a capability, or a generic resource, never a Keenon-specific path segment, field, or status code. The Keenon Open Platform endpoints exercised in that live testing (`/api/open/oauth/token`, `/api/open/data/v1/store/...`, `/api/open/custom/clean/robot/...`, etc.) are **never** exposed directly to Web or Mobile clients. They are consumed only by the Keenon-Cloud-backed `Keenon Adapter` behind the Robot Adapter Layer (`SAKAR_ROBOT_PLATFORM_ARCHITECTURE.md` §8), which the Robot Command Service and Telemetry Service call internally and translate into the generic capability commands (`GET_STATUS`, `GET_BATTERY`, `START_TASK`, `RETURN_TO_DOCK`, etc.) before anything reaches §1. Keenon receipt codes (e.g. `610000`) and `bizType` values are translated to the generic `sent`/`acked`/`completed`/`failed`/`timed_out` command states (§1.5) internally — a client of §1 never sees a Keenon-specific code.
 
 ---
 
@@ -137,7 +139,7 @@ Two API surfaces are specified:
 
 ---
 
-## 2. Robot Agent API (SakarC40Agent ↔ Sakar Backend)
+## 2. Robot Agent API (Sakar Robot Agent ↔ Sakar Backend)
 
 This is the internal protocol the existing `PeanutSdkBridge`/`C40RobotController` architecture would need to speak to the Sakar Backend. Transport per `SAKAR_ROBOT_PLATFORM_ARCHITECTURE.md` §4 (hybrid HTTPS + MQTT recommended); message *shapes* below apply regardless of transport choice.
 

@@ -1,0 +1,39 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:sakar_test_${random.uuid};MODE=PostgreSQL;DB_CLOSE_DELAY=-1
+    username: sa
+    password: ""
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.H2Dialect
+
+  flyway:
+    enabled: false
+
+  data:
+    redis:
+      host: localhost
+      port: 6399
+
+sakar:
+  security:
+    jwt:
+      secret: test-only-secret-never-used-outside-automated-tests-0123456789
+  integration:
+    keenon:
+      enabled: false
+      webhook-secret: test-webhook-secret-0123456789
+  mqtt:
+    enabled: false
+
+management:
+  health:
+    redis:
+      enabled: false
+
+logging:
+  level:
+    com.sakarrobotics.cloud: DEBUG

@@ -4,6 +4,8 @@ A native Android proof-of-concept bridge between the Keenon C40 delivery
 robot and future Sakar software, built on top of Keenon's Peanut SDK
 (v1.3.0 distribution, compiled SDK version `1.5.0-bate1`).
 
+This module is the current concrete implementation of the generic **Sakar Robot Agent** role for the first product, **Sakar CleanBot 5000 Plus** — see [`docs/architecture/SAKAR_ROBOT_PLATFORM_NAMING_AND_MODEL_STRATEGY.md`](../../docs/architecture/SAKAR_ROBOT_PLATFORM_NAMING_AND_MODEL_STRATEGY.md).
+
 ## Purpose
 
 This app talks to the C40's onboard Peanut SDK and exposes a clean,

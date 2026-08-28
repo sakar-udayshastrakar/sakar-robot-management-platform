@@ -393,3 +393,56 @@ users, organizations, robots  →  referenced (nullable, non-owning) by audit_lo
 - Every FK from a tenant-scoped table up to `organizations` (directly or via `sites`/`robots`) must be enforced at the query layer as a mandatory filter, not merely available as a join — this is the technical backbone of `SAKAR_ROBOT_PLATFORM_REQUIREMENTS.md` §5.5.
 - High-volume append-only tables (`robot_telemetry`, `robot_events`, `command_results`, `task_events`) are strong candidates for time-based partitioning as the fleet scales; not required for MVP scale but the schema above does not preclude it later.
 - `payload`/`JSONB` columns are used deliberately wherever the SDK study graded the underlying data as `UNKNOWN`/schema-unconfirmed (e.g., most of the 65 SDK topics) — this avoids a rigid schema built on assumptions that later prove wrong, at the cost of needing application-level validation rather than DB-level constraints for those fields.
+
+---
+
+## Appendix: Multi-Vendor Normalization (`robot_manufacturers`, `robot_capabilities`, `robot_adapters`)
+
+**Status: documented future schema extension, not created.** No migration exists for any table in this appendix. `robot_models.vendor` (a plain `TEXT` column, §6) and `robot_models.capabilities` (a `JSONB` blob, §6) already satisfy the multi-vendor/capability-flag requirement for the current single-adapter (Keenon) integration. The three tables below are the normalized form to introduce **only when a second vendor or a second adapter implementation is actually onboarded** — introducing them speculatively now would be exactly the kind of premature abstraction this platform's requirements explicitly warn against (`SAKAR_ROBOT_PLATFORM_ARCHITECTURE.md` §2's anti-microservices rationale applies by the same logic here).
+
+```
+robots
+    ↓
+robot_models
+    ↓
+robot_manufacturers
+
+robots
+    ↓
+robot_capabilities
+
+robots
+    ↓
+robot_adapter
+```
+
+### A.1 `robot_manufacturers` (normalizes `robot_models.vendor`)
+| Field | Type | Notes |
+|---|---|---|
+| `id` | UUID, PK | |
+| `name` | TEXT, UNIQUE, NOT NULL | e.g. `Keenon`, `Sakar Robotics` |
+| `created_at`, `updated_at` | TIMESTAMPTZ | |
+
+`robot_models.manufacturer_id` (FK → `robot_manufacturers.id`) would replace the current free-text `robot_models.vendor` column once a second manufacturer is onboarded; until then, the free-text column is sufficient and should not be migrated preemptively.
+
+### A.2 `robot_capabilities` (normalizes `robot_models.capabilities`)
+| Field | Type | Notes |
+|---|---|---|
+| `id` | UUID, PK | |
+| `robot_model_id` | UUID, FK → `robot_models.id`, NOT NULL | |
+| `capability` | TEXT, NOT NULL | One of `TELEMETRY`, `CLEANING`, `NAVIGATION`, `CHARGING`, `MAP`, `TASK_MANAGEMENT`, `LOCK`, `UNLOCK` (`SAKAR_ROBOT_PLATFORM_MASTER_REQUIREMENTS.md` §6.A) |
+| `supported` | BOOLEAN, NOT NULL DEFAULT false | |
+| `created_at`, `updated_at` | TIMESTAMPTZ | |
+
+**Unique constraint:** `(robot_model_id, capability)`. A request for a capability not present here (or present with `supported = false`) must be rejected by the Robot Command Service with `UNSUPPORTED_CAPABILITY` before it ever reaches an adapter — this is the query-layer expression of the rule in `SAKAR_ROBOT_PLATFORM_ARCHITECTURE.md` §8. Until a second robot model exists, `robot_models.capabilities` (JSONB) remains the simpler, sufficient representation of the same information.
+
+### A.3 `robot_adapters` (records which adapter implementation serves a robot model)
+| Field | Type | Notes |
+|---|---|---|
+| `id` | UUID, PK | |
+| `robot_model_id` | UUID, FK → `robot_models.id`, NOT NULL, UNIQUE | One adapter implementation per model |
+| `adapter_type` | TEXT, NOT NULL | e.g. `keenon_cloud`, `keenon_local_sdk`, `sakar_native`, future third-party values |
+| `integration_path` | TEXT | `keenon_cloud_dependent` / `sakar_owned_local` — mirrors the distinction in `SAKAR_ROBOT_PLATFORM_ARCHITECTURE.md` §7 |
+| `created_at`, `updated_at` | TIMESTAMPTZ | |
+
+**Current data (documented, not yet inserted anywhere — no schema exists to insert into):** the Keenon C40 S / Sakar CleanBot 5000 Plus `robot_models` row would carry `adapter_type = keenon_cloud`, `integration_path = keenon_cloud_dependent`, per the live evidence in `SAKAR_ROBOT_PLATFORM_MASTER_REQUIREMENTS.md` Part 40. No column named `c40_battery`, `c40_status`, `c40_tasks`, or any other hardware-specific name is ever introduced anywhere in this schema — all robot-model-specific data is carried in `robot_models`/`robot_capabilities`/`robot_adapters` rows or in already-generic `robots`/`robot_status`/`robot_telemetry` columns (e.g. `robot_status.battery_percent`, §9, not `c40_battery`), by design.
