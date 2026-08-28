@@ -1,0 +1,112 @@
+package com.sakarrobotics.cloud.integration.keenon;
+
+import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestClient;
+
+import tools.jackson.databind.JsonNode;
+import com.sakarrobotics.cloud.common.error.ApiException;
+import com.sakarrobotics.cloud.common.error.SakarErrorCode;
+
+import lombok.RequiredArgsConstructor;
+
+// Built via RestClient.builder() directly (not an injected RestClient.Builder bean) —
+// no RestClient auto-configuration is on this project's classpath in this Spring Boot
+// version, and a hand-built client is sufficient for this simple, single-vendor use.
+
+/**
+ * Thin, read/control HTTP client for the exact Keenon Open Platform
+ * endpoints live-tested in Master Requirements Part 40 /
+ * {@code SAKAR_LIVE_API_VALIDATION_MATRIX.md}. Every response is returned
+ * as a raw {@link JsonNode} deliberately — the vendor's field-level schema
+ * beyond what was actually observed in that live test is graded
+ * {@code UNKNOWN} in the docs, and this client does not invent typed DTOs
+ * for fields nobody has confirmed. Only {@link KeenonRobotAdapter} calls
+ * this class; nothing in this class is ever called directly from a
+ * controller.
+ */
+@Component
+@RequiredArgsConstructor
+class KeenonApiClient {
+
+    private final KeenonProperties properties;
+    private final KeenonOAuthTokenService tokenService;
+
+    private RestClient client() {
+        return RestClient.builder().baseUrl(properties.getBaseUrl()).build();
+    }
+
+    private RestClient.RequestHeadersSpec<?> authorizedGet(String uri) {
+        return client().get().uri(uri).header("Authorization", "Bearer " + tokenService.currentAccessToken());
+    }
+
+    JsonNode getRobotStatus(String robotId) {
+        return get("/api/open/scene/v1/robot/status?robotId=" + encode(robotId));
+    }
+
+    JsonNode getBatteryLevel(String robotSn) {
+        return get("/api/open/custom/robot/battery/level?robotSn=" + encode(robotSn));
+    }
+
+    JsonNode getCleaningStatus(String robotSn) {
+        return get("/api/open/custom/clean/robot/status?robotSn=" + encode(robotSn));
+    }
+
+    JsonNode getAreaList(String storeId, String robotSn) {
+        return get("/api/open/custom/clean/robot/area/list?storeId=" + encode(storeId)
+                + "&robotSn=" + encode(robotSn) + "&currentPage=1&pageSize=100");
+    }
+
+    JsonNode getCleaningModes(String robotSn) {
+        return get("/api/open/custom/clean/robot/strategy/clean/model?robotSn=" + encode(robotSn));
+    }
+
+    JsonNode getBackPoints(String robotSn) {
+        return get("/api/open/custom/clean/robot/strategy/back/point?robotSn=" + encode(robotSn));
+    }
+
+    JsonNode getCleaningLogs(String storeId, String robotSn, int pageSize) {
+        return get("/api/open/custom/clean/log/list?storeId=" + encode(storeId)
+                + "&robotSn=" + encode(robotSn) + "&currentPage=1&pageSize=" + pageSize);
+    }
+
+    JsonNode postTemporaryTask(Object body) {
+        return post("/api/open/custom/clean/robot/strategy/temporary/task", body);
+    }
+
+    JsonNode postFinishTask(Object body) {
+        return post("/api/open/custom/clean/robot/finish/task", body);
+    }
+
+    JsonNode postPauseTask(Object body) {
+        return post("/api/open/custom/clean/robot/pause/task", body);
+    }
+
+    JsonNode postRechargeTask(Object body) {
+        return post("/api/open/custom/clean/robot/recharge/task", body);
+    }
+
+    private JsonNode get(String uri) {
+        try {
+            return authorizedGet(uri).retrieve().body(JsonNode.class);
+        } catch (Exception ex) {
+            throw new ApiException(SakarErrorCode.VENDOR_API_ERROR, "Keenon Open Platform request failed: " + uri, ex);
+        }
+    }
+
+    private JsonNode post(String uri, Object body) {
+        try {
+            return client().post().uri(uri)
+                    .header("Authorization", "Bearer " + tokenService.currentAccessToken())
+                    .contentType(org.springframework.http.MediaType.APPLICATION_JSON)
+                    .body(body)
+                    .retrieve()
+                    .body(JsonNode.class);
+        } catch (Exception ex) {
+            throw new ApiException(SakarErrorCode.VENDOR_API_ERROR, "Keenon Open Platform request failed: " + uri, ex);
+        }
+    }
+
+    private static String encode(String value) {
+        return java.net.URLEncoder.encode(value, java.nio.charset.StandardCharsets.UTF_8);
+    }
+}

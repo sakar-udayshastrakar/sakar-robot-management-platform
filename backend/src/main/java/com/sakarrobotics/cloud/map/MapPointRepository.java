@@ -1,0 +1,8 @@
+package com.sakarrobotics.cloud.map;
+
+import java.util.UUID;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface MapPointRepository extends JpaRepository<MapPoint, UUID> {
+}

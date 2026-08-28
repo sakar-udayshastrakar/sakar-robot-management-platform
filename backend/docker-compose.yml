@@ -1,0 +1,63 @@
+# Local development environment only (Master Requirements Part 8/16).
+# NOT a production deployment topology — production sits behind a WAF/
+# Nginx with the database/broker on a private network with no host port
+# exposure (see SAKAR_ROBOT_PLATFORM_ARCHITECTURE.md "Hardened deployment
+# view"). All credentials below are development-only defaults.
+
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: sakar_cloud
+      POSTGRES_USER: sakar
+      POSTGRES_PASSWORD: sakar
+    ports:
+      - "5432:5432"
+    volumes:
+      - sakar_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sakar -d sakar_cloud"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  mosquitto:
+    image: eclipse-mosquitto:2
+    ports:
+      - "1883:1883"
+    volumes:
+      - ./docker/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+
+  backend:
+    build: .
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      SAKAR_DB_URL: jdbc:postgresql://postgres:5432/sakar_cloud
+      SAKAR_DB_USERNAME: sakar
+      SAKAR_DB_PASSWORD: sakar
+      SAKAR_REDIS_HOST: redis
+      SAKAR_REDIS_PORT: "6379"
+      SAKAR_MQTT_ENABLED: "false"
+      SAKAR_KEENON_ENABLED: "false"
+      # Real values are supplied only via a deployment secret manager — never here.
+      SAKAR_JWT_SECRET: dev-only-do-not-use-in-any-real-environment-change-me
+      SAKAR_BOOTSTRAP_ADMIN: "true"
+
+volumes:
+  sakar_postgres_data:
