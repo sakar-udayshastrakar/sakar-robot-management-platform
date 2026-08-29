@@ -1,10 +1,38 @@
-// This module is a placeholder for the FUTURE Sakar Backend integration
-// surface (see architecture diagram in README.md). It intentionally
-// contains no networking code (no REST/MQTT/WebSocket) - see
-// api/README.md for details.
+// Phase 3 (Robot Communication / MQTT): this module now holds the actual
+// Sakar Backend integration surface - the MQTT client, envelope, and topic
+// classes under mqtt/. Deliberately stays plain java-library (not an
+// Android library): it depends only on Paho + Gson + :logging, none of
+// which need the Android SDK, so this module's tests run as plain JUnit
+// with no Android toolchain required. It still does not talk to the SDK
+// directly - see mqtt/TelemetrySnapshotProvider.java and api/README.md.
 apply plugin: 'java-library'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+dependencies {
+    // Same client/version the Sakar Cloud backend uses (backend/pom.xml) - one MQTT
+    // library across both ends of this link, not a coincidence.
+    implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5'
+    // 2.8.9, not sdk/build.gradle's 2.8.6 (Phase 3 Security Hardening): 2.8.6 carries
+    // CVE-2022-25647 (deserialization of untrusted data via writeReplace(), CVSS 7.7) - directly
+    // relevant here since this module deserializes network-received MQTT payloads. 2.8.9 is the
+    // fix, same 2.8.x line, no API break expected. Deliberately NOT bumped in sdk/build.gradle -
+    // that pin is tied to the vendor's own SampleApp/CoAP library compatibility, which the
+    // Peanut-SDK-untouched rule means leaving alone; Gradle's default "highest version wins"
+    // conflict resolution means :app ends up on 2.8.9 everywhere regardless.
+    implementation 'com.google.code.gson:gson:2.8.9'
+
+    implementation project(':logging')
+
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+    testImplementation 'org.mockito:mockito-core:5.11.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.11.0'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.10.2'
+}
+
+test {
+    useJUnitPlatform()
 }

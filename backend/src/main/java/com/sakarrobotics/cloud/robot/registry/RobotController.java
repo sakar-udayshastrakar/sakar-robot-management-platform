@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +22,7 @@ import com.sakarrobotics.cloud.robot.adapter.RobotAdapter;
 import com.sakarrobotics.cloud.robot.adapter.RobotAdapterRegistry;
 import com.sakarrobotics.cloud.robot.adapter.dto.RobotStatusSnapshot;
 import com.sakarrobotics.cloud.robot.registry.dto.RegisterRobotRequest;
+import com.sakarrobotics.cloud.robot.registry.dto.RobotMqttCredentialResponse;
 import com.sakarrobotics.cloud.robot.registry.dto.RobotResponse;
 import com.sakarrobotics.cloud.security.UserPrincipal;
 
@@ -44,6 +46,7 @@ public class RobotController {
     private final RobotModelRepository robotModelRepository;
     private final RobotCapabilityService robotCapabilityService;
     private final RobotAdapterRegistry robotAdapterRegistry;
+    private final RobotCredentialService robotCredentialService;
 
     @GetMapping
     @PreAuthorize("hasAuthority('ROBOT_VIEW')")
@@ -103,6 +106,26 @@ public class RobotController {
         robotCapabilityService.assertSupported(robot.getRobotModelId(), RobotCapabilityType.GET_STATUS);
         RobotAdapter adapter = adapterFor(robot);
         return ApiResponse.ok(adapter.getStatus(robot));
+    }
+
+    @PostMapping("/{id}/mqtt-credentials")
+    @PreAuthorize("hasAuthority('ROBOT_CONFIGURE')")
+    @Operation(summary = "Provision or rotate this robot's MQTT credential (Phase 3) — "
+            + "the raw secret is returned once here and never stored or retrievable in plaintext again")
+    public ApiResponse<RobotMqttCredentialResponse> provisionMqttCredentials(
+            @AuthenticationPrincipal UserPrincipal principal, @PathVariable UUID id) {
+        robotService.getAccessibleOrThrow(principal, id); // tenant check before issuing any credential
+        return ApiResponse.ok(robotCredentialService.provisionOrRotate(principal, id));
+    }
+
+    @DeleteMapping("/{id}/mqtt-credentials")
+    @PreAuthorize("hasAuthority('ROBOT_CONFIGURE')")
+    @Operation(summary = "Revoke this robot's MQTT credential (Phase 3 Security Hardening) — "
+            + "deletes the stored hash; see RobotCredentialService#revoke for what this does and does not enforce today")
+    public ApiResponse<Void> revokeMqttCredentials(@AuthenticationPrincipal UserPrincipal principal, @PathVariable UUID id) {
+        robotService.getAccessibleOrThrow(principal, id); // tenant check before revoking any credential
+        robotCredentialService.revoke(principal, id);
+        return ApiResponse.ok(null);
     }
 
     private RobotAdapter adapterFor(Robot robot) {

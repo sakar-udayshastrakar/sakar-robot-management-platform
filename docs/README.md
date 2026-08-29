@@ -12,6 +12,7 @@
 | `SAKAR_C40_AGENT_VALIDATION_REPORT.md` | Phase 0 validation report — assesses the existing `SakarC40Agent` codebase (current Sakar Robot Agent implementation) against the approved requirements. |
 | `SAKAR_KEENON_C40S_LIVE_API_TESTING_REFERENCE.pdf` | **New.** The supplied Postman/cURL live API testing reference against the real Keenon Open Platform (store `C00715655`, robot `94:BA:06:CA:99:F3`) — the source evidence for Master Requirements Part 40. |
 | `SAKAR_LIVE_API_VALIDATION_MATRIX.md` | **New.** Endpoint-by-endpoint breakdown (purpose/input/output/live test result/Sakar mapping/dependency/status/notes) of every API exercised in the live testing reference above. |
+| `SAKAR_PHASE_3_IMPLEMENTATION_REPORT.md` | **New (Phase 3).** Originated in this workspace, not a copy — what Phase 3 (Robot Communication / MQTT) actually built, test results, security review, and known limitations. |
 
 ## docs/security/
 
@@ -20,6 +21,7 @@
 | `SAKAR_SECURITY_REQUIREMENTS.md` | Standalone, self-contained security requirements specification (authentication/RBAC, robot command security, Android/agent security, network/MQTT/WebSocket security, data protection, secrets management, backup/DR, monitoring, security testing, security acceptance gates). |
 | `SAKAR_SECURITY_RISK_REGISTER.md` | The formal risk register (R01–R18) with severity, status, mitigation, and validation columns. |
 | `SAKAR_C40_AGENT_SECURITY_AUDIT.md` | Phase 0 security audit of the existing `SakarC40Agent` codebase against `SAKAR_SECURITY_REQUIREMENTS.md`. |
+| `SAKAR_PHASE_3_SECURITY_HARDENING_REPORT.md` | **New (Phase 3 Security Hardening).** Originated in this workspace — threat model, findings, fixes applied, and residual risks for the Phase 3 MQTT pipeline, checked against actual source code. |
 
 ## docs/architecture/
 
@@ -29,12 +31,14 @@
 | `SAKAR_ROBOT_PLATFORM_DATABASE.md` | Full field-level database schema companion (every table, type, key, index, retention note). |
 | `SAKAR_C40_AGENT_ARCHITECTURE.md` | Phase 0 architecture snapshot of the existing `SakarC40Agent` codebase (current state only). |
 | `SAKAR_ROBOT_PLATFORM_NAMING_AND_MODEL_STRATEGY.md` | Product/platform/agent naming strategy and the multi-robot-model roadmap (Sakar CleanBot 5000 Plus, Sakar Robot Agent, Robot Adapter concept). |
+| `SAKAR_MQTT_ARCHITECTURE.md` | **New (Phase 3).** Originated in this workspace, not a copy — the actual MQTT communication pipeline as implemented (topic scheme, envelope, identity/tenant verification, security DEV-vs-PROD-REQUIRED split, failure handling, reconnection). |
 
 ## docs/api/
 
 | File | Contents |
 |---|---|
 | `SAKAR_ROBOT_PLATFORM_API_SPEC.md` | REST API requirements companion (endpoint-by-endpoint request/response/error specification) and the Robot Agent API (Sakar Cloud ↔ Sakar Robot Agent message contract). |
+| `SAKAR_ROBOT_MQTT_PROTOCOL.md` | **New (Phase 3).** Originated in this workspace — the concrete wire-format realization of the API spec's transport-agnostic Robot Agent API §2, as actually implemented. |
 
 ## Specifications not yet extracted into standalone files
 

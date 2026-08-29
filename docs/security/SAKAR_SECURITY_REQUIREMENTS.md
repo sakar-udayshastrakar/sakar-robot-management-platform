@@ -297,17 +297,19 @@ Six categories are deliberately separated: Application Logs, Robot Events, Robot
 
 ## Section 10 — MQTT Security
 
+**Updated 2026-08-29 (Phase 3 Security Hardening) — see `SAKAR_PHASE_3_SECURITY_HARDENING_REPORT.md` for full evidence.** Per that report's own governing distinction: a row marked `DESIGN COMPLETE` below is **software-hardened and automated-test-verified only** — it has not been run against a live broker or a physical robot, and is not a claim of production readiness.
+
 | Control | Requirement | Status |
 |---|---|---|
-| TLS | All MQTT connections TLS-protected | `REQUIREMENT` |
-| Unique robot credentials | Each robot's agent authenticates with its own credential — no shared/global credential | `REQUIREMENT` |
-| Unique robot certificates (where feasible) | Client-certificate auth per robot is the preferred long-term posture | `REQUIREMENT` |
-| ACL | Per-client topic ACLs — a robot's credential can only publish/subscribe to its own topics | `REQUIREMENT` |
-| Topic isolation | Namespaced by organization, site, robot | `REQUIREMENT` |
-| Organization / robot isolation | No cross-org credential access; **Robot A must never receive Robot B's commands**, enforced by ACL matching the topic scheme | `REQUIREMENT` |
-| Credential rotation | Rotatable without a full agent redeploy | `REQUIREMENT` |
-| Connection limits | Per-credential connection caps | `REQUIREMENT` |
-| Message validation | Backend validates schema/sender before acting — broker delivery is not proof of validity | `REQUIREMENT` |
+| TLS | All MQTT connections TLS-protected | `DESIGN COMPLETE` — both backend and agent accept `ssl://` broker URLs with real (never trust-all) certificate validation, plus optional private-CA truststore config; `REQUIRES NETWORK TEST` to confirm against an actual TLS-terminating broker |
+| Unique robot credentials | Each robot's agent authenticates with its own credential — no shared/global credential | `DESIGN COMPLETE` (issuance/storage) / `REQUIREMENT` (broker enforcement) — `robot_credentials` now populated via `POST /api/v1/robots/{id}/mqtt-credentials`, BCrypt-hashed, one-time-returned; the dev broker does not yet check it at CONNECT time |
+| Unique robot certificates (where feasible) | Client-certificate auth per robot is the preferred long-term posture | `REQUIREMENT` — not attempted this phase (out of scope; username/password credential issued instead) |
+| ACL | Per-client topic ACLs — a robot's credential can only publish/subscribe to its own topics | `REQUIREMENT` — `REQUIRES BROKER CONFIGURATION`; the software-side equivalent (robot/tenant identity cross-check on every message, independent of the broker) is `DESIGN COMPLETE` |
+| Topic isolation | Namespaced by organization, site, robot | `DESIGN COMPLETE` — implemented exactly as specified (`MqttTopicResolver`/`AgentMqttTopics`), test-covered |
+| Organization / robot isolation | No cross-org credential access; **Robot A must never receive Robot B's commands**, enforced by ACL matching the topic scheme | `DESIGN COMPLETE` (software cross-check) / `REQUIREMENT` (broker ACL) — see R08 in the risk register for the exact split |
+| Credential rotation | Rotatable without a full agent redeploy | `DESIGN COMPLETE` — `POST` re-issues (rotates) and `DELETE` revokes, both audit-logged; revocation is not yet broker-enforced (see R08) |
+| Connection limits | Per-credential connection caps | `REQUIREMENT` — not implemented; would require broker-side configuration |
+| Message validation | Backend validates schema/sender before acting — broker delivery is not proof of validity | `DESIGN COMPLETE` — schema version, required fields, timestamp skew (both directions), sequence sanity, payload size cap, per-robot rate limit, all enforced server-side regardless of what the broker does or doesn't check |
 
 **Topic scheme:**
 ```

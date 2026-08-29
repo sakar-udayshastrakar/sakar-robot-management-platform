@@ -91,12 +91,29 @@ sakar:
       read-timeout-ms: 8000
 
   mqtt:
+    # Phase 3: when enabled, the backend actually connects, subscribes to every
+    # robot's presence/heartbeat/telemetry/events/errors topic, and ingests them
+    # (see MqttSubscriptionManager / MqttInboundMessageService). Still disabled
+    # by default — no broker connection is attempted in dev/test unless a
+    # deployment explicitly turns this on and a broker is actually reachable.
     enabled: ${SAKAR_MQTT_ENABLED:false}
     broker-url: ${SAKAR_MQTT_BROKER_URL:tcp://localhost:1883}
     client-id-prefix: sakar-cloud-
     username: ${SAKAR_MQTT_USERNAME:}
     password: ${SAKAR_MQTT_PASSWORD:}
     qos: 1
+    topic-prefix: ${SAKAR_MQTT_TOPIC_PREFIX:sakar}
+    schema-version: "1.0"
+    max-timestamp-skew-seconds: ${SAKAR_MQTT_MAX_TIMESTAMP_SKEW_SECONDS:300}
+    # Phase 3 Security Hardening.
+    max-payload-size-bytes: ${SAKAR_MQTT_MAX_PAYLOAD_SIZE_BYTES:65536}
+    rate-limit-max-messages: ${SAKAR_MQTT_RATE_LIMIT_MAX_MESSAGES:120}
+    rate-limit-window-seconds: ${SAKAR_MQTT_RATE_LIMIT_WINDOW_SECONDS:60}
+    # Only used when broker-url is "ssl://..." and a private/self-signed CA is in play - leave both
+    # blank to use the JVM's default (publicly-trusted CA) trust store, which is the secure default
+    # Paho already applies to any "ssl://" URL with no code changes required.
+    tls-trust-store-path: ${SAKAR_MQTT_TLS_TRUSTSTORE_PATH:}
+    tls-trust-store-password: ${SAKAR_MQTT_TLS_TRUSTSTORE_PASSWORD:}
 
 logging:
   level:

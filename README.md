@@ -4,24 +4,24 @@
 
 ## CURRENT PHASE
 
-**PHASE 1 — BACKEND FOUNDATION COMPLETE.**
+**PHASE 3 — ROBOT COMMUNICATION / MQTT IMPLEMENTED (uncommitted — pending review/approval).**
 
-The Sakar Cloud backend's Phase 1 foundation (Java 21 / Spring Boot 4, modular monolith) has been implemented, tested, and merged. This covers authentication, RBAC, organization/site hierarchy, the vendor-neutral robot registry and capability model, the Robot Adapter abstraction, a functional Keenon Cloud integration adapter, the full Part 13 database schema, audit logging, and OpenAPI documentation. It does **not** cover robot communication (MQTT/`SakarC40Agent`), command dispatch, task/cleaning orchestration, telemetry ingestion, alerting, analytics, or any physical robot validation — see **Implementation Status**, **Robot Integration Status**, and **Known Limitations** below before assuming otherwise.
+The first Sakar-owned, end-to-end robot data path now exists in the working tree: `SakarC40Agent` → MQTT → Sakar Cloud backend → PostgreSQL → WebSocket. This is **software-complete and automated-test-verified**, but has **not been committed**, and has **not been run against a real broker or a physical robot** — see `docs/architecture/SAKAR_MQTT_ARCHITECTURE.md` and `docs/requirements/SAKAR_PHASE_3_IMPLEMENTATION_REPORT.md` for the full, source-checked account. It does **not** cover command dispatch, remote lock/unlock, task/cleaning orchestration, alerting, analytics, web/mobile, or any physical robot validation — see **Implementation Status**, **Robot Integration Status**, and **Known Limitations** below before assuming otherwise.
 
 ## Project Status
 
 | Field | Value |
 |---|---|
-| Current phase | Phase 1 — Backend Foundation Complete |
-| Overall status | Backend foundation implemented and merged to `dev`; web, mobile, robot-agent integration, and physical validation not started |
+| Current phase | Phase 3 — Robot Communication / MQTT implemented (software), uncommitted |
+| Overall status | Backend + Agent MQTT pipeline implemented and test-verified in the working tree; not yet committed/merged; web, mobile, physical validation, and broker/robot live testing not started |
 | Last updated | 2026-08-29 |
-| Latest branch | `dev` (Phase 1 work developed on `backend/phase-1-foundation`, merged via PR #4) |
-| Latest commit | `5b4a3a0` — Merge pull request #4 from `sakar-udayshastrakar/backend/phase-1-foundation` (merges `50f6377` — "feat: implement phase 1 backend foundation") |
-| Test status | **32 / 32 automated backend tests passing** (`./mvnw clean test`) |
-| Build status | **Maven build and package successful** (`./mvnw clean test` and `./mvnw package` both verified against the current `dev` tree) |
-| Secrets scan | Clean — no client secrets, access tokens, passwords, API keys, or private keys found in source |
+| Latest branch | `dev` (working tree modified, not committed — see `git status`/`git diff` before trusting "current" claims) |
+| Latest commit | `5b4a3a0` — Merge pull request #4 from `sakar-udayshastrakar/backend/phase-1-foundation` (Phase 1; Phase 3 work sits on top, uncommitted) |
+| Test status | **71 / 71 automated backend tests passing** (`cd backend && ./mvnw clean test`) — 32 pre-existing + 27 Phase 3 + 12 Phase 3 Security Hardening. **18 / 18 automated Robot Agent (`:api` module) tests passing** (`cd robot/SakarC40Agent && ./gradlew :api:test`) |
+| Build status | Backend: **Maven build and package successful**. Robot Agent: **`./gradlew assembleDebug test` BUILD SUCCESSFUL** (debug APK assembles with the new `:api` module wired in) |
+| Secrets scan | Clean — no client secrets, access tokens, passwords, API keys, or private keys found in source; new `secrets.properties.example` keys (Phase 3) are blank placeholders only |
 
-This table reflects the actual repository state as of the commands above being run against `dev`, not a copy-forward of an earlier report — re-run `git branch --show-current`, `git log -1 --oneline`, and `./mvnw clean test` before trusting it if time has passed.
+This table reflects the actual repository state as of the commands above being run, not a copy-forward of an earlier report — re-run `git branch --show-current`, `git status --short`, `./mvnw clean test`, and `./gradlew :api:test` before trusting it if time has passed.
 
 ## Project Purpose
 
@@ -29,20 +29,21 @@ Sakar Robotics is building a platform so that Sakar — not the robot vendor (Ke
 
 ## Robot Integration Status
 
-**Current (implemented and tested):**
+**Path 1 — current, live-tested, Keenon-dependent:**
 ```
 Sakar Backend  →  Keenon Robot Adapter  →  Keenon Cloud (https://cloud.robotkeenon.com)  →  Robot
 ```
 The `KeenonRobotAdapter` (`backend/src/main/java/com/sakarrobotics/cloud/integration/keenon/`) implements the live-tested read/control operations (status, battery, telemetry, areas, temporary task, pause, recharge) against Keenon's Open Platform, gated by the robot capability model so unsupported operations return `UNSUPPORTED_CAPABILITY` rather than being attempted. This path is **KEENON-CLOUD DEPENDENT** by design and is explicitly not the target architecture — see Master Requirements Part 10/40.
 
-**Target (not yet implemented):**
+**Path 2 — target architecture, MQTT telemetry now implemented in software (Phase 3):**
 ```
-Web / Mobile  →  Sakar Cloud  →  MQTT  →  SakarC40Agent  →  Peanut SDK  →  Robot
+SakarC40Agent  →  MQTT  →  Sakar Cloud  →  PostgreSQL  →  WebSocket
 ```
-- `SakarC40Agent` integration: **NOT IMPLEMENTED.** The `SakarRobotAdapter` exists as a stub only — every method throws `FEATURE_NOT_YET_IMPLEMENTED`. No MQTT telemetry, command, or heartbeat channel to the agent exists yet.
+Presence/heartbeat/telemetry/events/errors flow agent → cloud → database over MQTT, with idempotent ingestion, robot/tenant identity verification, and real-time WebSocket publish — see `docs/architecture/SAKAR_MQTT_ARCHITECTURE.md`. **This is a software pipeline verified by automated tests only — no MQTT broker or physical robot was run against it in this session.** The `SakarRobotAdapter` (REST/adapter-based control path, distinct from this MQTT telemetry path) is still a stub — every method throws `FEATURE_NOT_YET_IMPLEMENTED`; command dispatch and lock/unlock are not implemented on either path.
+
 - Physical C40 validation: **NOT PERFORMED.** No physical robot has been connected to, or controlled by, any code in this repository.
-- Remote lock/unlock: **NOT PHYSICALLY CERTIFIED.** Software scaffolding only (permission model, `robot_locks` schema) — the ten physical validation conditions in Master Requirements Part 11/38 have not been run. Do not represent lock/unlock as production-ready anywhere derived from this README.
-- Keenon Cloud independence: **NOT ACHIEVED.** The current integration requires Keenon Cloud; the core control loop does not yet function without it.
+- Remote lock/unlock: **NOT PHYSICALLY CERTIFIED, NOT IMPLEMENTED IN SOFTWARE EITHER.** No lock/unlock code exists in the backend, MQTT layer, or agent — the ten physical validation conditions in Master Requirements Part 11/38 remain entirely unaddressed. Do not represent lock/unlock as production-ready anywhere derived from this README.
+- Keenon Cloud independence: **NOT ACHIEVED.** Path 1 still requires Keenon Cloud. Path 2 removes that dependency for telemetry, but has not been proven against a real robot.
 
 ## Project Structure
 
@@ -72,7 +73,7 @@ sakar robotics web/
 | Sakar Cloud (backend) | `backend/` | **Phase 1 foundation implemented** — see Implementation Status |
 | Web application | `web/` | Not yet implemented |
 | Mobile application | `mobile/` | Not yet implemented |
-| Robot Android tablet agent — Sakar Robot Agent (currently `SakarC40Agent`) | `robot/SakarC40Agent/` | Existing project, unmodified; not yet extended with telemetry-forwarding/command-reception, and not yet integrated with the Phase 1 backend |
+| Robot Android tablet agent — Sakar Robot Agent (currently `SakarC40Agent`) | `robot/SakarC40Agent/` | Existing diagnostic app **now extended (Phase 3) with an MQTT telemetry/heartbeat link to the Sakar Cloud backend** (`api/` module); command-reception is still not implemented; not yet run against a real broker or physical robot |
 
 **Core architecture rule:** the web and mobile applications communicate with Sakar Cloud only. Neither ever connects to a robot directly. The backend enforces this today for every implemented endpoint (Part 16); it cannot yet be exercised end-to-end because no web/mobile client or robot-agent connection exists yet.
 
@@ -96,35 +97,38 @@ Backend module status as implemented in `backend/src/main/java/com/sakarrobotics
 | Redis | ✅ Complete (foundation) | Login rate limiting and Keenon OAuth token caching implemented; not yet used for caching/pub-sub beyond that |
 | Audit | ✅ Complete (foundation) | `audit/` — append-only `audit_logs`, recorded on login/logout; DB-role-level tamper hardening (`REVOKE UPDATE/DELETE`) not yet applied |
 | OpenAPI / Swagger | ✅ Complete | `config/OpenApiConfig.java`, served at `/swagger-ui.html` |
-| WebSocket Foundation | ✅ Complete (foundation) | `websocket/` — STOMP auth on CONNECT, org-scoped SUBSCRIBE authorization; no controller publishes real events yet (no telemetry/task pipeline to publish from) |
+| WebSocket Foundation | ✅ Complete (now publishing) | `websocket/` — STOMP auth on CONNECT, org-scoped SUBSCRIBE authorization, **plus (Phase 3) `RobotRealtimePublisher` actually publishing status/telemetry updates** |
 | Docker (dev environment) | ✅ Complete | `backend/docker-compose.yml` — Postgres, Redis, Mosquitto, backend; **not** a production topology |
-| MQTT (robot communication) | 🔄 In Progress (connection scaffold only) | `mqtt/` — client lifecycle + config exist, disabled by default; no telemetry/command traffic implemented |
-| Telemetry ingestion | ⏳ Planned | `telemetry/` entities/repositories exist; no ingestion pipeline |
-| SRELS (events/errors/app logs) | ⏳ Planned | `srels/` entities/repositories exist; nothing writes to them yet |
-| Command signing/dispatch | ⏳ Planned | `command/` entities + lifecycle enum exist; no signing, no MQTT dispatch |
-| Robot lock/unlock (software) | ⏳ Planned | `lock/` schema only; no endpoint exists to trigger it |
+| MQTT (robot communication) | ✅ Complete (software, Phase 3) | `mqtt/` — full subscribe/ingest/ack pipeline (`MqttSubscriptionManager`, `MqttInboundListener`, `MqttInboundMessageService`); disabled by default (`SAKAR_MQTT_ENABLED`); **not run against a real broker or physical robot in this session** — broker-side auth/ACL/TLS remain a production requirement, see `docs/architecture/SAKAR_MQTT_ARCHITECTURE.md` §7 |
+| Telemetry ingestion | ✅ Complete (software, Phase 3) | `telemetry/TelemetryIngestionService`/`HeartbeatService`/`RobotStatusService` — `robot_telemetry`/`robot_status` now have a real write path, driven by inbound MQTT |
+| SRELS (events/errors/app logs) | 🔄 Partially Implemented (Phase 3) | `RobotEventIngestionService`/`RobotErrorIngestionService` write `robot_events`/`robot_errors` from MQTT; `application_logs` now receives MQTT lifecycle/ingestion events (`MqttLifecycleLogger`); no other module writes SRELS yet |
+| Command signing/dispatch | ⏳ Planned | `command/` entities + lifecycle enum exist; no signing, no MQTT dispatch — explicitly out of Phase 3 scope |
+| Robot lock/unlock (software) | ⏳ Planned | `lock/` schema only; no endpoint exists to trigger it — explicitly excluded from Phase 3 |
 | Task / cleaning orchestration | ⏳ Planned | `task/`, `cleaning/` entities exist; no orchestration logic |
 | Alerting | ⏳ Planned | `alert/` entity/repository only |
 | Analytics | ⏳ Planned | No code exists yet |
-| SakarC40Agent integration | ⏳ Planned | Not started — see Robot Integration Status |
+| SakarC40Agent integration | 🔄 Partially Implemented (Phase 3) | MQTT telemetry/heartbeat/events/errors link now exists (`:api` module) and is wired into `SakarC40Application`; not yet run against a real broker or physical robot — see Robot Integration Status |
+| Robot MQTT credential issuance | ✅ Complete (Phase 3) | `RobotCredentialService`, `POST /api/v1/robots/{id}/mqtt-credentials` — `robot_credentials` now populated; broker does not yet enforce it |
 | Physical C40 validation | ⚠️ Requires Physical Test | Not performed; gated by Master Requirements Part 38 |
-| Remote lock/unlock certification | ⚠️ Requires Physical Test | Not performed; gated by Master Requirements Part 11/38 |
+| Remote lock/unlock certification | ⚠️ Requires Physical Test | Not performed; not even software-implemented yet; gated by Master Requirements Part 11/38 |
 
 ## Database Status
 
-The PostgreSQL + Flyway foundation is implemented: 10 migrations (`backend/src/main/resources/db/migration/V1__core_and_iam.sql` through `V10__seed_reference_data.sql`) create the full schema and seed the RBAC matrix plus Keenon C40 S / Sakar CleanBot 5000 Plus reference data. Current tables:
+The PostgreSQL + Flyway foundation is implemented: 11 migrations (`backend/src/main/resources/db/migration/V1__core_and_iam.sql` through `V11__mqtt_inbound_messages.sql`) create the full schema and seed the RBAC matrix plus Keenon C40 S / Sakar CleanBot 5000 Plus reference data. Current tables:
 
-`organizations`, `sites`, `roles`, `permissions`, `role_permissions`, `users`, `refresh_tokens`, `robot_manufacturers`, `robot_models`, `robot_capabilities`, `robots`, `robot_credentials`, `robot_status`, `robot_telemetry`, `robot_events`, `robot_errors`, `robot_alerts`, `application_logs`, `robot_commands`, `command_results`, `robot_locks`, `robot_tasks`, `task_events`, `cleaning_sessions`, `charging_sessions`, `maps`, `map_points`, `notifications`, `audit_logs`, `keenon_area_mappings`, `vendor_webhook_events`.
+`organizations`, `sites`, `roles`, `permissions`, `role_permissions`, `users`, `refresh_tokens`, `robot_manufacturers`, `robot_models`, `robot_capabilities`, `robots`, `robot_credentials`, `robot_status`, `robot_telemetry`, `robot_events`, `robot_errors`, `robot_alerts`, `application_logs`, `robot_commands`, `command_results`, `robot_locks`, `robot_tasks`, `task_events`, `cleaning_sessions`, `charging_sessions`, `maps`, `map_points`, `notifications`, `audit_logs`, `keenon_area_mappings`, `vendor_webhook_events`, `mqtt_inbound_messages`.
 
-**Schema existing does not mean the corresponding workflow is complete.** Tables such as `robot_telemetry`, `robot_events`, `robot_commands`, `robot_tasks`, `cleaning_sessions`, and `robot_locks` have no application code populating them yet — see Implementation Status above for which modules are foundation-only.
+**Schema existing does not mean the corresponding workflow is complete.** As of Phase 3, `robot_status`, `robot_telemetry`, `robot_events`, `robot_errors`, `robot_credentials`, and `mqtt_inbound_messages` now have real application code populating them (via the MQTT ingestion pipeline). `robot_commands`, `robot_tasks`, `cleaning_sessions`, and `robot_locks` still have no application code populating them — see Implementation Status above for which modules remain foundation-only.
 
 ## Testing Status
 
-**32 / 32 automated backend tests passing** (`cd backend && ./mvnw clean test`). Coverage includes: login/lockout/rate-limiting, refresh-token rotation and reuse detection, RBAC enforcement, tenant isolation (IDOR/BOLA — cross-org robot access returns `404`, not `403`), privilege-escalation boundaries on organization creation, organization-hierarchy path logic, robot capability gating, Keenon adapter response mapping (including the `610000`-accepted-vs-rejected distinction), webhook idempotency, audit-log writes, and JWT expiry/tamper handling.
+**71 / 71 automated backend tests passing** (`cd backend && ./mvnw clean test`) — 32 pre-existing (unmodified) + 27 Phase 3 + 12 Phase 3 Security Hardening. Coverage includes everything Phase 1 already covered (login/lockout/rate-limiting, refresh-token rotation and reuse detection, RBAC enforcement, tenant isolation, organization-hierarchy logic, robot capability gating, Keenon adapter response mapping, webhook idempotency, audit-log writes, JWT expiry/tamper handling); Phase 3: MQTT topic build/parse, full ingestion-pipeline acceptance/rejection paths, heartbeat/telemetry/event/error/presence ingestion, ACK generation, robot MQTT credential provisioning/rotation; Security Hardening: negative-sequence/oversized-payload/rate-limit rejection, credential revocation and audit-trail verification (including that the raw secret never appears in any log), and a new WebSocket tenant-isolation unit-test suite. See `docs/security/SAKAR_PHASE_3_SECURITY_HARDENING_REPORT.md` for the full finding-by-finding account.
 
-Build/package: `./mvnw clean test` and `./mvnw package -DskipTests` both succeed against the current `dev` tree, producing `backend/target/sakar-cloud-backend-0.0.1-SNAPSHOT.jar`.
+**18 / 18 automated Robot Agent tests passing** (`cd robot/SakarC40Agent && ./gradlew :api:test`) — topic building, Gson↔Jackson wire-format compatibility, the bounded offline queue, safe no-broker behavior, both schedulers, and (Security Hardening) TLS (`ssl://`) configuration safety. `./gradlew assembleDebug test` (whole agent project) also succeeds.
 
-No coverage percentage is reported here because none has been measured (no coverage tool is wired into the build) — do not infer one.
+Build/package: `./mvnw clean test` and `./mvnw package -DskipTests` both succeed, producing `backend/target/sakar-cloud-backend-0.0.1-SNAPSHOT.jar`.
+
+No coverage percentage is reported here because none has been measured (no coverage tool is wired into the build) — do not infer one. **None of the above tests exercise a running MQTT broker or a physical robot** — see `docs/requirements/SAKAR_PHASE_3_IMPLEMENTATION_REPORT.md` §9 "Known Limitations".
 
 ## Security Status
 
@@ -141,14 +145,21 @@ Implemented and verified by the test suite above:
 | Audit foundation | ✅ Complete (foundation) — append-only writes; DB-role `REVOKE UPDATE/DELETE` hardening not applied |
 | Login rate limiting | ✅ Complete (Redis-backed) |
 | Account lockout | ✅ Complete |
-| Secret protection | ✅ Complete for what exists — Keenon credentials env-var-only, never in source; secrets-manager integration for production deployment not yet built |
-| WebSocket authorization | ✅ Complete (foundation) — CONNECT auth + org-scoped SUBSCRIBE; no real event traffic to further validate against yet |
+| Secret protection | ✅ Complete for what exists — Keenon credentials and (Phase 3) MQTT credentials env-var/git-ignored-file-only, never in source; secrets-manager integration for production deployment not yet built |
+| WebSocket authorization | ✅ Complete, now with real traffic — CONNECT auth + org-scoped SUBSCRIBE (unchanged); `RobotRealtimePublisher` (Phase 3) is the first real event traffic exercising it |
+| MQTT robot identity + tenant verification (software) | ✅ Complete (Phase 3) — `MqttInboundMessageService` cross-checks robot/org/site against the registered `Robot` row independent of transport-level auth |
+| MQTT broker-side authentication/ACL/TLS | ❌ Not implemented — dev broker allows anonymous, plaintext connections; **production requirement**, see `docs/architecture/SAKAR_MQTT_ARCHITECTURE.md` §7 |
+| MQTT client-side TLS configuration | ✅ Complete (Security Hardening) — `ssl://` supported end-to-end with real CA validation, optional private-CA truststore; never run against a live TLS broker |
+| MQTT message idempotency/replay handling | ✅ Complete (Phase 3) — `mqtt_inbound_messages` unique constraint |
+| MQTT payload size limit + per-robot rate limiting | ✅ Complete (Security Hardening) — 64 KiB cap enforced before parsing; Redis-backed 120 msg/60s per-robot limit |
+| Robot MQTT credential revocation + audit logging | ✅ Complete (Security Hardening) — `DELETE /api/v1/robots/{id}/mqtt-credentials`; provision/rotate/revoke all audit-logged, secret never logged |
+| WebSocket tenant-isolation test coverage | ✅ Complete (Security Hardening) — previously untested; new unit-test suite covers cross-org/own-org/unrecognized-destination/user-queue cases |
 
-Explicitly incomplete: command signing/replay protection (no commands are dispatched yet), Android/agent-side security (Part 21 — `SakarC40Agent` untouched), MQTT broker security (TLS, per-robot credentials, topic ACLs — scaffold only, not enforced against a real broker), DB-role-level audit tamper hardening, and every physical-robot-dependent control in Part 11/38.
+Explicitly incomplete: command signing/replay protection (no commands are dispatched yet), message signing independent of TLS (documented, not implemented — see the hardening report §3.5), Android/agent-side security beyond MQTT credential wiring (Part 21 — kiosk/device-owner mode, Keystore-backed credential storage, secure updates — all still untouched/undone, see hardening report §9), MQTT broker security (TLS termination, per-robot credential enforcement, topic ACLs — client-side wiring exists, not enforced against a real broker), DB-role-level audit tamper hardening, and every physical-robot-dependent control in Part 11/38.
 
 ## Security
 
-`docs/security/SAKAR_SECURITY_REQUIREMENTS.md` remains the authoritative control specification. The table above documents what Phase 1 actually implements against it — this repository is no longer purely "specified, not implemented" for the backend, but most of Parts 16–29 still describe target state beyond what Phase 1 covers (network/MQTT/WebSocket hardening against a real deployment, Android/agent security, backup/DR, monitoring, security testing). The platform's highest-risk feature — remote motor lock/unlock — remains **not production-ready**; the software scaffolding described above changes nothing about the physical validation requirement (Part 11/38).
+`docs/security/SAKAR_SECURITY_REQUIREMENTS.md` remains the authoritative control specification. The table above documents what Phase 1 + Phase 3 actually implement against it — this repository is no longer purely "specified, not implemented" for the backend or the agent's communication layer, but most of Parts 16–29 still describe target state beyond what's implemented (MQTT broker hardening against a real deployment, Android/agent security beyond credential wiring, backup/DR, monitoring, security testing). The platform's highest-risk feature — remote motor lock/unlock — remains **not production-ready and not software-implemented at all**; Phase 3 changes nothing about the physical validation requirement (Part 11/38) and deliberately does not touch lock/unlock.
 
 ## Documentation
 
@@ -160,9 +171,9 @@ The Keenon **Peanut SDK** (`peanut-sdk-v1.3.0`, including the vendor's sample ap
 
 ## Roadmap
 
-**Next development step: Story 3 — Implement SakarC40Agent Communication Layer.**
+**Completed this pass: Story 3 — Implement SakarC40Agent Communication Layer (software).** The MQTT-based telemetry channel between Sakar Cloud and `SakarC40Agent` now exists and is automated-test-verified, with `robot_status`/`robot_telemetry`/`robot_events`/`robot_errors` ingestion wired. **Not yet done as part of this story:** replacing the `SakarRobotAdapter` stub with a working local-path *command* adapter (this phase implemented the telemetry/heartbeat direction only, not command dispatch), and any physical/network validation.
 
-This means building the MQTT-based telemetry/command channel between Sakar Cloud and `SakarC40Agent` (Master Requirements roadmap Phase 2), replacing the `SakarRobotAdapter` stub with a working local-path adapter, and wiring `robot_status`/`robot_telemetry` ingestion. Command signing/dispatch, task/cleaning orchestration, alerting, and analytics follow per the master roadmap; physical C40 validation and remote lock/unlock certification remain separately gated (Part 38) and are not unblocked by this story.
+**Next development step: Phase 0 physical validation (Master Requirements Part 38) + a live network test of this MQTT pipeline** — running the agent against a real Mosquitto broker and, separately, a physical C40, since neither was done in this pass by explicit instruction. Command signing/dispatch, remote lock/unlock, task/cleaning orchestration, alerting, and analytics remain gated behind that validation and are not unblocked by Phase 3.
 
 ## Team Ownership
 
@@ -201,4 +212,4 @@ This means building the MQTT-based telemetry/command channel between Sakar Cloud
 
 ---
 
-**Current authorized scope:** backend Phase 1 is complete; the next authorized step is Story 3 (`SakarC40Agent` communication layer / MQTT), per the roadmap above. Physical C40 connection, physical robot control, and remote lock/unlock certification remain out of scope until the separate physical-validation go-ahead described in Master Requirements Part 33/38 is given.
+**Current authorized scope:** backend Phase 1 is complete; Story 3 (`SakarC40Agent` MQTT communication layer) is now implemented in software and test-verified, per the roadmap above, but **uncommitted** — pending review/approval before any commit or push. Physical C40 connection, physical robot control, and remote lock/unlock certification remain out of scope until the separate physical-validation go-ahead described in Master Requirements Part 33/38 is given.
