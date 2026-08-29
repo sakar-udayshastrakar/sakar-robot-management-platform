@@ -13,6 +13,8 @@
 | `SAKAR_KEENON_C40S_LIVE_API_TESTING_REFERENCE.pdf` | **New.** The supplied Postman/cURL live API testing reference against the real Keenon Open Platform (store `C00715655`, robot `94:BA:06:CA:99:F3`) — the source evidence for Master Requirements Part 40. |
 | `SAKAR_LIVE_API_VALIDATION_MATRIX.md` | **New.** Endpoint-by-endpoint breakdown (purpose/input/output/live test result/Sakar mapping/dependency/status/notes) of every API exercised in the live testing reference above. |
 | `SAKAR_PHASE_3_IMPLEMENTATION_REPORT.md` | **New (Phase 3).** Originated in this workspace, not a copy — what Phase 3 (Robot Communication / MQTT) actually built, test results, security review, and known limitations. |
+| `SAKAR_PHASE_3_LIVE_MQTT_VALIDATION_REPORT.md` | **New (Phase 3 live validation).** Validates the Phase 3 MQTT pipeline against a real (locally-hosted) MQTT broker, using a test agent — not a physical robot. |
+| `SAKAR_PHASE_4_WEB_IMPLEMENTATION_REPORT.md` | **New (Phase 4).** Originated in this workspace — what the Web Application actually implements, the real-vs-simulated feature breakdown, and live browser verification against a real backend instance. |
 
 ## docs/security/
 
@@ -32,6 +34,7 @@
 | `SAKAR_C40_AGENT_ARCHITECTURE.md` | Phase 0 architecture snapshot of the existing `SakarC40Agent` codebase (current state only). |
 | `SAKAR_ROBOT_PLATFORM_NAMING_AND_MODEL_STRATEGY.md` | Product/platform/agent naming strategy and the multi-robot-model roadmap (Sakar CleanBot 5000 Plus, Sakar Robot Agent, Robot Adapter concept). |
 | `SAKAR_MQTT_ARCHITECTURE.md` | **New (Phase 3).** Originated in this workspace, not a copy — the actual MQTT communication pipeline as implemented (topic scheme, envelope, identity/tenant verification, security DEV-vs-PROD-REQUIRED split, failure handling, reconnection). |
+| `SAKAR_WEB_APPLICATION_ARCHITECTURE.md` | **New (Phase 4).** Originated in this workspace — the Web Application's stack, directory layout, real-vs-simulated data flow, auth/RBAC, and WebSocket usage, as implemented. |
 
 ## docs/api/
 

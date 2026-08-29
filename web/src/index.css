@@ -1,0 +1,127 @@
+:root {
+  color-scheme: light;
+
+  /* Sakar Robotics platform theme — original palette, not derived from any
+     vendor's branding. Deep slate + teal accent, built for a dense
+     operations/admin surface (fleet monitoring), not a marketing site. */
+  --sakar-bg: #f4f6f8;
+  --sakar-surface: #ffffff;
+  --sakar-surface-raised: #ffffff;
+  --sakar-border: #e2e8f0;
+  --sakar-text: #101828;
+  --sakar-text-muted: #475467;
+  --sakar-text-subtle: #667085;
+
+  --sakar-primary: #0f766e;
+  --sakar-primary-hover: #0d5f59;
+  --sakar-primary-soft: #ecfdf9;
+  --sakar-accent: #1d2b4f;
+
+  --sakar-success: #12b76a;
+  --sakar-success-soft: #ecfdf3;
+  --sakar-warning: #f79009;
+  --sakar-warning-soft: #fffaeb;
+  --sakar-danger: #f04438;
+  --sakar-danger-soft: #fef3f2;
+  --sakar-info: #2e90fa;
+  --sakar-info-soft: #eff8ff;
+  --sakar-neutral: #667085;
+  --sakar-neutral-soft: #f2f4f7;
+
+  --sakar-sidebar-bg: #101828;
+  --sakar-sidebar-text: #cbd5e1;
+  --sakar-sidebar-text-active: #ffffff;
+  --sakar-sidebar-active-bg: #1d2b4f;
+
+  --sakar-shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.06);
+  --sakar-shadow-md: 0 4px 12px rgba(16, 24, 40, 0.08);
+
+  --sakar-radius-sm: 6px;
+  --sakar-radius-md: 10px;
+  --sakar-radius-lg: 14px;
+
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --sakar-bg: #0b0f19;
+    --sakar-surface: #111827;
+    --sakar-surface-raised: #161f2e;
+    --sakar-border: #1f2937;
+    --sakar-text: #f2f4f7;
+    --sakar-text-muted: #98a2b3;
+    --sakar-text-subtle: #667085;
+
+    --sakar-primary: #2dd4bf;
+    --sakar-primary-hover: #5eead4;
+    --sakar-primary-soft: #0f2e2b;
+    --sakar-accent: #3b4a75;
+
+    --sakar-success-soft: #08321f;
+    --sakar-warning-soft: #3a2708;
+    --sakar-danger-soft: #3b1412;
+    --sakar-info-soft: #0c2440;
+    --sakar-neutral-soft: #1c2431;
+
+    --sakar-sidebar-bg: #05070c;
+    --sakar-sidebar-active-bg: #182238;
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --sakar-bg: #0b0f19;
+  --sakar-surface: #111827;
+  --sakar-surface-raised: #161f2e;
+  --sakar-border: #1f2937;
+  --sakar-text: #f2f4f7;
+  --sakar-text-muted: #98a2b3;
+  --sakar-text-subtle: #667085;
+
+  --sakar-primary: #2dd4bf;
+  --sakar-primary-hover: #5eead4;
+  --sakar-primary-soft: #0f2e2b;
+  --sakar-accent: #3b4a75;
+
+  --sakar-success-soft: #08321f;
+  --sakar-warning-soft: #3a2708;
+  --sakar-danger-soft: #3b1412;
+  --sakar-info-soft: #0c2440;
+  --sakar-neutral-soft: #1c2431;
+
+  --sakar-sidebar-bg: #05070c;
+  --sakar-sidebar-active-bg: #182238;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--sakar-bg);
+  color: var(--sakar-text);
+}
+
+a {
+  color: var(--sakar-primary);
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+.sakar-scroll-x {
+  overflow-x: auto;
+}

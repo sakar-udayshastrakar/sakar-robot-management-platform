@@ -1,0 +1,49 @@
+.sakar-timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+.sakar-timeline-item {
+  display: flex;
+  gap: 12px;
+  padding-bottom: 16px;
+  position: relative;
+}
+
+.sakar-timeline-item:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 14px;
+  bottom: -2px;
+  width: 1px;
+  background: var(--sakar-border);
+}
+
+.sakar-timeline-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+
+.sakar-timeline-meta {
+  display: flex;
+  gap: 8px;
+  font-size: 11.5px;
+  color: var(--sakar-text-subtle);
+  margin-bottom: 2px;
+}
+
+.sakar-timeline-source {
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.sakar-timeline-message {
+  font-size: 13.5px;
+}

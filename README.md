@@ -4,17 +4,19 @@
 
 ## CURRENT PHASE
 
-**PHASE 3 — ROBOT COMMUNICATION / MQTT IMPLEMENTED (uncommitted — pending review/approval).**
+**PHASE 4 — WEB APPLICATION IMPLEMENTED (uncommitted — pending review/approval).**
 
-The first Sakar-owned, end-to-end robot data path now exists in the working tree: `SakarC40Agent` → MQTT → Sakar Cloud backend → PostgreSQL → WebSocket. This is **software-complete and automated-test-verified**, but has **not been committed**, and has **not been run against a real broker or a physical robot** — see `docs/architecture/SAKAR_MQTT_ARCHITECTURE.md` and `docs/requirements/SAKAR_PHASE_3_IMPLEMENTATION_REPORT.md` for the full, source-checked account. It does **not** cover command dispatch, remote lock/unlock, task/cleaning orchestration, alerting, analytics, web/mobile, or any physical robot validation — see **Implementation Status**, **Robot Integration Status**, and **Known Limitations** below before assuming otherwise.
+The Sakar Web Application (`web/`, React + TypeScript) now exists and talks to the real Sakar Cloud Backend for every feature the backend actually supports: authentication, organizations, sites, robots (registry, activate/deactivate, live status probe, MQTT credential provisioning), and audit logs. Telemetry, events, errors, alerts, tasks, application logs, users, and roles have no backend REST endpoint yet (their tables/entities exist, but nothing exposes them over REST) — those pages render clearly-labeled simulated data instead of fabricating a real feed. See `docs/architecture/SAKAR_WEB_APPLICATION_ARCHITECTURE.md` and `docs/requirements/SAKAR_PHASE_4_WEB_IMPLEMENTATION_REPORT.md` for the full account, including live browser verification against a real running instance of the backend.
+
+Separately, Phase 3's own MQTT pipeline was validated against a real (locally-hosted) MQTT broker after this README was last written — see `docs/requirements/SAKAR_PHASE_3_LIVE_MQTT_VALIDATION_REPORT.md`: MQTT connection/auth/TLS/ACL, heartbeat, telemetry, dedup, replay, cross-tenant isolation, rate limiting, and reconnect all passed against a real broker with the real, unmodified backend and agent code — still **using a test agent, not a physical CleanBot**, and still uncommitted.
 
 ## Project Status
 
 | Field | Value |
 |---|---|
-| Current phase | Phase 3 — Robot Communication / MQTT implemented (software), uncommitted |
-| Overall status | Backend + Agent MQTT pipeline implemented and test-verified in the working tree; not yet committed/merged; web, mobile, physical validation, and broker/robot live testing not started |
-| Last updated | 2026-08-29 |
+| Current phase | Phase 4 — Web Application implemented (against the real backend), uncommitted |
+| Overall status | Backend + Agent MQTT pipeline implemented, live-broker-validated, and test-verified; Web Application implemented against real backend endpoints (simulated data only where no endpoint exists); not yet committed/merged; mobile and physical robot validation not started |
+| Last updated | 2026-08-30 |
 | Latest branch | `dev` (working tree modified, not committed — see `git status`/`git diff` before trusting "current" claims) |
 | Latest commit | `5b4a3a0` — Merge pull request #4 from `sakar-udayshastrakar/backend/phase-1-foundation` (Phase 1; Phase 3 work sits on top, uncommitted) |
 | Test status | **71 / 71 automated backend tests passing** (`cd backend && ./mvnw clean test`) — 32 pre-existing + 27 Phase 3 + 12 Phase 3 Security Hardening. **18 / 18 automated Robot Agent (`:api` module) tests passing** (`cd robot/SakarC40Agent && ./gradlew :api:test`) |
@@ -54,8 +56,8 @@ sakar robotics web/
 │   ├── security/             Standalone security requirements + risk register
 │   ├── architecture/         System architecture + database specification
 │   └── api/                  REST API specification
-├── backend/                  Sakar Cloud backend (Java 21 + Spring Boot 4) — PHASE 1 FOUNDATION IMPLEMENTED
-├── web/                      Sakar web application (React + TypeScript) — not yet implemented
+├── backend/                  Sakar Cloud backend (Java 21 + Spring Boot 4) — PHASE 1 FOUNDATION IMPLEMENTED, Phase 3 MQTT, live-broker-validated
+├── web/                      Sakar web application (React + TypeScript) — PHASE 4 IMPLEMENTED against the real backend
 ├── mobile/                   Sakar mobile application (Flutter) — not yet implemented
 ├── robot/
 │   └── SakarC40Agent/        Robot-resident Android agent — existing project, unmodified by Phase 1
@@ -71,7 +73,7 @@ sakar robotics web/
 | Application | Location | Status |
 |---|---|---|
 | Sakar Cloud (backend) | `backend/` | **Phase 1 foundation implemented** — see Implementation Status |
-| Web application | `web/` | Not yet implemented |
+| Web application | `web/` | **Phase 4 implemented** — React + TypeScript admin UI against the real backend for auth/organizations/sites/robots/audit; simulated data (clearly labeled) for telemetry/events/errors/alerts/tasks/logs/users/roles, which have no backend REST endpoint yet |
 | Mobile application | `mobile/` | Not yet implemented |
 | Robot Android tablet agent — Sakar Robot Agent (currently `SakarC40Agent`) | `robot/SakarC40Agent/` | Existing diagnostic app **now extended (Phase 3) with an MQTT telemetry/heartbeat link to the Sakar Cloud backend** (`api/` module); command-reception is still not implemented; not yet run against a real broker or physical robot |
 
