@@ -7,7 +7,9 @@ public enum MqttTopicKind {
     TELEMETRY("telemetry"),
     EVENTS("events"),
     ERRORS("errors"),
-    ACK("ack");
+    ACK("ack"),
+    /** Cloud-to-agent outbound (Roadmap Phase 6 Remote Commands) — {@link MqttMessageType#COMMAND}. */
+    COMMANDS("commands");
 
     private final String segment;
 

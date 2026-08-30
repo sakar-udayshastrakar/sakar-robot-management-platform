@@ -1,98 +1,90 @@
 :root {
   color-scheme: light;
 
-  /* Sakar Robotics platform theme — original palette, not derived from any
-     vendor's branding. Deep slate + teal accent, built for a dense
-     operations/admin surface (fleet monitoring), not a marketing site. */
-  --sakar-bg: #f4f6f8;
+  /* Sakar Robotics design-system alignment: these tokens are transcribed
+     directly from the real Sakar Robotics Support Portal frontend
+     (support-portal/frontend/src/index.css + component classes) so this
+     product visually belongs to the same family — same brand-orange scale,
+     same slate neutrals, same Roboto stack, same radius/shadow scale.
+     Intentionally light-only: the Support Portal has no dark mode, so
+     neither does this. */
+
+  --sakar-bg: #f8fafc;              /* slate-50 */
   --sakar-surface: #ffffff;
-  --sakar-surface-raised: #ffffff;
-  --sakar-border: #e2e8f0;
-  --sakar-text: #101828;
-  --sakar-text-muted: #475467;
-  --sakar-text-subtle: #667085;
+  --sakar-surface-sunken: #f1f5f9;   /* slate-100 */
+  --sakar-border: #e2e8f0;          /* slate-200 */
+  --sakar-border-subtle: #f1f5f9;   /* slate-100 */
+  --sakar-border-strong: #cbd5e1;   /* slate-300 */
 
-  --sakar-primary: #0f766e;
-  --sakar-primary-hover: #0d5f59;
-  --sakar-primary-soft: #ecfdf9;
-  --sakar-accent: #1d2b4f;
+  --sakar-text: #0f172a;            /* slate-900 */
+  --sakar-text-muted: #475569;      /* slate-600 */
+  --sakar-text-faint: #64748b;      /* slate-500 */
+  --sakar-text-subtle: #94a3b8;     /* slate-400 */
 
-  --sakar-success: #12b76a;
-  --sakar-success-soft: #ecfdf3;
-  --sakar-warning: #f79009;
-  --sakar-warning-soft: #fffaeb;
-  --sakar-danger: #f04438;
-  --sakar-danger-soft: #fef3f2;
-  --sakar-info: #2e90fa;
-  --sakar-info-soft: #eff8ff;
-  --sakar-neutral: #667085;
-  --sakar-neutral-soft: #f2f4f7;
+  /* Brand orange scale — verbatim from the Support Portal's own
+     tailwind @theme brand-* scale. */
+  --sakar-primary-50: #fff6f0;
+  --sakar-primary-100: #ffe9db;
+  --sakar-primary-300: #ffc099;
+  --sakar-primary-500: #ff9d61;
+  --sakar-primary-600: #ff914d;
+  --sakar-primary-700: #ff6100;
+  --sakar-primary-800: #c24a00;
 
-  --sakar-sidebar-bg: #101828;
-  --sakar-sidebar-text: #cbd5e1;
-  --sakar-sidebar-text-active: #ffffff;
-  --sakar-sidebar-active-bg: #1d2b4f;
+  --sakar-primary: var(--sakar-primary-600);
+  --sakar-primary-hover: var(--sakar-primary-700);
+  --sakar-primary-soft: var(--sakar-primary-50);
+  --sakar-primary-soft-strong: var(--sakar-primary-100);
+  --sakar-primary-strong: var(--sakar-primary-700);
+  --sakar-primary-contrast: #ffffff;
+  --sakar-accent: var(--sakar-primary-700);
 
-  --sakar-shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.06);
-  --sakar-shadow-md: 0 4px 12px rgba(16, 24, 40, 0.08);
+  --sakar-success: #059669;         /* emerald-600 */
+  --sakar-success-soft: #d1fae5;    /* emerald-100 */
+  --sakar-warning: #d97706;         /* amber-600 */
+  --sakar-warning-text: #92400e;    /* amber-800, matches Badge.jsx's amber text */
+  --sakar-warning-soft: #fef3c7;    /* amber-100 */
+  --sakar-danger: #dc2626;          /* red-600 */
+  --sakar-danger-soft: #fee2e2;     /* red-100 */
+  --sakar-info: #2563eb;            /* blue-600 */
+  --sakar-info-soft: #dbeafe;       /* blue-100 */
+  --sakar-neutral: #475569;         /* slate-600 */
+  --sakar-neutral-soft: #f1f5f9;    /* slate-100 */
 
-  --sakar-radius-sm: 6px;
-  --sakar-radius-md: 10px;
-  --sakar-radius-lg: 14px;
+  /* Alert-severity scale (Critical/High/Medium/Low) */
+  --sakar-sev-critical: #b91c1c;
+  --sakar-sev-critical-soft: #fee2e2;
+  --sakar-sev-high: var(--sakar-primary-800);
+  --sakar-sev-high-soft: var(--sakar-primary-100);
+  --sakar-sev-medium: #92400e;
+  --sakar-sev-medium-soft: #fef3c7;
+  --sakar-sev-low: #475569;
+  --sakar-sev-low-soft: #f1f5f9;
 
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-}
+  --sakar-sidebar-bg: #ffffff;
+  --sakar-sidebar-text: #475569;
+  --sakar-sidebar-text-active: var(--sakar-primary-700);
+  --sakar-sidebar-active-bg: var(--sakar-primary-50);
+  --sakar-sidebar-border: #e2e8f0;
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) {
-    color-scheme: dark;
-    --sakar-bg: #0b0f19;
-    --sakar-surface: #111827;
-    --sakar-surface-raised: #161f2e;
-    --sakar-border: #1f2937;
-    --sakar-text: #f2f4f7;
-    --sakar-text-muted: #98a2b3;
-    --sakar-text-subtle: #667085;
+  --sakar-overlay: rgba(15, 23, 42, 0.45);
 
-    --sakar-primary: #2dd4bf;
-    --sakar-primary-hover: #5eead4;
-    --sakar-primary-soft: #0f2e2b;
-    --sakar-accent: #3b4a75;
+  --sakar-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
+  --sakar-shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.06);
+  --sakar-shadow-lg: 0 12px 24px -4px rgba(15, 23, 42, 0.14);
 
-    --sakar-success-soft: #08321f;
-    --sakar-warning-soft: #3a2708;
-    --sakar-danger-soft: #3b1412;
-    --sakar-info-soft: #0c2440;
-    --sakar-neutral-soft: #1c2431;
+  /* Radius scale matches the Support Portal's rounded-lg/xl/2xl exactly. */
+  --sakar-radius-sm: 8px;
+  --sakar-radius-md: 12px;
+  --sakar-radius-lg: 16px;
 
-    --sakar-sidebar-bg: #05070c;
-    --sakar-sidebar-active-bg: #182238;
-  }
-}
+  --sakar-font-sans: Roboto, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --sakar-font-mono: ui-monospace, SFMono-Regular, 'Roboto Mono', Menlo, Consolas, monospace;
 
-:root[data-theme='dark'] {
-  color-scheme: dark;
-  --sakar-bg: #0b0f19;
-  --sakar-surface: #111827;
-  --sakar-surface-raised: #161f2e;
-  --sakar-border: #1f2937;
-  --sakar-text: #f2f4f7;
-  --sakar-text-muted: #98a2b3;
-  --sakar-text-subtle: #667085;
+  --sakar-sidebar-width: 240px;
+  --sakar-sidebar-width-collapsed: 68px;
 
-  --sakar-primary: #2dd4bf;
-  --sakar-primary-hover: #5eead4;
-  --sakar-primary-soft: #0f2e2b;
-  --sakar-accent: #3b4a75;
-
-  --sakar-success-soft: #08321f;
-  --sakar-warning-soft: #3a2708;
-  --sakar-danger-soft: #3b1412;
-  --sakar-info-soft: #0c2440;
-  --sakar-neutral-soft: #1c2431;
-
-  --sakar-sidebar-bg: #05070c;
-  --sakar-sidebar-active-bg: #182238;
+  font-family: var(--sakar-font-sans);
 }
 
 * {
@@ -109,6 +101,8 @@ body {
   margin: 0;
   background: var(--sakar-bg);
   color: var(--sakar-text);
+  font-family: var(--sakar-font-sans);
+  -webkit-font-smoothing: antialiased;
 }
 
 a {
@@ -122,6 +116,47 @@ textarea {
   font-family: inherit;
 }
 
+/* Visible, high-contrast focus rings everywhere — never rely on browser
+   default outline alone, never remove it without replacing it. */
+:focus-visible {
+  outline: 2px solid var(--sakar-primary);
+  outline-offset: 2px;
+}
+
 .sakar-scroll-x {
   overflow-x: auto;
+}
+
+.sakar-mono {
+  font-family: var(--sakar-font-mono);
+}
+
+.sakar-spin {
+  animation: sakar-spin 0.9s linear infinite;
+  color: var(--sakar-primary);
+}
+
+@keyframes sakar-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.sakar-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

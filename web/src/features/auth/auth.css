@@ -9,32 +9,31 @@
 
 .sakar-auth-card {
   width: 100%;
-  max-width: 380px;
+  max-width: 384px;
   background: var(--sakar-surface);
   border: 1px solid var(--sakar-border);
   border-radius: var(--sakar-radius-lg);
-  box-shadow: var(--sakar-shadow-md);
+  box-shadow: var(--sakar-shadow-sm);
   padding: 32px;
 }
 
 .sakar-auth-brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 28px;
+  text-align: center;
+  margin-bottom: 24px;
 }
 
-.sakar-auth-brand .sakar-sidebar-brand-mark {
-  background: var(--sakar-primary);
-  color: #05221f;
+.sakar-auth-logo {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+  margin: 0 auto 12px;
+  display: block;
 }
 
 .sakar-auth-title {
-  font-weight: 700;
-  font-size: 15px;
-}
-
-.sakar-auth-subtitle {
-  font-size: 13px;
-  color: var(--sakar-text-muted);
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--sakar-text);
+  margin: 0;
 }

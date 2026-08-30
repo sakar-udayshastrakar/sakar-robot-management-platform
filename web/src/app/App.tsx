@@ -3,7 +3,9 @@ import { AuthProvider } from '../features/auth/AuthContext';
 import { ProtectedRoute } from '../features/auth/ProtectedRoute';
 import { LoginPage } from '../features/auth/LoginPage';
 import { AppShell } from '../components/layout/AppShell';
+import { ToastProvider } from '../components/ui/Toast';
 import { DashboardPage } from '../features/dashboard/DashboardPage';
+import { FleetMapPage } from '../features/fleet/FleetMapPage';
 import { OrganizationsPage } from '../features/organizations/OrganizationsPage';
 import { OrganizationDetailPage } from '../features/organizations/OrganizationDetailPage';
 import { SitesPage } from '../features/sites/SitesPage';
@@ -14,9 +16,11 @@ import { EventsPage } from '../features/events/EventsPage';
 import { ErrorsPage } from '../features/errors/ErrorsPage';
 import { AlertsPage } from '../features/alerts/AlertsPage';
 import { TasksPage } from '../features/tasks/TasksPage';
+import { CleaningPage } from '../features/cleaning/CleaningPage';
 import { LogsPage } from '../features/logs/LogsPage';
 import { UsersPage } from '../features/users/UsersPage';
 import { RolesPage } from '../features/roles/RolesPage';
+import { PermissionsPage } from '../features/roles/PermissionsPage';
 import { AuditLogPage } from '../features/audit/AuditLogPage';
 import { SettingsPage } from '../features/settings/SettingsPage';
 import { PlannedFeaturePage } from '../features/placeholder/PlannedFeaturePage';
@@ -25,6 +29,7 @@ import { ForbiddenPage, NotFoundPage } from '../features/misc/StatusPages';
 export function App() {
   return (
     <BrowserRouter>
+      <ToastProvider>
       <AuthProvider>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
@@ -46,18 +51,10 @@ export function App() {
 
             <Route path="/robots" element={<RobotsListPage />} />
             <Route path="/robots/:id" element={<RobotDetailPage />} />
+            <Route path="/fleet" element={<FleetMapPage />} />
 
             <Route path="/tasks" element={<TasksPage />} />
-            <Route
-              path="/cleaning"
-              element={
-                <PlannedFeaturePage
-                  title="Cleaning"
-                  subtitle="Scheduled/immediate cleaning task control."
-                  reason="No cleaning API exists on the backend (POST /robots/{id}/cleaning/* is unbuilt). This page intentionally does not simulate task execution."
-                />
-              }
-            />
+            <Route path="/cleaning" element={<CleaningPage />} />
             <Route path="/telemetry" element={<TelemetryPage />} />
             <Route path="/alerts" element={<AlertsPage />} />
             <Route path="/events" element={<EventsPage />} />
@@ -86,8 +83,22 @@ export function App() {
             <Route
               path="/roles"
               element={
-                <ProtectedRoute requirePermission="ROLE_MANAGE">
+                // Matches the backend's real gate: RoleController requires
+                // USER_MANAGE (its only consumer today is the user-role
+                // picker), not ROLE_MANAGE, which the RBAC seed only grants
+                // to SUPER_ADMIN — gating this route on ROLE_MANAGE would
+                // block ORG_ADMIN from a page the backend actually lets
+                // them load.
+                <ProtectedRoute requirePermission="USER_MANAGE">
                   <RolesPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/permissions"
+              element={
+                <ProtectedRoute requirePermission="ROLE_MANAGE">
+                  <PermissionsPage />
                 </ProtectedRoute>
               }
             />
@@ -105,6 +116,7 @@ export function App() {
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </AuthProvider>
+      </ToastProvider>
     </BrowserRouter>
   );
 }

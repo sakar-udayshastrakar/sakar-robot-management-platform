@@ -25,3 +25,37 @@
   color: var(--sakar-primary);
   border-bottom-color: var(--sakar-primary);
 }
+
+.sakar-tab {
+  white-space: nowrap;
+}
+
+.sakar-robot-header-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 20px;
+  margin: 8px 0 0;
+}
+
+.sakar-robot-header-meta > div {
+  display: flex;
+  gap: 6px;
+  font-size: 12.5px;
+}
+
+.sakar-robot-header-meta dt {
+  color: var(--sakar-text-subtle);
+  font-weight: 600;
+}
+
+.sakar-robot-header-meta dd {
+  margin: 0;
+  color: var(--sakar-text-muted);
+}
+
+.sakar-actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+}
