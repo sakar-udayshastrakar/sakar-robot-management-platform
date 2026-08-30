@@ -189,6 +189,21 @@ public final class C40RobotController {
         chargingBridge.stopCharging(callback);
     }
 
+    /**
+     * Roadmap Phase 7 "RETURN_TO_DOCK" - commands the robot to navigate
+     * back to a charging dock (Peanut SDK {@code BatteryComponent.autoCharge()},
+     * see {@code ChargingBridge.returnToDock}). Gated by {@code
+     * OperatingMode.HARDWARE_TEST} exactly like every other actuation
+     * method in this class - nothing about this method is exempt from
+     * that guard.
+     */
+    public void returnToDock(SdkCallback callback) {
+        if (!guard("returnToDock", "n/a", callback)) {
+            return;
+        }
+        chargingBridge.returnToDock(callback);
+    }
+
     /** @return true if the call is allowed to proceed. */
     private boolean guard(String methodName, String request, SdkCallback callback) {
         if (operatingMode == OperatingMode.HARDWARE_TEST) {

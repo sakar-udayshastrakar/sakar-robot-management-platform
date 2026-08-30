@@ -17,6 +17,7 @@ class AgentMqttTopicsTest {
         assertEquals("sakar/org-1/site-1/robot-1/events", topics.events());
         assertEquals("sakar/org-1/site-1/robot-1/errors", topics.errors());
         assertEquals("sakar/org-1/site-1/robot-1/ack", topics.ack());
+        assertEquals("sakar/org-1/site-1/robot-1/commands", topics.command());
     }
 
     @Test

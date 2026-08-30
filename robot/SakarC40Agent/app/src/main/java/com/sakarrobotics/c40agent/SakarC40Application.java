@@ -1,9 +1,16 @@
 package com.sakarrobotics.c40agent;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import android.app.Application;
 
 import com.sakarrobotics.c40agent.api.mqtt.AgentMqttClient;
+import com.sakarrobotics.c40agent.api.mqtt.CommandDispatcher;
+import com.sakarrobotics.c40agent.api.mqtt.CompositeRobotCommandExecutor;
 import com.sakarrobotics.c40agent.api.mqtt.HeartbeatScheduler;
+import com.sakarrobotics.c40agent.api.mqtt.PeanutSdkReturnToDockExecutor;
+import com.sakarrobotics.c40agent.api.mqtt.RobotCommandExecutor;
 import com.sakarrobotics.c40agent.api.mqtt.SakarMqttConfig;
 import com.sakarrobotics.c40agent.api.mqtt.TelemetryScheduler;
 import com.sakarrobotics.c40agent.logging.SdkCallLogger;
@@ -14,10 +21,11 @@ import com.sakarrobotics.c40agent.sdk.SdkConnectionConfig;
 /**
  * Owns the single, application-scoped {@link C40RobotController} instance,
  * and (Phase 3) the single {@link AgentMqttClient} connecting this agent
- * to the Sakar Cloud backend. Activities must obtain the controller from
- * here rather than constructing their own - the Peanut SDK is a
- * process-wide singleton underneath, so more than one controller instance
- * would fight over the same connection.
+ * to the Sakar Cloud backend — including (Phase 6/7) the {@link
+ * CommandDispatcher} that consumes inbound robot commands. Activities must
+ * obtain the controller from here rather than constructing their own - the
+ * Peanut SDK is a process-wide singleton underneath, so more than one
+ * controller instance would fight over the same connection.
  */
 public class SakarC40Application extends Application {
 
@@ -38,7 +46,8 @@ public class SakarC40Application extends Application {
     }
 
     /**
-     * Phase 3 (Robot Communication / MQTT). No-op if
+     * Phase 3 (Robot Communication / MQTT), extended in Phase 6/7 with
+     * inbound command consumption via {@link CommandDispatcher}. No-op if
      * {@code secrets.properties} does not configure a broker URL and robot
      * identity - same "compiles and runs with nothing configured" fallback
      * {@link SdkConnectionConfig} already provides for the Peanut SDK
@@ -52,7 +61,18 @@ public class SakarC40Application extends Application {
                     "MQTT not configured (secrets.properties) - agent stays diagnostic-only, no Sakar Cloud link");
             return;
         }
-        mqttClient = new AgentMqttClient(mqttConfig, null);
+        // Roadmap Phase 6/7 "Robot Agent Command Loop": START_TASK has no supported Peanut SDK
+        // cleaning-control API (see SimulatedRobotCommandExecutor's own Javadoc), so it stays a
+        // software placeholder. RETURN_TO_DOCK (Phase 7) DOES have a verified official SDK
+        // API - BatteryComponent.autoCharge() - so it gets a real executor, gated by the
+        // existing C40RobotController.returnToDock()'s OperatingMode.HARDWARE_TEST check.
+        Map<String, RobotCommandExecutor> executorsByCommandType = new HashMap<>();
+        executorsByCommandType.put("START_TASK", new SimulatedRobotCommandExecutor());
+        executorsByCommandType.put("RETURN_TO_DOCK",
+                new PeanutSdkReturnToDockExecutor(new RealReturnToDockGateway(controller)));
+        CommandDispatcher commandDispatcher = new CommandDispatcher(new CompositeRobotCommandExecutor(executorsByCommandType));
+        mqttClient = new AgentMqttClient(mqttConfig, commandDispatcher);
+        commandDispatcher.attachResultPublisher(mqttClient::publishEvent);
         mqttClient.connect();
 
         heartbeatScheduler = new HeartbeatScheduler(mqttClient, BuildConfig.VERSION_NAME);

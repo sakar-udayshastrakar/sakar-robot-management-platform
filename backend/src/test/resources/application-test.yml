@@ -36,6 +36,11 @@ sakar:
     # The scheduled offline sweep must not run against test-fixture robots mid-test.
     enabled: false
 
+  commands:
+    expiry-sweep:
+      # Tests call CommandExpiryService.sweep() directly instead — must not race test assertions.
+      enabled: false
+
 management:
   health:
     redis:

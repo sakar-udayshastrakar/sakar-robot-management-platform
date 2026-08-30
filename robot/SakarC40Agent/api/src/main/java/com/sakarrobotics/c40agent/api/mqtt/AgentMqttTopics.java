@@ -43,6 +43,11 @@ public final class AgentMqttTopics {
         return topic("ack");
     }
 
+    /** Cloud-to-agent inbound (Roadmap Phase 6/7 "Robot Agent Command Loop"). */
+    public String command() {
+        return topic("commands");
+    }
+
     private String topic(String kindSegment) {
         String siteSegment = identity.getSiteId() == null || identity.getSiteId().trim().isEmpty()
                 ? NO_SITE_SEGMENT : identity.getSiteId();

@@ -1,6 +1,6 @@
 # backend/
 
-**Status: PHASE 1 — FOUNDATION IMPLEMENTED.** Java 21 / Spring Boot 4 modular monolith for the Sakar Cloud backend. See the root `FINAL_REPORT` in the PR/commit description (or ask the session that built this) for the full phase-1 status; the summary below is the durable reference.
+**Status: PHASE 1 — FOUNDATION IMPLEMENTED**, superseded in practice by Phase 3 (MQTT), Phase 6 (Users/Roles/Tasks/Alerts/Cleaning/Commands), and Phase 7 (Robot Agent Command Loop) — **this file was not kept current through those phases; the root `README.md`'s "Implementation Status" table is the authoritative, current source, not this banner.** Java 21 / Spring Boot 4 modular monolith for the Sakar Cloud backend. The summary below (Phase 1 scope) is still accurate as far as it goes, it is just incomplete.
 
 Specification sources (do not deviate from these without an approved change to the master requirements):
 - `docs/requirements/SAKAR_ROBOT_PLATFORM_MASTER_REQUIREMENTS.md` — Part 8 (Sakar Cloud), Part 13 (Database), Part 14 (APIs), Part 19 (RBAC), Part 20 (Robot Command Security), Part 40 (live Keenon API evidence), §6.A (Robot Capability Abstraction)
