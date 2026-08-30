@@ -3,9 +3,12 @@ import { useRobotOptions } from '../shared/useRobotOptions';
 import { RobotPicker } from '../shared/RobotPicker';
 import { generateEvents } from '../../mocks/simulated';
 import type { EventCategory, EventSeverity } from '../../types/domain';
+import { PageHeader } from '../../components/ui/PageHeader';
 import { Card } from '../../components/ui/Card';
 import { DataTable } from '../../components/ui/DataTable';
 import { Badge } from '../../components/ui/Badge';
+import { SearchBar } from '../../components/ui/SearchBar';
+import { FilterBar } from '../../components/ui/FilterBar';
 import { SimulatedDataBanner } from '../../components/ui/SimulatedDataBanner';
 import { EmptyState } from '../../components/ui/States';
 
@@ -24,24 +27,24 @@ export function EventsPage() {
   const [robotId, setRobotId] = useState('');
   const [severity, setSeverity] = useState<EventSeverity | 'ALL'>('ALL');
   const [category, setCategory] = useState<EventCategory | 'ALL'>('ALL');
+  const [search, setSearch] = useState('');
 
   const events = useMemo(() => (robotId ? generateEvents(robotId, 40) : []), [robotId]);
   const filtered = events.filter(
-    (e) => (severity === 'ALL' || e.severity === severity) && (category === 'ALL' || e.category === category),
+    (e) =>
+      (severity === 'ALL' || e.severity === severity) &&
+      (category === 'ALL' || e.category === category) &&
+      (!search.trim() || e.message.toLowerCase().includes(search.trim().toLowerCase())),
   );
 
   return (
     <div>
-      <div className="sakar-page-header">
-        <div>
-          <h1 className="sakar-page-title">Events</h1>
-          <p className="sakar-page-subtitle">Robot event stream, filterable by severity and category.</p>
-        </div>
-      </div>
+      <PageHeader title="Events" subtitle="Robot event stream, filterable by severity and category." />
       <SimulatedDataBanner label="No GET /robots/{id}/events endpoint exists yet — robot_events rows are persisted but not exposed over REST" />
       <RobotPicker robots={robots} value={robotId} onChange={setRobotId} />
       {robotId && (
-        <div className="sakar-filter-bar">
+        <FilterBar>
+          <SearchBar value={search} onChange={setSearch} ariaLabel="Search events" placeholder="Search message…" />
           <select value={severity} onChange={(e) => setSeverity(e.target.value as typeof severity)} aria-label="Severity">
             {SEVERITIES.map((s) => (
               <option key={s} value={s}>{s === 'ALL' ? 'All severities' : s}</option>
@@ -52,7 +55,7 @@ export function EventsPage() {
               <option key={c} value={c}>{c === 'ALL' ? 'All categories' : c}</option>
             ))}
           </select>
-        </div>
+        </FilterBar>
       )}
       <Card title="Events">
         {!robotId ? (

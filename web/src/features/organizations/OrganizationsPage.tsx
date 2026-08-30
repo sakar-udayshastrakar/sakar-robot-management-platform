@@ -2,6 +2,7 @@ import { useEffect, useState, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../features/auth/AuthContext';
 import { listRobots } from '../../api/robots';
+import { PageHeader } from '../../components/ui/PageHeader';
 import { Card } from '../../components/ui/Card';
 import { UnavailableFeature } from '../../components/ui/SimulatedDataBanner';
 import { LoadingState } from '../../components/ui/States';
@@ -43,12 +44,7 @@ export function OrganizationsPage() {
 
   return (
     <div>
-      <div className="sakar-page-header">
-        <div>
-          <h1 className="sakar-page-title">Organizations</h1>
-          <p className="sakar-page-subtitle">Distributor / sub-distributor / client hierarchy.</p>
-        </div>
-      </div>
+      <PageHeader title="Organizations" subtitle="Distributor / sub-distributor / client hierarchy." />
 
       <UnavailableFeature reason="No endpoint exists to list all organizations for a super-admin scope. Showing organizations discovered via the robots you can already see, plus a manual lookup." />
 

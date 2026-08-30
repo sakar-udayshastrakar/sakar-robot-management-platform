@@ -2,8 +2,11 @@ import { useState, type FormEvent } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import { ApiRequestError } from '../../api/client';
+import sakarLogo from '../../assets/sakar-logo-full.png';
 import './auth.css';
 
+// Matches the Sakar Robotics Support Portal's own AdminLoginPage.jsx:
+// centered logo, centered title, the same card/input/button system.
 export function LoginPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -36,11 +39,8 @@ export function LoginPage() {
     <div className="sakar-auth-page">
       <div className="sakar-auth-card">
         <div className="sakar-auth-brand">
-          <span className="sakar-sidebar-brand-mark">SR</span>
-          <div>
-            <div className="sakar-auth-title">Sakar Robot Management Platform</div>
-            <div className="sakar-auth-subtitle">Sign in to continue</div>
-          </div>
+          <img src={sakarLogo} alt="Sakar Robotics" className="sakar-auth-logo" />
+          <h1 className="sakar-auth-title">Robot Management Platform</h1>
         </div>
 
         <form onSubmit={handleSubmit} noValidate>

@@ -1,12 +1,18 @@
-import { useState, type FormEvent } from 'react';
+import { useMemo, useState, type FormEvent } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useApi } from '../../hooks/useApi';
 import { usePermissions } from '../../hooks/usePermissions';
 import { useAuth } from '../../features/auth/AuthContext';
 import { listSitesByOrganization, createSite } from '../../api/sites';
+import { getOrganization } from '../../api/organizations';
+import { listRobots } from '../../api/robots';
+import { useRobotStatusProbe } from '../shared/useRobotStatusProbe';
+import { PageHeader } from '../../components/ui/PageHeader';
 import { Card } from '../../components/ui/Card';
+import { Badge } from '../../components/ui/Badge';
 import { DataTable } from '../../components/ui/DataTable';
 import { LoadingState, ErrorState, EmptyState } from '../../components/ui/States';
+import { useToast } from '../../components/ui/Toast';
 import { ApiRequestError } from '../../api/client';
 
 // GET /sites requires an organizationId query param — there is no
@@ -16,6 +22,7 @@ import { ApiRequestError } from '../../api/client';
 export function SitesPage() {
   const { user } = useAuth();
   const { hasPermission } = usePermissions();
+  const toast = useToast();
   const [params, setParams] = useSearchParams();
   const organizationId = params.get('organizationId') ?? user?.organizationId ?? '';
 
@@ -27,10 +34,17 @@ export function SitesPage() {
   const [createError, setCreateError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
+  const { data: org } = useApi(() => (organizationId ? getOrganization(organizationId) : Promise.resolve(null)), [organizationId]);
   const { data: sites, status, error, refetch } = useApi(
     () => (organizationId ? listSitesByOrganization(organizationId) : Promise.resolve([])),
     [organizationId],
   );
+  const { data: robotsPage } = useApi(() => listRobots(0, 100), []);
+  const robotsForOrg = useMemo(
+    () => (robotsPage?.content ?? []).filter((r) => r.organizationId === organizationId),
+    [robotsPage, organizationId],
+  );
+  const { statuses } = useRobotStatusProbe(robotsForOrg);
 
   function handleSwitchOrg(e: FormEvent) {
     e.preventDefault();
@@ -48,6 +62,7 @@ export function SitesPage() {
       setTimezone('');
       setShowCreate(false);
       refetch();
+      toast.show('Site created', 'success');
     } catch (err) {
       setCreateError(err instanceof ApiRequestError ? err.message : 'Failed to create site');
     } finally {
@@ -57,12 +72,7 @@ export function SitesPage() {
 
   return (
     <div>
-      <div className="sakar-page-header">
-        <div>
-          <h1 className="sakar-page-title">Sites</h1>
-          <p className="sakar-page-subtitle">Sites belonging to one organization at a time.</p>
-        </div>
-      </div>
+      <PageHeader title="Sites" subtitle="Sites belonging to one organization at a time." />
 
       <Card title="Organization scope">
         <form onSubmit={handleSwitchOrg} style={{ display: 'flex', gap: 10, alignItems: 'flex-end' }}>
@@ -86,7 +96,7 @@ export function SitesPage() {
         <ErrorState title="Could not load sites" detail={error ?? undefined} action={<button type="button" className="sakar-btn sakar-btn--secondary" onClick={refetch}>Retry</button>} />
       ) : (
         <Card
-          title={`Sites (${sites?.length ?? 0})`}
+          title={`Sites (${sites?.length ?? 0})${org ? ` — ${org.name}` : ''}`}
           actions={
             hasPermission('ROBOT_CONFIGURE') && (
               <button type="button" className="sakar-btn sakar-btn--primary" onClick={() => setShowCreate((v) => !v)}>
@@ -121,16 +131,23 @@ export function SitesPage() {
             rowKey={(s) => s.id}
             emptyTitle="No sites in this organization"
             columns={[
-              { key: 'name', header: 'Name', render: (s) => s.name },
-              { key: 'address', header: 'Address', render: (s) => s.address ?? '—' },
-              { key: 'timezone', header: 'Timezone', render: (s) => s.timezone ?? '—' },
-              {
-                key: 'robots',
-                header: 'Robots',
-                render: (s) => (
-                  <Link to={`/robots?siteId=${s.id}`}>View robots</Link>
-                ),
-              },
+              { key: 'name', header: 'Site', render: (s) => s.name },
+              { key: 'org', header: 'Organization', render: () => org?.name ?? organizationId },
+              { key: 'robots', header: 'Robots', render: (s) => {
+                  const count = robotsForOrg.filter((r) => r.siteId === s.id).length;
+                  return <Link to={`/robots?siteId=${s.id}`}>{count}</Link>;
+                } },
+              { key: 'online', header: 'Online', render: (s) => {
+                  const siteRobotIds = robotsForOrg.filter((r) => r.siteId === s.id).map((r) => r.id);
+                  const probed = siteRobotIds.map((id) => statuses.get(id)).filter((v) => v && v !== 'unavailable') as { online: boolean }[];
+                  if (probed.length === 0) return <span className="sakar-page-subtitle">—</span>;
+                  return probed.filter((p) => p.online).length;
+                } },
+              { key: 'alerts', header: 'Alerts', render: () => <span className="sakar-page-subtitle">Simulated</span> },
+              { key: 'status', header: 'Status', render: (s) => {
+                  const count = robotsForOrg.filter((r) => r.siteId === s.id).length;
+                  return <Badge tone={count > 0 ? 'success' : 'neutral'}>{count > 0 ? 'Active' : 'No robots'}</Badge>;
+                } },
             ]}
           />
         </Card>

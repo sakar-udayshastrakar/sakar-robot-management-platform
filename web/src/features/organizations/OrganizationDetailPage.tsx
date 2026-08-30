@@ -1,14 +1,62 @@
-import { useState, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useApi } from '../../hooks/useApi';
 import { usePermissions } from '../../hooks/usePermissions';
 import { getOrganization, getOrganizationChildren, createOrganization } from '../../api/organizations';
-import type { OrganizationType } from '../../types/domain';
+import { listSitesByOrganization } from '../../api/sites';
+import { listRobots } from '../../api/robots';
+import type { Organization, OrganizationType } from '../../types/domain';
+import { PageHeader } from '../../components/ui/PageHeader';
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { LoadingState, ErrorState } from '../../components/ui/States';
 import { DataTable } from '../../components/ui/DataTable';
 import { ApiRequestError } from '../../api/client';
+
+// Real counts, resolved client-side: no endpoint returns
+// sites-count/robots-count per organization directly, so this fetches the
+// real sites list per child org and the real (capped) robots list once,
+// then tallies both — never a fabricated number.
+function useOrgCounts(children: Organization[] | null) {
+  const [sites, setSites] = useState<Map<string, number>>(new Map());
+  const [robots, setRobots] = useState<Map<string, number>>(new Map());
+
+  useEffect(() => {
+    if (!children || children.length === 0) {
+      setSites(new Map());
+      return;
+    }
+    let cancelled = false;
+    Promise.allSettled(children.map((c) => listSitesByOrganization(c.id))).then((results) => {
+      if (cancelled) return;
+      const map = new Map<string, number>();
+      results.forEach((r, i) => map.set(children[i].id, r.status === 'fulfilled' ? r.value.length : 0));
+      setSites(map);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [children]);
+
+  useEffect(() => {
+    if (!children || children.length === 0) {
+      setRobots(new Map());
+      return;
+    }
+    let cancelled = false;
+    listRobots(0, 100).then((page) => {
+      if (cancelled) return;
+      const map = new Map<string, number>();
+      children.forEach((c) => map.set(c.id, page.content.filter((r) => r.organizationId === c.id).length));
+      setRobots(map);
+    }).catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [children]);
+
+  return { sites, robots };
+}
 
 const ORG_TYPES: OrganizationType[] = ['SAKAR_ROOT', 'INTERNAL', 'DISTRIBUTOR', 'SUB_DISTRIBUTOR', 'CLIENT', 'DIRECT_CLIENT'];
 
@@ -18,6 +66,7 @@ export function OrganizationDetailPage() {
   const { hasPermission } = usePermissions();
   const { data: org, status, error, refetch } = useApi(() => getOrganization(id!), [id]);
   const { data: children, refetch: refetchChildren } = useApi(() => getOrganizationChildren(id!), [id]);
+  const { sites: siteCounts, robots: robotCounts } = useOrgCounts(children);
 
   const [showCreate, setShowCreate] = useState(false);
   const [name, setName] = useState('');
@@ -60,13 +109,11 @@ export function OrganizationDetailPage() {
 
   return (
     <div>
-      <div className="sakar-page-header">
-        <div>
-          <h1 className="sakar-page-title">{org.name}</h1>
-          <p className="sakar-page-subtitle">{org.orgType} · {org.id}</p>
-        </div>
-        <Badge tone={org.status === 'ACTIVE' ? 'success' : 'danger'}>{org.status}</Badge>
-      </div>
+      <PageHeader
+        title={org.name}
+        subtitle={`${org.orgType} · ${org.id}`}
+        actions={<Badge tone={org.status === 'ACTIVE' ? 'success' : 'danger'}>{org.status}</Badge>}
+      />
 
       <Card title="Details">
         <dl style={{ display: 'grid', gridTemplateColumns: '160px 1fr', rowGap: 10 }}>
@@ -128,11 +175,15 @@ export function OrganizationDetailPage() {
           emptyTitle="No child organizations"
           columns={[
             { key: 'name', header: 'Name', render: (c) => (
-                <button type="button" className="sakar-btn sakar-btn--secondary" onClick={() => navigate(`/organizations/${c.id}`)}>
-                  {c.name}
-                </button>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <button type="button" className="sakar-btn sakar-btn--secondary" onClick={() => navigate(`/organizations/${c.id}`)}>
+                    {c.name}
+                  </button>
+                  <span className="sakar-page-subtitle">{c.orgType}</span>
+                </div>
               ) },
-            { key: 'type', header: 'Type', render: (c) => c.orgType },
+            { key: 'sites', header: 'Sites', render: (c) => siteCounts.get(c.id) ?? '—' },
+            { key: 'robots', header: 'Robots', render: (c) => robotCounts.get(c.id) ?? '—' },
             { key: 'status', header: 'Status', render: (c) => <Badge tone={c.status === 'ACTIVE' ? 'success' : 'danger'}>{c.status}</Badge> },
           ]}
         />

@@ -178,6 +178,23 @@ Each phase lists: objective, dependencies, deliverables, acceptance criteria, an
 
 ---
 
+## Proposed Product-Expansion Phases (Keenon Parity) — NOT APPROVED, NOT IMPLEMENTED
+
+**Everything in this section is a proposal, not a committed phase.** It exists only because Keenon Cloud reference screenshots surfaced three product capabilities (Open Platform, OTA/Deployment, IoT/Elevator Integration) that have no Sakar equivalent today, and the explicit governing decision on this was: *"Open Platform / OTA / Deployment / IoT / Elevator must NOT be silently implemented from screenshots alone. First create a formal REQUIREMENTS / PRODUCT SCOPE proposal for these modules. Do NOT implement their backend functionality yet."* Full scoping lives in `SAKAR_PLATFORM_KEENON_PARITY_REQUIREMENTS.md`; this section only records where these phases would sit in the roadmap **if** that document is separately reviewed and approved. Nothing below should be read as scheduled, budgeted, or authorized work.
+
+### Phase 11 — Open Platform (proposed, unapproved)
+**Objective (if approved):** Sakar-branded third-party API client/key management with per-client access grants (e.g., *Client A → Robot X, Robot Y but NOT Robot Z*) — see Module A of the parity requirements document. Lowest physical/safety risk of the three proposed modules.
+
+### Phase 12 — OTA / Deployment (proposed, unapproved)
+**Objective (if approved):** version tracking and deployment-history record-keeping, starting with the Sakar-agent (`SakarC40Agent`) APK, which Sakar actually controls — see Module B of the parity requirements document. **Do not assume Sakar can currently update Keenon firmware; no such vendor capability has been confirmed to exist.** The Keenon-firmware half of this phase may remain `REQUIRES VENDOR SUPPORT` indefinitely.
+
+### Phase 13 — IoT / Elevator Integration (proposed, unapproved)
+**Objective (if approved):** register non-robot devices (starting with elevator controllers) and authorize robot-initiated elevator calls — see Module C of the parity requirements document. **No elevator communication protocol has been confirmed or chosen** — this is an explicit open question, not an assumption to resolve during implementation. Highest physical/safety-adjacent risk of the three (a robot mis-calling or blocking an elevator has real-world consequences) — recommended last if all three are approved.
+
+**These three phases are sequenced after the approved Phase 0-10 and depend on none of them being reopened.** None of Phases 0-10's content is altered by this section.
+
+---
+
 ## Roadmap-Level Risk Register (cross-phase)
 
 | Risk | Phases most affected | Notes |

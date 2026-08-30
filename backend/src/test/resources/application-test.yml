@@ -32,6 +32,9 @@ sakar:
     # case can deterministically exceed it without waiting on a real 60s+ window.
     rate-limit-max-messages: 3
     rate-limit-window-seconds: 60
+  alerts:
+    # The scheduled offline sweep must not run against test-fixture robots mid-test.
+    enabled: false
 
 management:
   health:

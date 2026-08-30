@@ -15,6 +15,7 @@
 | `SAKAR_PHASE_3_IMPLEMENTATION_REPORT.md` | **New (Phase 3).** Originated in this workspace, not a copy — what Phase 3 (Robot Communication / MQTT) actually built, test results, security review, and known limitations. |
 | `SAKAR_PHASE_3_LIVE_MQTT_VALIDATION_REPORT.md` | **New (Phase 3 live validation).** Validates the Phase 3 MQTT pipeline against a real (locally-hosted) MQTT broker, using a test agent — not a physical robot. |
 | `SAKAR_PHASE_4_WEB_IMPLEMENTATION_REPORT.md` | **New (Phase 4).** Originated in this workspace — what the Web Application actually implements, the real-vs-simulated feature breakdown, and live browser verification against a real backend instance. |
+| `SAKAR_WEB_UI_UX_REQUIREMENTS.md` | **New (Phase 4 UI redesign).** Originated in this workspace — what the enterprise UI redesign changed, an updated page-by-page real-vs-simulated table, and the accessibility/responsive/performance checklists verified for that pass. |
 
 ## docs/security/
 
@@ -35,6 +36,7 @@
 | `SAKAR_ROBOT_PLATFORM_NAMING_AND_MODEL_STRATEGY.md` | Product/platform/agent naming strategy and the multi-robot-model roadmap (Sakar CleanBot 5000 Plus, Sakar Robot Agent, Robot Adapter concept). |
 | `SAKAR_MQTT_ARCHITECTURE.md` | **New (Phase 3).** Originated in this workspace, not a copy — the actual MQTT communication pipeline as implemented (topic scheme, envelope, identity/tenant verification, security DEV-vs-PROD-REQUIRED split, failure handling, reconnection). |
 | `SAKAR_WEB_APPLICATION_ARCHITECTURE.md` | **New (Phase 4).** Originated in this workspace — the Web Application's stack, directory layout, real-vs-simulated data flow, auth/RBAC, and WebSocket usage, as implemented. |
+| `SAKAR_WEB_UI_DESIGN_SYSTEM.md` | **New (Phase 4 UI redesign).** Originated in this workspace — the enterprise design system: color tokens, typography, layout, component library, and accessibility conventions actually implemented. |
 
 ## docs/api/
 

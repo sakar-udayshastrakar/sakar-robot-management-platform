@@ -1,24 +1,20 @@
 // Simulated/test data generators — used ONLY for pages where no backend REST
-// API exists yet (telemetry, events, errors, alerts, tasks, users, roles,
-// application logs). Never called on a page backed by a real endpoint. Every
-// consumer of this module must render <SimulatedDataBanner /> alongside it
-// so a viewer can never mistake this for real robot data. See the Phase 4
-// implementation report's "Implementation Gap List".
+// API exists yet (telemetry, events, errors, application logs, timeline).
+// Alerts, Tasks, Users, and Roles moved to real backend APIs in Phase 6 —
+// see api/alerts.ts, api/tasks.ts, api/users.ts, api/roles.ts — and their
+// generators were removed from here; do not re-add them. Never call this
+// module from a page backed by a real endpoint. Every consumer of what
+// remains here must render <SimulatedDataBanner /> alongside it so a viewer
+// can never mistake this for real robot data.
 
 import type {
-  AlertStatus,
   ApplicationLogRecord,
   ErrorStatus,
   EventCategory,
   EventSeverity,
   LogLevel,
-  PlatformRoleRecord,
-  PlatformUserRecord,
-  RobotAlertRecord,
   RobotErrorRecord,
   RobotEventRecord,
-  RobotTaskRecord,
-  TaskStatus,
   TelemetryReading,
   TimelineEntry,
   TimelineSourceType,
@@ -94,27 +90,6 @@ export function generateErrors(robotId: string, count = 8): RobotErrorRecord[] {
   });
 }
 
-export function generateAlerts(robotId: string, count = 6): RobotAlertRecord[] {
-  return Array.from({ length: count }, (_, i) => ({
-    id: `sim-alert-${robotId}-${i}`,
-    robotId,
-    severity: pick(SEVERITIES),
-    status: pick<AlertStatus>(['ACTIVE', 'ACKNOWLEDGED', 'RESOLVED']),
-    message: pick(['Low battery — return to dock recommended', 'Offline for over 15 minutes', 'Repeated navigation errors']),
-    createdAt: minutesAgo(i * 19),
-  }));
-}
-
-export function generateTasks(robotId: string, count = 5): RobotTaskRecord[] {
-  return Array.from({ length: count }, (_, i) => ({
-    id: `sim-task-${robotId}-${i}`,
-    robotId,
-    taskType: pick(['ZONE_CLEAN', 'RETURN_TO_DOCK', 'SPOT_CLEAN', 'SCHEDULED_CLEAN']),
-    status: pick<TaskStatus>(['PLANNED', 'RUNNING', 'PAUSED', 'COMPLETED', 'CANCELLED', 'FAILED']),
-    createdAt: minutesAgo(i * 40),
-  }));
-}
-
 export function generateLogs(count = 30): ApplicationLogRecord[] {
   return Array.from({ length: count }, (_, i) => ({
     id: `sim-log-${i}`,
@@ -132,26 +107,18 @@ export function generateLogs(count = 30): ApplicationLogRecord[] {
   }));
 }
 
-export function generateUsers(count = 8): PlatformUserRecord[] {
+// Same shape as generateLogs, but every row is pinned to the given real
+// robotId — used by the Robot Detail "Logs" tab so it never shows another
+// robot's simulated entries alongside this one's.
+export function generateRobotLogs(robotId: string, count = 15): ApplicationLogRecord[] {
   return Array.from({ length: count }, (_, i) => ({
-    id: `sim-user-${i}`,
-    email: `user${i}@sakarrobotics.com`,
-    fullName: pick(['A. Sharma', 'R. Iyer', 'K. Patel', 'M. Rao', 'S. Nair']),
-    role: pick(['ORG_ADMIN', 'SITE_ADMIN', 'OPERATOR', 'TECHNICIAN', 'VIEWER']),
-    organizationId: null,
-    active: Math.random() > 0.15,
+    id: `sim-log-${robotId}-${i}`,
+    level: pick<LogLevel>(['INFO', 'WARN', 'ERROR', 'CRITICAL']),
+    source: pick(['mqtt', 'robot-registry', 'websocket']),
+    robotId,
+    message: pick(['HEARTBEAT_ACCEPTED', 'TELEMETRY_ACCEPTED', 'RATE_LIMITED_REJECTED', 'MQTT_RECONNECTED']),
+    recordedAt: minutesAgo(i * 5),
   }));
-}
-
-export function generateRoles(): PlatformRoleRecord[] {
-  return [
-    { name: 'SUPER_ADMIN', description: 'Full cross-organization access', permissions: ['SYSTEM_ADMIN'] },
-    { name: 'ORG_ADMIN', description: 'Full access within one organization tree', permissions: ['ROBOT_CONFIGURE', 'USER_MANAGE'] },
-    { name: 'SITE_ADMIN', description: 'Manage robots/users at one site', permissions: ['ROBOT_CONFIGURE'] },
-    { name: 'OPERATOR', description: 'Operate robots, view fleet state', permissions: ['ROBOT_CONTROL', 'ROBOT_VIEW'] },
-    { name: 'TECHNICIAN', description: 'Diagnostics and maintenance', permissions: ['ROBOT_DIAGNOSTICS', 'ROBOT_VIEW'] },
-    { name: 'VIEWER', description: 'Read-only fleet visibility', permissions: ['ROBOT_VIEW'] },
-  ];
 }
 
 const TIMELINE_SOURCES: readonly TimelineSourceType[] = ['APPLICATION', 'EVENT', 'ERROR', 'COMMAND', 'SECURITY', 'TELEMETRY'];

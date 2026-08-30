@@ -1,60 +1,43 @@
-import { useEffect, useState } from 'react';
-import { listRobots, getRobotStatus } from '../../api/robots';
-import type { Robot } from '../../types/domain';
+import { useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { listRobots } from '../../api/robots';
+import { listAlerts } from '../../api/alerts';
 import { useApi } from '../../hooks/useApi';
+import { useRobotStatusProbe } from '../shared/useRobotStatusProbe';
+import { useSiteNames } from '../shared/useSiteNames';
+import { PageHeader } from '../../components/ui/PageHeader';
 import { Card } from '../../components/ui/Card';
-import { StatCard } from '../../components/ui/StatCard';
+import { MetricCard } from '../../components/ui/MetricCard';
 import { Badge } from '../../components/ui/Badge';
+import { Icon } from '../../components/ui/Icon';
+import { StatusBadge } from '../../components/ui/StatusBadge';
+import { SeverityBadge } from '../../components/ui/SeverityBadge';
+import { DataTable } from '../../components/ui/DataTable';
 import { LoadingState, ErrorState } from '../../components/ui/States';
 import { SimulatedDataBanner, UnavailableFeature } from '../../components/ui/SimulatedDataBanner';
-import { generateAlerts, generateErrors, generateEvents } from '../../mocks/simulated';
-
-const LIVE_STATUS_PROBE_LIMIT = 12;
-
-interface LiveStatusSummary {
-  online: number;
-  offline: number;
-  probed: number;
-}
-
-function useLiveStatusSummary(robots: Robot[] | null) {
-  const [summary, setSummary] = useState<LiveStatusSummary | null>(null);
-
-  useEffect(() => {
-    if (!robots || robots.length === 0) {
-      setSummary(null);
-      return;
-    }
-    let cancelled = false;
-    const sample = robots.slice(0, LIVE_STATUS_PROBE_LIMIT);
-
-    Promise.allSettled(sample.map((r) => getRobotStatus(r.id))).then((results) => {
-      if (cancelled) {
-        return;
-      }
-      const fulfilled = results.filter((r) => r.status === 'fulfilled') as PromiseFulfilledResult<
-        Awaited<ReturnType<typeof getRobotStatus>>
-      >[];
-      if (fulfilled.length === 0) {
-        setSummary({ online: 0, offline: 0, probed: 0 });
-        return;
-      }
-      const online = fulfilled.filter((r) => r.value.online).length;
-      setSummary({ online, offline: fulfilled.length - online, probed: fulfilled.length });
-    });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [robots]);
-
-  return summary;
-}
+import { generateEvents } from '../../mocks/simulated';
+import { SystemHealthCard } from './SystemHealthCard';
 
 export function DashboardPage() {
+  const navigate = useNavigate();
   const { data: robotsPage, status, error, refetch } = useApi(() => listRobots(0, 100), []);
   const robots = robotsPage?.content ?? null;
-  const liveStatus = useLiveStatusSummary(robots);
+  const { statuses, probing } = useRobotStatusProbe(robots);
+  const siteNames = useSiteNames(robots);
+
+  // Real, organization-scoped alerts (up to the most recent 200) — used for
+  // both the "Active Alerts" card and the Low Battery fleet metric, which is
+  // genuinely derivable from real LOW_BATTERY alerts (unlike Locked/Faulted/
+  // Cleaning/Charging below, which have no backend-derivable source today).
+  const { data: alertsPage } = useApi(() => listAlerts(0, 200), []);
+  const openAlerts = useMemo(() => (alertsPage?.content ?? []).filter((a) => a.status === 'OPEN'), [alertsPage]);
+  const lowBatteryRobotCount = useMemo(
+    () => new Set(openAlerts.filter((a) => a.alertType === 'LOW_BATTERY').map((a) => a.robotId)).size,
+    [openAlerts],
+  );
+
+  const simulatedRobotId = robots?.[0]?.id ?? 'sim-robot-0';
+  const recentEvents = useMemo(() => generateEvents(simulatedRobotId, 5), [simulatedRobotId]);
 
   if (status === 'loading' || status === 'idle') {
     return <LoadingState title="Loading dashboard…" />;
@@ -64,95 +47,107 @@ export function DashboardPage() {
       <ErrorState
         title="Could not load dashboard data"
         detail={error ?? undefined}
-        action={
-          <button type="button" className="sakar-btn sakar-btn--secondary" onClick={refetch}>
-            Retry
-          </button>
-        }
+        action={<button type="button" className="sakar-btn sakar-btn--secondary" onClick={refetch}>Retry</button>}
       />
     );
   }
 
   const total = robotsPage?.totalElements ?? 0;
-  const active = robots?.filter((r) => r.status === 'ACTIVE').length ?? 0;
-  const registered = robots?.filter((r) => r.status === 'REGISTERED').length ?? 0;
-  const deactivated = robots?.filter((r) => r.status === 'DEACTIVATED').length ?? 0;
-
-  const simulatedRobotId = robots?.[0]?.id ?? 'sim-robot-0';
-  const recentEvents = generateEvents(simulatedRobotId, 5);
-  const recentErrors = generateErrors(simulatedRobotId, 5);
-  const recentAlerts = generateAlerts(simulatedRobotId, 5);
+  const probedEntries = Array.from(statuses.values()).filter((v) => v !== 'unavailable') as { online: boolean }[];
+  const onlineCount = probedEntries.filter((s) => s.online).length;
+  const offlineCount = probedEntries.filter((s) => !s.online).length;
+  const anyProbed = probedEntries.length > 0;
 
   return (
     <div>
-      <div className="sakar-page-header">
-        <div>
-          <h1 className="sakar-page-title">Dashboard</h1>
-          <p className="sakar-page-subtitle">Fleet overview across every organization you can access.</p>
-        </div>
+      <PageHeader title="Dashboard" subtitle="Robot fleet operations control center." />
+
+      <div className="sakar-stat-grid" style={{ marginBottom: 20 }}>
+        <MetricCard label="Total Robots" value={total} icon={<Icon.robot />} tone="default" />
+        <MetricCard
+          label="Online"
+          value={anyProbed ? onlineCount : '—'}
+          icon={<Icon.wifi />}
+          tone="success"
+          trend={anyProbed ? `of ${probedEntries.length} probed` : probing ? 'Probing…' : 'Unavailable'}
+        />
+        <MetricCard
+          label="Offline"
+          value={anyProbed ? offlineCount : '—'}
+          icon={<Icon.xCircle />}
+          tone="neutral"
+          trend={anyProbed ? `of ${probedEntries.length} probed` : probing ? 'Probing…' : 'Unavailable'}
+        />
+        <MetricCard label="Locked" value="—" icon={<Icon.lock />} tone="neutral" trend="Unavailable" />
+        <MetricCard label="Low Battery" value={lowBatteryRobotCount} icon={<Icon.battery />} tone="warning" trend="Open LOW_BATTERY alerts" />
+        <MetricCard label="Faulted" value="—" icon={<Icon.alertOctagon />} tone="neutral" trend="Unavailable" />
+        <MetricCard label="Cleaning" value="—" icon={<Icon.spray />} tone="neutral" trend="Unavailable" />
+        <MetricCard label="Charging" value="—" icon={<Icon.plug />} tone="neutral" trend="Unavailable" />
       </div>
 
-      <div className="sakar-stat-grid" style={{ marginBottom: 24 }}>
-        <StatCard label="Total Robots" value={total} />
-        <StatCard label="Active" value={active} tone="success" />
-        <StatCard label="Registered (not activated)" value={registered} />
-        <StatCard label="Deactivated" value={deactivated} tone="warning" />
-      </div>
+      <UnavailableFeature reason="Locked, Faulted, Cleaning, and Charging have no backend-derivable source today: robot lock/unlock is not implemented, there is no fleet-wide fault/error status field, and there is no fleet-wide task-list endpoint to derive an active-cleaning count from (only per-robot task listing exists). These are marked Unavailable rather than fabricated. Low Battery is real — a count of robots with an open LOW_BATTERY alert." />
+      {!anyProbed && (
+        <UnavailableFeature reason="Online/Offline counts require at least one successful GET /robots/{id}/status probe (up to 12 robots). None succeeded — most likely no live robot adapter connection is configured." />
+      )}
 
-      <Card title="Live connectivity">
-        {liveStatus === null ? (
-          <LoadingState title="Probing robot status…" />
-        ) : liveStatus.probed === 0 ? (
-          <UnavailableFeature reason="GET /robots/{id}/status returned no usable result for any robot in this fleet (no live adapter connection) — online/offline counts require a connected robot and are not shown as zero to avoid implying a false negative." />
-        ) : (
-          <div className="sakar-stat-grid">
-            <StatCard label="Online" value={liveStatus.online} tone="success" />
-            <StatCard label="Offline" value={liveStatus.offline} tone="danger" />
-            <StatCard label="Charging (simulated)" value={Math.round(liveStatus.probed * 0.2)} />
-            <StatCard label="Low battery (simulated)" value={Math.round(liveStatus.probed * 0.1)} tone="warning" />
-          </div>
-        )}
-        <p className="sakar-page-subtitle" style={{ marginTop: 12 }}>
-          Online/offline reflects a live <code>GET /robots/{'{id}'}/status</code> probe of up to{' '}
-          {LIVE_STATUS_PROBE_LIMIT} robots. Charging and low-battery are not derivable from the current status
-          response shape and are simulated placeholders.
+      <Card title="Robot Fleet Overview" actions={<button type="button" className="sakar-btn sakar-btn--secondary" onClick={() => navigate('/robots')}>View all</button>}>
+        <p className="sakar-page-subtitle" style={{ marginBottom: 12 }}>
+          Status/Current state/Last heartbeat reflect a live status probe where it succeeded. Battery and Agent
+          version are not exposed by any backend endpoint today.
         </p>
+        <DataTable
+          rows={(robots ?? []).slice(0, 8)}
+          rowKey={(r) => r.id}
+          emptyTitle="No robots registered"
+          columns={[
+            { key: 'name', header: 'Robot', render: (r) => (
+                <button type="button" className="sakar-btn sakar-btn--secondary" onClick={() => navigate(`/robots/${r.id}`)}>{r.name}</button>
+              ) },
+            { key: 'status', header: 'Status', render: (r) => {
+                const s = statuses.get(r.id);
+                if (!s || s === 'unavailable') return <StatusBadge status="UNKNOWN" />;
+                return <StatusBadge status={s.online ? 'ONLINE' : 'OFFLINE'} />;
+              } },
+            { key: 'battery', header: 'Battery', render: () => <span className="sakar-page-subtitle">Not available</span> },
+            { key: 'state', header: 'Current State', render: (r) => {
+                const s = statuses.get(r.id);
+                return s && s !== 'unavailable' ? s.mainState : <span className="sakar-page-subtitle">—</span>;
+              } },
+            { key: 'site', header: 'Site', render: (r) => (r.siteId ? siteNames.get(r.siteId) ?? r.siteId : '—') },
+            { key: 'heartbeat', header: 'Last Heartbeat', render: (r) => {
+                const s = statuses.get(r.id);
+                return s && s !== 'unavailable' ? new Date(s.observedAt).toLocaleString() : <span className="sakar-page-subtitle">—</span>;
+              } },
+            { key: 'agent', header: 'Agent Version', render: () => <span className="sakar-page-subtitle">Not available</span> },
+          ]}
+        />
       </Card>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 16, marginTop: 24 }}>
-        <Card title="Recent robot events">
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 16, marginTop: 20 }}>
+        <Card title="Recent Robot Events">
           <SimulatedDataBanner />
           {recentEvents.map((e) => (
             <div key={e.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid var(--sakar-border)' }}>
               <span>{e.message}</span>
-              <Badge tone={e.severity === 'INFO' ? 'info' : e.severity === 'WARNING' ? 'warning' : 'danger'}>
-                {e.severity}
-              </Badge>
+              <Badge tone={e.severity === 'INFO' ? 'info' : e.severity === 'WARNING' ? 'warning' : 'danger'}>{e.severity}</Badge>
             </div>
           ))}
         </Card>
 
-        <Card title="Recent errors">
-          <SimulatedDataBanner />
-          {recentErrors.map((e) => (
-            <div key={e.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid var(--sakar-border)' }}>
-              <span>{e.message}</span>
-              <Badge tone="danger">{e.errorCode}</Badge>
-            </div>
-          ))}
+        <Card title="Active Alerts" actions={<button type="button" className="sakar-btn sakar-btn--secondary" onClick={() => navigate('/alerts')}>View all</button>}>
+          {openAlerts.length === 0 ? (
+            <p className="sakar-page-subtitle">No open alerts.</p>
+          ) : (
+            openAlerts.slice(0, 8).map((a) => (
+              <div key={a.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid var(--sakar-border)' }}>
+                <span>{a.message}</span>
+                <SeverityBadge severity={a.severity} />
+              </div>
+            ))
+          )}
         </Card>
 
-        <Card title="Recent alerts">
-          <SimulatedDataBanner />
-          {recentAlerts.map((a) => (
-            <div key={a.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid var(--sakar-border)' }}>
-              <span>{a.message}</span>
-              <Badge tone={a.status === 'ACTIVE' ? 'danger' : a.status === 'ACKNOWLEDGED' ? 'warning' : 'success'}>
-                {a.status}
-              </Badge>
-            </div>
-          ))}
-        </Card>
+        <SystemHealthCard />
       </div>
     </div>
   );

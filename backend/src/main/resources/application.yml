@@ -78,6 +78,15 @@ sakar:
   command:
     default-expiration-seconds: 45
 
+  alerts:
+    # Roadmap Phase 6: gates only RobotOfflineWatcherService's scheduled
+    # sweep (the wall-clock-driven half of alert generation). The
+    # battery-threshold rule fires inline on real telemetry ingest and is
+    # not gated by this flag — there is no background job to race in tests.
+    enabled: ${SAKAR_ALERTS_ENABLED:true}
+    offline-threshold-seconds: ${SAKAR_ALERTS_OFFLINE_THRESHOLD_SECONDS:300}
+    offline-check-interval-ms: ${SAKAR_ALERTS_OFFLINE_CHECK_INTERVAL_MS:60000}
+
   integration:
     keenon:
       # Current tested integration path is KEENON-CLOUD DEPENDENT (Master
