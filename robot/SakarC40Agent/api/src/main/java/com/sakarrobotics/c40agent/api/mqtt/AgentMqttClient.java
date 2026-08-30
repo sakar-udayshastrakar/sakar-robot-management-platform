@@ -19,6 +19,7 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.sakarrobotics.c40agent.api.mqtt.dto.AckPayload;
+import com.sakarrobotics.c40agent.api.mqtt.dto.CommandPayload;
 import com.sakarrobotics.c40agent.api.mqtt.dto.ErrorPayload;
 import com.sakarrobotics.c40agent.api.mqtt.dto.EventPayload;
 import com.sakarrobotics.c40agent.api.mqtt.dto.HeartbeatPayload;
@@ -157,6 +158,11 @@ public final class AgentMqttClient {
                     } catch (MqttException ex) {
                         SdkCallLogger.getInstance().logError("AgentMqttClient.subscribe", topics.ack(), ex.getReasonCode(), String.valueOf(ex.getMessage()));
                     }
+                    try {
+                        newClient.subscribe(topics.command(), config.getQos(), (topic, message) -> handleCommand(message));
+                    } catch (MqttException ex) {
+                        SdkCallLogger.getInstance().logError("AgentMqttClient.subscribe", topics.command(), ex.getReasonCode(), String.valueOf(ex.getMessage()));
+                    }
                     publishRetained(topics.presence(), presenceEnvelope(PresencePayload.ONLINE));
                     flushOfflineQueue();
                 }
@@ -196,6 +202,17 @@ public final class AgentMqttClient {
             listener.onAckReceived(ack);
         } catch (RuntimeException malformed) {
             SdkCallLogger.getInstance().logError("AgentMqttClient.handleAck", "n/a", -1, "malformed ack: " + malformed.getMessage());
+        }
+    }
+
+    private void handleCommand(MqttMessage message) {
+        try {
+            // Deliberately NOT parsed as MqttEnvelope - see CommandPayload's Javadoc for why the
+            // command message is a flat structure, unlike every agent-authored message type.
+            CommandPayload command = gson.fromJson(new String(message.getPayload()), CommandPayload.class);
+            listener.onCommandReceived(command);
+        } catch (RuntimeException malformed) {
+            SdkCallLogger.getInstance().logError("AgentMqttClient.handleCommand", "n/a", -1, "malformed command: " + malformed.getMessage());
         }
     }
 

@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -26,27 +27,38 @@ import lombok.RequiredArgsConstructor;
 import tools.jackson.databind.ObjectMapper;
 
 /**
- * Real, non-lock robot command issuance (Roadmap Phase 6). This is
- * deliberately the full extent of "command dispatch" this codebase
- * implements: it validates capability/tenant/permission, persists a
- * signed-envelope-shaped {@link RobotCommand} row, and makes a real,
- * best-effort MQTT publish attempt on the outbound {@link
- * MqttTopicKind#COMMANDS} topic.
+ * Real, non-lock robot command issuance (Roadmap Phase 6). Validates
+ * capability/tenant/permission, persists a signed-envelope-shaped {@link
+ * RobotCommand} row, and makes a real, best-effort MQTT publish attempt on
+ * the outbound {@link MqttTopicKind#COMMANDS} topic.
  *
- * <p>It does <strong>not</strong> claim delivery or execution:
- * {@code SakarC40Agent} has no command-consuming code (this task
- * deliberately does not modify the agent — see the Keenon-parity
- * requirements document), so no ack/result ever arrives and {@link
- * RobotCommand#getStatus()} never advances past {@link
- * CommandStatus#SENT}. A failed/disabled MQTT publish is reported back to
- * the caller honestly rather than silently swallowed or faked as
- * successful.
+ * <p>It does <strong>not</strong> itself claim delivery or execution: a
+ * successful publish here only means the broker accepted the message, not
+ * that any agent received or executed it. As of Roadmap Phase 6/7 ("Robot
+ * Agent Command Loop"), {@code SakarC40Agent} <em>can</em> consume this
+ * topic and report lifecycle results back (see {@link
+ * CommandResultIngestionService}), which is what advances {@link
+ * RobotCommand#getStatus()} past {@link CommandStatus#SENT} — but that
+ * result is only ever as trustworthy as the agent's own command executor.
+ * SakarC40Agent's current {@code START_TASK} executor is an explicitly
+ * labeled software simulation (no Peanut SDK cleaning-control API exists
+ * to call — see PEANUT_CLEAN_V3.7.6_INTERNAL_OPERATION_ANALYSIS.md and
+ * PEANUT_SDK_C40_API_MATRIX.md), so a {@code COMMAND_SUCCESS} status for
+ * that command type does not mean a physical robot did anything. A
+ * failed/disabled MQTT publish is reported back to the caller honestly
+ * rather than silently swallowed or faked as successful.
  */
 @Service
 @RequiredArgsConstructor
 public class RobotCommandService {
 
-    private static final long EXPIRY_SECONDS = 30;
+    /**
+     * Previously hardcoded to 30 with {@code sakar.command.default-expiration-seconds}
+     * (application.yml, value 45) defined but never read anywhere — Roadmap
+     * Phase 6/7 wires it up for real.
+     */
+    @Value("${sakar.command.default-expiration-seconds:30}")
+    private long expirySeconds;
 
     private final RobotCommandRepository robotCommandRepository;
     private final RobotService robotService;
@@ -72,7 +84,7 @@ public class RobotCommandService {
         command.setOrganizationId(robot.getOrganizationId());
         command.setCommandType(commandType.name());
         command.setNonce(UUID.randomUUID().toString());
-        command.setExpiresAt(Instant.now().plusSeconds(EXPIRY_SECONDS));
+        command.setExpiresAt(Instant.now().plusSeconds(expirySeconds));
         command.setStatus(CommandStatus.AUTHORIZED);
         command.setPayload(serializePayload(params));
         RobotCommand saved = robotCommandRepository.save(command);
@@ -87,8 +99,8 @@ public class RobotCommandService {
             saved.setSentAt(Instant.now());
             robotCommandRepository.save(saved);
             dispatched = true;
-            dispatchNote = "Published to MQTT — SakarC40Agent does not yet consume commands, "
-                    + "so delivery/execution is not confirmed.";
+            dispatchNote = "Published to MQTT — awaiting the agent's own report of receipt/execution; "
+                    + "see GET .../commands/{commandId} for the current status.";
         } catch (ApiException ex) {
             dispatched = false;
             dispatchNote = "Not dispatched: " + ex.getMessage();

@@ -8,6 +8,8 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.sakarrobotics.cloud.command.CommandResultIngestionService;
+import com.sakarrobotics.cloud.mqtt.dto.CommandResultDetail;
 import com.sakarrobotics.cloud.mqtt.dto.EventPayload;
 import com.sakarrobotics.cloud.mqtt.dto.HeartbeatPayload;
 import com.sakarrobotics.cloud.mqtt.dto.PresencePayload;
@@ -42,6 +44,14 @@ import tools.jackson.databind.ObjectMapper;
 @RequiredArgsConstructor
 public class MqttInboundMessageService {
 
+    /**
+     * {@code eventType} value {@link CommandResultIngestionService} looks for
+     * on an inbound EVENT — see {@link com.sakarrobotics.cloud.mqtt.dto.CommandResultDetail}'s
+     * Javadoc for why command results ride the EVENT channel rather than a
+     * dedicated message type.
+     */
+    private static final String COMMAND_RESULT_EVENT_TYPE = "COMMAND_RESULT";
+
     private final MqttProperties properties;
     private final RobotRepository robotRepository;
     private final MqttDedupGuard dedupGuard;
@@ -53,6 +63,7 @@ public class MqttInboundMessageService {
     private final RobotErrorIngestionService robotErrorIngestionService;
     private final RobotStatusService robotStatusService;
     private final RobotRealtimePublisher realtimePublisher;
+    private final CommandResultIngestionService commandResultIngestionService;
     private final ObjectMapper objectMapper;
 
     public MqttIngestResult handle(ParsedMqttTopic topic, MqttEnvelope envelope) {
@@ -137,6 +148,17 @@ public class MqttInboundMessageService {
             case EVENT -> {
                 EventPayload payload = convert(envelope, EventPayload.class);
                 robotEventIngestionService.record(robot.getId(), payload);
+                if (COMMAND_RESULT_EVENT_TYPE.equals(payload.eventType()) && payload.payload() != null) {
+                    // A malformed nested payload must not undo the generic robot_event row this
+                    // EVENT already earned above, nor be reported to the agent as a whole-message
+                    // failure — degrade gracefully, exactly like handleAck does for a bad ack.
+                    try {
+                        CommandResultDetail resultDetail = objectMapper.readValue(payload.payload(), CommandResultDetail.class);
+                        commandResultIngestionService.record(robot, resultDetail);
+                    } catch (RuntimeException malformed) {
+                        lifecycleLogger.warn(robot.getId(), "COMMAND_RESULT_MALFORMED", String.valueOf(malformed.getMessage()));
+                    }
+                }
             }
             case ERROR -> {
                 ErrorPayload payload = convert(envelope, ErrorPayload.class);

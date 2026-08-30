@@ -29,6 +29,19 @@ public final class ChargingBridge {
         bridge.startManualCharge(callback);
     }
 
+    /**
+     * Roadmap Phase 7 "RETURN_TO_DOCK" - unlike {@link #startCharging}, this
+     * does use {@code BatteryComponent.autoCharge()} (via {@link
+     * PeanutSdkBridge#autoCharge}), because "return to dock" specifically
+     * means commanding the robot to navigate back and charge, not just
+     * starting a charge cycle assuming it is already docked. See {@code
+     * PeanutSdkBridge.autoCharge}'s Javadoc for why pile {@code 0} is used
+     * rather than a guessed pile id.
+     */
+    public void returnToDock(SdkCallback callback) {
+        bridge.autoCharge(callback);
+    }
+
     public void stopCharging(SdkCallback callback) {
         bridge.stopCharge(callback);
     }

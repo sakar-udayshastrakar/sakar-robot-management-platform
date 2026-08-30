@@ -13,11 +13,41 @@ modular Java API (`C40RobotController`) that later Sakar software can
 build on, without any module outside `:sdk` ever importing a
 `com.keenon.*` class directly.
 
-**Current scope is diagnostic-only.** There is no physical C40 available
-in any environment this was built in, so the app defaults to
-`OperatingMode.DIAGNOSTIC_ONLY` and only performs read-only status
-queries. See `COMPATIBILITY_REPORT.md` for exactly what has and has not
-been verified.
+**Current scope is diagnostic-only for physical robot actions.** There is
+no physical C40 available in any environment this was built in, so the
+app defaults to `OperatingMode.DIAGNOSTIC_ONLY` and only performs
+read-only status queries via the Peanut SDK. See `COMPATIBILITY_REPORT.md`
+for exactly what has and has not been verified.
+
+**Roadmap Phase 7 addition:** the app now also consumes remote commands
+over MQTT from the Sakar Cloud backend (`CommandDispatcher`, in `:api`,
+routing by command type via `CompositeRobotCommandExecutor`) and reports
+RECEIVED/EXECUTING/COMPLETED/DISPATCHED/FAILED/TIMEOUT lifecycle results
+back. Two command types are wired, with two very different executors:
+
+- `START_TASK` → `SimulatedRobotCommandExecutor` (in `:app`), an
+  **explicitly-labeled software placeholder that never calls the Peanut
+  SDK and never touches the robot**. This is not a shortcut: the
+  officially-distributed Peanut SDK v1.3.0 AAR this app bundles has **no
+  cleaning-control API at all** (confirmed by decompiling every class in
+  the AAR — no `CleanComponent`, no `com.keenon.sdk.robot.api` /
+  `com.keenon.sdk.coapapi` packages).
+- `RETURN_TO_DOCK` → `PeanutSdkReturnToDockExecutor` (in `:api`) →
+  `RealReturnToDockGateway` (in `:app`) → `C40RobotController.returnToDock()`
+  — a **REAL** call to the officially-distributed SDK's
+  `BatteryComponent.autoCharge(IDataCallback, int)` (re-verified this pass
+  by fresh `javap` decompilation; internally `@CoapCommond(path="/charge/auto")`).
+  This one goes through the exact same `OperatingMode.HARDWARE_TEST` guard
+  as `startCharging`/`stopCharging` — it is never called unless that mode
+  is deliberately, supervisedly enabled (see "C40 hardware test procedure"
+  below). Its success signal is reported as `DISPATCHED`, not `COMPLETED`
+  — the SDK callback only confirms the local interface *accepted* the
+  request, never that the robot physically reached a dock or began
+  charging.
+
+See `../../ROBOT_AGENT_COMMAND_LOOP_INVESTIGATION_AND_DESIGN.md` (§§1-21
+for `START_TASK`, §22 for `RETURN_TO_DOCK`) for the full investigation and
+the business decision still open before cleaning gets a real executor.
 
 ## Architecture
 
@@ -67,13 +97,13 @@ C40
 | `diagnostics` | `DeviceEnvironmentInspector` (Android/Build info, network interfaces) and `SerialPortInspector` (read-only `/dev/ttyS*` existence checks). |
 | `logging` | `LogEntry` + `SdkCallLogger`: the ring buffer behind the on-screen raw SDK log. No SDK or Android dependency. |
 | `ui` | `MainActivity` - the diagnostic dashboard, and the app's only screen. |
-| `api` | Placeholder for the future Sakar Backend integration boundary. No networking code - see `api/README.md`. |
+| `api` | The Sakar Backend integration boundary: MQTT client (`AgentMqttClient`, Eclipse Paho), presence/heartbeat/telemetry/event/error publishing, and (Phase 7) inbound command consumption (`CommandDispatcher`) + lifecycle result reporting. Never imports `com.keenon.*` - see `api/README.md`. |
 
 ## Safety: operating modes
 
 `C40RobotController` has two modes:
 
-- `DIAGNOSTIC_ONLY` (default, and the only mode the UI can reach): status/telemetry queries only. `goToPoint`, `pauseNavigation`, `resumeNavigation`, `stopNavigation`, `startCharging`, and `stopCharging` all immediately return `ERROR_BLOCKED_BY_OPERATING_MODE` without touching the SDK.
+- `DIAGNOSTIC_ONLY` (default, and the only mode the UI can reach): status/telemetry queries only. `goToPoint`, `pauseNavigation`, `resumeNavigation`, `stopNavigation`, `startCharging`, `stopCharging`, and (Phase 7) `returnToDock` all immediately return `ERROR_BLOCKED_BY_OPERATING_MODE` without touching the SDK. This is also what blocks the MQTT-triggered `RETURN_TO_DOCK` command's real executor from ever reaching the robot in this build.
 - `HARDWARE_TEST`: unlocks the actuation methods above. **Nothing in this codebase ever sets this mode**; it exists as a documented seam for a future, explicitly supervised on-robot test session.
 
 `connect()`/`disconnect()` are always allowed in either mode - they only open/close the SDK link, they do not move anything.

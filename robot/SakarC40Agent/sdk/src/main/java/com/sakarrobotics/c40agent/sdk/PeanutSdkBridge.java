@@ -197,6 +197,23 @@ public final class PeanutSdkBridge {
         PeanutSDK.getInstance().battery().manualCharge(wrap("BatteryComponent.manualCharge", "n/a", callback));
     }
 
+    /**
+     * Roadmap Phase 7 "RETURN_TO_DOCK" - {@code BatteryComponent.autoCharge(IDataCallback, int)},
+     * confirmed present in the AAR via {@code javap} (delegates to {@code
+     * com.keenon.sdk.api.ChargeAutoApi}, {@code @CoapCommond(path="/charge/auto")}).
+     * Passes pile {@code 0} deliberately, not a guessed pile id: {@code
+     * ChargeAutoApi.CoapParams()}'s own decompiled bytecode builds a null
+     * request body (no "dst" field) whenever the pile argument is
+     * {@code <= 0}, which is the closest verified "no specific pile"
+     * behavior available without inventing a pile number this project has
+     * not confirmed for any C40 install - see {@code
+     * PeanutSdkReturnToDockExecutor}'s Javadoc and {@code
+     * ROBOT_AGENT_COMMAND_LOOP_INVESTIGATION_AND_DESIGN.md}.
+     */
+    public void autoCharge(SdkCallback callback) {
+        PeanutSDK.getInstance().battery().autoCharge(wrap("BatteryComponent.autoCharge", "pile=0", callback), 0);
+    }
+
     public void stopCharge(SdkCallback callback) {
         PeanutSDK.getInstance().battery().stopCharge(wrap("BatteryComponent.stopCharge", "n/a", callback));
     }

@@ -78,6 +78,14 @@ sakar:
   command:
     default-expiration-seconds: 45
 
+  commands:
+    # Roadmap Phase 6/7 "Robot Agent Command Loop" — resolves commands the
+    # agent never reported a result for before they expired. Same
+    # gated-scheduled-sweep convention as sakar.alerts below.
+    expiry-sweep:
+      enabled: ${SAKAR_COMMAND_EXPIRY_SWEEP_ENABLED:true}
+      interval-ms: ${SAKAR_COMMAND_EXPIRY_SWEEP_INTERVAL_MS:15000}
+
   alerts:
     # Roadmap Phase 6: gates only RobotOfflineWatcherService's scheduled
     # sweep (the wall-clock-driven half of alert generation). The

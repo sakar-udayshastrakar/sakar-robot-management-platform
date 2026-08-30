@@ -58,11 +58,8 @@ public class RobotCommandController {
             @PathVariable UUID robotId,
             @PathVariable UUID commandId) {
         RobotCommand command = robotCommandService.getAccessibleOrThrow(principal, commandId);
-        boolean dispatched = command.getStatus() == CommandStatus.SENT;
-        String note = dispatched
-                ? "Published to MQTT — SakarC40Agent does not yet consume commands, so delivery/execution is not confirmed."
-                : "Not dispatched.";
-        return ApiResponse.ok(CommandResponse.from(command, dispatched, note));
+        boolean dispatched = command.getSentAt() != null;
+        return ApiResponse.ok(CommandResponse.from(command, dispatched, dispatchNoteFor(command)));
     }
 
     @GetMapping
@@ -74,7 +71,36 @@ public class RobotCommandController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "25") int pageSize) {
         Page<CommandResponse> result = robotCommandService.listByRobot(principal, robotId, page, pageSize)
-                .map(c -> CommandResponse.from(c, c.getStatus() == CommandStatus.SENT, null));
+                .map(c -> CommandResponse.from(c, c.getSentAt() != null, dispatchNoteFor(c)));
         return ApiResponse.ok(result);
+    }
+
+    /**
+     * {@code dispatched}/{@code sentAt} only ever mean "the backend
+     * published this to MQTT" — the note is the honest, human-readable
+     * bridge to "here is what is actually known about what happened after
+     * that" (Master Requirements Part 40), driven entirely by {@link
+     * CommandStatus}, never fabricated.
+     */
+    private static String dispatchNoteFor(RobotCommand command) {
+        if (command.getSentAt() == null) {
+            return "Not dispatched.";
+        }
+        return switch (command.getStatus()) {
+            case SENT -> "Published to MQTT — awaiting the agent's acknowledgement.";
+            case COMMAND_RECEIVED -> "The agent received the command and has not yet reported an execution outcome.";
+            case RUNNING -> "The agent reported the command is executing.";
+            case COMMAND_DISPATCHED ->
+                "The agent's local robot control interface accepted and dispatched this command. This does NOT "
+                        + "confirm the command's real-world effect completed (e.g. the robot arriving at a "
+                        + "charging dock) — no further confirmation signal was available for this command type.";
+            case COMMAND_SUCCESS ->
+                "The agent reported successful completion. This reflects the agent's own command executor only — "
+                        + "see the agent/robot documentation for whether that executor is a real robot call or a software simulation.";
+            case COMMAND_FAILED -> "The agent reported that command execution failed.";
+            case COMMAND_TIMEOUT -> "No result was reported by the agent before the command expired.";
+            case CANCELLED -> "This command was cancelled.";
+            default -> "Published to MQTT — awaiting the agent's acknowledgement.";
+        };
     }
 }
