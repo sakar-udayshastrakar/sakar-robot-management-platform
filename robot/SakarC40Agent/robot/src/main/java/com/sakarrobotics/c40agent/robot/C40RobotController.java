@@ -142,6 +142,42 @@ public final class C40RobotController {
         return sdkBridge.getLastHeartbeatEvent();
     }
 
+    /**
+     * Roadmap addition - raw LiDAR read ({@code com.keenon.sdk.api.SensorLidarApi},
+     * confirmed present in the officially-distributed AAR, previously unused
+     * by this project). Read-only, so no operating-mode guard.
+     */
+    public void getLidar(SdkCallback callback) {
+        sdkBridge.queryLidar(callback);
+    }
+
+    public void getDepth(SdkCallback callback) {
+        sdkBridge.queryDepth(callback);
+    }
+
+    public void getSonar(SdkCallback callback) {
+        sdkBridge.querySonar(callback);
+    }
+
+    public void getImu(SdkCallback callback) {
+        sdkBridge.queryImu(callback);
+    }
+
+    /**
+     * Roadmap addition - {@code MapComponent.getMapInfo}/{@code downloadOpt},
+     * confirmed present in the officially-distributed AAR, previously
+     * unused by this project. Both only read map data off the robot - see
+     * {@link #uploadMap(byte[], SdkCallback)} for the write side, which is
+     * gated.
+     */
+    public void getMapInfo(SdkCallback callback) {
+        sdkBridge.getMapInfo(callback);
+    }
+
+    public void downloadMap(SdkCallback callback) {
+        sdkBridge.downloadMap(callback);
+    }
+
     // ---------------------------------------------------------------
     // Motion / charging actions - blocked unless operatingMode is
     // explicitly HARDWARE_TEST. Nothing in this build ever sets that mode.
@@ -202,6 +238,19 @@ public final class C40RobotController {
             return;
         }
         chargingBridge.returnToDock(callback);
+    }
+
+    /**
+     * Roadmap addition - {@code MapComponent.uploadOpt}, pushes new map
+     * data to the robot. Gated exactly like every other write/actuation
+     * method in this class: it changes robot-side state even though it
+     * does not cause physical motion, so it is not exempt from the guard.
+     */
+    public void uploadMap(byte[] mapData, SdkCallback callback) {
+        if (!guard("uploadMap", "bytes=" + (mapData != null ? mapData.length : 0), callback)) {
+            return;
+        }
+        sdkBridge.uploadMap(mapData, callback);
     }
 
     /** @return true if the call is allowed to proceed. */

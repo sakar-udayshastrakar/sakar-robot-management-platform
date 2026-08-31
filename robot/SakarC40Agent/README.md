@@ -49,6 +49,52 @@ See `../../ROBOT_AGENT_COMMAND_LOOP_INVESTIGATION_AND_DESIGN.md` (§§1-21
 for `START_TASK`, §22 for `RETURN_TO_DOCK`) for the full investigation and
 the business decision still open before cleaning gets a real executor.
 
+**Roadmap addition (unreleased C40 S reverse-engineering pass):** the
+diagnostic dashboard now also queries raw sensor data and map metadata,
+none of which were previously wired into this project even though both
+were already present in the bundled AAR:
+
+- `C40RobotController.getLidar/getDepth/getSonar/getImu()` → `PeanutSdkBridge`
+  → `com.keenon.sdk.api.SensorLidarApi/SensorDepthApi/SensorSonarApi/SensorImuApi`
+  (public, standalone classes confirmed present via `javap` - **not** the
+  same package as the internal-only `com.keenon.sdk.coapapi.api.sensor.*`
+  classes found bundled inside Keenon's own C40 S apps). One-shot
+  `send()` queries only; `observe()` (continuous subscription) exists on
+  each class but is intentionally not wired yet.
+- `C40RobotController.getMapInfo()/downloadMap()` → `MapComponent.getMapInfo`/`downloadOpt`
+  - read-only, no operating-mode guard, shown on the diagnostic screen.
+- `C40RobotController.uploadMap(byte[], callback)` → `MapComponent.uploadOpt`
+  - writes to the robot, so it is gated by `OperatingMode.HARDWARE_TEST`
+  exactly like `goToPoint`/`startCharging`/`returnToDock`, and (like
+  those) has no UI control on this diagnostic-only screen. `PeanutSdkBridge.uploadMap`
+  rejects `null`/empty map data before ever calling the SDK (`SdkCallback.onError`
+  with `PeanutSdkBridge.ERROR_INVALID_MAP_DATA`), rather than relying on
+  Keenon's `MapDownloadOptApi.CoapParams()` silently degrading a null
+  payload to an empty request body. Also documented in
+  `PeanutSdkBridge.java`: Keenon's own `MapUploadOptApi`/`MapDownloadOptApi`
+  internal class names are reversed relative to what they do (verified by
+  bytecode - `downloadOpt` calls the class named "Upload", `uploadOpt`
+  calls the class named "Download") - this bridge's read/gated-write split
+  is based on the verified payload behavior, not the vendor names.
+
+**Status:**
+- Map/Sensor integration: **CODE VERIFIED** (every method traced to the
+  actual bundled AAR via `javap`, `:sdk`/`:robot`/`:ui`/`:app` build clean).
+- Software tests: **SOFTWARE TEST VERIFIED** - `robot/src/test/java/.../C40RobotControllerTest.java`
+  covers `uploadMap`'s gating (null/empty data rejected before the SDK is
+  touched; `OperatingMode.DIAGNOSTIC_ONLY` blocks before the SDK is
+  touched; `OperatingMode.HARDWARE_TEST` with valid data reaches the real
+  `PeanutSDK` singleton - which then throws in this pure-JVM test because
+  it was never initialized, and that exception is itself the proof the
+  guard let the call through). No Android runtime, no physical robot.
+- Physical robot: **NOT PERFORMED.** None of the above has been exercised
+  against a physical C40 S.
+
+See
+`../../C40_S_LS_M014C00_RW_F00_V246_ROS_INTERFACE_ANALYSIS.md` section 18
+for the full evidence trail (fresh `javap` extraction of this project's
+own vendored `peanut-sdk-release.aar`) that motivated this addition.
+
 ## Architecture
 
 Today:

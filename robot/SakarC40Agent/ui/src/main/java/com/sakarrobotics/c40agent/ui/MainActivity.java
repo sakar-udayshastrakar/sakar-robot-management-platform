@@ -48,12 +48,21 @@ public class MainActivity extends AppCompatActivity {
     private TextView tvBattery;
     private TextView tvMotor;
     private TextView tvPosition;
+    private TextView tvSensors;
+    private TextView tvMap;
     private TextView tvHealth;
     private TextView tvSerialPorts;
     private TextView tvRawLog;
     private ScrollView svRawLog;
 
     private final StringBuilder rawLogBuilder = new StringBuilder();
+
+    // Populated independently by refreshSensors() - each line renders as
+    // soon as its own callback returns, rather than waiting on all four.
+    private String lastLidar = "(not queried yet)";
+    private String lastDepth = "(not queried yet)";
+    private String lastSonar = "(not queried yet)";
+    private String lastImu = "(not queried yet)";
 
     private final SdkCallLogger.Listener logListener = entry -> runOnUiThread(() -> appendLogEntry(entry));
 
@@ -96,6 +105,8 @@ public class MainActivity extends AppCompatActivity {
         tvBattery = findViewById(R.id.tv_battery);
         tvMotor = findViewById(R.id.tv_motor);
         tvPosition = findViewById(R.id.tv_position);
+        tvSensors = findViewById(R.id.tv_sensors);
+        tvMap = findViewById(R.id.tv_map);
         tvHealth = findViewById(R.id.tv_health);
         tvSerialPorts = findViewById(R.id.tv_serial_ports);
         tvRawLog = findViewById(R.id.tv_raw_log);
@@ -199,6 +210,58 @@ public class MainActivity extends AppCompatActivity {
         controller.getPosition(uiCallback(
                 response -> tvPosition.setText("Position [UNCONFIRMED API on C40]: " + response),
                 (code, msg) -> tvPosition.setText("Position [UNCONFIRMED API on C40]: error " + code + " " + msg)));
+
+        refreshSensors();
+        refreshMap();
+    }
+
+    /**
+     * Roadmap addition - raw sensor reads via com.keenon.sdk.api.Sensor*Api,
+     * previously unused by this project (see
+     * C40_S_LS_M014C00_RW_F00_V246_ROS_INTERFACE_ANALYSIS.md section 18).
+     * Each of the four queries is independent and renders as soon as its
+     * own callback returns.
+     */
+    private void refreshSensors() {
+        if (controller == null) {
+            return;
+        }
+        controller.getLidar(uiCallback(
+                response -> { lastLidar = response; renderSensors(); },
+                (code, msg) -> { lastLidar = "error " + code + " " + msg; renderSensors(); }));
+
+        controller.getDepth(uiCallback(
+                response -> { lastDepth = response; renderSensors(); },
+                (code, msg) -> { lastDepth = "error " + code + " " + msg; renderSensors(); }));
+
+        controller.getSonar(uiCallback(
+                response -> { lastSonar = response; renderSensors(); },
+                (code, msg) -> { lastSonar = "error " + code + " " + msg; renderSensors(); }));
+
+        controller.getImu(uiCallback(
+                response -> { lastImu = response; renderSensors(); },
+                (code, msg) -> { lastImu = "error " + code + " " + msg; renderSensors(); }));
+    }
+
+    private void renderSensors() {
+        tvSensors.setText("LiDAR: " + lastLidar
+                + "\nDepth: " + lastDepth
+                + "\nSonar: " + lastSonar
+                + "\nIMU: " + lastImu);
+    }
+
+    /**
+     * Roadmap addition - MapComponent.getMapInfo, previously unused by this
+     * project. Read-only; the write side (uploadMap) intentionally has no
+     * UI control here, matching this screen's diagnostic-only scope.
+     */
+    private void refreshMap() {
+        if (controller == null) {
+            return;
+        }
+        controller.getMapInfo(uiCallback(
+                response -> tvMap.setText("Map info: " + response),
+                (code, msg) -> tvMap.setText("Map info: error " + code + " " + msg)));
     }
 
     private void renderRuntimeInfoAndHealth() {
