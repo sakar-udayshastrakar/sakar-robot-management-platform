@@ -75,6 +75,7 @@ public class RobotCommandService {
     @Transactional
     public Issued issue(UserPrincipal principal, UUID robotId, String commandTypeRaw, Map<String, Object> params) {
         NonLockCommandType commandType = parseCommandType(commandTypeRaw);
+        validateParams(commandType, params);
         Robot robot = robotService.getAccessibleOrThrow(principal, robotId);
         robotCapabilityService.assertSupported(robot.getRobotModelId(), commandType.requiredCapability());
 
@@ -132,6 +133,47 @@ public class RobotCommandService {
             throw new ApiException(SakarErrorCode.VALIDATION_FAILED,
                     "Unsupported or lock/unlock command type: " + raw
                             + " — only non-lock commands may be issued through this endpoint");
+        }
+    }
+
+    /**
+     * Per-command-type payload shape checks (Roadmap Phase 8 "GO_TO_POINT",
+     * {@code C40_S_GO_TO_POINT_SDK_INVESTIGATION.md}). {@code GO_TO_POINT} is
+     * the only command type with such a check today: it requires an integer
+     * {@code destinationId} — a pre-registered destination id on the
+     * robot's own currently-loaded map (verified SDK contract:
+     * {@code NavigationComponent.setTarget(IDataCallback, int)} takes a
+     * plain destination id, not raw coordinates). This backend never
+     * invents or defaults that id; a missing or malformed one fails the
+     * request here rather than being forwarded to the agent. Negative
+     * values are rejected defensively — the verified SDK request body has
+     * no documented meaning for a negative destination id (unlike, e.g.,
+     * its unrelated {@code taskType}/{@code takeControl} fields, which use
+     * {@code -1} as their own "unset" sentinel) — so this project treats
+     * negative as invalid rather than guessing it is safe to forward.
+     */
+    private static void validateParams(NonLockCommandType commandType, Map<String, Object> params) {
+        if (commandType != NonLockCommandType.GO_TO_POINT) {
+            return;
+        }
+        Object destinationId = params == null ? null : params.get("destinationId");
+        if (destinationId == null) {
+            throw new ApiException(SakarErrorCode.VALIDATION_FAILED,
+                    "GO_TO_POINT requires a 'destinationId' in params — a pre-registered destination id on "
+                            + "the robot's currently loaded map. This backend does not invent one.");
+        }
+        long value;
+        try {
+            value = destinationId instanceof Number
+                    ? ((Number) destinationId).longValue()
+                    : Long.parseLong(destinationId.toString());
+        } catch (NumberFormatException ex) {
+            throw new ApiException(SakarErrorCode.VALIDATION_FAILED,
+                    "GO_TO_POINT 'destinationId' must be an integer, got: " + destinationId);
+        }
+        if (value < 0 || value > Integer.MAX_VALUE) {
+            throw new ApiException(SakarErrorCode.VALIDATION_FAILED,
+                    "GO_TO_POINT 'destinationId' must be a non-negative 32-bit integer, got: " + value);
         }
     }
 

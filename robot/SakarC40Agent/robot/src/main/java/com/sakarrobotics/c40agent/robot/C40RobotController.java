@@ -5,6 +5,7 @@ import android.content.Context;
 import com.sakarrobotics.c40agent.charging.ChargingBridge;
 import com.sakarrobotics.c40agent.logging.SdkCallLogger;
 import com.sakarrobotics.c40agent.navigation.NavigationBridge;
+import com.sakarrobotics.c40agent.sdk.DestinationsCallback;
 import com.sakarrobotics.c40agent.sdk.PeanutSdkBridge;
 import com.sakarrobotics.c40agent.sdk.SdkCallback;
 import com.sakarrobotics.c40agent.sdk.SdkConnectionConfig;
@@ -176,6 +177,21 @@ public final class C40RobotController {
 
     public void downloadMap(SdkCallback callback) {
         sdkBridge.downloadMap(callback);
+    }
+
+    /**
+     * Roadmap Phase 8 addition (see {@code
+     * C40_S_DESTINATION_DISCOVERY_INVESTIGATION.md}) - {@code
+     * NavigationComponent.getAllDestPose}, confirmed present in the
+     * officially-distributed AAR, previously unused by this project.
+     * Read-only, so no operating-mode guard: it only fetches
+     * pre-registered destinations off the robot's currently loaded map,
+     * it never sends a movement command. Feeds {@link #goToPoint(int, SdkCallback)}
+     * a real {@code destinationId} instead of requiring one to be
+     * invented.
+     */
+    public void getAllDestinations(DestinationsCallback callback) {
+        navigationBridge.getAllDestinations(callback);
     }
 
     // ---------------------------------------------------------------

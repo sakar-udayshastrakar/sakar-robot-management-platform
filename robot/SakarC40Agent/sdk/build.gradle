@@ -39,6 +39,16 @@ android {
             minifyEnabled false
         }
     }
+
+    // JUnit 5 for this module's unit tests (same versions as :robot/build.gradle).
+    // No Robolectric, no Mockito needed: PeanutSdkBridge.parseDestinations is a
+    // pure function (String -> List<Destination>) that never touches the
+    // PeanutSDK singleton - see PeanutSdkBridgeDestinationParsingTest.
+    testOptions {
+        unitTests.all {
+            useJUnitPlatform()
+        }
+    }
 }
 
 dependencies {
@@ -54,4 +64,7 @@ dependencies {
 
     implementation project(':logging')
     implementation project(':telemetry')
+
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.10.2'
 }

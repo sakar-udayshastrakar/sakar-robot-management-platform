@@ -15,6 +15,7 @@ public enum RobotCapabilityType {
     PAUSE_TASK,
     RESUME_TASK,
     RETURN_TO_DOCK,
+    GO_TO_POINT,
     LOCK,
     UNLOCK,
     GET_MAP,

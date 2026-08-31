@@ -9,6 +9,7 @@ import com.sakarrobotics.c40agent.api.mqtt.AgentMqttClient;
 import com.sakarrobotics.c40agent.api.mqtt.CommandDispatcher;
 import com.sakarrobotics.c40agent.api.mqtt.CompositeRobotCommandExecutor;
 import com.sakarrobotics.c40agent.api.mqtt.HeartbeatScheduler;
+import com.sakarrobotics.c40agent.api.mqtt.PeanutSdkGoToPointExecutor;
 import com.sakarrobotics.c40agent.api.mqtt.PeanutSdkReturnToDockExecutor;
 import com.sakarrobotics.c40agent.api.mqtt.RobotCommandExecutor;
 import com.sakarrobotics.c40agent.api.mqtt.SakarMqttConfig;
@@ -66,10 +67,17 @@ public class SakarC40Application extends Application {
         // software placeholder. RETURN_TO_DOCK (Phase 7) DOES have a verified official SDK
         // API - BatteryComponent.autoCharge() - so it gets a real executor, gated by the
         // existing C40RobotController.returnToDock()'s OperatingMode.HARDWARE_TEST check.
+        // GO_TO_POINT (Roadmap Phase 8, see C40_S_GO_TO_POINT_SDK_INVESTIGATION.md) DOES have a
+        // verified official SDK API too - NavigationComponent.setTarget(IDataCallback, int) - so
+        // it also gets a real executor, gated the same way via C40RobotController.goToPoint().
+        // The int is a pre-registered destination id, never invented here - see
+        // PeanutSdkGoToPointExecutor's Javadoc for where a command must supply it from.
         Map<String, RobotCommandExecutor> executorsByCommandType = new HashMap<>();
         executorsByCommandType.put("START_TASK", new SimulatedRobotCommandExecutor());
         executorsByCommandType.put("RETURN_TO_DOCK",
                 new PeanutSdkReturnToDockExecutor(new RealReturnToDockGateway(controller)));
+        executorsByCommandType.put("GO_TO_POINT",
+                new PeanutSdkGoToPointExecutor(new RealGoToPointGateway(controller)));
         CommandDispatcher commandDispatcher = new CommandDispatcher(new CompositeRobotCommandExecutor(executorsByCommandType));
         mqttClient = new AgentMqttClient(mqttConfig, commandDispatcher);
         commandDispatcher.attachResultPublisher(mqttClient::publishEvent);
