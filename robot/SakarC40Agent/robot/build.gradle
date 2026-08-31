@@ -13,6 +13,15 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    // JUnit 5 for this module's unit tests (same versions as :api/build.gradle).
+    // No Robolectric: tests here deliberately avoid needing a real Android
+    // runtime - see C40RobotControllerTest's class Javadoc.
+    testOptions {
+        unitTests.all {
+            useJUnitPlatform()
+        }
+    }
 }
 
 dependencies {
@@ -21,4 +30,9 @@ dependencies {
     implementation project(':charging')
     implementation project(':telemetry')
     implementation project(':logging')
+
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+    testImplementation 'org.mockito:mockito-core:5.11.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.11.0'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.10.2'
 }

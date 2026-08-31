@@ -97,6 +97,22 @@
             android:paddingBottom="8dp" />
 
         <TextView
+            android:id="@+id/tv_sensors"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="monospace"
+            android:textIsSelectable="true"
+            android:paddingBottom="8dp" />
+
+        <TextView
+            android:id="@+id/tv_map"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="monospace"
+            android:textIsSelectable="true"
+            android:paddingBottom="8dp" />
+
+        <TextView
             android:id="@+id/tv_health"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

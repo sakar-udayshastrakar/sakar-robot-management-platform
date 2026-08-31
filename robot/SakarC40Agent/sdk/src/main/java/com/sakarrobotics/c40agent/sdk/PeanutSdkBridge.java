@@ -5,15 +5,22 @@ import android.util.Log;
 
 import com.keenon.common.constant.PeanutConstants;
 import com.keenon.common.external.PeanutConfig;
+import com.keenon.sdk.api.SensorDepthApi;
+import com.keenon.sdk.api.SensorImuApi;
+import com.keenon.sdk.api.SensorLidarApi;
+import com.keenon.sdk.api.SensorSonarApi;
 import com.keenon.sdk.component.runtime.PeanutRuntime;
 import com.keenon.sdk.component.runtime.RuntimeInfo;
 import com.keenon.sdk.constant.TopicName;
 import com.keenon.sdk.external.IDataCallback;
+import com.keenon.sdk.external.IProgressCallback;
 import com.keenon.sdk.external.PeanutSDK;
 import com.keenon.sdk.hedera.model.ApiError;
 import com.sakarrobotics.c40agent.logging.SdkCallLogger;
 import com.sakarrobotics.c40agent.telemetry.HealthEvent;
 import com.sakarrobotics.c40agent.telemetry.RuntimeSnapshot;
+
+import org.eclipse.californium.core.coap.Request;
 
 /**
  * The ONLY class in this project allowed to import com.keenon.* types.
@@ -32,6 +39,14 @@ public final class PeanutSdkBridge {
 
     /** From the SDK's own AndroidManifest (android:versionName), verified by unzipping the AAR. */
     public static final String SDK_VERSION = "1.5.0-bate1";
+
+    /**
+     * Client-side validation failure - the SDK was never called. Same
+     * negative-code convention as {@code C40RobotController.ERROR_BLOCKED_BY_OPERATING_MODE}
+     * ({@code -1001}); this is the next code in that local, non-SDK
+     * error-code family.
+     */
+    public static final int ERROR_INVALID_MAP_DATA = -1002;
 
     private static final String TAG = "PeanutSdkBridge";
     private static final PeanutSdkBridge INSTANCE = new PeanutSdkBridge();
@@ -188,6 +203,66 @@ public final class PeanutSdkBridge {
     }
 
     // ---------------------------------------------------------------
+    // Raw sensor reads (Roadmap addition, evidenced by the C40 S
+    // reverse-engineering pass - see
+    // C40_S_LS_M014C00_RW_F00_V246_ROS_INTERFACE_ANALYSIS.md section 18).
+    // com.keenon.sdk.api.SensorLidarApi/SensorDepthApi/SensorSonarApi/
+    // SensorImuApi are public, standalone classes in this AAR - confirmed
+    // present via javap, NOT part of any Component facade, and NOT the
+    // same package as the internal-only com.keenon.sdk.coapapi.api.sensor.*
+    // classes found bundled inside Keenon's own apps. Each is a one-shot
+    // CoAP GET (send()); observe() (continuous subscription) exists on
+    // each class too but is intentionally not wired here yet - this pass
+    // only adds the same one-shot-query shape already used above for
+    // battery/motor/navigation status.
+    // ---------------------------------------------------------------
+
+    public void queryLidar(SdkCallback callback) {
+        new SensorLidarApi().send(wrap("SensorLidarApi.send", "n/a", callback));
+    }
+
+    public void queryDepth(SdkCallback callback) {
+        new SensorDepthApi().send(wrap("SensorDepthApi.send", "n/a", callback));
+    }
+
+    public void querySonar(SdkCallback callback) {
+        new SensorSonarApi().send(wrap("SensorSonarApi.send", "n/a", callback));
+    }
+
+    public void queryImu(SdkCallback callback) {
+        new SensorImuApi().send(wrap("SensorImuApi.send", "n/a", callback));
+    }
+
+    // ---------------------------------------------------------------
+    // MapComponent read-only calls (Roadmap addition, same evidence as
+    // above). getMapInfo/downloadOpt only pull data FROM the robot - they
+    // do not modify robot state, so they are safe in every OperatingMode
+    // exactly like the diagnostic queries above. uploadOpt (below, in the
+    // action pass-throughs section) pushes data TO the robot and is gated.
+    //
+    // VENDOR CLASS-NAME TRAP (verified by bytecode, not vendor docs):
+    // Keenon's own internal API classes are named opposite to what they
+    // do. MapComponent.downloadOpt(IDataCallback) - a read - actually
+    // constructs and calls com.keenon.sdk.api.MapUploadOptApi, which has
+    // no byte[]/request-body field at all (a bodyless fetch). Conversely,
+    // MapComponent.uploadOpt(IProgressCallback, byte[]) - a write - calls
+    // com.keenon.sdk.api.MapDownloadOptApi, which does carry a
+    // "private byte[] file" field serialized into the CoAP request body.
+    // The read/write split used in this bridge (downloadMap ungated,
+    // uploadMap gated) is based on this verified payload evidence, not on
+    // the (reversed) vendor class names - do not "fix" this bridge by
+    // matching method names to Keenon's internal class names.
+    // ---------------------------------------------------------------
+
+    public void getMapInfo(SdkCallback callback) {
+        PeanutSDK.getInstance().map().getMapInfo(wrap("MapComponent.getMapInfo", "n/a", callback));
+    }
+
+    public void downloadMap(SdkCallback callback) {
+        PeanutSDK.getInstance().map().downloadOpt(wrap("MapComponent.downloadOpt", "n/a", callback));
+    }
+
+    // ---------------------------------------------------------------
     // Action pass-throughs. These exist so :robot can gate them behind
     // OperatingMode.HARDWARE_TEST - this class does not decide when it is
     // safe to call them, it only forwards the call.
@@ -235,6 +310,32 @@ public final class PeanutSdkBridge {
         PeanutSDK.getInstance().navigation().stop(wrap("NavigationComponent.stop", "n/a", callback));
     }
 
+    /**
+     * Roadmap addition - {@code MapComponent.uploadOpt(IProgressCallback, byte[])},
+     * confirmed present in the AAR via javap (see the vendor class-name
+     * trap note above this method's siblings). Pushes new map data to the
+     * robot, so it lives in this gated section like every other write:
+     * this class does not decide whether it is safe to call, {@code
+     * C40RobotController} does.
+     *
+     * Validates {@code mapData} before touching the SDK: {@code null} or
+     * empty is rejected here rather than silently becoming an empty
+     * vendor request body (Keenon's {@code MapDownloadOptApi.CoapParams()}
+     * degrades a null {@code file} field to an empty string, which this
+     * bridge does not want to rely on implicitly).
+     */
+    public void uploadMap(byte[] mapData, SdkCallback callback) {
+        if (mapData == null || mapData.length == 0) {
+            String message = "uploadMap rejected: mapData is " + (mapData == null ? "null" : "empty");
+            SdkCallLogger.getInstance().logError("MapComponent.uploadOpt", "n/a", ERROR_INVALID_MAP_DATA, message);
+            callback.onError(ERROR_INVALID_MAP_DATA, message);
+            return;
+        }
+        PeanutSDK.getInstance().map().uploadOpt(
+                wrapProgress("MapComponent.uploadOpt", "bytes=" + mapData.length, callback),
+                mapData);
+    }
+
     // ---------------------------------------------------------------
 
     private static PeanutConstants.LinkType toSdkLinkType(SdkLinkType linkType) {
@@ -254,6 +355,40 @@ public final class PeanutSdkBridge {
 
     private static IDataCallback wrap(String api, String request, SdkCallback callback) {
         return new IDataCallback() {
+            @Override
+            public void success(String result) {
+                SdkCallLogger.getInstance().logSuccess(api, request, result);
+                callback.onSuccess(result);
+            }
+
+            @Override
+            public void error(ApiError error) {
+                int code = error != null ? error.getCode() : -1;
+                String message = error != null ? error.getMsg() : "unknown error";
+                SdkCallLogger.getInstance().logError(api, request, code, message);
+                callback.onError(code, message);
+            }
+        };
+    }
+
+    /**
+     * Same success/error contract as {@link #wrap}, for the SDK's upload
+     * methods which require the wider {@code IProgressCallback} interface.
+     * {@code readyToSend}/{@code progress} are logged only - nothing above
+     * :sdk needs the raw Californium request object or a progress bar yet.
+     */
+    private static IProgressCallback wrapProgress(String api, String request, SdkCallback callback) {
+        return new IProgressCallback() {
+            @Override
+            public void readyToSend(Request coapRequest) {
+                // No-op: intentionally not surfaced above :sdk - see class Javadoc.
+            }
+
+            @Override
+            public void progress(int percent) {
+                SdkCallLogger.getInstance().logSuccess(api, request, "progress=" + percent + "%");
+            }
+
             @Override
             public void success(String result) {
                 SdkCallLogger.getInstance().logSuccess(api, request, result);
