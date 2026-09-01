@@ -1,6 +1,6 @@
 import { apiClient, unwrap } from './client';
 import type { ApiResponse, Page } from '../types/api';
-import type { Robot, RobotMqttCredentialResponse, RobotStatusSnapshot } from '../types/domain';
+import type { Robot, RobotBatteryInfo, RobotMqttCredentialResponse, RobotStatusSnapshot } from '../types/domain';
 
 export function listRobots(page = 0, pageSize = 25): Promise<Page<Robot>> {
   return unwrap(apiClient.get<ApiResponse<Page<Robot>>>('/robots', { params: { page, pageSize } }));
@@ -36,6 +36,15 @@ export function deactivateRobot(id: string): Promise<Robot> {
 // must treat a rejected promise as "status unavailable", never as "offline".
 export function getRobotStatus(id: string): Promise<RobotStatusSnapshot> {
   return unwrap(apiClient.get<ApiResponse<RobotStatusSnapshot>>(`/robots/${id}/status`));
+}
+
+// Calls a live robot adapter (GET_BATTERY capability) — same real
+// adapter.getBattery() call already implemented for KEENON_CLOUD, now
+// wired to a REST endpoint for the first time. Same failure semantics as
+// getRobotStatus: a rejected promise means "unavailable", never "offline"
+// or "0%".
+export function getRobotBattery(id: string): Promise<RobotBatteryInfo> {
+  return unwrap(apiClient.get<ApiResponse<RobotBatteryInfo>>(`/robots/${id}/battery`));
 }
 
 export function provisionMqttCredentials(id: string): Promise<RobotMqttCredentialResponse> {

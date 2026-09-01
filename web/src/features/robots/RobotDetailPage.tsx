@@ -22,9 +22,10 @@ import { RobotTasksPanel } from '../tasks/RobotTasksPanel';
 import { RobotAlertsPanel } from '../alerts/RobotAlertsPanel';
 import { RobotCleaningPanel } from '../cleaning/RobotCleaningPanel';
 import { CommandsPanel } from './CommandsPanel';
-import { generateTelemetry, generateEvents, generateErrors, generateRobotLogs } from '../../mocks/simulated';
-import { SimulatedDataBanner } from '../../components/ui/SimulatedDataBanner';
-import { DataTable } from '../../components/ui/DataTable';
+import { RobotTelemetryPanel } from './RobotTelemetryPanel';
+import { RobotEventsPanel } from './RobotEventsPanel';
+import { RobotErrorsPanel } from './RobotErrorsPanel';
+import { RobotLogsPanel } from './RobotLogsPanel';
 import { ApiRequestError } from '../../api/client';
 import './robots.css';
 
@@ -99,10 +100,6 @@ export function RobotDetailPage() {
     }
   }
 
-  const telemetry = generateTelemetry(robot.id, 10);
-  const events = generateEvents(robot.id, 10);
-  const errors = generateErrors(robot.id, 10);
-  const logs = generateRobotLogs(robot.id, 12);
   const siteName = robot.siteId ? siteNames.get(robot.siteId) ?? robot.siteId : '—';
 
   return (
@@ -188,50 +185,11 @@ export function RobotDetailPage() {
         </div>
       )}
 
-      {tab === 'telemetry' && (
-        <Card title="Recent Telemetry">
-          <SimulatedDataBanner />
-          <DataTable
-            rows={telemetry}
-            rowKey={(r) => r.id}
-            columns={[
-              { key: 'time', header: 'Timestamp', render: (r) => new Date(r.recordedAt).toLocaleString() },
-              { key: 'metric', header: 'Metric', render: (r) => r.metricType },
-              { key: 'value', header: 'Value', render: (r) => r.valueNumeric ?? r.valueText ?? '—' },
-            ]}
-          />
-        </Card>
-      )}
+      {tab === 'telemetry' && <RobotTelemetryPanel robotId={robot.id} />}
 
-      {tab === 'events' && (
-        <Card title="Recent Events">
-          <SimulatedDataBanner />
-          <DataTable
-            rows={events}
-            rowKey={(e) => e.id}
-            columns={[
-              { key: 'time', header: 'Timestamp', render: (e) => new Date(e.recordedAt).toLocaleString() },
-              { key: 'severity', header: 'Severity', render: (e) => e.severity },
-              { key: 'message', header: 'Message', render: (e) => e.message },
-            ]}
-          />
-        </Card>
-      )}
+      {tab === 'events' && <RobotEventsPanel robotId={robot.id} />}
 
-      {tab === 'errors' && (
-        <Card title="Recent Errors">
-          <SimulatedDataBanner />
-          <DataTable
-            rows={errors}
-            rowKey={(e) => e.id}
-            columns={[
-              { key: 'code', header: 'Code', render: (e) => e.errorCode },
-              { key: 'message', header: 'Message', render: (e) => e.message },
-              { key: 'status', header: 'Status', render: (e) => e.status },
-            ]}
-          />
-        </Card>
-      )}
+      {tab === 'errors' && <RobotErrorsPanel robotId={robot.id} />}
 
       {tab === 'alerts' && <RobotAlertsPanel robotId={robot.id} />}
 
@@ -241,21 +199,7 @@ export function RobotDetailPage() {
 
       {tab === 'commands' && <CommandsPanel robot={robot} />}
 
-      {tab === 'logs' && (
-        <Card title="Application Logs">
-          <SimulatedDataBanner label="application_logs is written by the backend but has no per-robot GET endpoint yet" />
-          <DataTable
-            rows={logs}
-            rowKey={(l) => l.id}
-            columns={[
-              { key: 'time', header: 'Timestamp', render: (l) => new Date(l.recordedAt).toLocaleString() },
-              { key: 'level', header: 'Level', render: (l) => l.level },
-              { key: 'source', header: 'Source', render: (l) => <span className="sakar-mono">{l.source}</span> },
-              { key: 'message', header: 'Message', render: (l) => <span className="sakar-mono">{l.message}</span> },
-            ]}
-          />
-        </Card>
-      )}
+      {tab === 'logs' && <RobotLogsPanel robotId={robot.id} />}
 
       {tab === 'timeline' && <RobotTimeline robotId={robot.id} />}
 

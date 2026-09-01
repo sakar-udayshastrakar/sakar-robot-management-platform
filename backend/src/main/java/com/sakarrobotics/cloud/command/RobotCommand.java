@@ -14,6 +14,8 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 /**
  * Maps to {@code robot_commands} (Master Requirements Part 20,
@@ -46,7 +48,10 @@ public class RobotCommand extends BaseEntity {
     @Column(name = "command_type", nullable = false)
     private String commandType;
 
+    // See ApplicationLog.context's comment: LONGVARCHAR matches this column's
+    // actual Postgres type (TEXT, not oid) under Hibernate 7's @Lob defaults.
     @Lob
+    @JdbcTypeCode(SqlTypes.LONGVARCHAR)
     @Column
     private String payload;
 

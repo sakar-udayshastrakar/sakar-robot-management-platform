@@ -116,6 +116,45 @@ class RobotControllerSecurityTest extends IntegrationTestSupport {
                 .andExpect(jsonPath("$.error.code").value("UNSUPPORTED_CAPABILITY"));
     }
 
+    @Test
+    void robotModelWithoutGetBatteryCapability_batteryEndpointReturnsUnsupportedCapability() throws Exception {
+        Role orgAdmin = ensureRole(RoleName.ORG_ADMIN, PermissionCode.ROBOT_VIEW, PermissionCode.ROBOT_CONFIGURE);
+        Organization org = createOrganization("Org " + UUID.randomUUID(), OrganizationType.DIRECT_CLIENT, null);
+        String email = "orgadmin-batcap-" + UUID.randomUUID() + "@example.com";
+        createUser(email, "Password1!", orgAdmin, org.getId());
+
+        RobotManufacturer manufacturer = manufacturerRepository.save(new RobotManufacturer("NoBattery-" + UUID.randomUUID()));
+        RobotModel model = new RobotModel();
+        model.setManufacturerId(manufacturer.getId());
+        model.setName("Limited Model");
+        model.setAdapterType(AdapterType.SAKAR_NATIVE);
+        model.setIntegrationPath(IntegrationPath.SAKAR_OWNED_LOCAL);
+        model = modelRepository.save(model);
+        // Deliberately no RobotCapability row for GET_BATTERY at all -> unsupported.
+
+        Robot robot = registerRobot(org.getId(), model.getId(), "SN-" + UUID.randomUUID());
+        String token = login(email, "Password1!");
+
+        mockMvc.perform(get("/api/v1/robots/" + robot.getId() + "/battery")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.error.code").value("UNSUPPORTED_CAPABILITY"));
+    }
+
+    @Test
+    void unknownRobotId_batteryEndpointReturnsNotFound() throws Exception {
+        Role orgAdmin = ensureRole(RoleName.ORG_ADMIN, PermissionCode.ROBOT_VIEW);
+        Organization org = createOrganization("Org " + UUID.randomUUID(), OrganizationType.DIRECT_CLIENT, null);
+        String email = "orgadmin-batmissing-" + UUID.randomUUID() + "@example.com";
+        createUser(email, "Password1!", orgAdmin, org.getId());
+        String token = login(email, "Password1!");
+
+        mockMvc.perform(get("/api/v1/robots/" + UUID.randomUUID() + "/battery")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error.code").value("ROBOT_NOT_FOUND"));
+    }
+
     private RobotModel aFullyCapableModel() {
         RobotManufacturer manufacturer = manufacturerRepository.save(new RobotManufacturer("TestVendor-" + UUID.randomUUID()));
         RobotModel model = new RobotModel();

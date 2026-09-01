@@ -36,16 +36,16 @@ export const NAV_SECTIONS: NavSection[] = [
     items: [
       { label: 'Tasks', path: '/tasks', icon: Icon.listCheck, permission: 'ROBOT_VIEW', dataMode: 'live' },
       { label: 'Cleaning', path: '/cleaning', icon: Icon.spray, permission: 'ROBOT_VIEW', dataMode: 'live' },
-      { label: 'Telemetry', path: '/telemetry', icon: Icon.gauge, permission: 'ROBOT_VIEW', dataMode: 'simulated' },
+      { label: 'Telemetry', path: '/telemetry', icon: Icon.gauge, permission: 'ROBOT_LOG_VIEW', dataMode: 'live' },
       { label: 'Alerts', path: '/alerts', icon: Icon.alertTriangle, permission: 'ROBOT_VIEW', dataMode: 'live' },
-      { label: 'Events', path: '/events', icon: Icon.activity, permission: 'ROBOT_VIEW', dataMode: 'simulated' },
-      { label: 'Errors', path: '/errors', icon: Icon.xCircle, permission: 'ROBOT_VIEW', dataMode: 'simulated' },
+      { label: 'Events', path: '/events', icon: Icon.activity, permission: 'ROBOT_LOG_VIEW', dataMode: 'live' },
+      { label: 'Errors', path: '/errors', icon: Icon.xCircle, permission: 'ROBOT_LOG_VIEW', dataMode: 'live' },
     ],
   },
   {
     title: 'Insights',
     items: [
-      { label: 'Logs', path: '/logs', icon: Icon.fileText, permission: 'ROBOT_LOG_VIEW', dataMode: 'unavailable' },
+      { label: 'Logs', path: '/logs', icon: Icon.fileText, permission: 'ROBOT_LOG_VIEW', dataMode: 'live' },
       { label: 'Analytics', path: '/analytics', icon: Icon.barChart, permission: 'ROBOT_VIEW', dataMode: 'unavailable' },
     ],
   },

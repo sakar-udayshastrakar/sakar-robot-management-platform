@@ -1,30 +1,36 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useRobotOptions } from '../shared/useRobotOptions';
 import { RobotPicker } from '../shared/RobotPicker';
-import { generateTelemetry } from '../../mocks/simulated';
+import { listRobotTelemetry } from '../../api/telemetry';
+import { useApi } from '../../hooks/useApi';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { Card } from '../../components/ui/Card';
 import { DataTable } from '../../components/ui/DataTable';
 import { Sparkline } from '../../components/ui/Sparkline';
-import { SimulatedDataBanner } from '../../components/ui/SimulatedDataBanner';
-import { EmptyState } from '../../components/ui/States';
+import { EmptyState, LoadingState, ErrorState } from '../../components/ui/States';
 
 const RANGES = [
   { label: 'Last 1 hour', minutes: 60 },
   { label: 'Last 6 hours', minutes: 360 },
   { label: 'Last 24 hours', minutes: 1440 },
+  { label: 'All fetched', minutes: null },
 ] as const;
 
 export function TelemetryPage() {
   const { robots } = useRobotOptions();
   const [robotId, setRobotId] = useState('');
-  const [rangeIdx, setRangeIdx] = useState(1);
-  const allReadings = useMemo(() => (robotId ? generateTelemetry(robotId, 60) : []), [robotId]);
+  const [rangeIdx, setRangeIdx] = useState(3);
+  const { data, status, error, refetch } = useApi(
+    () => (robotId ? listRobotTelemetry(robotId, 0, 200) : Promise.resolve(null)),
+    [robotId],
+  );
 
-  const cutoff = Date.now() - RANGES[rangeIdx].minutes * 60_000;
+  const allReadings = data?.content ?? [];
+  const range = RANGES[rangeIdx];
+  const cutoff = range.minutes === null ? 0 : Date.now() - range.minutes * 60_000;
   const readings = allReadings.filter((r) => new Date(r.recordedAt).getTime() >= cutoff);
   const batteryReadings = readings
-    .filter((r) => r.metricType === 'battery_percent' && r.valueNumeric !== null)
+    .filter((r) => r.metric === 'battery_percent' && r.valueNumeric !== null)
     .map((r) => r.valueNumeric as number)
     .reverse();
 
@@ -39,8 +45,7 @@ export function TelemetryPage() {
 
   return (
     <div>
-      <PageHeader title="Telemetry" subtitle="Per-robot telemetry readings." />
-      <SimulatedDataBanner label="No GET /robots/{id}/telemetry endpoint exists yet — telemetry is persisted (robot_telemetry, populated live by the Phase 3 MQTT pipeline) but not exposed over REST" />
+      <PageHeader title="Telemetry" subtitle="Per-robot telemetry history, ingested live from MQTT." />
       <div className="sakar-filter-bar">
         <RobotPicker robots={robots} value={robotId} onChange={setRobotId} />
         {robotId && (
@@ -52,8 +57,16 @@ export function TelemetryPage() {
 
       {!robotId ? (
         <Card title="Readings">
-          <EmptyState title="Select a robot" detail="Choose a robot above to preview its telemetry table." />
+          <EmptyState title="Select a robot" detail="Choose a robot above to view its telemetry history." />
         </Card>
+      ) : status === 'loading' || status === 'idle' ? (
+        <LoadingState title="Loading telemetry…" />
+      ) : status === 'error' ? (
+        <ErrorState
+          title="Could not load telemetry"
+          detail={error ?? 'Unknown error'}
+          action={<button type="button" className="sakar-btn sakar-btn--secondary" onClick={refetch}>Retry</button>}
+        />
       ) : (
         <>
           {stats && (
@@ -72,13 +85,12 @@ export function TelemetryPage() {
           <Card title="Historical Readings">
             <DataTable
               rows={readings}
-              rowKey={(r) => r.id}
-              emptyTitle="No readings in this time range"
+              rowKey={(r) => String(r.id)}
+              emptyTitle="No telemetry ingested yet for this robot in this time range"
               columns={[
                 { key: 'time', header: 'Timestamp', render: (r) => new Date(r.recordedAt).toLocaleString() },
-                { key: 'metric', header: 'Metric', render: (r) => r.metricType },
+                { key: 'metric', header: 'Metric', render: (r) => r.metric },
                 { key: 'value', header: 'Value', render: (r) => r.valueNumeric ?? r.valueText ?? '—' },
-                { key: 'source', header: 'Source', render: (r) => r.source },
               ]}
             />
           </Card>

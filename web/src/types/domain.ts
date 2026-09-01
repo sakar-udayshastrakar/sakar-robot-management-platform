@@ -81,6 +81,17 @@ export interface RobotStatusSnapshot {
   raw: unknown;
 }
 
+// backend/.../robot/adapter/dto/BatteryInfo.java — same live-adapter-call
+// pattern as RobotStatusSnapshot (GET /robots/{id}/battery, GET_BATTERY
+// capability). `charging` is hardcoded false by KeenonRobotAdapter today
+// (the vendor battery-level endpoint it calls does not report charging
+// state) — real, not fabricated, just an incomplete upstream field.
+export interface RobotBatteryInfo {
+  percentage: number;
+  charging: boolean;
+  observedAt: string;
+}
+
 // backend/.../robot/registry/dto/RobotMqttCredentialResponse.java
 export interface RobotMqttCredentialResponse {
   robotId: string;
@@ -235,21 +246,62 @@ export interface RobotCommand {
   createdAt: string;
 }
 
-// --- Simulated-only types (no backend REST API exists for these yet) ------
-// See RobotTelemetry / robot_events / robot_errors / application_logs
-// entities in the backend — all persisted, none exposed over REST.
+// --- Real telemetry/diagnostics history (Roadmap Phase 9 web-platform gap
+// analysis STEP 2) — mirror backend/.../telemetry/dto/RobotTelemetryResponse
+// and .../srels/dto/{RobotEventResponse,RobotErrorResponse,ApplicationLogResponse}
+// field-for-field. Do not add a field the backend does not actually send.
 
-export type TelemetrySource = 'MQTT_AGENT' | 'SIMULATED';
-
-export interface TelemetryReading {
-  id: string;
+export interface RobotTelemetryEntry {
+  id: number;
   robotId: string;
-  recordedAt: string;
-  metricType: string;
+  metric: string;
   valueNumeric: number | null;
   valueText: string | null;
-  source: TelemetrySource;
+  recordedAt: string;
+  createdAt: string;
 }
+
+export interface RobotEventEntry {
+  id: number;
+  robotId: string;
+  eventType: string;
+  severity: string;
+  payload: string | null;
+  occurredAt: string;
+  createdAt: string;
+}
+
+export interface RobotErrorEntry {
+  id: string;
+  robotId: string;
+  errorCode: string;
+  severity: string;
+  source: string | null;
+  message: string | null;
+  sdkApi: string | null;
+  status: string;
+  occurredAt: string;
+  resolvedAt: string | null;
+  resolvedBy: string | null;
+  createdAt: string;
+}
+
+export interface ApplicationLogEntry {
+  id: number;
+  source: string;
+  robotId: string | null;
+  level: string;
+  message: string;
+  context: string | null;
+  createdAt: string;
+}
+
+// --- Simulated-only types (no backend REST API exists for these yet) ------
+// Telemetry/events/errors/application-logs moved to real APIs above (Phase 9
+// web-platform gap analysis STEP 2) — only the Timeline tab (which merges
+// all four into one synthesized view) remains simulated; see RobotTimeline.
+
+export type TelemetrySource = 'MQTT_AGENT' | 'SIMULATED';
 
 export type EventSeverity = 'INFO' | 'WARNING' | 'ERROR' | 'CRITICAL';
 export type EventCategory =
@@ -268,21 +320,6 @@ export interface RobotEventRecord {
   category: EventCategory;
   source: TelemetrySource;
   message: string;
-}
-
-export type ErrorStatus = 'OPEN' | 'ACKNOWLEDGED' | 'RESOLVED';
-
-export interface RobotErrorRecord {
-  id: string;
-  robotId: string;
-  errorCode: string;
-  severity: EventSeverity;
-  source: TelemetrySource;
-  message: string;
-  recordedAt: string;
-  status: ErrorStatus;
-  resolvedAt: string | null;
-  resolvedBy: string | null;
 }
 
 // Alert-severity vocabulary (Critical/High/Medium/Low) — distinct from the
@@ -310,16 +347,6 @@ export interface TimelineEntry {
   dataSource: TelemetrySource;
 }
 
-export type LogLevel = 'INFO' | 'WARN' | 'ERROR' | 'CRITICAL';
-
-export interface ApplicationLogRecord {
-  id: string;
-  level: LogLevel;
-  source: string;
-  robotId: string | null;
-  message: string;
-  recordedAt: string;
-}
 
 // Kept as a loose string here (rather than importing RoleName from
 // types/permissions) purely to avoid a circular/needless coupling between

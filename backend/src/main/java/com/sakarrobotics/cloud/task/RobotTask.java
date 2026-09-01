@@ -11,6 +11,8 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 /**
  * Maps to {@code robot_tasks} (Master Requirements "Task Model" —
@@ -37,7 +39,10 @@ public class RobotTask extends BaseEntity {
     @Column(name = "task_type", nullable = false)
     private String taskType;
 
+    // See ApplicationLog.context's comment: LONGVARCHAR matches this column's
+    // actual Postgres type (TEXT, not oid) under Hibernate 7's @Lob defaults.
     @Lob
+    @JdbcTypeCode(SqlTypes.LONGVARCHAR)
     @Column
     private String parameters;
 
