@@ -95,6 +95,110 @@ See
 for the full evidence trail (fresh `javap` extraction of this project's
 own vendored `peanut-sdk-release.aar`) that motivated this addition.
 
+**Roadmap Phase 8 addition (`GO_TO_POINT`):** a third real command type is
+now wired into the same command loop, following the exact investigation
+in `../../C40_S_GO_TO_POINT_SDK_INVESTIGATION.md` — do not redo that
+investigation or guess a different API.
+
+- `PeanutSdkGoToPointExecutor` (in `:api`) → `GoToPointGateway` (interface,
+  in `:api`) → `RealGoToPointGateway` (in `:app`) →
+  `C40RobotController.goToPoint(int, SdkCallback)` (**already existed**
+  before this pass) → `NavigationBridge.goToPoint` →
+  `PeanutSdkBridge.setNavigationTarget` → the officially-distributed SDK's
+  `NavigationComponent.setTarget(IDataCallback, int)`, which internally
+  calls `com.keenon.sdk.api.NavigationSetTargetApi`, annotated
+  `@CoapCommond(path="/navigation/dst", requestType=POST)` — the identical
+  local CoAP endpoint independently found (and actively called in
+  production) inside Keenon's own C40 S Robot Installation Assistant app.
+- The `int` parameter is a **pre-registered destination id already known
+  to the robot on its currently-loaded map — never a raw (x, y)
+  coordinate.** This project has no confirmed destination id for any
+  specific C40 install and does not invent one: `PeanutSdkGoToPointExecutor`
+  rejects any command whose `params` lack a non-negative integer
+  `destinationId`, reporting `FAILED` without ever calling the gateway (so
+  the SDK is never touched for a malformed request), and the Sakar Cloud
+  backend's `RobotCommandService` independently rejects the same
+  malformed shapes before ever publishing to MQTT (`VALIDATION_FAILED`) —
+  defense-in-depth, not two competing validation frameworks.
+- Gated by the exact same, pre-existing `OperatingMode.HARDWARE_TEST`
+  guard as `returnToDock`/`startCharging`/`uploadMap` — `goToPoint()`'s
+  guard was not touched by this pass, only tested (it previously had zero
+  test coverage).
+- Success is reported as `DISPATCHED`, never `COMPLETED` — the same
+  completion-evidence distinction `RETURN_TO_DOCK` already established:
+  the SDK callback confirms the local interface *accepted* the request,
+  never that the robot physically reached the destination.
+
+**Status:**
+- `GO_TO_POINT`: **CODE VERIFIED** (class/method/CoAP path all confirmed
+  present in the bundled AAR via fresh `javap`, and already wired end to
+  end in this codebase — `:api`/`:robot`/`:app` build clean).
+- Software tests: **SOFTWARE TEST VERIFIED** —
+  `api/src/test/java/.../PeanutSdkGoToPointExecutorTest.java` (9 cases:
+  executing-before-gateway, integer/numeric-string destination ids
+  accepted, missing/null/negative/non-numeric destination ids rejected
+  without ever calling the gateway, gateway acceptance → `DISPATCHED`
+  never `COMPLETED`, gateway error → `FAILED`),
+  `robot/src/test/java/.../C40RobotControllerTest.java` (2 new cases:
+  `HARDWARE_TEST` reaches the real SDK singleton, `DIAGNOSTIC_ONLY` blocks
+  before it), and two new `CommandDispatcherTest` cases (full
+  `CommandDispatcher → PeanutSdkGoToPointExecutor` flow with only the
+  `GoToPointGateway` boundary faked). Backend: `RobotCommandControllerTest`
+  (4 new cases covering capability gating and the destinationId
+  validation above). No Android runtime, no MQTT broker, no physical
+  robot anywhere in this test coverage.
+- Physical robot: **NOT PERFORMED.** No destination id has been invented
+  or physically validated against any real C40's map — see
+  `../../C40_S_GO_TO_POINT_SDK_INVESTIGATION.md` §13/§14. Destination
+  discovery (below) now exists to supply a real destination id instead of
+  one being invented, but it too has not been physically validated.
+
+**Roadmap Phase 8 addition (Destination Discovery):** `GO_TO_POINT`
+required a caller-supplied `destinationId` with no way to discover one —
+`../../C40_S_DESTINATION_DISCOVERY_INVESTIGATION.md` investigated and,
+finding the official SDK does support it, implemented discovery:
+
+- `C40RobotController.getAllDestinations(DestinationsCallback)` →
+  `NavigationBridge.getAllDestinations` → `PeanutSdkBridge.getAllDestinations`
+  → the officially-distributed SDK's `NavigationComponent.getAllDestPose(IDataCallback)`,
+  which internally calls `com.keenon.sdk.api.NavigationDestPoseApi`,
+  annotated `@CoapCommond(path="/navigation/dest_poses")` — a plain GET.
+  **Read-only, no `OperatingMode` guard** — code-inspection-confirmed to
+  never call `setTarget`/`pause`/`resume`/`stop`, exactly like
+  `getBattery`/`getMotorStatus`.
+- Returns a vendor-neutral `Destination` (`id`, `name`, `pose`, `mapId`
+  from the vendor's `bind_map_md5`, `floor`, `type`) — new plain classes
+  in `:telemetry` (`Destination`/`Pose`/`Position`/`Orientation`), no
+  `com.keenon.*` type crosses out of `:sdk`.
+- `getAllDestPoseV2()` and `getDestInfo(id)` were investigated too and
+  found **unsuitable** (no pose/map field at all, or coordinates as bare
+  strings with no orientation) — not used, not by oversight but by
+  verified elimination; see the investigation doc.
+- An empty destination list is reported as a valid success, not an
+  error — a deliberate departure from Keenon's own Peanut Clean app
+  (`PeanutResourceManager`, decompiled), which treats that same shape as
+  a failure.
+- **No backend endpoint was built.** There is no existing MQTT channel
+  for the agent to report a destination list to the Sakar Cloud backend
+  — building `GET /robots/{robotId}/destinations` today would mean either
+  a hollow endpoint with nothing behind it, or inventing a new,
+  unreviewed reporting mechanism. Reported as a finding, not silently
+  skipped — see the investigation doc's "Remaining limitations".
+
+**Status:**
+- Destination Discovery: **CODE VERIFIED** (class/method/CoAP path
+  confirmed via fresh `javap`; `:telemetry`/`:sdk`/`:navigation`/`:robot`
+  build clean).
+- Software tests: **SOFTWARE TEST VERIFIED** —
+  `sdk/src/test/java/.../PeanutSdkBridgeDestinationParsingTest.java` (9
+  cases: full field mapping including map-id association, multiple
+  destinations, missing pose, empty/null/malformed responses) — a pure
+  function, no Android runtime, no SDK singleton touched at all — plus 2
+  new `C40RobotControllerTest` cases proving the call is never blocked by
+  `OperatingMode`.
+- Physical robot: **NOT PERFORMED.** No destination id or name returned
+  by this feature has been confirmed against a real C40's map.
+
 ## Architecture
 
 Today:

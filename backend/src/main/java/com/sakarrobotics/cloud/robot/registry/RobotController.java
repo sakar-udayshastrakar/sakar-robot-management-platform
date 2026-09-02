@@ -20,6 +20,7 @@ import com.sakarrobotics.cloud.common.error.SakarErrorCode;
 import com.sakarrobotics.cloud.common.web.ApiResponse;
 import com.sakarrobotics.cloud.robot.adapter.RobotAdapter;
 import com.sakarrobotics.cloud.robot.adapter.RobotAdapterRegistry;
+import com.sakarrobotics.cloud.robot.adapter.dto.BatteryInfo;
 import com.sakarrobotics.cloud.robot.adapter.dto.RobotStatusSnapshot;
 import com.sakarrobotics.cloud.robot.registry.dto.RegisterRobotRequest;
 import com.sakarrobotics.cloud.robot.registry.dto.RobotMqttCredentialResponse;
@@ -106,6 +107,19 @@ public class RobotController {
         robotCapabilityService.assertSupported(robot.getRobotModelId(), RobotCapabilityType.GET_STATUS);
         RobotAdapter adapter = adapterFor(robot);
         return ApiResponse.ok(adapter.getStatus(robot));
+    }
+
+    @GetMapping("/{id}/battery")
+    @PreAuthorize("hasAuthority('ROBOT_VIEW')")
+    @Operation(summary = "Read a robot's current battery level through its configured adapter "
+            + "(returns UNSUPPORTED_CAPABILITY if this robot model does not support GET_BATTERY) — "
+            + "same real adapter call RobotAdapter.getBattery() already implements for KEENON_CLOUD, "
+            + "previously wired into no REST endpoint at all")
+    public ApiResponse<BatteryInfo> battery(@AuthenticationPrincipal UserPrincipal principal, @PathVariable UUID id) {
+        Robot robot = robotService.getAccessibleOrThrow(principal, id);
+        robotCapabilityService.assertSupported(robot.getRobotModelId(), RobotCapabilityType.GET_BATTERY);
+        RobotAdapter adapter = adapterFor(robot);
+        return ApiResponse.ok(adapter.getBattery(robot));
     }
 
     @PostMapping("/{id}/mqtt-credentials")

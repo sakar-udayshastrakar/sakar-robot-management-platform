@@ -116,6 +116,44 @@ class CommandDispatcherTest {
     }
 
     @Test
+    void fullGoToPointFlow_realExecutorWithAFakeGateway_publishesReceivedThenDispatched() {
+        // Exercises the real composition CommandDispatcher -> PeanutSdkGoToPointExecutor,
+        // with only the Peanut-SDK-touching boundary (GoToPointGateway) faked — no Android
+        // runtime, no real SDK, no physical robot. SOFTWARE TEST VERIFIED, not physical.
+        // See C40_S_GO_TO_POINT_SDK_INVESTIGATION.md - destinationId=5 here is an arbitrary
+        // payload value, not a claim it is a confirmed destination on any real C40's map.
+        List<Published> published = new ArrayList<>();
+        GoToPointGateway immediatelyAcceptingGateway = (destinationId, callback) -> callback.onAccepted("{\"code\":0}");
+        CommandDispatcher dispatcher = new CommandDispatcher(new PeanutSdkGoToPointExecutor(immediatelyAcceptingGateway));
+        dispatcher.attachResultPublisher(recordingPublisher(published));
+
+        dispatcher.onCommandReceived(command("cmd-real-go-to-point", "GO_TO_POINT", futureExpiry(), Map.of("destinationId", 5)));
+
+        // RECEIVED (CommandDispatcher) -> EXECUTING (PeanutSdkGoToPointExecutor.execute's own
+        // first action) -> DISPATCHED (the fake gateway accepts synchronously).
+        assertEquals(3, published.size());
+        assertEquals("RECEIVED", statusOf(published.get(0)));
+        assertEquals("EXECUTING", statusOf(published.get(1)));
+        assertEquals("DISPATCHED", statusOf(published.get(2)));
+    }
+
+    @Test
+    void fullGoToPointFlow_missingDestinationId_publishesReceivedThenFailed_gatewayNeverCalled() {
+        List<Published> published = new ArrayList<>();
+        GoToPointGateway gatewayThatMustNeverBeCalled = (destinationId, callback) -> {
+            throw new AssertionError("gateway must not be called when destinationId is missing");
+        };
+        CommandDispatcher dispatcher = new CommandDispatcher(new PeanutSdkGoToPointExecutor(gatewayThatMustNeverBeCalled));
+        dispatcher.attachResultPublisher(recordingPublisher(published));
+
+        dispatcher.onCommandReceived(command("cmd-go-to-point-no-dest", "GO_TO_POINT", futureExpiry(), Map.of()));
+
+        assertEquals(2, published.size()); // RECEIVED, then FAILED - EXECUTING is never reported
+        assertEquals("RECEIVED", statusOf(published.get(0)));
+        assertEquals("FAILED", statusOf(published.get(1)));
+    }
+
+    @Test
     void duplicateCommandId_isIgnoredAndNeverExecutedTwice() {
         List<Published> published = new ArrayList<>();
         CommandDispatcher dispatcher = new CommandDispatcher(executor);
@@ -158,8 +196,12 @@ class CommandDispatcherTest {
     // ---------------------------------------------------------------
 
     private static CommandPayload command(String commandId, String commandType, String expiresAt) {
+        return command(commandId, commandType, expiresAt, Map.of());
+    }
+
+    private static CommandPayload command(String commandId, String commandType, String expiresAt, Map<String, Object> params) {
         return new CommandPayload("1.0", commandId, "robot-1", Instant.now().toString(),
-                "COMMAND", commandType, "nonce-1", expiresAt, Map.of());
+                "COMMAND", commandType, "nonce-1", expiresAt, params);
     }
 
     private static String futureExpiry() {

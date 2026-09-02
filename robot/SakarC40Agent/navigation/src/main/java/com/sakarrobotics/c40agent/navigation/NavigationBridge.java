@@ -1,5 +1,6 @@
 package com.sakarrobotics.c40agent.navigation;
 
+import com.sakarrobotics.c40agent.sdk.DestinationsCallback;
 import com.sakarrobotics.c40agent.sdk.PeanutSdkBridge;
 import com.sakarrobotics.c40agent.sdk.SdkCallback;
 
@@ -42,5 +43,16 @@ public final class NavigationBridge {
 
     public void getStatus(SdkCallback callback) {
         bridge.queryNavigationStatus(callback);
+    }
+
+    /**
+     * Roadmap Phase 8 addition (see {@code
+     * C40_S_DESTINATION_DISCOVERY_INVESTIGATION.md}) - fetches every
+     * destination pre-registered on the robot's currently loaded map, so
+     * a {@code GO_TO_POINT} caller no longer has to invent or manually
+     * look up a {@code destinationId}. Read-only, like {@link #getStatus}.
+     */
+    public void getAllDestinations(DestinationsCallback callback) {
+        bridge.getAllDestinations(callback);
     }
 }

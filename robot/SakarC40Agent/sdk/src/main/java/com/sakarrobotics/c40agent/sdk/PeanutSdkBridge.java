@@ -3,8 +3,14 @@ package com.sakarrobotics.c40agent.sdk;
 import android.content.Context;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import com.google.gson.Gson;
 import com.keenon.common.constant.PeanutConstants;
 import com.keenon.common.external.PeanutConfig;
+import com.keenon.sdk.api.NavigationDestPoseApi;
 import com.keenon.sdk.api.SensorDepthApi;
 import com.keenon.sdk.api.SensorImuApi;
 import com.keenon.sdk.api.SensorLidarApi;
@@ -17,7 +23,11 @@ import com.keenon.sdk.external.IProgressCallback;
 import com.keenon.sdk.external.PeanutSDK;
 import com.keenon.sdk.hedera.model.ApiError;
 import com.sakarrobotics.c40agent.logging.SdkCallLogger;
+import com.sakarrobotics.c40agent.telemetry.Destination;
 import com.sakarrobotics.c40agent.telemetry.HealthEvent;
+import com.sakarrobotics.c40agent.telemetry.Orientation;
+import com.sakarrobotics.c40agent.telemetry.Pose;
+import com.sakarrobotics.c40agent.telemetry.Position;
 import com.sakarrobotics.c40agent.telemetry.RuntimeSnapshot;
 
 import org.eclipse.californium.core.coap.Request;
@@ -47,6 +57,13 @@ public final class PeanutSdkBridge {
      * error-code family.
      */
     public static final int ERROR_INVALID_MAP_DATA = -1002;
+
+    /**
+     * Client-side parsing failure - the SDK returned a response but it
+     * could not be parsed into {@link Destination}s. Same local,
+     * non-SDK error-code family as {@link #ERROR_INVALID_MAP_DATA}.
+     */
+    public static final int ERROR_MALFORMED_DESTINATIONS = -1003;
 
     private static final String TAG = "PeanutSdkBridge";
     private static final PeanutSdkBridge INSTANCE = new PeanutSdkBridge();
@@ -200,6 +217,58 @@ public final class PeanutSdkBridge {
      */
     public void queryRobotPosition(SdkCallback callback) {
         PeanutSDK.getInstance().runtime().getRobotPosition(wrap("RuntimeComponent.getRobotPosition", "n/a", callback));
+    }
+
+    // ---------------------------------------------------------------
+    // Destination discovery (Roadmap Phase 8 addition, see
+    // C40_S_DESTINATION_DISCOVERY_INVESTIGATION.md). NavigationComponent.
+    // getAllDestPose(IDataCallback) is confirmed present in the officially-
+    // distributed AAR via javap, internally delegates to
+    // com.keenon.sdk.api.NavigationDestPoseApi, @CoapCommond(path=
+    // "/navigation/dest_poses") - a plain GET, so this is a read-only
+    // query exactly like the diagnostic queries above: no operating-mode
+    // guard, and it never calls setTarget/pause/resume/stop or any other
+    // actuation method. (getAllDestPoseV2 exists too, at
+    // /navigation/dest_posesV2, but its response has no pose/map field at
+    // all - grouped building->floor->{id,name,type,phoneStr} only - so it
+    // cannot build a usable Destination and is deliberately not wired
+    // here; see the investigation doc for the full comparison.)
+    // ---------------------------------------------------------------
+
+    /**
+     * Fetches every destination pre-registered on the robot's currently
+     * loaded map. An empty list is a valid, successful result (the robot
+     * has none registered right now) - this bridge does not treat that as
+     * an error, unlike Keenon's own Peanut Clean app ({@code
+     * PeanutResourceManager.getLocalResource()}, decompiled), which
+     * treats an empty raw response string as a business-level failure
+     * ("point empty"). A malformed/unparsable response is reported via
+     * {@link #ERROR_MALFORMED_DESTINATIONS}, never silently swallowed or
+     * substituted with invented data.
+     */
+    public void getAllDestinations(DestinationsCallback callback) {
+        PeanutSDK.getInstance().navigation().getAllDestPose(new IDataCallback() {
+            @Override
+            public void success(String result) {
+                SdkCallLogger.getInstance().logSuccess("NavigationComponent.getAllDestPose", "n/a", result);
+                try {
+                    callback.onSuccess(parseDestinations(result));
+                } catch (RuntimeException malformed) {
+                    String message = "Malformed getAllDestPose response: " + malformed.getMessage();
+                    SdkCallLogger.getInstance().logError("NavigationComponent.getAllDestPose", "n/a",
+                            ERROR_MALFORMED_DESTINATIONS, message);
+                    callback.onError(ERROR_MALFORMED_DESTINATIONS, message);
+                }
+            }
+
+            @Override
+            public void error(ApiError error) {
+                int code = error != null ? error.getCode() : -1;
+                String message = error != null ? error.getMsg() : "unknown error";
+                SdkCallLogger.getInstance().logError("NavigationComponent.getAllDestPose", "n/a", code, message);
+                callback.onError(code, message);
+            }
+        });
     }
 
     // ---------------------------------------------------------------
@@ -403,6 +472,63 @@ public final class PeanutSdkBridge {
                 callback.onError(code, message);
             }
         };
+    }
+
+    /**
+     * Parses a raw {@code NavigationComponent.getAllDestPose} success
+     * payload into vendor-neutral {@link Destination}s. Package-private
+     * (not private) specifically so it is directly unit-testable from
+     * this module's own test source set without ever touching {@code
+     * PeanutSDK.getInstance()} - see {@code
+     * PeanutSdkBridgeDestinationParsingTest}.
+     *
+     * <p>A {@code null}/empty raw string is treated as "no destinations"
+     * (returns an empty list), not an error - this project's own,
+     * deliberate interpretation, distinct from Keenon's Peanut Clean app
+     * treating that same shape as a failure (see {@link
+     * #getAllDestinations}'s Javadoc). Any other unparsable input
+     * propagates the underlying {@link com.google.gson.JsonSyntaxException}
+     * (or a {@link NullPointerException} for a structurally-wrong-but-
+     * valid-JSON payload) to the caller, which {@link #getAllDestinations}
+     * catches and reports as {@link #ERROR_MALFORMED_DESTINATIONS}.
+     */
+    static List<Destination> parseDestinations(String rawJson) {
+        if (rawJson == null || rawJson.isEmpty()) {
+            return Collections.emptyList();
+        }
+        NavigationDestPoseApi.Bean bean = new Gson().fromJson(rawJson, NavigationDestPoseApi.Bean.class);
+        if (bean == null || bean.getData() == null) {
+            return Collections.emptyList();
+        }
+        List<Destination> destinations = new ArrayList<>();
+        for (NavigationDestPoseApi.Bean.DataBean data : bean.getData()) {
+            destinations.add(toDestination(data));
+        }
+        return destinations;
+    }
+
+    /**
+     * Field-for-field mapping from the verified vendor bean
+     * (NavigationDestPoseApi.Bean.DataBean) to the vendor-neutral {@link
+     * Destination} - see that class's Javadoc for which vendor field each
+     * one mirrors (in particular {@code bind_map_md5} -> {@code mapId}).
+     */
+    private static Destination toDestination(NavigationDestPoseApi.Bean.DataBean data) {
+        Pose pose = null;
+        NavigationDestPoseApi.Bean.DataBean.PoseBean vendorPose = data.getPose();
+        if (vendorPose != null) {
+            Position position = vendorPose.getPosition() != null
+                    ? new Position(vendorPose.getPosition().getX(), vendorPose.getPosition().getY(),
+                            vendorPose.getPosition().getZ())
+                    : null;
+            Orientation orientation = vendorPose.getOrientation() != null
+                    ? new Orientation(vendorPose.getOrientation().getW(), vendorPose.getOrientation().getX(),
+                            vendorPose.getOrientation().getY(), vendorPose.getOrientation().getZ())
+                    : null;
+            pose = new Pose(position, orientation);
+        }
+        return new Destination(data.getId(), data.getName(), pose, data.getBind_map_md5(), data.getFloor(),
+                data.getType());
     }
 
     /** Verified topic name constants (TopicName.*) exposed without leaking com.keenon.* to callers. */

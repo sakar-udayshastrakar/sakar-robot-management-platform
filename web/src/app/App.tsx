@@ -55,12 +55,40 @@ export function App() {
 
             <Route path="/tasks" element={<TasksPage />} />
             <Route path="/cleaning" element={<CleaningPage />} />
-            <Route path="/telemetry" element={<TelemetryPage />} />
+            <Route
+              path="/telemetry"
+              element={
+                <ProtectedRoute requirePermission="ROBOT_LOG_VIEW">
+                  <TelemetryPage />
+                </ProtectedRoute>
+              }
+            />
             <Route path="/alerts" element={<AlertsPage />} />
-            <Route path="/events" element={<EventsPage />} />
-            <Route path="/errors" element={<ErrorsPage />} />
+            <Route
+              path="/events"
+              element={
+                <ProtectedRoute requirePermission="ROBOT_LOG_VIEW">
+                  <EventsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/errors"
+              element={
+                <ProtectedRoute requirePermission="ROBOT_LOG_VIEW">
+                  <ErrorsPage />
+                </ProtectedRoute>
+              }
+            />
 
-            <Route path="/logs" element={<LogsPage />} />
+            <Route
+              path="/logs"
+              element={
+                <ProtectedRoute requirePermission="ROBOT_LOG_VIEW">
+                  <LogsPage />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/analytics"
               element={

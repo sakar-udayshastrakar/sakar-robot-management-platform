@@ -1,0 +1,48 @@
+// Roadmap Phase 9 "Virtual C40 Robot Simulator" (see
+// ../../VIRTUAL_C40_SIMULATOR.md). Deliberately stays plain java-library,
+// same reasoning as :api's own build.gradle comment: its tests run as
+// plain JUnit with no Android toolchain required.
+//
+// CRITICAL ARCHITECTURAL BOUNDARY, enforced at the build-graph level, not
+// just by convention: this module depends ONLY on :api, :telemetry, and
+// :logging - it does NOT and MUST NOT depend on :sdk, :robot, :navigation,
+// or :charging (the modules that touch com.keenon.*/the real Peanut SDK
+// AAR). Gradle itself would fail to compile a reference to
+// PeanutSdkBridge/PeanutSDK from this module, because those types are
+// simply not on its classpath - see
+// VirtualAgentRealSdkIsolationTest for the automated test that also
+// guards this at the source level, so a future accidental dependency
+// addition still gets caught.
+apply plugin: 'java-library'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+dependencies {
+    // The SAME vendor-neutral MQTT/command contracts the real SakarC40Agent
+    // uses (CommandDispatcher, RobotCommandExecutor, RobotCommandResultReporter,
+    // AgentMqttClient, AgentMqttTopics, CompositeRobotCommandExecutor, ...) -
+    // reused as-is, not reimplemented, per this module's own design goal of
+    // never creating a second command/message pipeline.
+    implementation project(':api')
+    // The SAME vendor-neutral Destination/Pose/Position/Orientation types
+    // the real getAllDestPose() integration returns - reused as-is so a
+    // caller (backend, Web UI) cannot tell, from the shape of the data
+    // alone, whether it came from a virtual or a real robot.
+    implementation project(':telemetry')
+    implementation project(':logging')
+
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+    testImplementation 'org.mockito:mockito-core:5.11.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.11.0'
+    // Same version as :api/build.gradle (Phase 3 Security Hardening pin) - used only by this
+    // module's own tests, to inspect the JSON CommandDispatcher publishes via :api's own Gson.
+    testImplementation 'com.google.code.gson:gson:2.8.9'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.10.2'
+}
+
+test {
+    useJUnitPlatform()
+}
