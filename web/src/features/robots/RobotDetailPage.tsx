@@ -69,15 +69,16 @@ const TABS: { key: TabKey; label: string }[] = [
   { key: 'audit', label: 'Audit' },
 ];
 
-// Compact label/value row for the Overview tab's structured info panels
-// (Basic Information / Location & Organization / Device Status) — an
-// enterprise device-management layout instead of stacked full-width cards.
+// Inline "Label: value" fact for the Overview tab's structured info panels
+// (Basic Information / Location & Organization / Device Status) — verified
+// against the live Keenon Cloud Robot Detail panels, which flow facts
+// horizontally and wrap rather than stacking one bordered row per field.
 function KvRow({ label, value, mono }: { label: string; value: ReactNode; mono?: boolean }) {
   return (
-    <div className="sakar-kv-row">
-      <span className="sakar-kv-label">{label}</span>
+    <span className="sakar-kv-row">
+      <span className="sakar-kv-label">{label}:</span>
       <span className={'sakar-kv-value' + (mono ? ' sakar-mono' : '')}>{value}</span>
-    </div>
+    </span>
   );
 }
 
@@ -220,23 +221,29 @@ export function RobotDetailPage() {
 
           <div className="sakar-info-grid">
             <Card title="Basic Information">
-              <KvRow label="Robot name" value={robot.name} />
-              <KvRow label="Serial number" value={robot.serialNumber} />
-              <KvRow label="Robot ID" value={robot.id} mono />
-              <KvRow label="Model ID" value={robot.robotModelId} mono />
+              <div className="sakar-fact-group">
+                <KvRow label="Robot name" value={robot.name} />
+                <KvRow label="Serial number" value={robot.serialNumber} />
+                <KvRow label="Robot ID" value={robot.id} mono />
+                <KvRow label="Model ID" value={robot.robotModelId} mono />
+              </div>
             </Card>
 
             <Card title="Location & Organization">
-              <KvRow label="Organization" value={robot.organizationId} mono />
-              <KvRow label="Site" value={siteName} />
+              <div className="sakar-fact-group">
+                <KvRow label="Organization" value={robot.organizationId} mono />
+                <KvRow label="Site" value={siteName} />
+              </div>
             </Card>
 
             <Card title="Device Status">
-              <KvRow
-                label="Registration state"
-                value={<Badge tone={robot.status === 'ACTIVE' ? 'success' : robot.status === 'DEACTIVATED' ? 'warning' : 'neutral'}>{robot.status}</Badge>}
-              />
-              <KvRow label="Registered" value={new Date(robot.createdAt).toLocaleString()} />
+              <div className="sakar-fact-group">
+                <KvRow
+                  label="Registration state"
+                  value={<Badge tone={robot.status === 'ACTIVE' ? 'success' : robot.status === 'DEACTIVATED' ? 'warning' : 'neutral'}>{robot.status}</Badge>}
+                />
+                <KvRow label="Registered" value={new Date(robot.createdAt).toLocaleString()} />
+              </div>
             </Card>
 
             <Card title="Capabilities">

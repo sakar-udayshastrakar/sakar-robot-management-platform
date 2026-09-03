@@ -69,6 +69,32 @@
   border: 1px solid var(--sakar-border);
 }
 
+/* Plain centered text, no icon — table-specific empty state (see
+   DataTable.tsx for why this differs from the icon-bearing EmptyState). */
+.sakar-table-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 32px 16px;
+  text-align: center;
+  border-radius: var(--sakar-radius-md);
+  border: 1px solid var(--sakar-border);
+}
+
+.sakar-table-empty-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--sakar-text-faint);
+}
+
+.sakar-table-empty-detail {
+  font-size: 12px;
+  color: var(--sakar-text-subtle);
+  max-width: 420px;
+}
+
 .sakar-table {
   width: 100%;
   border-collapse: collapse;
@@ -260,8 +286,8 @@
 .sakar-filter-bar {
   display: flex;
   flex-wrap: wrap;
-  align-items: flex-end;
-  gap: 12px;
+  align-items: center;
+  gap: 14px 20px;
   margin-bottom: 16px;
 }
 
@@ -282,23 +308,23 @@
   box-shadow: 0 0 0 3px rgba(255, 145, 77, 0.25);
 }
 
-/* Labeled "Label / control" field used inside a FilterBar — Keenon's
-   filter rows show a small label above every field rather than
-   placeholder-only inputs (SAKAR_KEENON_UI_AUDIT.md). Purely structural:
-   no new filtering behavior, just a label above whatever control the
-   page already renders. */
+/* Labeled "Label beside control" field used inside a FilterBar — verified
+   against the live Keenon Cloud Robot Management filter row (label to the
+   LEFT of each control, e.g. "Production code [___]"), not a label-above
+   layout. Purely structural: no new filtering behavior, just a label
+   beside whatever control the page already renders. */
 .sakar-filter-field {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
 }
 
 .sakar-filter-field-label {
-  font-size: 10.5px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  color: var(--sakar-text-faint);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--sakar-text-muted);
+  white-space: nowrap;
 }
 
 /* Plain text-link presentation for an identity cell that is a real
@@ -464,6 +490,7 @@
   position: relative;
   display: flex;
   align-items: center;
+  min-width: 200px;
 }
 
 .sakar-search svg {
@@ -775,16 +802,16 @@
   margin: 0 0 10px;
 }
 
+/* Inline "Label: value" facts flowing left-to-right and wrapping as
+   needed — verified against the live Keenon Cloud Robot Detail "Real time
+   status"/"Software info"/"Business info" panels, which lay facts out
+   this way rather than as one bordered row per field. */
 .sakar-kv-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 5px 0;
-  border-bottom: 1px solid var(--sakar-border-subtle);
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
   font-size: 12.5px;
 }
-.sakar-kv-row:last-child { border-bottom: none; }
 
 .sakar-kv-label {
   color: var(--sakar-text-faint);
@@ -794,9 +821,16 @@
 
 .sakar-kv-value {
   color: var(--sakar-text);
-  text-align: right;
   min-width: 0;
   overflow-wrap: anywhere;
+}
+
+/* Groups a panel's facts into a flowing, wrapping row (the container for
+   several .sakar-kv-row items) instead of one full-width row per field. */
+.sakar-fact-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 22px;
 }
 
 /* Horizontal strip of compact stat items — the Robot Detail top summary
