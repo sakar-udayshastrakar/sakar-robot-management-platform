@@ -31,7 +31,7 @@ export function Sidebar() {
                       'sakar-sidebar-link' + (isActive ? ' sakar-sidebar-link--active' : '')
                     }
                   >
-                    <ItemIcon width={17} height={17} aria-hidden="true" />
+                    <ItemIcon width={16} height={16} aria-hidden="true" />
                     {!collapsed && (
                       <>
                         <span className="sakar-sidebar-link-label">{item.label}</span>

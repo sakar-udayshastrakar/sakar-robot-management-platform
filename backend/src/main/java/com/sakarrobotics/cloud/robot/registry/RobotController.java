@@ -1,5 +1,6 @@
 package com.sakarrobotics.cloud.robot.registry;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -20,6 +21,7 @@ import com.sakarrobotics.cloud.common.error.SakarErrorCode;
 import com.sakarrobotics.cloud.common.web.ApiResponse;
 import com.sakarrobotics.cloud.robot.adapter.RobotAdapter;
 import com.sakarrobotics.cloud.robot.adapter.RobotAdapterRegistry;
+import com.sakarrobotics.cloud.robot.adapter.dto.AreaInfo;
 import com.sakarrobotics.cloud.robot.adapter.dto.BatteryInfo;
 import com.sakarrobotics.cloud.robot.adapter.dto.RobotStatusSnapshot;
 import com.sakarrobotics.cloud.robot.registry.dto.RegisterRobotRequest;
@@ -120,6 +122,19 @@ public class RobotController {
         robotCapabilityService.assertSupported(robot.getRobotModelId(), RobotCapabilityType.GET_BATTERY);
         RobotAdapter adapter = adapterFor(robot);
         return ApiResponse.ok(adapter.getBattery(robot));
+    }
+
+    @GetMapping("/{id}/areas")
+    @PreAuthorize("hasAuthority('ROBOT_VIEW')")
+    @Operation(summary = "List a robot's cleanable areas/zones through its configured adapter "
+            + "(returns UNSUPPORTED_CAPABILITY if this robot model does not support GET_AREAS) — "
+            + "metadata only (vendor area id + display name), no polygon geometry: the adapter does "
+            + "not receive or expose any, so none is fabricated here")
+    public ApiResponse<List<AreaInfo>> areas(@AuthenticationPrincipal UserPrincipal principal, @PathVariable UUID id) {
+        Robot robot = robotService.getAccessibleOrThrow(principal, id);
+        robotCapabilityService.assertSupported(robot.getRobotModelId(), RobotCapabilityType.GET_AREAS);
+        RobotAdapter adapter = adapterFor(robot);
+        return ApiResponse.ok(adapter.getAreas(robot));
     }
 
     @PostMapping("/{id}/mqtt-credentials")

@@ -92,6 +92,18 @@ export interface RobotBatteryInfo {
   observedAt: string;
 }
 
+// backend/.../robot/adapter/dto/AreaInfo.java — same live-adapter-call
+// pattern as RobotStatusSnapshot/BatteryInfo (GET /robots/{id}/areas,
+// GET_AREAS capability). Deliberately only these two fields: the adapter
+// does not receive or expose polygon geometry, navigation points, or a
+// charging-point position from the vendor, so none of that is modeled
+// here — see SAKAR_KEENON_UI_AUDIT.md / the Map implementation report for
+// exactly what is and isn't available.
+export interface RobotArea {
+  vendorAreaId: string | null;
+  displayName: string | null;
+}
+
 // backend/.../robot/registry/dto/RobotMqttCredentialResponse.java
 export interface RobotMqttCredentialResponse {
   robotId: string;

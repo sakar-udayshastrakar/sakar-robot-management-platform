@@ -7,7 +7,7 @@
 .sakar-card {
   background: var(--sakar-surface);
   border: 1px solid var(--sakar-border);
-  border-radius: var(--sakar-radius-lg);
+  border-radius: var(--sakar-radius-md);
   box-shadow: var(--sakar-shadow-sm);
 }
 
@@ -15,19 +15,19 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 24px;
+  padding: 10px 14px;
   border-bottom: 1px solid var(--sakar-border-subtle);
 }
 
 .sakar-card-title {
-  font-size: 15px;
-  font-weight: 700;
+  font-size: 13px;
+  font-weight: 600;
   color: var(--sakar-text);
   margin: 0;
 }
 
 .sakar-card-body {
-  padding: 24px;
+  padding: 14px;
 }
 
 .sakar-stat-grid {
@@ -36,13 +36,15 @@
   gap: 12px;
 }
 
+/* Rounded-rectangle status chip, not a full capsule/pill — matches the
+   audited Keenon status-tag treatment (SAKAR_KEENON_UI_AUDIT.md). */
 .sakar-badge {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
-  border-radius: 999px;
-  font-size: 12px;
+  gap: 5px;
+  padding: 2px 8px;
+  border-radius: var(--sakar-radius-sm);
+  font-size: 11.5px;
   font-weight: 600;
   white-space: nowrap;
 }
@@ -63,7 +65,7 @@
 
 .sakar-table-wrap {
   overflow-x: auto;
-  border-radius: var(--sakar-radius-lg);
+  border-radius: var(--sakar-radius-md);
   border: 1px solid var(--sakar-border);
 }
 
@@ -75,11 +77,11 @@
 
 .sakar-table th {
   text-align: left;
-  padding: 10px 12px;
-  font-size: 11.5px;
+  padding: 7px 12px;
+  font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.02em;
   color: var(--sakar-text-faint);
   background: var(--sakar-bg);
   border-bottom: 1px solid var(--sakar-border-subtle);
@@ -87,10 +89,11 @@
 }
 
 .sakar-table td {
-  padding: 10px 12px;
+  padding: 7px 12px;
   border-bottom: 1px solid var(--sakar-border-subtle);
   color: var(--sakar-text-muted);
   vertical-align: middle;
+  font-size: 13px;
 }
 
 .sakar-table tbody tr:hover {
@@ -106,23 +109,25 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 56px 24px;
+  gap: 6px;
+  padding: 36px 24px;
   text-align: center;
   color: var(--sakar-text-faint);
 }
 
 .sakar-state-icon {
-  width: 56px;
-  height: 56px;
-  border-radius: var(--sakar-radius-lg);
+  width: 40px;
+  height: 40px;
+  border-radius: var(--sakar-radius-md);
   background: var(--sakar-neutral-soft);
   color: var(--sakar-text-subtle);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
+
+.sakar-state-icon svg { width: 18px; height: 18px; }
 
 .sakar-state--error {
   border: 1px solid var(--sakar-danger-soft);
@@ -174,10 +179,10 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 9px 16px;
-  border-radius: var(--sakar-radius-md);
+  padding: 7px 13px;
+  border-radius: var(--sakar-radius-sm);
   border: 1px solid transparent;
-  font-size: 13.5px;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.15s ease, box-shadow 0.15s ease;
@@ -221,12 +226,12 @@
 
 .sakar-field input,
 .sakar-field select {
-  padding: 10px 14px;
-  border-radius: var(--sakar-radius-md);
+  padding: 8px 12px;
+  border-radius: var(--sakar-radius-sm);
   border: 1px solid var(--sakar-border-strong);
   background: var(--sakar-surface);
   color: var(--sakar-text);
-  font-size: 14px;
+  font-size: 13.5px;
 }
 
 .sakar-field input:focus,
@@ -255,14 +260,15 @@
 .sakar-filter-bar {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  align-items: flex-end;
+  gap: 12px;
   margin-bottom: 16px;
 }
 
 .sakar-filter-bar select,
 .sakar-filter-bar input {
-  padding: 8px 12px;
-  border-radius: var(--sakar-radius-md);
+  padding: 7px 10px;
+  border-radius: var(--sakar-radius-sm);
   border: 1px solid var(--sakar-border-strong);
   background: var(--sakar-surface);
   color: var(--sakar-text);
@@ -276,25 +282,66 @@
   box-shadow: 0 0 0 3px rgba(255, 145, 77, 0.25);
 }
 
+/* Labeled "Label / control" field used inside a FilterBar — Keenon's
+   filter rows show a small label above every field rather than
+   placeholder-only inputs (SAKAR_KEENON_UI_AUDIT.md). Purely structural:
+   no new filtering behavior, just a label above whatever control the
+   page already renders. */
+.sakar-filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sakar-filter-field-label {
+  font-size: 10.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--sakar-text-faint);
+}
+
+/* Plain text-link presentation for an identity cell that is a real
+   <button onClick={navigate}> under the hood (a table cell can't use
+   react-router's <Link> here without changing the render callback
+   signature) — no border/background/pill, just an accent-colored link,
+   matching Keenon's plain SN links instead of a boxed button. */
+.sakar-link-btn {
+  display: inline;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--sakar-primary-strong);
+  font-size: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.sakar-link-btn:hover {
+  text-decoration: underline;
+  color: var(--sakar-primary-hover);
+}
+
 .sakar-page-header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 12px;
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 }
 
 .sakar-page-title {
-  font-size: 24px;
-  font-weight: 800;
-  letter-spacing: -0.01em;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
   color: var(--sakar-text);
-  margin: 0 0 4px;
+  margin: 0 0 3px;
 }
 
 .sakar-page-subtitle {
-  font-size: 13.5px;
+  font-size: 13px;
   color: var(--sakar-text-faint);
   margin: 0;
 }
@@ -306,10 +353,10 @@
 .sakar-severity {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
-  border-radius: 999px;
-  font-size: 11.5px;
+  gap: 5px;
+  padding: 2px 8px;
+  border-radius: var(--sakar-radius-sm);
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.02em;
@@ -344,15 +391,18 @@
 /* Metric card (KPI cards with icon + trend)                           */
 /* ------------------------------------------------------------------ */
 
+/* Icon-beside-value KPI layout (Keenon-style), not icon-above-value:
+   [icon]  [big value]
+           [label / trend] */
 .sakar-metric-card {
   background: var(--sakar-surface);
   border: 1px solid var(--sakar-border-subtle);
-  border-radius: var(--sakar-radius-lg);
-  padding: 16px;
+  border-radius: var(--sakar-radius-md);
+  padding: 12px 14px;
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
   box-shadow: var(--sakar-shadow-sm);
   transition: box-shadow 0.15s ease;
 }
@@ -362,16 +412,16 @@
 }
 
 .sakar-metric-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: var(--sakar-radius-md);
+  width: 30px;
+  height: 30px;
+  border-radius: var(--sakar-radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
 }
 
-.sakar-metric-icon svg { width: 18px; height: 18px; }
+.sakar-metric-icon svg { width: 15px; height: 15px; }
 
 .sakar-metric-icon--default { background: var(--sakar-primary-soft); color: var(--sakar-primary-700); }
 .sakar-metric-icon--success { background: var(--sakar-success-soft); color: var(--sakar-success); }
@@ -382,26 +432,27 @@
 
 .sakar-metric-body {
   display: flex;
+  flex: 1;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
   min-width: 0;
 }
 
 .sakar-metric-value {
-  font-size: 24px;
-  font-weight: 800;
+  font-size: 20px;
+  font-weight: 700;
   color: var(--sakar-text);
   line-height: 1.1;
 }
 
 .sakar-metric-label {
-  font-size: 12px;
+  font-size: 11.5px;
   font-weight: 600;
   color: var(--sakar-text-faint);
 }
 
 .sakar-metric-trend {
-  font-size: 11px;
+  font-size: 10.5px;
   color: var(--sakar-text-subtle);
 }
 
@@ -690,9 +741,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 0;
+  padding: 8px 0;
   border-bottom: 1px solid var(--sakar-border-subtle);
-  font-size: 13.5px;
+  font-size: 13px;
 }
 .sakar-health-row:last-child { border-bottom: none; }
 
@@ -702,4 +753,71 @@
   gap: 8px;
   font-weight: 600;
   color: var(--sakar-text);
+}
+
+/* ------------------------------------------------------------------ */
+/* Compact label/value info panels — enterprise device-management style  */
+/* (Robot Detail Overview, and any other page needing structured facts). */
+/* ------------------------------------------------------------------ */
+
+.sakar-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 12px;
+}
+
+.sakar-kv-panel-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--sakar-text-faint);
+  margin: 0 0 10px;
+}
+
+.sakar-kv-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--sakar-border-subtle);
+  font-size: 12.5px;
+}
+.sakar-kv-row:last-child { border-bottom: none; }
+
+.sakar-kv-label {
+  color: var(--sakar-text-faint);
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.sakar-kv-value {
+  color: var(--sakar-text);
+  text-align: right;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* Horizontal strip of compact stat items — the Robot Detail top summary
+   (connection / current state / battery / charging) and similar. */
+.sakar-status-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+}
+
+.sakar-status-strip-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 110px;
+}
+
+.sakar-status-strip-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--sakar-text-faint);
 }

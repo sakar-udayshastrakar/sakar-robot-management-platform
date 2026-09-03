@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useMemo, useState, type ReactNode } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import { activateRobot, deactivateRobot, getRobot } from '../../api/robots';
 import { useApi } from '../../hooks/useApi';
 import { usePermissions } from '../../hooks/usePermissions';
@@ -10,9 +10,10 @@ import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { Icon } from '../../components/ui/Icon';
 import { StatusBadge } from '../../components/ui/StatusBadge';
-import { LoadingState, ErrorState } from '../../components/ui/States';
+import { LoadingState, ErrorState, EmptyState } from '../../components/ui/States';
 import { ConfirmDialog } from '../../components/ui/ConfirmDialog';
 import { RobotStatusPanel } from './RobotStatusPanel';
+import { RobotMapPanel } from './RobotMapPanel';
 import { MqttCredentialsPanel } from './MqttCredentialsPanel';
 import { LockUnlockPanel } from './LockUnlockPanel';
 import { RobotDiagnosticsPanel } from './RobotDiagnosticsPanel';
@@ -29,10 +30,32 @@ import { RobotLogsPanel } from './RobotLogsPanel';
 import { ApiRequestError } from '../../api/client';
 import './robots.css';
 
-type TabKey = 'overview' | 'telemetry' | 'events' | 'errors' | 'alerts' | 'tasks' | 'cleaning' | 'commands' | 'logs' | 'timeline' | 'diagnostics' | 'audit';
+// The 7 Keenon-inspired tabs below "Overview" started as a visual shell only
+// (SAKAR_KEENON_UI_AUDIT.md, Section O — first implementation slice). 'map'
+// is now wired to the real GET /robots/{id}/areas endpoint (RobotMapPanel) —
+// see that component for exactly what is and isn't available. The remaining
+// 6 are still intentionally NOT wired to a backend endpoint: no such API
+// exists today (recurring schedules, cleaning-run history/report
+// generation, fleet statistics aggregation, or per-robot push-notification
+// config are all real gaps tracked in the audit, Sections F/K/N). Rendering
+// a mock table/chart here would misrepresent real robot capability, so each
+// one shows a plain "not connected yet" empty state instead.
+type PlannedTabKey = 'map' | 'taskManagement' | 'taskRecord' | 'statistics' | 'trialRunRecord' | 'configuration' | 'cleaningDailyReport';
+type TabKey = 'overview' | PlannedTabKey | 'telemetry' | 'events' | 'errors' | 'alerts' | 'tasks' | 'cleaning' | 'commands' | 'logs' | 'timeline' | 'diagnostics' | 'audit';
+
+const PLANNED_TABS: { key: PlannedTabKey; label: string }[] = [
+  { key: 'map', label: 'Map' },
+  { key: 'taskManagement', label: 'Task Management' },
+  { key: 'taskRecord', label: 'Task Record' },
+  { key: 'statistics', label: 'Statistics' },
+  { key: 'trialRunRecord', label: 'Trial Run Record' },
+  { key: 'configuration', label: 'Configuration' },
+  { key: 'cleaningDailyReport', label: 'Cleaning Daily Report' },
+];
 
 const TABS: { key: TabKey; label: string }[] = [
   { key: 'overview', label: 'Overview' },
+  ...PLANNED_TABS,
   { key: 'telemetry', label: 'Telemetry' },
   { key: 'events', label: 'Events' },
   { key: 'errors', label: 'Errors' },
@@ -45,6 +68,29 @@ const TABS: { key: TabKey; label: string }[] = [
   { key: 'diagnostics', label: 'Diagnostics' },
   { key: 'audit', label: 'Audit' },
 ];
+
+// Compact label/value row for the Overview tab's structured info panels
+// (Basic Information / Location & Organization / Device Status) — an
+// enterprise device-management layout instead of stacked full-width cards.
+function KvRow({ label, value, mono }: { label: string; value: ReactNode; mono?: boolean }) {
+  return (
+    <div className="sakar-kv-row">
+      <span className="sakar-kv-label">{label}</span>
+      <span className={'sakar-kv-value' + (mono ? ' sakar-mono' : '')}>{value}</span>
+    </div>
+  );
+}
+
+function NotConnectedTab({ label }: { label: string }) {
+  return (
+    <Card title={label}>
+      <EmptyState
+        title="This feature is not connected yet."
+        detail="Coming in a future implementation phase — no backend API exists for this view yet (see SAKAR_KEENON_UI_AUDIT.md for the tracked gap and roadmap). This tab intentionally shows no data rather than a fabricated example."
+      />
+    </Card>
+  );
+}
 
 export function RobotDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -104,10 +150,19 @@ export function RobotDetailPage() {
 
   return (
     <div>
+      <nav className="sakar-breadcrumb" aria-label="Breadcrumb">
+        <span>Fleet</span>
+        <span aria-hidden="true">/</span>
+        <Link to="/robots">Robots</Link>
+        <span aria-hidden="true">/</span>
+        <span className="sakar-breadcrumb-current">{robot.name}</span>
+      </nav>
       <div className="sakar-page-header">
         <div>
           <h1 className="sakar-page-title">{robot.name}</h1>
-          <p className="sakar-page-subtitle">Sakar Robot — Sakar CleanBot 5000 Plus</p>
+          <p className="sakar-page-subtitle">
+            {robot.serialNumber} · Sakar CleanBot 5000 Plus
+          </p>
           <dl className="sakar-robot-header-meta">
             <div><dt>Robot ID</dt><dd className="sakar-mono">{robot.id}</dd></div>
             <div><dt>Model</dt><dd className="sakar-mono">{robot.robotModelId.slice(0, 8)}…</dd></div>
@@ -161,29 +216,55 @@ export function RobotDetailPage() {
 
       {tab === 'overview' && (
         <div style={{ display: 'grid', gap: 16 }}>
-          <Card title="Registry Detail">
-            <dl style={{ display: 'grid', gridTemplateColumns: '160px 1fr', rowGap: 10 }}>
-              <dt className="sakar-page-subtitle">Robot ID</dt>
-              <dd style={{ margin: 0, fontFamily: 'var(--sakar-font-mono)', fontSize: 12.5 }}>{robot.id}</dd>
-              <dt className="sakar-page-subtitle">Serial Number</dt>
-              <dd style={{ margin: 0 }}>{robot.serialNumber}</dd>
-              <dt className="sakar-page-subtitle">Organization</dt>
-              <dd style={{ margin: 0 }}>{robot.organizationId}</dd>
-              <dt className="sakar-page-subtitle">Site</dt>
-              <dd style={{ margin: 0 }}>{siteName}</dd>
-              <dt className="sakar-page-subtitle">Model ID</dt>
-              <dd style={{ margin: 0 }}>{robot.robotModelId}</dd>
-              <dt className="sakar-page-subtitle">Capabilities</dt>
-              <dd style={{ margin: 0 }}>{robot.capabilities.join(', ') || 'None reported'}</dd>
-              <dt className="sakar-page-subtitle">Registered</dt>
-              <dd style={{ margin: 0 }}>{new Date(robot.createdAt).toLocaleString()}</dd>
-            </dl>
-          </Card>
           <RobotStatusPanel robotId={robot.id} />
-          <MqttCredentialsPanel robotId={robot.id} />
-          <LockUnlockPanel />
+
+          <div className="sakar-info-grid">
+            <Card title="Basic Information">
+              <KvRow label="Robot name" value={robot.name} />
+              <KvRow label="Serial number" value={robot.serialNumber} />
+              <KvRow label="Robot ID" value={robot.id} mono />
+              <KvRow label="Model ID" value={robot.robotModelId} mono />
+            </Card>
+
+            <Card title="Location & Organization">
+              <KvRow label="Organization" value={robot.organizationId} mono />
+              <KvRow label="Site" value={siteName} />
+            </Card>
+
+            <Card title="Device Status">
+              <KvRow
+                label="Registration state"
+                value={<Badge tone={robot.status === 'ACTIVE' ? 'success' : robot.status === 'DEACTIVATED' ? 'warning' : 'neutral'}>{robot.status}</Badge>}
+              />
+              <KvRow label="Registered" value={new Date(robot.createdAt).toLocaleString()} />
+            </Card>
+
+            <Card title="Capabilities">
+              {robot.capabilities.length === 0 ? (
+                <span className="sakar-page-subtitle">No capabilities reported for this robot model.</span>
+              ) : (
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                  {robot.capabilities.map((c) => <Badge key={c} tone="primary">{c}</Badge>)}
+                </div>
+              )}
+            </Card>
+          </div>
         </div>
       )}
+
+      {tab === 'map' && <RobotMapPanel robotId={robot.id} />}
+
+      {tab === 'taskManagement' && <NotConnectedTab label="Task Management" />}
+
+      {tab === 'taskRecord' && <NotConnectedTab label="Task Record" />}
+
+      {tab === 'statistics' && <NotConnectedTab label="Statistics" />}
+
+      {tab === 'trialRunRecord' && <NotConnectedTab label="Trial Run Record" />}
+
+      {tab === 'configuration' && <NotConnectedTab label="Configuration" />}
+
+      {tab === 'cleaningDailyReport' && <NotConnectedTab label="Cleaning Daily Report" />}
 
       {tab === 'telemetry' && <RobotTelemetryPanel robotId={robot.id} />}
 
@@ -197,7 +278,13 @@ export function RobotDetailPage() {
 
       {tab === 'cleaning' && <RobotCleaningPanel robotId={robot.id} />}
 
-      {tab === 'commands' && <CommandsPanel robot={robot} />}
+      {tab === 'commands' && (
+        <div style={{ display: 'grid', gap: 16 }}>
+          <CommandsPanel robot={robot} />
+          <MqttCredentialsPanel robotId={robot.id} />
+          <LockUnlockPanel />
+        </div>
+      )}
 
       {tab === 'logs' && <RobotLogsPanel robotId={robot.id} />}
 

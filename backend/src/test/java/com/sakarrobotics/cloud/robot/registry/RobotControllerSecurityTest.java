@@ -142,6 +142,99 @@ class RobotControllerSecurityTest extends IntegrationTestSupport {
     }
 
     @Test
+    void user_cannotSeeRobotAreasBelongingToAnUnrelatedOrganization_getsNotFoundNotForbidden() throws Exception {
+        Role orgAdmin = ensureRole(RoleName.ORG_ADMIN, PermissionCode.ROBOT_VIEW, PermissionCode.ROBOT_CONFIGURE);
+        Organization orgA = createOrganization("Org A " + UUID.randomUUID(), OrganizationType.DIRECT_CLIENT, null);
+        Organization orgB = createOrganization("Org B " + UUID.randomUUID(), OrganizationType.DIRECT_CLIENT, null);
+        String emailA = "orgadmin-areas-a-" + UUID.randomUUID() + "@example.com";
+        createUser(emailA, "Password1!", orgAdmin, orgA.getId());
+
+        RobotModel model = aFullyCapableModel();
+        Robot robotInOrgB = registerRobot(orgB.getId(), model.getId(), "SN-" + UUID.randomUUID());
+
+        String token = login(emailA, "Password1!");
+
+        // A user must not be able to reach another organization's robot's areas
+        // simply by guessing/changing the id — same tenant guard as every other
+        // per-robot read endpoint (getAccessibleOrThrow runs before the
+        // capability check, so this fails closed regardless of what the model
+        // actually supports).
+        mockMvc.perform(get("/api/v1/robots/" + robotInOrgB.getId() + "/areas")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error.code").value("ROBOT_NOT_FOUND"));
+    }
+
+    @Test
+    void robotModelWithoutGetAreasCapability_areasEndpointReturnsUnsupportedCapability() throws Exception {
+        Role orgAdmin = ensureRole(RoleName.ORG_ADMIN, PermissionCode.ROBOT_VIEW, PermissionCode.ROBOT_CONFIGURE);
+        Organization org = createOrganization("Org " + UUID.randomUUID(), OrganizationType.DIRECT_CLIENT, null);
+        String email = "orgadmin-areascap-" + UUID.randomUUID() + "@example.com";
+        createUser(email, "Password1!", orgAdmin, org.getId());
+
+        RobotManufacturer manufacturer = manufacturerRepository.save(new RobotManufacturer("NoAreas-" + UUID.randomUUID()));
+        RobotModel model = new RobotModel();
+        model.setManufacturerId(manufacturer.getId());
+        model.setName("Limited Model");
+        model.setAdapterType(AdapterType.SAKAR_NATIVE);
+        model.setIntegrationPath(IntegrationPath.SAKAR_OWNED_LOCAL);
+        model = modelRepository.save(model);
+        // Deliberately no RobotCapability row for GET_AREAS at all -> unsupported.
+
+        Robot robot = registerRobot(org.getId(), model.getId(), "SN-" + UUID.randomUUID());
+        String token = login(email, "Password1!");
+
+        mockMvc.perform(get("/api/v1/robots/" + robot.getId() + "/areas")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.error.code").value("UNSUPPORTED_CAPABILITY"));
+    }
+
+    @Test
+    void keenonRobotWithGetAreasCapabilityButNoSyncedAreaMapping_areasEndpointReturnsResourceNotFound() throws Exception {
+        // Exercises the real KeenonRobotAdapter.getAreas() -> storeIdOf() path through the
+        // full Spring context (JPA + the real GlobalExceptionHandler) — the other /areas
+        // tests above all short-circuit before ever reaching the adapter (tenant guard or
+        // capability check), so this is the only coverage of "capability supported, adapter
+        // genuinely called, no synced Keenon store mapping yet" end to end.
+        Role orgAdmin = ensureRole(RoleName.ORG_ADMIN, PermissionCode.ROBOT_VIEW, PermissionCode.ROBOT_CONFIGURE);
+        Organization org = createOrganization("Org " + UUID.randomUUID(), OrganizationType.DIRECT_CLIENT, null);
+        String email = "orgadmin-keenonareas-" + UUID.randomUUID() + "@example.com";
+        createUser(email, "Password1!", orgAdmin, org.getId());
+
+        RobotManufacturer manufacturer = manufacturerRepository.save(new RobotManufacturer("Keenon-" + UUID.randomUUID()));
+        RobotModel model = new RobotModel();
+        model.setManufacturerId(manufacturer.getId());
+        model.setName("Keenon Model");
+        model.setAdapterType(AdapterType.KEENON_CLOUD);
+        model.setIntegrationPath(IntegrationPath.KEENON_CLOUD_DEPENDENT);
+        model = modelRepository.save(model);
+        capabilityRepository.save(new RobotCapability(model.getId(), RobotCapabilityType.GET_AREAS, true));
+
+        Robot robot = registerRobot(org.getId(), model.getId(), "SN-" + UUID.randomUUID());
+        String token = login(email, "Password1!");
+
+        mockMvc.perform(get("/api/v1/robots/" + robot.getId() + "/areas")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error.code").value("RESOURCE_NOT_FOUND"));
+    }
+
+    @Test
+    void unknownRobotId_areasEndpointReturnsNotFound() throws Exception {
+        Role orgAdmin = ensureRole(RoleName.ORG_ADMIN, PermissionCode.ROBOT_VIEW);
+        Organization org = createOrganization("Org " + UUID.randomUUID(), OrganizationType.DIRECT_CLIENT, null);
+        String email = "orgadmin-areasmissing-" + UUID.randomUUID() + "@example.com";
+        createUser(email, "Password1!", orgAdmin, org.getId());
+        String token = login(email, "Password1!");
+
+        mockMvc.perform(get("/api/v1/robots/" + UUID.randomUUID() + "/areas")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error.code").value("ROBOT_NOT_FOUND"));
+    }
+
+    @Test
     void unknownRobotId_batteryEndpointReturnsNotFound() throws Exception {
         Role orgAdmin = ensureRole(RoleName.ORG_ADMIN, PermissionCode.ROBOT_VIEW);
         Organization org = createOrganization("Org " + UUID.randomUUID(), OrganizationType.DIRECT_CLIENT, null);
