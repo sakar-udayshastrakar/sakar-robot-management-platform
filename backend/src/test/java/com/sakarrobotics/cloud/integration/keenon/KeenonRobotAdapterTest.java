@@ -108,6 +108,60 @@ class KeenonRobotAdapterTest {
     }
 
     @Test
+    void getAreas_mapsAreaIdAndAreaNameFields() throws Exception {
+        Robot robot = robotWithExternalId("94:BA:06:CA:99:F3");
+        robot.setId(UUID.randomUUID());
+        KeenonAreaMapping mapping = new KeenonAreaMapping();
+        mapping.setKeenonStoreId("C00715655");
+        when(areaMappingRepository.findByRobotIdAndActiveTrue(robot.getId())).thenReturn(java.util.List.of(mapping));
+
+        JsonNode response = objectMapper.readTree(
+                "{\"data\":[{\"areaId\":\"area-1\",\"areaName\":\"Lobby\"},{\"areaId\":\"area-2\",\"areaName\":\"Conference Room\"}]}");
+        when(client.getAreaList("C00715655", "94:BA:06:CA:99:F3")).thenReturn(response);
+
+        var areas = adapter().getAreas(robot);
+
+        assertThat(areas).hasSize(2);
+        assertThat(areas.get(0).vendorAreaId()).isEqualTo("area-1");
+        assertThat(areas.get(0).displayName()).isEqualTo("Lobby");
+        assertThat(areas.get(1).vendorAreaId()).isEqualTo("area-2");
+        assertThat(areas.get(1).displayName()).isEqualTo("Conference Room");
+    }
+
+    @Test
+    void getAreas_withoutSyncedStoreMapping_throwsResourceNotFound() {
+        Robot robot = robotWithExternalId("94:BA:06:CA:99:F3");
+        robot.setId(UUID.randomUUID());
+        when(areaMappingRepository.findByRobotIdAndActiveTrue(robot.getId())).thenReturn(java.util.List.of());
+
+        assertThatThrownBy(() -> adapter().getAreas(robot))
+                .isInstanceOfSatisfying(ApiException.class,
+                        ex -> assertThat(ex.getErrorCode()).isEqualTo(SakarErrorCode.RESOURCE_NOT_FOUND));
+    }
+
+    @Test
+    void getAreas_whenVendorApiFails_propagatesTheFailureRatherThanReturningEmptyAreas() {
+        Robot robot = robotWithExternalId("94:BA:06:CA:99:F3");
+        robot.setId(UUID.randomUUID());
+        KeenonAreaMapping mapping = new KeenonAreaMapping();
+        mapping.setKeenonStoreId("C00715655");
+        when(areaMappingRepository.findByRobotIdAndActiveTrue(robot.getId())).thenReturn(java.util.List.of(mapping));
+        when(client.getAreaList(anyString(), anyString()))
+                .thenThrow(new ApiException(SakarErrorCode.VENDOR_API_ERROR, "Keenon Open Platform request failed"));
+
+        assertThatThrownBy(() -> adapter().getAreas(robot))
+                .isInstanceOfSatisfying(ApiException.class,
+                        ex -> assertThat(ex.getErrorCode()).isEqualTo(SakarErrorCode.VENDOR_API_ERROR));
+    }
+
+    @Test
+    void getMap_isNotYetImplemented_failsClosedRatherThanGuessingAResponseShape() {
+        assertThatThrownBy(() -> adapter().getMap(robotWithExternalId("94:BA:06:CA:99:F3")))
+                .isInstanceOfSatisfying(ApiException.class,
+                        ex -> assertThat(ex.getErrorCode()).isEqualTo(SakarErrorCode.FEATURE_NOT_YET_IMPLEMENTED));
+    }
+
+    @Test
     void startTask_withUnknownMode_throwsValidationFailed() {
         java.util.UUID areaMappingId = UUID.randomUUID();
         KeenonAreaMapping mapping = new KeenonAreaMapping();

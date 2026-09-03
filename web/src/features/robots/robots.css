@@ -1,20 +1,21 @@
 .sakar-tabs {
   display: flex;
-  gap: 4px;
+  gap: 2px;
   border-bottom: 1px solid var(--sakar-border);
-  margin-bottom: 20px;
+  margin-bottom: 14px;
 }
 
 .sakar-tab {
-  padding: 10px 14px;
-  font-size: 13.5px;
+  padding: 7px 12px;
+  font-size: 12.5px;
   font-weight: 600;
-  color: var(--sakar-text-muted);
+  color: var(--sakar-text-faint);
   background: none;
   border: none;
   border-bottom: 2px solid transparent;
   cursor: pointer;
   margin-bottom: -1px;
+  white-space: nowrap;
 }
 
 .sakar-tab:hover {
@@ -24,23 +25,20 @@
 .sakar-tab--active {
   color: var(--sakar-primary);
   border-bottom-color: var(--sakar-primary);
-}
-
-.sakar-tab {
-  white-space: nowrap;
+  font-weight: 700;
 }
 
 .sakar-robot-header-meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px 20px;
-  margin: 8px 0 0;
+  gap: 3px 18px;
+  margin: 5px 0 0;
 }
 
 .sakar-robot-header-meta > div {
   display: flex;
-  gap: 6px;
-  font-size: 12.5px;
+  gap: 5px;
+  font-size: 12px;
 }
 
 .sakar-robot-header-meta dt {
@@ -56,6 +54,32 @@
 .sakar-actions-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 16px;
+  gap: 6px;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid var(--sakar-border-subtle);
+}
+
+.sakar-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  color: var(--sakar-text-faint);
+  margin: 0 0 8px;
+}
+
+.sakar-breadcrumb a {
+  color: var(--sakar-text-faint);
+  text-decoration: none;
+}
+
+.sakar-breadcrumb a:hover {
+  color: var(--sakar-primary);
+  text-decoration: underline;
+}
+
+.sakar-breadcrumb-current {
+  color: var(--sakar-text-muted);
+  font-weight: 600;
 }

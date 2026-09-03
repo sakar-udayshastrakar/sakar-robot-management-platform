@@ -20,7 +20,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 12px 20px;
+  padding: 8px 16px;
   background: var(--sakar-surface);
   border-bottom: 1px solid var(--sakar-border);
   position: sticky;
@@ -36,7 +36,7 @@
 }
 
 .sakar-topnav-logo {
-  height: 32px;
+  height: 26px;
   width: auto;
   object-fit: contain;
   display: block;
@@ -51,8 +51,8 @@
 }
 
 .sakar-topnav-product-name {
-  font-size: 14px;
-  font-weight: 800;
+  font-size: 13px;
+  font-weight: 700;
   color: var(--sakar-text);
   margin: 0;
   white-space: nowrap;
@@ -143,8 +143,8 @@
   display: flex;
   flex-direction: column;
   position: sticky;
-  top: 57px;
-  height: calc(100vh - 57px);
+  top: 43px;
+  height: calc(100vh - 43px);
   overflow-y: auto;
   transition: width 0.15s ease;
 }
@@ -155,38 +155,52 @@
 
 .sakar-sidebar-nav {
   flex: 1;
-  padding: 14px 12px;
+  padding: 12px 10px;
 }
 
 .sakar-sidebar-section {
-  margin-bottom: 18px;
+  margin-bottom: 4px;
 }
 
+/* Deliberately subtle — Keenon's top-level nav has no category dividers
+   at all, so this reads as a faint grouping hint rather than a heading
+   (kept, not removed, so the existing IA/permission structure and
+   usability grouping are unchanged — SAKAR_KEENON_UI_AUDIT.md Section D). */
 .sakar-sidebar-section-title {
-  font-size: 11px;
-  font-weight: 700;
+  font-size: 9.5px;
+  font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.02em;
   color: var(--sakar-text-subtle);
-  padding: 4px 12px 6px;
+  opacity: 0.75;
+  padding: 2px 10px;
+}
+
+.sakar-sidebar-section + .sakar-sidebar-section {
+  border-top: 1px solid var(--sakar-border-subtle);
+  padding-top: 6px;
+  margin-top: 2px;
 }
 
 .sakar-sidebar-link {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 9px 12px;
+  padding: 8px 12px 8px 9px;
   border-radius: var(--sakar-radius-sm);
-  font-size: 13.5px;
+  border-left: 3px solid transparent;
+  font-size: 13px;
   font-weight: 600;
   color: var(--sakar-sidebar-text);
   text-decoration: none;
-  margin-bottom: 2px;
+  margin-bottom: 1px;
+  transition: background-color 0.12s ease, border-color 0.12s ease, color 0.12s ease;
 }
 
 .sakar-sidebar--collapsed .sakar-sidebar-link {
   justify-content: center;
-  padding: 10px;
+  padding: 9px;
+  border-left-width: 0;
 }
 
 .sakar-sidebar-link svg {
@@ -208,14 +222,16 @@
 
 .sakar-sidebar-link--active {
   background: var(--sakar-sidebar-active-bg);
+  border-left-color: var(--sakar-primary);
   color: var(--sakar-sidebar-text-active);
+  font-weight: 700;
 }
 
 .sakar-nav-tag {
   font-size: 9.5px;
   font-weight: 700;
   padding: 1px 6px;
-  border-radius: 999px;
+  border-radius: var(--sakar-radius-sm);
   letter-spacing: 0.03em;
   flex-shrink: 0;
 }
@@ -255,7 +271,7 @@
 
 .sakar-shell-content {
   flex: 1;
-  padding: 24px 28px 48px;
+  padding: 18px 22px 32px;
   min-width: 0;
 }
 

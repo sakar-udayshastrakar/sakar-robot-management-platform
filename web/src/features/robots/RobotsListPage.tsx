@@ -13,7 +13,7 @@ import { Badge } from '../../components/ui/Badge';
 import { StatusBadge } from '../../components/ui/StatusBadge';
 import { Pagination } from '../../components/ui/Pagination';
 import { SearchBar } from '../../components/ui/SearchBar';
-import { FilterBar } from '../../components/ui/FilterBar';
+import { FilterBar, FilterField } from '../../components/ui/FilterBar';
 import { LoadingState, ErrorState } from '../../components/ui/States';
 import { ConfirmDialog } from '../../components/ui/ConfirmDialog';
 import { ApiRequestError } from '../../api/client';
@@ -137,29 +137,37 @@ export function RobotsListPage() {
       ) : (
         <Card title={`Robots (${data?.totalElements ?? 0})`}>
           <FilterBar>
-            <SearchBar value={search} onChange={setSearch} ariaLabel="Search robots by name or serial number" placeholder="Search by name or serial…" />
-            <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value as typeof statusFilter)} aria-label="Filter by status">
-              <option value="ALL">All statuses</option>
-              <option value="ACTIVE">Active</option>
-              <option value="REGISTERED">Registered</option>
-              <option value="DEACTIVATED">Deactivated</option>
-            </select>
-            <select value={modelFilter} onChange={(e) => setModelFilter(e.target.value)} aria-label="Filter by model">
-              <option value="ALL">All models</option>
-              {modelOptions.map((m) => (
-                <option key={m} value={m}>{m.slice(0, 8)}…</option>
-              ))}
-            </select>
+            <FilterField label="Search">
+              <SearchBar value={search} onChange={setSearch} ariaLabel="Search robots by name or serial number" placeholder="Name or serial…" />
+            </FilterField>
+            <FilterField label="Status">
+              <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value as typeof statusFilter)} aria-label="Filter by status">
+                <option value="ALL">All statuses</option>
+                <option value="ACTIVE">Active</option>
+                <option value="REGISTERED">Registered</option>
+                <option value="DEACTIVATED">Deactivated</option>
+              </select>
+            </FilterField>
+            <FilterField label="Model">
+              <select value={modelFilter} onChange={(e) => setModelFilter(e.target.value)} aria-label="Filter by model">
+                <option value="ALL">All models</option>
+                {modelOptions.map((m) => (
+                  <option key={m} value={m}>{m.slice(0, 8)}…</option>
+                ))}
+              </select>
+            </FilterField>
+            <FilterField label="Sort">
+              <select value={sortKey} onChange={(e) => setSortKey(e.target.value as SortKey)} aria-label="Sort by">
+                <option value="name">Name</option>
+                <option value="status">Status</option>
+                <option value="site">Site</option>
+              </select>
+            </FilterField>
             {siteIdFilter && (
               <button type="button" className="sakar-btn sakar-btn--secondary" onClick={() => setParams({})}>
                 Clear site filter
               </button>
             )}
-            <select value={sortKey} onChange={(e) => setSortKey(e.target.value as SortKey)} aria-label="Sort by">
-              <option value="name">Sort: Name</option>
-              <option value="status">Sort: Status</option>
-              <option value="site">Sort: Site</option>
-            </select>
           </FilterBar>
 
           <p className="sakar-page-subtitle" style={{ marginBottom: 12 }}>
@@ -173,7 +181,7 @@ export function RobotsListPage() {
             emptyTitle={robots.length === 0 ? 'No robots registered' : 'No robots match these filters'}
             columns={[
               { key: 'name', header: 'Robot', render: (r) => (
-                  <button type="button" className="sakar-btn sakar-btn--secondary" onClick={() => navigate(`/robots/${r.id}`)}>{r.name}</button>
+                  <button type="button" className="sakar-link-btn" onClick={() => navigate(`/robots/${r.id}`)}>{r.name}</button>
                 ) },
               { key: 'model', header: 'Model', render: (r) => <span className="sakar-mono" style={{ fontSize: 12 }}>{r.robotModelId.slice(0, 8)}…</span> },
               { key: 'site', header: 'Site', render: (r) => (r.siteId ? siteNames.get(r.siteId) ?? r.siteId : '—') },

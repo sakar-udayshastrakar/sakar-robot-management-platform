@@ -101,7 +101,7 @@ export function DashboardPage() {
           emptyTitle="No robots registered"
           columns={[
             { key: 'name', header: 'Robot', render: (r) => (
-                <button type="button" className="sakar-btn sakar-btn--secondary" onClick={() => navigate(`/robots/${r.id}`)}>{r.name}</button>
+                <button type="button" className="sakar-link-btn" onClick={() => navigate(`/robots/${r.id}`)}>{r.name}</button>
               ) },
             { key: 'status', header: 'Status', render: (r) => {
                 const s = statuses.get(r.id);

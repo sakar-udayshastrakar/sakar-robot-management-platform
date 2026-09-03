@@ -1,4 +1,5 @@
 import type { Robot } from '../../types/domain';
+import { FilterBar, FilterField } from '../../components/ui/FilterBar';
 
 interface RobotPickerProps {
   robots: Robot[];
@@ -8,15 +9,17 @@ interface RobotPickerProps {
 
 export function RobotPicker({ robots, value, onChange }: RobotPickerProps) {
   return (
-    <div className="sakar-filter-bar">
-      <select value={value} onChange={(e) => onChange(e.target.value)} aria-label="Robot">
-        <option value="">Select a robot…</option>
-        {robots.map((r) => (
-          <option key={r.id} value={r.id}>
-            {r.name} ({r.serialNumber})
-          </option>
-        ))}
-      </select>
-    </div>
+    <FilterBar>
+      <FilterField label="Robot">
+        <select value={value} onChange={(e) => onChange(e.target.value)} aria-label="Robot">
+          <option value="">Select a robot…</option>
+          {robots.map((r) => (
+            <option key={r.id} value={r.id}>
+              {r.name} ({r.serialNumber})
+            </option>
+          ))}
+        </select>
+      </FilterField>
+    </FilterBar>
   );
 }

@@ -1,6 +1,6 @@
 import { apiClient, unwrap } from './client';
 import type { ApiResponse, Page } from '../types/api';
-import type { Robot, RobotBatteryInfo, RobotMqttCredentialResponse, RobotStatusSnapshot } from '../types/domain';
+import type { Robot, RobotArea, RobotBatteryInfo, RobotMqttCredentialResponse, RobotStatusSnapshot } from '../types/domain';
 
 export function listRobots(page = 0, pageSize = 25): Promise<Page<Robot>> {
   return unwrap(apiClient.get<ApiResponse<Page<Robot>>>('/robots', { params: { page, pageSize } }));
@@ -45,6 +45,16 @@ export function getRobotStatus(id: string): Promise<RobotStatusSnapshot> {
 // or "0%".
 export function getRobotBattery(id: string): Promise<RobotBatteryInfo> {
   return unwrap(apiClient.get<ApiResponse<RobotBatteryInfo>>(`/robots/${id}/battery`));
+}
+
+// Calls a live robot adapter (GET_AREAS capability) — real Keenon area-list
+// call (KeenonRobotAdapter.getAreas()), now wired to a REST endpoint for the
+// first time. Metadata only (vendor area id + display name) — no polygon
+// geometry exists anywhere upstream of this call, so none is modeled here.
+// A rejected promise means "areas unavailable" (e.g. RESOURCE_NOT_FOUND when
+// no Keenon store mapping has been synced for this robot yet), never "no areas".
+export function getRobotAreas(id: string): Promise<RobotArea[]> {
+  return unwrap(apiClient.get<ApiResponse<RobotArea[]>>(`/robots/${id}/areas`));
 }
 
 export function provisionMqttCredentials(id: string): Promise<RobotMqttCredentialResponse> {

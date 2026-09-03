@@ -12,7 +12,7 @@ import { DataTable } from '../../components/ui/DataTable';
 import { Badge } from '../../components/ui/Badge';
 import { SeverityBadge } from '../../components/ui/SeverityBadge';
 import { SearchBar } from '../../components/ui/SearchBar';
-import { FilterBar } from '../../components/ui/FilterBar';
+import { FilterBar, FilterField } from '../../components/ui/FilterBar';
 import { Pagination } from '../../components/ui/Pagination';
 import { LoadingState, ErrorState } from '../../components/ui/States';
 
@@ -100,17 +100,25 @@ export function AlertsPage() {
 
       <Card title={`Alerts (${filtered.length} of ${data?.totalElements ?? 0} on this page)`}>
         <FilterBar>
-          <SearchBar value={search} onChange={setSearch} ariaLabel="Search alerts" placeholder="Search alert message…" />
-          <select value={severityFilter} onChange={(e) => setSeverityFilter(e.target.value as typeof severityFilter)} aria-label="Filter by severity">
-            {SEVERITIES.map((s) => <option key={s} value={s}>{s === 'ALL' ? 'All severities' : s}</option>)}
-          </select>
-          <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value as typeof statusFilter)} aria-label="Filter by status">
-            {STATUSES.map((s) => <option key={s} value={s}>{s === 'ALL' ? 'All statuses' : s}</option>)}
-          </select>
-          <select value={robotFilter} onChange={(e) => setRobotFilter(e.target.value)} aria-label="Filter by robot">
-            <option value="ALL">All robots</option>
-            {robots.map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}
-          </select>
+          <FilterField label="Search">
+            <SearchBar value={search} onChange={setSearch} ariaLabel="Search alerts" placeholder="Search alert message…" />
+          </FilterField>
+          <FilterField label="Severity">
+            <select value={severityFilter} onChange={(e) => setSeverityFilter(e.target.value as typeof severityFilter)} aria-label="Filter by severity">
+              {SEVERITIES.map((s) => <option key={s} value={s}>{s === 'ALL' ? 'All severities' : s}</option>)}
+            </select>
+          </FilterField>
+          <FilterField label="Status">
+            <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value as typeof statusFilter)} aria-label="Filter by status">
+              {STATUSES.map((s) => <option key={s} value={s}>{s === 'ALL' ? 'All statuses' : s}</option>)}
+            </select>
+          </FilterField>
+          <FilterField label="Robot">
+            <select value={robotFilter} onChange={(e) => setRobotFilter(e.target.value)} aria-label="Filter by robot">
+              <option value="ALL">All robots</option>
+              {robots.map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}
+            </select>
+          </FilterField>
         </FilterBar>
 
         <DataTable
