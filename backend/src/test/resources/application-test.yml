@@ -22,6 +22,11 @@ sakar:
   security:
     jwt:
       secret: test-only-secret-never-used-outside-automated-tests-0123456789
+  maps:
+    # Fixed test-only root — RobotControllerSecurityTest writes real fixture PNGs under
+    # <this>/<robotId>/<mapId>/map.png using the same @Value key RobotMapImageService reads,
+    # so every fixture lands in its own UUID-named subdirectory with no cross-test collision.
+    storage-root: ${java.io.tmpdir}/sakar-test-maps
   integration:
     keenon:
       enabled: false

@@ -3,13 +3,18 @@ package com.sakarrobotics.cloud.robot.registry;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
@@ -17,6 +22,8 @@ import com.sakarrobotics.cloud.IntegrationTestSupport;
 import com.sakarrobotics.cloud.iam.PermissionCode;
 import com.sakarrobotics.cloud.iam.Role;
 import com.sakarrobotics.cloud.iam.RoleName;
+import com.sakarrobotics.cloud.map.RobotMap;
+import com.sakarrobotics.cloud.map.RobotMapRepository;
 import com.sakarrobotics.cloud.org.Organization;
 import com.sakarrobotics.cloud.org.OrganizationType;
 
@@ -34,6 +41,11 @@ class RobotControllerSecurityTest extends IntegrationTestSupport {
     private RobotCapabilityRepository capabilityRepository;
     @Autowired
     private RobotRepository robotRepository;
+    @Autowired
+    private RobotMapRepository robotMapRepository;
+
+    @Value("${sakar.maps.storage-root}")
+    private String storageRoot;
 
     @Test
     void user_cannotSeeRobotBelongingToAnUnrelatedOrganization_getsNotFoundNotForbidden() throws Exception {
@@ -448,6 +460,297 @@ class RobotControllerSecurityTest extends IntegrationTestSupport {
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.error.code").value("ROBOT_NOT_FOUND"));
+    }
+
+    // ---------------------------------------------------------------
+    // Authenticated Map Image Serving API (Raw Keenon PNG Map Storage +
+    // Sync's read side): GET /{id}/map and GET /{id}/map/image. Deliberately
+    // NOT gated on GET_MAP capability (see RobotController#map's Javadoc) —
+    // aFullyCapableModel() below only grants GET_STATUS, and these tests
+    // still expect the map endpoints to work, proving that independence.
+    // ---------------------------------------------------------------
+
+    private static final byte[] PNG_SIGNATURE = {
+            (byte) 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A
+    };
+
+    @Test
+    void authorizedUser_canGetRobotMapMetadata() throws Exception {
+        Role orgAdmin = ensureRole(RoleName.ORG_ADMIN, PermissionCode.ROBOT_VIEW);
+        Organization org = createOrganization("Org " + UUID.randomUUID(), OrganizationType.DIRECT_CLIENT, null);
+        String email = "orgadmin-mapmeta-" + UUID.randomUUID() + "@example.com";
+        createUser(email, "Password1!", orgAdmin, org.getId());
+
+        RobotModel model = aFullyCapableModel();
+        Robot robot = registerRobot(org.getId(), model.getId(), "SN-" + UUID.randomUUID());
+        RobotMap robotMap = registerMap(robot.getId(), "7ClJPR", "F", 570, 763, "md5-abc");
+        String token = login(email, "Password1!");
+
+        mockMvc.perform(get("/api/v1/robots/" + robot.getId() + "/map")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.vendorMapId").value("7ClJPR"))
+                .andExpect(jsonPath("$.data.name").value("F"))
+                .andExpect(jsonPath("$.data.width").value(570))
+                .andExpect(jsonPath("$.data.height").value(763))
+                .andExpect(jsonPath("$.data.mapMd5").value("md5-abc"))
+                .andExpect(jsonPath("$.data.updatedAt").exists())
+                .andExpect(jsonPath("$.data.imageUrl").doesNotExist());
+        assertThat(robotMap.getId()).isNotNull();
+    }
+
+    @Test
+    void authorizedUser_canGetRobotMapImage_correctContentTypeAndBytesAndEtag() throws Exception {
+        Role orgAdmin = ensureRole(RoleName.ORG_ADMIN, PermissionCode.ROBOT_VIEW);
+        Organization org = createOrganization("Org " + UUID.randomUUID(), OrganizationType.DIRECT_CLIENT, null);
+        String email = "orgadmin-mapimg-" + UUID.randomUUID() + "@example.com";
+        createUser(email, "Password1!", orgAdmin, org.getId());
+
+        RobotModel model = aFullyCapableModel();
+        Robot robot = registerRobot(org.getId(), model.getId(), "SN-" + UUID.randomUUID());
+        RobotMap robotMap = registerMap(robot.getId(), "7ClJPR", "F", 10, 10, "md5-xyz");
+        byte[] png = writeMapImageFile(robot.getId(), robotMap.getId());
+        String token = login(email, "Password1!");
+
+        mockMvc.perform(get("/api/v1/robots/" + robot.getId() + "/map/image")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.IMAGE_PNG_VALUE))
+                .andExpect(header().string(HttpHeaders.ETAG, "\"md5-xyz\""))
+                .andExpect(header().string(HttpHeaders.CACHE_CONTROL, "private, must-revalidate"))
+                .andExpect(content().bytes(png));
+    }
+
+    @Test
+    void matchingIfNoneMatch_mapImageReturns304NotModified_withEmptyBody() throws Exception {
+        Role orgAdmin = ensureRole(RoleName.ORG_ADMIN, PermissionCode.ROBOT_VIEW);
+        Organization org = createOrganization("Org " + UUID.randomUUID(), OrganizationType.DIRECT_CLIENT, null);
+        String email = "orgadmin-mapetag-" + UUID.randomUUID() + "@example.com";
+        createUser(email, "Password1!", orgAdmin, org.getId());
+
+        RobotModel model = aFullyCapableModel();
+        Robot robot = registerRobot(org.getId(), model.getId(), "SN-" + UUID.randomUUID());
+        RobotMap robotMap = registerMap(robot.getId(), "7ClJPR", "F", 10, 10, "md5-etag");
+        writeMapImageFile(robot.getId(), robotMap.getId());
+        String token = login(email, "Password1!");
+
+        mockMvc.perform(get("/api/v1/robots/" + robot.getId() + "/map/image")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                        .header(HttpHeaders.IF_NONE_MATCH, "\"md5-etag\""))
+                .andExpect(status().isNotModified())
+                .andExpect(content().bytes(new byte[0]));
+    }
+
+    @Test
+    void staleIfNoneMatch_mapImageReturns200WithFreshBytes() throws Exception {
+        Role orgAdmin = ensureRole(RoleName.ORG_ADMIN, PermissionCode.ROBOT_VIEW);
+        Organization org = createOrganization("Org " + UUID.randomUUID(), OrganizationType.DIRECT_CLIENT, null);
+        String email = "orgadmin-mapstaleetag-" + UUID.randomUUID() + "@example.com";
+        createUser(email, "Password1!", orgAdmin, org.getId());
+
+        RobotModel model = aFullyCapableModel();
+        Robot robot = registerRobot(org.getId(), model.getId(), "SN-" + UUID.randomUUID());
+        RobotMap robotMap = registerMap(robot.getId(), "7ClJPR", "F", 10, 10, "md5-fresh");
+        byte[] png = writeMapImageFile(robot.getId(), robotMap.getId());
+        String token = login(email, "Password1!");
+
+        mockMvc.perform(get("/api/v1/robots/" + robot.getId() + "/map/image")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                        .header(HttpHeaders.IF_NONE_MATCH, "\"some-stale-value\""))
+                .andExpect(status().isOk())
+                .andExpect(content().bytes(png));
+    }
+
+    @Test
+    void user_cannotGetRobotMapMetadataBelongingToAnUnrelatedOrganization_getsNotFoundNotForbidden() throws Exception {
+        Role orgAdmin = ensureRole(RoleName.ORG_ADMIN, PermissionCode.ROBOT_VIEW);
+        Organization orgA = createOrganization("Org A " + UUID.randomUUID(), OrganizationType.DIRECT_CLIENT, null);
+        Organization orgB = createOrganization("Org B " + UUID.randomUUID(), OrganizationType.DIRECT_CLIENT, null);
+        String emailA = "orgadmin-mapmeta-a-" + UUID.randomUUID() + "@example.com";
+        createUser(emailA, "Password1!", orgAdmin, orgA.getId());
+
+        RobotModel model = aFullyCapableModel();
+        Robot robotInOrgB = registerRobot(orgB.getId(), model.getId(), "SN-" + UUID.randomUUID());
+        registerMap(robotInOrgB.getId(), "7ClJPR", "F", 10, 10, "md5-b");
+        String token = login(emailA, "Password1!");
+
+        mockMvc.perform(get("/api/v1/robots/" + robotInOrgB.getId() + "/map")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error.code").value("ROBOT_NOT_FOUND"));
+    }
+
+    @Test
+    void user_cannotGetRobotMapImageBelongingToAnUnrelatedOrganization_getsNotFoundNotForbidden() throws Exception {
+        Role orgAdmin = ensureRole(RoleName.ORG_ADMIN, PermissionCode.ROBOT_VIEW);
+        Organization orgA = createOrganization("Org A " + UUID.randomUUID(), OrganizationType.DIRECT_CLIENT, null);
+        Organization orgB = createOrganization("Org B " + UUID.randomUUID(), OrganizationType.DIRECT_CLIENT, null);
+        String emailA = "orgadmin-mapimg-a-" + UUID.randomUUID() + "@example.com";
+        createUser(emailA, "Password1!", orgAdmin, orgA.getId());
+
+        RobotModel model = aFullyCapableModel();
+        Robot robotInOrgB = registerRobot(orgB.getId(), model.getId(), "SN-" + UUID.randomUUID());
+        RobotMap robotMap = registerMap(robotInOrgB.getId(), "7ClJPR", "F", 10, 10, "md5-b");
+        writeMapImageFile(robotInOrgB.getId(), robotMap.getId());
+        String token = login(emailA, "Password1!");
+
+        mockMvc.perform(get("/api/v1/robots/" + robotInOrgB.getId() + "/map/image")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error.code").value("ROBOT_NOT_FOUND"));
+    }
+
+    @Test
+    void robotWithNoSyncedMap_mapMetadataReturnsResourceNotFound() throws Exception {
+        Role orgAdmin = ensureRole(RoleName.ORG_ADMIN, PermissionCode.ROBOT_VIEW);
+        Organization org = createOrganization("Org " + UUID.randomUUID(), OrganizationType.DIRECT_CLIENT, null);
+        String email = "orgadmin-nomap-" + UUID.randomUUID() + "@example.com";
+        createUser(email, "Password1!", orgAdmin, org.getId());
+
+        RobotModel model = aFullyCapableModel();
+        Robot robot = registerRobot(org.getId(), model.getId(), "SN-" + UUID.randomUUID());
+        String token = login(email, "Password1!");
+
+        mockMvc.perform(get("/api/v1/robots/" + robot.getId() + "/map")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error.code").value("RESOURCE_NOT_FOUND"));
+    }
+
+    @Test
+    void robotWithNoSyncedMap_mapImageReturnsResourceNotFound() throws Exception {
+        Role orgAdmin = ensureRole(RoleName.ORG_ADMIN, PermissionCode.ROBOT_VIEW);
+        Organization org = createOrganization("Org " + UUID.randomUUID(), OrganizationType.DIRECT_CLIENT, null);
+        String email = "orgadmin-nomapimg-" + UUID.randomUUID() + "@example.com";
+        createUser(email, "Password1!", orgAdmin, org.getId());
+
+        RobotModel model = aFullyCapableModel();
+        Robot robot = registerRobot(org.getId(), model.getId(), "SN-" + UUID.randomUUID());
+        String token = login(email, "Password1!");
+
+        mockMvc.perform(get("/api/v1/robots/" + robot.getId() + "/map/image")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error.code").value("RESOURCE_NOT_FOUND"));
+    }
+
+    @Test
+    void robotMapRowExistsButImageFileMissing_mapImageReturnsResourceNotFound_neverALeakedPathOr500() throws Exception {
+        Role orgAdmin = ensureRole(RoleName.ORG_ADMIN, PermissionCode.ROBOT_VIEW);
+        Organization org = createOrganization("Org " + UUID.randomUUID(), OrganizationType.DIRECT_CLIENT, null);
+        String email = "orgadmin-mapnofile-" + UUID.randomUUID() + "@example.com";
+        createUser(email, "Password1!", orgAdmin, org.getId());
+
+        RobotModel model = aFullyCapableModel();
+        Robot robot = registerRobot(org.getId(), model.getId(), "SN-" + UUID.randomUUID());
+        registerMap(robot.getId(), "7ClJPR", "F", 10, 10, "md5-nofile");
+        // Deliberately never call writeMapImageFile — the row exists, the file does not.
+        String token = login(email, "Password1!");
+
+        String body = mockMvc.perform(get("/api/v1/robots/" + robot.getId() + "/map/image")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error.code").value("RESOURCE_NOT_FOUND"))
+                .andReturn().getResponse().getContentAsString();
+        assertThat(body).doesNotContain(storageRoot);
+    }
+
+    @Test
+    void emptyStoredImageFile_mapImageReturnsResourceNotFound() throws Exception {
+        Role orgAdmin = ensureRole(RoleName.ORG_ADMIN, PermissionCode.ROBOT_VIEW);
+        Organization org = createOrganization("Org " + UUID.randomUUID(), OrganizationType.DIRECT_CLIENT, null);
+        String email = "orgadmin-mapempty-" + UUID.randomUUID() + "@example.com";
+        createUser(email, "Password1!", orgAdmin, org.getId());
+
+        RobotModel model = aFullyCapableModel();
+        Robot robot = registerRobot(org.getId(), model.getId(), "SN-" + UUID.randomUUID());
+        RobotMap robotMap = registerMap(robot.getId(), "7ClJPR", "F", 10, 10, "md5-empty");
+        Path file = imageFilePath(robot.getId(), robotMap.getId());
+        Files.createDirectories(file.getParent());
+        Files.write(file, new byte[0]);
+        String token = login(email, "Password1!");
+
+        mockMvc.perform(get("/api/v1/robots/" + robot.getId() + "/map/image")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error.code").value("RESOURCE_NOT_FOUND"));
+    }
+
+    @Test
+    void corruptStoredImageFile_mapImageReturnsResourceNotFound() throws Exception {
+        Role orgAdmin = ensureRole(RoleName.ORG_ADMIN, PermissionCode.ROBOT_VIEW);
+        Organization org = createOrganization("Org " + UUID.randomUUID(), OrganizationType.DIRECT_CLIENT, null);
+        String email = "orgadmin-mapcorrupt-" + UUID.randomUUID() + "@example.com";
+        createUser(email, "Password1!", orgAdmin, org.getId());
+
+        RobotModel model = aFullyCapableModel();
+        Robot robot = registerRobot(org.getId(), model.getId(), "SN-" + UUID.randomUUID());
+        RobotMap robotMap = registerMap(robot.getId(), "7ClJPR", "F", 10, 10, "md5-corrupt");
+        Path file = imageFilePath(robot.getId(), robotMap.getId());
+        Files.createDirectories(file.getParent());
+        Files.write(file, "not a png".getBytes());
+        String token = login(email, "Password1!");
+
+        mockMvc.perform(get("/api/v1/robots/" + robot.getId() + "/map/image")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error.code").value("RESOURCE_NOT_FOUND"));
+    }
+
+    @Test
+    void unknownRobotId_mapEndpointReturnsNotFound() throws Exception {
+        Role orgAdmin = ensureRole(RoleName.ORG_ADMIN, PermissionCode.ROBOT_VIEW);
+        Organization org = createOrganization("Org " + UUID.randomUUID(), OrganizationType.DIRECT_CLIENT, null);
+        String email = "orgadmin-mapmissing-" + UUID.randomUUID() + "@example.com";
+        createUser(email, "Password1!", orgAdmin, org.getId());
+        String token = login(email, "Password1!");
+
+        mockMvc.perform(get("/api/v1/robots/" + UUID.randomUUID() + "/map")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error.code").value("ROBOT_NOT_FOUND"));
+    }
+
+    @Test
+    void unknownRobotId_mapImageEndpointReturnsNotFound() throws Exception {
+        Role orgAdmin = ensureRole(RoleName.ORG_ADMIN, PermissionCode.ROBOT_VIEW);
+        Organization org = createOrganization("Org " + UUID.randomUUID(), OrganizationType.DIRECT_CLIENT, null);
+        String email = "orgadmin-mapimgmissing-" + UUID.randomUUID() + "@example.com";
+        createUser(email, "Password1!", orgAdmin, org.getId());
+        String token = login(email, "Password1!");
+
+        mockMvc.perform(get("/api/v1/robots/" + UUID.randomUUID() + "/map/image")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error.code").value("ROBOT_NOT_FOUND"));
+    }
+
+    private RobotMap registerMap(UUID robotId, String vendorMapId, String name, int width, int height, String mapMd5) {
+        RobotMap map = new RobotMap();
+        map.setRobotId(robotId);
+        map.setVendorMapId(vendorMapId);
+        map.setName(name);
+        map.setWidth(width);
+        map.setHeight(height);
+        map.setMapMd5(mapMd5);
+        return robotMapRepository.save(map);
+    }
+
+    private Path imageFilePath(UUID robotId, UUID mapId) {
+        return Path.of(storageRoot, robotId.toString(), mapId.toString(), "map.png");
+    }
+
+    private byte[] writeMapImageFile(UUID robotId, UUID mapId) throws Exception {
+        byte[] png = new byte[PNG_SIGNATURE.length + 4];
+        System.arraycopy(PNG_SIGNATURE, 0, png, 0, PNG_SIGNATURE.length);
+        png[8] = 1;
+        png[9] = 2;
+        png[10] = 3;
+        png[11] = 4;
+        Path file = imageFilePath(robotId, mapId);
+        Files.createDirectories(file.getParent());
+        Files.write(file, png);
+        return png;
     }
 
     private RobotModel aFullyCapableModel() {
