@@ -13,8 +13,15 @@ import lombok.Setter;
 
 /**
  * Maps to {@code maps} (SAKAR_ROBOT_PLATFORM_DATABASE.md §20). Named
- * {@code RobotMap} to avoid colliding with {@code java.util.Map}. Phase 1
- * scope: schema/entity only.
+ * {@code RobotMap} to avoid colliding with {@code java.util.Map}.
+ *
+ * <p>{@code width}/{@code height}/{@code mapMd5} were added by the raw
+ * Keenon PNG map-storage slice — see {@code KeenonMapImageSyncService}.
+ * {@code imageUrl} currently holds a local filesystem path, not a public
+ * URL — no image-serving controller exists yet (a later slice's concern);
+ * nothing exposes this value to any client today. Deliberately no
+ * {@code resolution}/{@code originX}/{@code originY}/{@code yaw}/occupancy
+ * fields — none are evidenced by any captured Keenon response.
  */
 @Getter
 @Setter
@@ -34,4 +41,13 @@ public class RobotMap extends BaseEntity {
 
     @Column
     private String name;
+
+    @Column
+    private Integer width;
+
+    @Column
+    private Integer height;
+
+    @Column(name = "map_md5")
+    private String mapMd5;
 }

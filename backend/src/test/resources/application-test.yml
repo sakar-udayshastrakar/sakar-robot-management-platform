@@ -26,6 +26,10 @@ sakar:
     keenon:
       enabled: false
       webhook-secret: test-webhook-secret-0123456789
+      status-sync:
+        # Tests call KeenonStatusSyncService.syncAll()/syncOne() directly instead — must
+        # not race test assertions, same convention as alerts/commands expiry-sweep below.
+        enabled: false
   mqtt:
     enabled: false
     # Deliberately low so MqttRateLimiterServiceTest / MqttInboundMessageServiceTest's rate-limit

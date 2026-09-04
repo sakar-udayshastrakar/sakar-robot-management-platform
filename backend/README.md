@@ -19,7 +19,41 @@ Specification sources (do not deviate from these without an approved change to t
 - Robot registry: manufacturer/model/capability/robot/credential entities, capability-gated API (`UNSUPPORTED_CAPABILITY`).
 - Robot Adapter abstraction with a functional `KeenonRobotAdapter` (the current, live-tested, **KEENON-CLOUD DEPENDENT** integration) and a stub `SakarRobotAdapter` (local MQTT path, not yet wired).
 - Audit logging, vendor-neutral error model, OpenAPI/Swagger, WebSocket auth scaffold, MQTT connection scaffold (disabled by default).
-- Docker Compose dev environment (Postgres, Redis, Mosquitto, backend).
+- Docker Compose dev environment (Redis, Mosquitto, backend) — PostgreSQL is native, see below.
+
+## Local development database setup
+
+PostgreSQL is **not** part of the Docker dev stack. This project's local database runs as
+a **native Windows PostgreSQL installation**:
+
+- Host: `localhost`
+- Port: `5432`
+- Database: `sakar_robot_platform`
+- Role: `sakar` (local dev password only, never used in a real deployment)
+
+Point the backend at it via environment variables (never hardcoded into `application.yml`,
+which must stay portable across machines):
+
+```bash
+export SAKAR_DB_URL="jdbc:postgresql://localhost:5432/sakar_robot_platform"
+export SAKAR_DB_USERNAME="sakar"
+export SAKAR_DB_PASSWORD="sakar"
+```
+
+Flyway runs its normal migration set against this database on startup, same as any
+environment. The fully-containerized `docker-compose.yml` `backend` service (an
+alternative to running the jar directly on the host) reaches this same native database
+from inside its container via `host.docker.internal:5432`.
+
+**Docker PostgreSQL is no longer used for this project** — an earlier iteration of this
+setup ran Postgres as a Docker container, but that has been fully migrated away from and
+the container/volume removed, specifically to avoid running two separate PostgreSQL
+instances on one machine. Do not reintroduce a Dockerized Postgres service without
+updating this section.
+
+**Production is a separate decision.** Nothing here implies the production database is
+also native PostgreSQL running this same way — that's an infrastructure choice made
+independently, not something to assume from this local dev setup.
 
 ## What's explicitly NOT implemented yet (see the phase-1 final report for the full list)
 

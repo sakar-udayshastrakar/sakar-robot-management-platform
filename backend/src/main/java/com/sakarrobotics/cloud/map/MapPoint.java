@@ -11,7 +11,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/** Maps to {@code map_points}. Phase 1 scope: schema/entity only. */
+/**
+ * Maps to {@code map_points}. {@code active} was added by the Keenon
+ * map-point-sync slice to represent "no longer reported by the vendor" —
+ * see {@code KeenonMapPointSyncService} for the sync writer.
+ */
 @Getter
 @Setter
 @NoArgsConstructor
@@ -33,4 +37,7 @@ public class MapPoint extends BaseEntity {
 
     @Column
     private Double y;
+
+    @Column(nullable = false)
+    private boolean active = true;
 }

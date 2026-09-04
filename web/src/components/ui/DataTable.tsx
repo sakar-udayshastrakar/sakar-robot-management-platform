@@ -1,5 +1,4 @@
 import type { ReactNode } from 'react';
-import { EmptyState } from './States';
 
 export interface Column<T> {
   key: string;
@@ -16,8 +15,19 @@ interface DataTableProps<T> {
 }
 
 export function DataTable<T>({ columns, rows, rowKey, emptyTitle, emptyDetail }: DataTableProps<T>) {
+  // Plain centered text, no icon — verified against the live Keenon Cloud
+  // Robot Detail "Task management" table, whose empty state is just
+  // "No Data" with no illustration (a different, more minimal treatment
+  // than the icon-bearing EmptyState used for whole-panel/widget empties
+  // elsewhere). Keeps Sakar's more specific existing copy (emptyTitle),
+  // just drops the icon to match a table's own empty-state convention.
   if (rows.length === 0) {
-    return <EmptyState title={emptyTitle ?? 'No records'} detail={emptyDetail} />;
+    return (
+      <div className="sakar-table-empty">
+        <span className="sakar-table-empty-title">{emptyTitle ?? 'No records'}</span>
+        {emptyDetail && <span className="sakar-table-empty-detail">{emptyDetail}</span>}
+      </div>
+    );
   }
 
   return (
