@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
@@ -95,14 +96,30 @@ public class KeenonRobotAdapter implements RobotAdapter {
 
     @Override
     public List<AreaInfo> getAreas(Robot robot) {
-        String storeId = storeIdOf(robot);
+        List<KeenonAreaMapping> mappings = areaMappingRepository.findByRobotIdAndActiveTrue(robot.getId());
+        String storeId = mappings.stream()
+                .findFirst()
+                .map(KeenonAreaMapping::getKeenonStoreId)
+                .orElseThrow(() -> new ApiException(SakarErrorCode.RESOURCE_NOT_FOUND,
+                        "No synced Keenon store mapping for robot " + robot.getId()));
+        // Correlates each LIVE vendor area (by its current keenonAreaId) back to the Sakar
+        // mapping row a caller needs for START_TASK — a vendor area with no synced row yet
+        // simply has no entry here, never a fabricated one. first-wins on a duplicate
+        // keenonAreaId rather than assuming the data is always perfectly deduplicated.
+        Map<String, String> sakarAreaIdByVendorAreaId = mappings.stream()
+                .filter(m -> m.getKeenonAreaId() != null)
+                .collect(Collectors.toMap(KeenonAreaMapping::getKeenonAreaId, m -> m.getId().toString(), (a, b) -> a));
+
         JsonNode response = client.getAreaList(storeId, externalId(robot));
         JsonNode list = response != null ? response.get("data") : null;
         if (list == null || !list.isArray()) {
             return List.of();
         }
         return list.spliterator() == null ? List.of() : java.util.stream.StreamSupport.stream(list.spliterator(), false)
-                .map(node -> new AreaInfo(textOrNull(node, "areaId"), textOrNull(node, "areaName")))
+                .map(node -> {
+                    String vendorAreaId = textOrNull(node, "areaId");
+                    return new AreaInfo(vendorAreaId, textOrNull(node, "areaName"), sakarAreaIdByVendorAreaId.get(vendorAreaId));
+                })
                 .toList();
     }
 
@@ -161,7 +178,10 @@ public class KeenonRobotAdapter implements RobotAdapter {
 
     private static AdapterOperationResult toOperationResult(JsonNode response) {
         if (response == null) {
-            return AdapterOperationResult.rejected("Empty response from Keenon Open Platform");
+            // The HTTP call itself completed without throwing — the vendor was genuinely
+            // contacted, it just returned nothing usable. Distinct from a pre-vendor-call
+            // rejection (see AdapterOperationResult#rejected's Javadoc).
+            return AdapterOperationResult.rejectedByVendor("Empty response from Keenon Open Platform");
         }
         String code = textOrNull(response, "code");
         // 610000 is Keenon's own "accepted" receipt code (Part 40) — this is deliberately the
@@ -170,7 +190,7 @@ public class KeenonRobotAdapter implements RobotAdapter {
         boolean accepted = "610000".equals(code);
         return accepted
                 ? AdapterOperationResult.accepted(code, "Accepted by Keenon Open Platform; not yet physically confirmed")
-                : AdapterOperationResult.rejected("Keenon Open Platform returned code " + code);
+                : AdapterOperationResult.rejectedByVendor("Keenon Open Platform returned code " + code);
     }
 
     private String externalId(Robot robot) {
@@ -179,14 +199,6 @@ public class KeenonRobotAdapter implements RobotAdapter {
                     "Robot " + robot.getId() + " has no external (Keenon) identifier configured");
         }
         return robot.getExternalRobotId();
-    }
-
-    private String storeIdOf(Robot robot) {
-        return areaMappingRepository.findByRobotIdAndActiveTrue(robot.getId()).stream()
-                .findFirst()
-                .map(KeenonAreaMapping::getKeenonStoreId)
-                .orElseThrow(() -> new ApiException(SakarErrorCode.RESOURCE_NOT_FOUND,
-                        "No synced Keenon store mapping for robot " + robot.getId()));
     }
 
     private String defaultBackPointId(Robot robot) {

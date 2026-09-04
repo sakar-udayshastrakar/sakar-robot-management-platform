@@ -106,6 +106,110 @@ sakar:
       client-secret: ${SAKAR_KEENON_CLIENT_SECRET:}
       connect-timeout-ms: 5000
       read-timeout-ms: 8000
+      status-sync:
+        # "Robot state synchronization foundation" slice — polls the already-real
+        # getStatus()/getBattery() adapter calls for KEENON_CLOUD robots and feeds
+        # RobotStatusService, the same table MQTT heartbeats already populate for
+        # agent-based robots. Disabled by default (unlike alerts/commands sweeps,
+        # which default true) because this makes real outbound Keenon HTTP calls
+        # and must stay opt-in until a deployment has real Keenon credentials.
+        enabled: ${SAKAR_KEENON_STATUS_SYNC_ENABLED:false}
+        interval-ms: ${SAKAR_KEENON_STATUS_SYNC_INTERVAL_MS:120000}
+      area-sync:
+        # Periodically refreshes ALREADY-established KeenonAreaMapping rows — never
+        # invents a storeId; it only re-syncs (robot, storeId) pairs this system has
+        # already recorded from a prior explicit sync via
+        # POST /robots/{id}/keenon/areas/sync. A robot with no existing mapping is
+        # never touched by this scheduler (no automatic way to learn its storeId).
+        # Areas change far less often than status/battery, so this defaults to a
+        # much longer interval. Disabled by default for the same reason as status-sync.
+        enabled: ${SAKAR_KEENON_AREA_SYNC_ENABLED:false}
+        interval-ms: ${SAKAR_KEENON_AREA_SYNC_INTERVAL_MS:21600000}
+      cleaning-mode-sync:
+        # Refreshes keenon_cleaning_mode_mappings from GET .../strategy/clean/model.
+        # Unlike area-sync, no per-robot bootstrap value is required (robotSn alone
+        # is enough), so this iterates every eligible KEENON_CLOUD robot directly,
+        # gated on the existing CLEANING capability. Modes change rarely, so this
+        # defaults to the same long interval as area-sync. Disabled by default for
+        # the same reason as status-sync/area-sync.
+        enabled: ${SAKAR_KEENON_CLEANING_MODE_SYNC_ENABLED:false}
+        interval-ms: ${SAKAR_KEENON_CLEANING_MODE_SYNC_INTERVAL_MS:21600000}
+      back-point-sync:
+        # Refreshes keenon_back_point_mappings from GET .../strategy/back/point.
+        # Same shape as cleaning-mode-sync: robotSn alone is enough, so this
+        # iterates every eligible KEENON_CLOUD robot directly, gated on the
+        # existing RETURN_TO_DOCK capability. Points change rarely, so this
+        # defaults to the same long interval as area-sync/cleaning-mode-sync.
+        # Disabled by default for the same reason as the other Keenon syncs.
+        enabled: ${SAKAR_KEENON_BACK_POINT_SYNC_ENABLED:false}
+        interval-ms: ${SAKAR_KEENON_BACK_POINT_SYNC_INTERVAL_MS:21600000}
+      cleaning-history-sync:
+        # Appends cleaning_sessions rows from GET .../clean/log/list. Unlike the
+        # other Keenon syncs this is append-only (history is immutable) and
+        # bounded pagination, not a "replace current state" sweep — see
+        # KeenonCleaningHistorySyncService's Javadoc for why there is no
+        # incremental/since-last-sync mode: no such parameter is documented or
+        # evidenced for this endpoint. Reuses the same storeId bootstrap as
+        # area-sync (an existing active KeenonAreaMapping), so only already
+        # area-synced robots are ever touched. Disabled by default for the same
+        # reason as every other Keenon sync.
+        enabled: ${SAKAR_KEENON_CLEANING_HISTORY_SYNC_ENABLED:false}
+        interval-ms: ${SAKAR_KEENON_CLEANING_HISTORY_SYNC_INTERVAL_MS:21600000}
+        page-size: ${SAKAR_KEENON_CLEANING_HISTORY_SYNC_PAGE_SIZE:50}
+        max-pages: ${SAKAR_KEENON_CLEANING_HISTORY_SYNC_MAX_PAGES:5}
+      map-metadata-sync:
+        # Populates the existing (previously schema-only) `maps` table from the
+        # sceneCode/sceneName fields already present on the robot-status response
+        # — NOT the real Keenon map-image endpoint (GET .../custom/robot/map),
+        # which needs an unresolved sceneCode/floorInfo pair and returns real
+        # geometry/image data explicitly out of scope for this sync. See
+        # KeenonMapMetadataSyncService's Javadoc for the full reasoning. Needs no
+        # bootstrap value (robotSn alone is enough), so this iterates every
+        # eligible KEENON_CLOUD robot directly, gated on GET_STATUS. Disabled by
+        # default for the same reason as every other Keenon sync.
+        enabled: ${SAKAR_KEENON_MAP_METADATA_SYNC_ENABLED:false}
+        interval-ms: ${SAKAR_KEENON_MAP_METADATA_SYNC_INTERVAL_MS:21600000}
+      map-point-sync:
+        # Populates map_points from GET .../custom/robot/map/position. Reuses
+        # map-metadata-sync to resolve sceneCode; does NOT call the map-image
+        # endpoint (GET .../custom/robot/map) at all — see
+        # KeenonMapPointSyncService's Javadoc. default-floor-info is the one
+        # empirically-observed-working value across every scene tested so far
+        # — NOT derived from any verified per-scene mechanism; override per
+        # deployment if a robot's actual floor differs. Independently
+        # configurable/disabled from GET_MAP capability on purpose — C40 S
+        # does not currently grant GET_MAP, so gating on it would leave this
+        # permanently inert; this scheduler is gated on GET_STATUS instead,
+        # matching map-metadata-sync.
+        enabled: ${SAKAR_KEENON_MAP_POINT_SYNC_ENABLED:false}
+        interval-ms: ${SAKAR_KEENON_MAP_POINT_SYNC_INTERVAL_MS:21600000}
+        default-floor-info: ${SAKAR_KEENON_MAP_POINT_SYNC_DEFAULT_FLOOR_INFO:1}
+      map-image-sync:
+        # Fetches the raw Keenon map PNG (GET .../custom/robot/map) and stores it
+        # under sakar.maps.storage-root — see KeenonMapImageSyncService's Javadoc
+        # for the full write-ordering/change-detection design. Only mechanical
+        # storage: no PGM/YAML/occupancy-grid conversion happens here or anywhere
+        # else yet. default-floor-info mirrors map-point-sync's own (same
+        # empirically-observed-working value, not derived from any verified
+        # per-scene mechanism) but is kept independently configurable since this
+        # is an independently schedulable sync. Independently configurable/
+        # disabled from GET_MAP capability on purpose — C40 S does not currently
+        # grant GET_MAP, so gating on it would leave this permanently inert; this
+        # scheduler is gated on GET_STATUS instead, matching map-metadata-sync/
+        # map-point-sync. Disabled by default for the same reason as every other
+        # Keenon sync.
+        enabled: ${SAKAR_KEENON_MAP_IMAGE_SYNC_ENABLED:false}
+        interval-ms: ${SAKAR_KEENON_MAP_IMAGE_SYNC_INTERVAL_MS:21600000}
+        default-floor-info: ${SAKAR_KEENON_MAP_IMAGE_SYNC_DEFAULT_FLOOR_INFO:1}
+
+  maps:
+    # Persistent, filesystem-backed storage for raw Keenon map PNGs — see
+    # KeenonMapImageSyncService's Javadoc. Path layout is
+    # <storage-root>/<robotId>/<mapId>/map.png, built only from Sakar-owned
+    # UUIDs. Mounted onto a named Docker volume in docker-compose.yml so the
+    # data survives container recreation; the default here is only a
+    # sensible local-dev fallback.
+    storage-root: ${SAKAR_MAPS_STORAGE_ROOT:./data/maps}
 
   mqtt:
     # Phase 3: when enabled, the backend actually connects, subscribes to every

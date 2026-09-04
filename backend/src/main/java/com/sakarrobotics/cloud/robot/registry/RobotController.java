@@ -28,6 +28,7 @@ import com.sakarrobotics.cloud.robot.registry.dto.RegisterRobotRequest;
 import com.sakarrobotics.cloud.robot.registry.dto.RobotMqttCredentialResponse;
 import com.sakarrobotics.cloud.robot.registry.dto.RobotResponse;
 import com.sakarrobotics.cloud.security.UserPrincipal;
+import com.sakarrobotics.cloud.security.access.TenantAccessGuard;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -50,6 +51,7 @@ public class RobotController {
     private final RobotCapabilityService robotCapabilityService;
     private final RobotAdapterRegistry robotAdapterRegistry;
     private final RobotCredentialService robotCredentialService;
+    private final TenantAccessGuard tenantAccessGuard;
 
     @GetMapping
     @PreAuthorize("hasAuthority('ROBOT_VIEW')")
@@ -77,7 +79,10 @@ public class RobotController {
     public ResponseEntity<ApiResponse<RobotResponse>> register(
             @AuthenticationPrincipal UserPrincipal principal,
             @Valid @RequestBody RegisterRobotRequest request) {
-        // A configuring user may only register a robot into an organization they can reach.
+        // A configuring user may only register a robot into an organization they can reach —
+        // enforced here, the same way SiteController.create() gates its own organization-scoped
+        // write (registration audit finding: this was previously an unenforced comment only).
+        tenantAccessGuard.assertOrganizationAccess(principal, request.organizationId());
         var guardedRobot = robotService.register(request.organizationId(), request.siteId(), request.robotModelId(),
                 request.name(), request.serialNumber(), request.externalRobotId());
         RobotResponse response = RobotResponse.from(guardedRobot, robotCapabilityService.supportedCapabilities(guardedRobot.getRobotModelId()));
@@ -128,8 +133,9 @@ public class RobotController {
     @PreAuthorize("hasAuthority('ROBOT_VIEW')")
     @Operation(summary = "List a robot's cleanable areas/zones through its configured adapter "
             + "(returns UNSUPPORTED_CAPABILITY if this robot model does not support GET_AREAS) — "
-            + "metadata only (vendor area id + display name), no polygon geometry: the adapter does "
-            + "not receive or expose any, so none is fabricated here")
+            + "metadata only (vendor area id + display name + the Sakar-side mapping id needed to "
+            + "issue START_TASK, when synced), no polygon geometry: the adapter does not receive "
+            + "or expose any, so none is fabricated here")
     public ApiResponse<List<AreaInfo>> areas(@AuthenticationPrincipal UserPrincipal principal, @PathVariable UUID id) {
         Robot robot = robotService.getAccessibleOrThrow(principal, id);
         robotCapabilityService.assertSupported(robot.getRobotModelId(), RobotCapabilityType.GET_AREAS);

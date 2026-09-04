@@ -23,6 +23,14 @@ import lombok.RequiredArgsConstructor;
  * for fields nobody has confirmed. Only {@link KeenonRobotAdapter} calls
  * this class; nothing in this class is ever called directly from a
  * controller.
+ *
+ * <p><strong>One deliberate exception:</strong> {@link
+ * #getMapData(String, String)} returns a typed {@link KeenonMapDataResponse}
+ * rather than a raw {@code JsonNode} — the raw Keenon PNG map-storage slice
+ * needs exactly three evidenced fields and nothing about a base64 image
+ * blob benefits from staying as a JSON tree. No base64/image decoding
+ * happens in this class either way — that stays entirely {@code
+ * KeenonMapImageSyncService}'s responsibility.
  */
 @Component
 @RequiredArgsConstructor
@@ -64,9 +72,23 @@ class KeenonApiClient {
         return get("/api/open/custom/clean/robot/strategy/back/point?robotSn=" + encode(robotSn));
     }
 
-    JsonNode getCleaningLogs(String storeId, String robotSn, int pageSize) {
+    JsonNode getCleaningLogs(String storeId, String robotSn, int currentPage, int pageSize) {
         return get("/api/open/custom/clean/log/list?storeId=" + encode(storeId)
-                + "&robotSn=" + encode(robotSn) + "&currentPage=1&pageSize=" + pageSize);
+                + "&robotSn=" + encode(robotSn) + "&currentPage=" + currentPage + "&pageSize=" + pageSize);
+    }
+
+    KeenonMapDataResponse getMapData(String sceneCode, String floorInfo) {
+        JsonNode response = get("/api/open/custom/robot/map?sceneCode=" + encode(sceneCode) + "&floorInfo=" + encode(floorInfo));
+        JsonNode data = response != null ? response.get("data") : null;
+        JsonNode originPosition = data != null ? data.get("originPosition") : null;
+        String content = data != null && data.hasNonNull("content") ? data.get("content").asText() : null;
+        Integer width = originPosition != null && originPosition.hasNonNull("width") ? originPosition.get("width").asInt() : null;
+        Integer height = originPosition != null && originPosition.hasNonNull("height") ? originPosition.get("height").asInt() : null;
+        return new KeenonMapDataResponse(content, width, height);
+    }
+
+    JsonNode getMapPosition(String sceneCode, String floorInfo) {
+        return get("/api/open/custom/robot/map/position?sceneCode=" + encode(sceneCode) + "&floorInfo=" + encode(floorInfo));
     }
 
     JsonNode postTemporaryTask(Object body) {

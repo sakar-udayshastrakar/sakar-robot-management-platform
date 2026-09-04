@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.sakarrobotics.cloud.common.error.ApiException;
 import com.sakarrobotics.cloud.common.error.SakarErrorCode;
+import com.sakarrobotics.cloud.org.OrganizationService;
+import com.sakarrobotics.cloud.org.OrganizationType;
 import com.sakarrobotics.cloud.security.UserPrincipal;
 import com.sakarrobotics.cloud.security.access.TenantAccessGuard;
 
@@ -21,6 +23,7 @@ public class RobotService {
 
     private final RobotRepository robotRepository;
     private final RobotModelRepository robotModelRepository;
+    private final OrganizationService organizationService;
     private final TenantAccessGuard tenantAccessGuard;
 
     @Transactional
@@ -33,6 +36,20 @@ public class RobotService {
         robotModelRepository.findById(robotModelId)
                 .orElseThrow(() -> new ApiException(SakarErrorCode.ROBOT_MODEL_NOT_FOUND,
                         "Robot model not found: " + robotModelId));
+        // The Sakar-serial <-> vendor-serial mapping is Sakar-Robotics-owned data — a
+        // non-Sakar-Robotics organization's robot must never carry a vendor identifier,
+        // even though that org may otherwise fully own/manage the robot itself.
+        if (externalRobotId != null && organizationService.getOrThrow(organizationId).getOrgType() != OrganizationType.SAKAR_ROOT) {
+            throw new ApiException(SakarErrorCode.EXTERNAL_ROBOT_ID_NOT_ALLOWED,
+                    "A vendor (Keenon) identifier may only be set for a robot registered under the Sakar Robotics organization");
+        }
+        // Duplicate-vendor-serial guard, scoped per organization (not per org-type) so it
+        // stays correct even if more than one SAKAR_ROOT-type organization ever exists —
+        // see RobotRepository.existsByOrganizationIdAndExternalRobotId for why.
+        if (externalRobotId != null && robotRepository.existsByOrganizationIdAndExternalRobotId(organizationId, externalRobotId)) {
+            throw new ApiException(SakarErrorCode.DUPLICATE_EXTERNAL_ROBOT_ID,
+                    "A robot with external (Keenon) id " + externalRobotId + " is already registered in this organization");
+        }
 
         Robot robot = new Robot();
         robot.setOrganizationId(organizationId);

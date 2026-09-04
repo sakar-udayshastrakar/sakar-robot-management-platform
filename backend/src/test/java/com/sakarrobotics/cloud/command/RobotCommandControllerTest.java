@@ -200,6 +200,68 @@ class RobotCommandControllerTest extends IntegrationTestSupport {
                 .andExpect(jsonPath("$.data.dispatchNote", containsString("Not dispatched")));
     }
 
+    // ---------------------------------------------------------------
+    // Real Keenon command dispatch (Keenon integration audit, "Real Keenon
+    // command dispatch" slice) — full Spring context, the REAL (unmocked)
+    // KeenonRobotAdapter bean. sakar.integration.keenon.enabled=false in
+    // the test profile, so KeenonOAuthTokenService fails closed before any
+    // HTTP request is ever built — these tests make zero real network
+    // calls by construction, while still proving the KEENON_CLOUD routing
+    // decision and tenant isolation end-to-end through the real beans.
+    // ---------------------------------------------------------------
+
+    @Test
+    void keenonCloudRobot_command_isHonestlyReportedAsCommandFailed_whenKeenonIntegrationIsDisabled() throws Exception {
+        Role orgAdmin = ensureRole(RoleName.ORG_ADMIN, PermissionCode.ROBOT_CONTROL, PermissionCode.ROBOT_CONFIGURE);
+        Organization org = createOrganization("Org " + UUID.randomUUID(), OrganizationType.DIRECT_CLIENT, null);
+        String email = "admin-" + UUID.randomUUID() + "@example.com";
+        createUser(email, "Password1!", orgAdmin, org.getId());
+        String token = login(email, "Password1!");
+
+        RobotModel model = keenonModelWithCapabilities(RobotCapabilityType.RETURN_TO_DOCK);
+        Robot robot = registerRobot(org.getId(), model.getId());
+        robot.setExternalRobotId("94:BA:06:CA:99:F3");
+        robot = robotRepository.save(robot);
+
+        mockMvc.perform(post("/api/v1/robots/" + robot.getId() + "/commands")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"commandType\":\"RETURN_TO_DOCK\"}"))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.data.commandType").value("RETURN_TO_DOCK"))
+                .andExpect(jsonPath("$.data.status").value("COMMAND_FAILED"))
+                .andExpect(jsonPath("$.data.dispatched").value(false))
+                .andExpect(jsonPath("$.data.dispatchNote", containsString("Not dispatched")))
+                // KeenonApiClient.post() catches any Exception (including the OAuth
+                // service's own INTEGRATION_UNAVAILABLE for a disabled integration) and
+                // rewraps it as a generic VENDOR_API_ERROR — pre-existing behavior, not
+                // changed by this slice. The outcome is still correctly "not dispatched".
+                .andExpect(jsonPath("$.data.dispatchNote", containsString("Keenon Open Platform request failed")));
+    }
+
+    @Test
+    void crossOrganizationRobot_keenonCommand_isRejectedBeforeAnyKeenonDispatchAttempt() throws Exception {
+        Role orgAdmin = ensureRole(RoleName.ORG_ADMIN, PermissionCode.ROBOT_CONTROL, PermissionCode.ROBOT_CONFIGURE);
+        Organization orgA = createOrganization("Org A " + UUID.randomUUID(), OrganizationType.DIRECT_CLIENT, null);
+        Organization orgB = createOrganization("Org B " + UUID.randomUUID(), OrganizationType.DIRECT_CLIENT, null);
+        String emailA = "admin-a-" + UUID.randomUUID() + "@example.com";
+        createUser(emailA, "Password1!", orgAdmin, orgA.getId());
+        String token = login(emailA, "Password1!");
+
+        RobotModel model = keenonModelWithCapabilities(RobotCapabilityType.RETURN_TO_DOCK);
+        Robot robotInOrgB = registerRobot(orgB.getId(), model.getId());
+
+        // Same 404-not-403 anti-enumeration behavior as every other robot endpoint —
+        // proves the tenant guard runs and rejects before any Keenon-vs-MQTT dispatch
+        // decision is even reached for this cross-org robot.
+        mockMvc.perform(post("/api/v1/robots/" + robotInOrgB.getId() + "/commands")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"commandType\":\"RETURN_TO_DOCK\"}"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error.code").value("ROBOT_NOT_FOUND"));
+    }
+
     private RobotModel modelWithCapabilities(RobotCapabilityType... capabilities) {
         RobotManufacturer manufacturer = manufacturerRepository.save(new RobotManufacturer("Vendor-" + UUID.randomUUID()));
         RobotModel model = new RobotModel();
@@ -207,6 +269,20 @@ class RobotCommandControllerTest extends IntegrationTestSupport {
         model.setName("Model");
         model.setAdapterType(AdapterType.SAKAR_NATIVE);
         model.setIntegrationPath(IntegrationPath.SAKAR_OWNED_LOCAL);
+        model = modelRepository.save(model);
+        for (RobotCapabilityType capability : capabilities) {
+            capabilityRepository.save(new RobotCapability(model.getId(), capability, true));
+        }
+        return model;
+    }
+
+    private RobotModel keenonModelWithCapabilities(RobotCapabilityType... capabilities) {
+        RobotManufacturer manufacturer = manufacturerRepository.save(new RobotManufacturer("Keenon-" + UUID.randomUUID()));
+        RobotModel model = new RobotModel();
+        model.setManufacturerId(manufacturer.getId());
+        model.setName("C40 S");
+        model.setAdapterType(AdapterType.KEENON_CLOUD);
+        model.setIntegrationPath(IntegrationPath.KEENON_CLOUD_DEPENDENT);
         model = modelRepository.save(model);
         for (RobotCapabilityType capability : capabilities) {
             capabilityRepository.save(new RobotCapability(model.getId(), capability, true));
