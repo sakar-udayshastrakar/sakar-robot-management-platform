@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,6 +23,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sakarrobotics.cloud.common.error.ApiException;
 import com.sakarrobotics.cloud.common.error.SakarErrorCode;
 import com.sakarrobotics.cloud.common.web.ApiResponse;
+import com.sakarrobotics.cloud.map.RobotMap;
+import com.sakarrobotics.cloud.map.RobotMapImageService;
+import com.sakarrobotics.cloud.map.RobotMapRepository;
+import com.sakarrobotics.cloud.map.RobotMapResponse;
 import com.sakarrobotics.cloud.robot.adapter.RobotAdapter;
 import com.sakarrobotics.cloud.robot.adapter.RobotAdapterRegistry;
 import com.sakarrobotics.cloud.robot.adapter.dto.AreaInfo;
@@ -52,6 +60,8 @@ public class RobotController {
     private final RobotAdapterRegistry robotAdapterRegistry;
     private final RobotCredentialService robotCredentialService;
     private final TenantAccessGuard tenantAccessGuard;
+    private final RobotMapRepository robotMapRepository;
+    private final RobotMapImageService robotMapImageService;
 
     @GetMapping
     @PreAuthorize("hasAuthority('ROBOT_VIEW')")
@@ -141,6 +151,60 @@ public class RobotController {
         robotCapabilityService.assertSupported(robot.getRobotModelId(), RobotCapabilityType.GET_AREAS);
         RobotAdapter adapter = adapterFor(robot);
         return ApiResponse.ok(adapter.getAreas(robot));
+    }
+
+    @GetMapping("/{id}/map")
+    @PreAuthorize("hasAuthority('ROBOT_VIEW')")
+    @Operation(summary = "Get a robot's synced map metadata (Raw Keenon PNG Map Storage + Sync slice) — "
+            + "vendorMapId/name/width/height/mapMd5/updatedAt only, never a filesystem path, vendor "
+            + "credentials, or a raw Keenon payload. Deliberately NOT gated on the GET_MAP capability: "
+            + "a previously-synced map must stay servable even for a model (e.g. C40 S) whose GET_MAP "
+            + "capability row is false — see KeenonMapImageSyncScheduler's own Javadoc for why that "
+            + "capability is unreliable. Returns RESOURCE_NOT_FOUND if no map has been synced yet.")
+    public ApiResponse<RobotMapResponse> map(@AuthenticationPrincipal UserPrincipal principal, @PathVariable UUID id) {
+        Robot robot = robotService.getAccessibleOrThrow(principal, id);
+        RobotMap robotMap = mapOrThrow(robot.getId());
+        return ApiResponse.ok(RobotMapResponse.from(robotMap));
+    }
+
+    @GetMapping(value = "/{id}/map/image", produces = MediaType.IMAGE_PNG_VALUE)
+    @PreAuthorize("hasAuthority('ROBOT_VIEW')")
+    @Operation(summary = "Get a robot's synced map as a raw PNG (Raw Keenon PNG Map Storage + Sync "
+            + "slice) — serves only the already-validated file RobotMapImageService reads from local "
+            + "storage, never a live Keenon call. ETag is derived from the vendor's own mapMd5; a "
+            + "matching If-None-Match returns 304. Returns RESOURCE_NOT_FOUND (never a path, a stack "
+            + "trace, or a 500) whether no map was ever synced, the file is missing, or it is empty/"
+            + "corrupt on disk.")
+    public ResponseEntity<byte[]> mapImage(@AuthenticationPrincipal UserPrincipal principal, @PathVariable UUID id,
+            @RequestHeader(value = HttpHeaders.IF_NONE_MATCH, required = false) String ifNoneMatch) {
+        Robot robot = robotService.getAccessibleOrThrow(principal, id);
+        RobotMap robotMap = mapOrThrow(robot.getId());
+        // Set as a literal header rather than via CacheControl.cachePrivate().mustRevalidate() —
+        // that builder always emits "must-revalidate, private" regardless of call order (a fixed
+        // internal directive sequence), whereas this tenant-scoped image API's contract is
+        // specifically "private, must-revalidate".
+        String cacheControl = "private, must-revalidate";
+        String etag = robotMapImageService.etagFor(robotMap);
+
+        if (etag != null && etag.equals(ifNoneMatch)) {
+            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).header(HttpHeaders.CACHE_CONTROL, cacheControl).eTag(etag).build();
+        }
+        // Path is resolved entirely inside RobotMapImageService from robot.getId()/robotMap.getId()
+        // (both server-side UUIDs) — never from robotMap.getImageUrl() and never from any request
+        // parameter, since none exists on this endpoint.
+        byte[] bytes = robotMapImageService.readImageBytes(robot.getId(), robotMap.getId());
+        ResponseEntity.BodyBuilder response = ResponseEntity.ok()
+                .header(HttpHeaders.CACHE_CONTROL, cacheControl)
+                .contentType(MediaType.IMAGE_PNG);
+        if (etag != null) {
+            response.eTag(etag);
+        }
+        return response.body(bytes);
+    }
+
+    private RobotMap mapOrThrow(UUID robotId) {
+        return robotMapRepository.findByRobotId(robotId)
+                .orElseThrow(() -> new ApiException(SakarErrorCode.RESOURCE_NOT_FOUND, "No map synced for robot " + robotId));
     }
 
     @PostMapping("/{id}/mqtt-credentials")
