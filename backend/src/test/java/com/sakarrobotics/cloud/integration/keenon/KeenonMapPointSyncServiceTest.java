@@ -100,6 +100,34 @@ class KeenonMapPointSyncServiceTest {
     }
 
     @Test
+    void sync_liveVerifiedDemoPieceScene_persistsRealEvidencedTargets() throws Exception {
+        // Regression/documentation test (Phase 1I): the exact live-verified targetList for
+        // Demo Piece's Sakar-configured sceneCode "7ClJPR" (never the historical "dTW2N7"
+        // or the vendor mapId).
+        Robot robot = aKeenonRobot();
+        RobotMap robotMap = aRobotMap("7ClJPR");
+        when(keenonMapMetadataSyncService.sync(robot)).thenReturn(Optional.of(robotMap));
+        when(mapPointRepository.findByMapIdAndName(any(), any())).thenReturn(Optional.empty());
+        when(mapPointRepository.findByMapIdAndActiveTrue(robotMap.getId())).thenReturn(List.of());
+        stubSaveEchoesArgument();
+        JsonNode response = objectMapper.readTree("{\"data\":{\"targetList\":["
+                + "{\"name\":\"1_Charging pile2\",\"type\":\"charge\",\"positionX\":255.92219426961137,"
+                + "\"positionY\":194.34652657507655,\"mapMd5\":\"a3cb0d75faa17c9ab12b9a6434173b42\"},"
+                + "{\"name\":\"Starting point6-1\",\"type\":\"zone_start_pose\","
+                + "\"mapMd5\":\"a3cb0d75faa17c9ab12b9a6434173b42\"}"
+                + "]}}");
+        when(client.getMapPosition("7ClJPR", "1")).thenReturn(response);
+
+        List<MapPoint> result = service("1").sync(robot);
+
+        assertThat(result).hasSize(2);
+        assertThat(result.get(0).getName()).isEqualTo("1_Charging pile2");
+        assertThat(result.get(0).getPointType()).isEqualTo("charge");
+        assertThat(result.get(1).getName()).isEqualTo("Starting point6-1");
+        assertThat(result.get(1).getPointType()).isEqualTo("zone_start_pose");
+    }
+
+    @Test
     void sync_noSceneResolvable_returnsEmpty_neverCallsMapPositionOrMutatesData() throws Exception {
         Robot robot = aKeenonRobot();
         when(keenonMapMetadataSyncService.sync(robot)).thenReturn(Optional.empty());

@@ -24,18 +24,22 @@ import lombok.RequiredArgsConstructor;
  * Periodically refreshes {@code maps} row for every KEENON_CLOUD robot —
  * follows the exact "real, gated, wall-clock-driven sweep, one robot's
  * failure never aborts the rest" pattern as every other Keenon sync
- * scheduler in this codebase. Needs no per-robot bootstrap value (unlike
- * area/cleaning-history sync's {@code storeId}) — {@code
- * GET .../scene/v1/robot/status} only ever needs {@code robotSn} — so this
+ * scheduler in this codebase. Needs no per-robot bootstrap value from this
+ * class itself (unlike area/cleaning-history sync's {@code storeId}) — it
  * iterates every eligible robot directly, the same way {@link
- * KeenonStatusSyncService} does.
+ * KeenonStatusSyncService} does, and simply calls through to {@link
+ * KeenonMapMetadataSyncService#sync}, which resolves each robot's sceneCode
+ * from its own Sakar-owned {@link KeenonRobotSceneConfig} row (see that
+ * class's Javadoc — no live Keenon endpoint supplies one for this account).
  *
- * <p>Gated on {@link RobotCapabilityType#GET_STATUS} — the actual,
- * evidenced vendor capability this data comes from — deliberately NOT
- * {@link RobotCapabilityType#GET_MAP}, which the C40 S model does not
- * currently grant (the capability it represents, real map-image retrieval
- * via {@link KeenonRobotAdapter#getMap}, remains unimplemented). Gating on
- * {@code GET_MAP} here would conflate two different vendor capabilities.
+ * <p>Still gated on {@link RobotCapabilityType#GET_STATUS} even though this
+ * class no longer calls the status endpoint itself — this capability flag
+ * remains the existing, evidenced signal that a robot is a reachable
+ * KEENON_CLOUD robot at all. Deliberately NOT gated on {@link
+ * RobotCapabilityType#GET_MAP}, which the C40 S model does not currently
+ * grant (the capability it represents, real map-image retrieval via {@link
+ * KeenonRobotAdapter#getMap}, remains unimplemented) — gating on {@code
+ * GET_MAP} here would conflate two different vendor capabilities.
  */
 @Service
 @RequiredArgsConstructor

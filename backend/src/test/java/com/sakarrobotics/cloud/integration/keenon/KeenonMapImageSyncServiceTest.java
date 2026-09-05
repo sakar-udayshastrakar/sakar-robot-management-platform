@@ -327,6 +327,30 @@ class KeenonMapImageSyncServiceTest {
     }
 
     @Test
+    void sync_liveVerifiedDemoPieceScene_persistsRealEvidencedMapMetadata() throws Exception {
+        // Regression/documentation test (Phase 1I): the exact sceneCode/mapMd5/dimensions
+        // live-verified for Demo Piece (robotSn 94:BA:06:CA:99:F3) via a Sakar-configured
+        // KeenonRobotSceneConfig row resolving to sceneCode "7ClJPR" — never the historical
+        // "dTW2N7" or the vendor mapId "4c0075859805496eb452187b3cd91107".
+        Robot robot = aKeenonRobot();
+        RobotMap robotMap = aRobotMap("7ClJPR");
+        when(keenonMapMetadataSyncService.sync(robot)).thenReturn(Optional.of(robotMap));
+        when(client.getMapPosition("7ClJPR", "1"))
+                .thenReturn(mapPositionResponse("a3cb0d75faa17c9ab12b9a6434173b42"));
+        byte[] png = validPngBytes(1);
+        when(client.getMapData("7ClJPR", "1")).thenReturn(new KeenonMapDataResponse(base64Of(png), 570, 763));
+        stubSaveEchoesArgument();
+
+        Optional<RobotMap> result = service("1").sync(robot);
+
+        assertThat(result).isPresent();
+        assertThat(result.get().getVendorMapId()).isEqualTo("7ClJPR");
+        assertThat(result.get().getWidth()).isEqualTo(570);
+        assertThat(result.get().getHeight()).isEqualTo(763);
+        assertThat(result.get().getMapMd5()).isEqualTo("a3cb0d75faa17c9ab12b9a6434173b42");
+    }
+
+    @Test
     void sync_storagePathIsBuiltOnlyFromRobotAndMapUuids_vendorSceneCodeNeverAppearsInPath() throws Exception {
         Robot robot = aKeenonRobot();
         RobotMap robotMap = aRobotMap("../../etc/passwd");
