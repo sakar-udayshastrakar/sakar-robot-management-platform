@@ -124,6 +124,144 @@ class KeenonRobotAdapterTest {
         assertThat(status.mainState()).isNull();
     }
 
+    // ------------------------------------------------------------------
+    // SEC-2026 Keenon status-endpoint migration - KeenonApiClient#getRobotStatus now
+    // calls the cleaning-family endpoint instead of the scene-family one, but this
+    // adapter's own mapping is unchanged (see getStatus() above): it reads mainState/
+    // subState off whatever "data" object the client returns and never touches the URL
+    // itself, so these tests use the real live cleaning-response shape (numeric
+    // mainState/subState, nested hardwareState/globalState/childState) captured during
+    // the investigation to pin that this adapter handles it correctly unmodified.
+    // ------------------------------------------------------------------
+
+    private static final String LIVE_CLEANING_STATUS_RESPONSE = """
+            {
+              "msg": "success",
+              "code": 610000,
+              "data": {
+                "hardwareState": {
+                  "armrests": 1,
+                  "dustBag": 0,
+                  "bilgeTank": 1,
+                  "leftEdgeBrush": 1,
+                  "rightEdgeBrush": 1,
+                  "skull": 1,
+                  "sweepingBrush": 1,
+                  "washingRollerBrush": 1,
+                  "cleanWaterTank": 1,
+                  "bilgeTankState": 0,
+                  "rollingBrushPushRod": 0,
+                  "assistHandler": 0,
+                  "assistHandlerWorkState": 0
+                },
+                "globalState": {
+                  "scram": false,
+                  "lock": true,
+                  "scheduling": false,
+                  "faulting": false,
+                  "locationSuc": true,
+                  "upgrading": false,
+                  "rosConnect": true
+                },
+                "childState": {
+                  "navigating": false,
+                  "lifting": false
+                },
+                "mainState": -1,
+                "subState": -1,
+                "robotSn": "94:BA:06:CA:99:F3"
+              },
+              "errorMsg": "success"
+            }
+            """;
+
+    @Test
+    void getStatus_cleaningResponse_mapsNumericMainStateAndSubStateAsText_neverGuessingAMeaning() throws Exception {
+        when(client.getRobotStatus(anyString())).thenReturn(objectMapper.readTree(LIVE_CLEANING_STATUS_RESPONSE));
+
+        var status = adapter().getStatus(robotWithExternalId("94:BA:06:CA:99:F3"));
+
+        // -1 is passed through as its literal string form - not translated into any
+        // guessed enum/label. Requirement: never invent a meaning for -1.
+        assertThat(status.mainState()).isEqualTo("-1");
+        assertThat(status.subState()).isEqualTo("-1");
+    }
+
+    @Test
+    void getStatus_cleaningResponse_isReportedOnline_becauseDataIsPresent() throws Exception {
+        when(client.getRobotStatus(anyString())).thenReturn(objectMapper.readTree(LIVE_CLEANING_STATUS_RESPONSE));
+
+        var status = adapter().getStatus(robotWithExternalId("94:BA:06:CA:99:F3"));
+
+        // Existing online derivation (data != null) is preserved unmodified and already
+        // behaves correctly against the new endpoint's response shape.
+        assertThat(status.online()).isTrue();
+    }
+
+    @Test
+    void getStatus_cleaningResponse_preservesTheCompleteRawVendorResponse() throws Exception {
+        JsonNode response = objectMapper.readTree(LIVE_CLEANING_STATUS_RESPONSE);
+        when(client.getRobotStatus(anyString())).thenReturn(response);
+
+        var status = adapter().getStatus(robotWithExternalId("94:BA:06:CA:99:F3"));
+
+        assertThat(status.raw()).isEqualTo(response);
+        JsonNode raw = (JsonNode) status.raw();
+        assertThat(raw.path("data").path("hardwareState").path("sweepingBrush").asInt()).isEqualTo(1);
+        assertThat(raw.path("data").path("globalState").path("rosConnect").asBoolean()).isTrue();
+        assertThat(raw.path("data").path("childState").path("navigating").asBoolean()).isFalse();
+        assertThat(raw.path("data").path("robotSn").asText()).isEqualTo("94:BA:06:CA:99:F3");
+    }
+
+    @Test
+    void getStatus_vendor610403Response_isReportedOffline_sameAsAnyOtherNoDataResponse() throws Exception {
+        // The exact live error body observed during the investigation - no "data" key at
+        // all, so this must be handled identically to any other data-less response, not
+        // as a special case.
+        JsonNode response = objectMapper.readTree("{\"code\":610403,\"msg\":\"Insufficient operation permission\"}");
+        when(client.getRobotStatus(anyString())).thenReturn(response);
+
+        var status = adapter().getStatus(robotWithExternalId("94:BA:06:CA:99:F3"));
+
+        assertThat(status.online()).isFalse();
+        assertThat(status.mainState()).isNull();
+        assertThat(status.subState()).isNull();
+        assertThat(status.raw()).isEqualTo(response);
+    }
+
+    @Test
+    void getStatus_dataFieldExplicitlyJsonNull_neverThrows_mainSubStateStillNull() throws Exception {
+        // Pre-existing, unmodified behavior worth pinning explicitly: a JSON literal
+        // `"data": null` deserializes to Jackson's NullNode, which is a non-null Java
+        // reference, so the existing `data != null` check (unchanged by this migration)
+        // reports online=true here - unlike a genuinely MISSING "data" key, which
+        // deserializes to a real Java null and reports online=false (see the
+        // no-data-field test above). Not something this migration introduced or should
+        // fix - documented here so it's a known, tested quirk rather than a surprise.
+        JsonNode response = objectMapper.readTree("{\"code\":610000,\"data\":null}");
+        when(client.getRobotStatus(anyString())).thenReturn(response);
+
+        var status = adapter().getStatus(robotWithExternalId("94:BA:06:CA:99:F3"));
+
+        assertThat(status.online()).isTrue();
+        assertThat(status.mainState()).isNull();
+        assertThat(status.subState()).isNull();
+    }
+
+    @Test
+    void getStatus_malformedDataField_isMissingObjectFields_stillNeverThrows() throws Exception {
+        // "data" present but not shaped as expected (e.g. an empty object) - must degrade
+        // to nulls, never throw, never fabricate a state.
+        JsonNode response = objectMapper.readTree("{\"code\":610000,\"data\":{}}");
+        when(client.getRobotStatus(anyString())).thenReturn(response);
+
+        var status = adapter().getStatus(robotWithExternalId("94:BA:06:CA:99:F3"));
+
+        assertThat(status.online()).isTrue();
+        assertThat(status.mainState()).isNull();
+        assertThat(status.subState()).isNull();
+    }
+
     @Test
     void getStatusAndGetBattery_useExternalRobotId_neverTheSakarSerialNumber() throws Exception {
         // A robot with BOTH identifiers set to deliberately different values — the Sakar
