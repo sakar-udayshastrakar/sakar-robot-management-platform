@@ -44,11 +44,24 @@ class KeenonApiClient {
     }
 
     private RestClient.RequestHeadersSpec<?> authorizedGet(String uri) {
-        return client().get().uri(uri).header("Authorization", "Bearer " + tokenService.currentAccessToken());
+        // uri(String) re-runs its argument through RestClient's own URI-template encoding —
+        // since every caller here already passes a pre-encoded query string (see encode()
+        // below), that doubly percent-encodes it (e.g. "%3A" becomes "%253A"), corrupting
+        // every identifier sent to Keenon. uri(URI) takes the URI as already encoded and
+        // performs no further encoding — see https://github.com/spring-projects/spring-framework
+        // "RestClient/RestTemplate URI encoding" for the documented distinction.
+        return client().get().uri(java.net.URI.create(uri)).header("Authorization", "Bearer " + tokenService.currentAccessToken());
     }
 
-    JsonNode getRobotStatus(String robotId) {
-        return get("/api/open/scene/v1/robot/status?robotId=" + encode(robotId));
+    // SEC-2026 Keenon status-endpoint migration: /api/open/scene/v1/robot/status (robotId)
+    // is documented and was live-confirmed working in the original Master Requirements
+    // Part 40 audit, but a later live re-test found it returning 610403 "Insufficient
+    // operation permission" for this account while the cleaning-family equivalent below
+    // succeeded (610000) for the exact same robot at the exact same time. Live-verified
+    // to return the same mainState/subState fields (plus hardwareState/globalState/
+    // childState) this adapter already reads - see KeenonRobotAdapter#getStatus.
+    JsonNode getRobotStatus(String robotSn) {
+        return get("/api/open/custom/clean/robot/status?robotSn=" + encode(robotSn));
     }
 
     JsonNode getBatteryLevel(String robotSn) {
