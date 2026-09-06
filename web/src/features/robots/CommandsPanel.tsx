@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { issueCommand, listCommands } from '../../api/commands';
+import { getCommandResults, issueCommand, listCommands } from '../../api/commands';
 import { useApi } from '../../hooks/useApi';
 import { usePermissions } from '../../hooks/usePermissions';
 import { useToast } from '../../components/ui/Toast';
@@ -8,7 +8,7 @@ import { Card } from '../../components/ui/Card';
 import { DataTable } from '../../components/ui/DataTable';
 import { Badge } from '../../components/ui/Badge';
 import { Icon } from '../../components/ui/Icon';
-import { LoadingState, ErrorState } from '../../components/ui/States';
+import { LoadingState, ErrorState, EmptyState } from '../../components/ui/States';
 import { UnavailableFeature } from '../../components/ui/SimulatedDataBanner';
 import type { NonLockCommandType, Robot, RobotCapabilityType } from '../../types/domain';
 
@@ -28,6 +28,7 @@ export function CommandsPanel({ robot }: { robot: Robot }) {
   const { hasPermission } = usePermissions();
   const toast = useToast();
   const [busyType, setBusyType] = useState<NonLockCommandType | null>(null);
+  const [selectedCommandId, setSelectedCommandId] = useState<string | null>(null);
   const { data, status, error, refetch } = useApi(() => listCommands(robot.id, 0, 10), [robot.id]);
 
   async function handleIssue(commandType: NonLockCommandType) {
@@ -97,10 +98,59 @@ export function CommandsPanel({ robot }: { robot: Robot }) {
               { key: 'dispatched', header: 'Dispatched', render: (c) => <Badge tone={c.dispatched ? 'success' : 'warning'}>{c.dispatched ? 'Yes' : 'No'}</Badge> },
               { key: 'note', header: 'Note', render: (c) => c.dispatchNote ?? '—' },
               { key: 'created', header: 'Issued', render: (c) => new Date(c.createdAt).toLocaleString() },
+              {
+                key: 'history',
+                header: '',
+                render: (c) => (
+                  <button
+                    type="button"
+                    className="sakar-btn sakar-btn--secondary"
+                    onClick={() => setSelectedCommandId(selectedCommandId === c.id ? null : c.id)}
+                  >
+                    {selectedCommandId === c.id ? 'Hide history' : 'View history'}
+                  </button>
+                ),
+              },
             ]}
           />
         )}
       </Card>
+
+      {selectedCommandId && <CommandHistorySection robotId={robot.id} commandId={selectedCommandId} />}
     </div>
+  );
+}
+
+// Newest-first lifecycle ledger for one command (GET .../commands/{commandId}/results)
+// — a separate component/hook call so it only fetches once a command is actually
+// selected, and independently of the command list's own loading/error state.
+function CommandHistorySection({ robotId, commandId }: { robotId: string; commandId: string }) {
+  const { data, status, error, refetch } = useApi(() => getCommandResults(robotId, commandId, 0, 25), [robotId, commandId]);
+
+  return (
+    <Card title="Command Lifecycle History">
+      {status === 'loading' || status === 'idle' ? (
+        <LoadingState title="Loading command history…" />
+      ) : status === 'error' ? (
+        <ErrorState
+          title="Could not load command history"
+          detail={error ?? undefined}
+          action={<button type="button" className="sakar-btn sakar-btn--secondary" onClick={refetch}>Retry</button>}
+        />
+      ) : (data?.content.length ?? 0) === 0 ? (
+        <EmptyState title="No lifecycle events recorded yet" />
+      ) : (
+        <DataTable
+          rows={data!.content}
+          rowKey={(r) => `${r.commandId}-${r.createdAt}`}
+          columns={[
+            { key: 'result', header: 'Result', render: (r) => <Badge tone="neutral">{r.result}</Badge> },
+            { key: 'detail', header: 'Detail', render: (r) => r.detail ?? '—' },
+            { key: 'durationMs', header: 'Duration', render: (r) => (r.durationMs != null ? `${r.durationMs} ms` : '—') },
+            { key: 'createdAt', header: 'Recorded', render: (r) => new Date(r.createdAt).toLocaleString() },
+          ]}
+        />
+      )}
+    </Card>
   );
 }
