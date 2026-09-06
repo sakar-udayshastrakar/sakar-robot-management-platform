@@ -272,6 +272,18 @@ export interface RobotCommand {
   createdAt: string;
 }
 
+// backend/.../command/dto/CommandResultResponse.java — one append-only
+// command_results lifecycle-history row. `result` is always a CommandStatus
+// name (never fabricated); `detail`/`durationMs` are nullable, exactly as
+// the backend record models them.
+export interface CommandResult {
+  commandId: string;
+  result: string;
+  detail: string | null;
+  durationMs: number | null;
+  createdAt: string;
+}
+
 // --- Real telemetry/diagnostics history (Roadmap Phase 9 web-platform gap
 // analysis STEP 2) — mirror backend/.../telemetry/dto/RobotTelemetryResponse
 // and .../srels/dto/{RobotEventResponse,RobotErrorResponse,ApplicationLogResponse}
