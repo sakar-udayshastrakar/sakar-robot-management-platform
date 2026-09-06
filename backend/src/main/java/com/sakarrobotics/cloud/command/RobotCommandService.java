@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sakarrobotics.cloud.audit.AuditService;
+import com.sakarrobotics.cloud.command.dto.CommandResultResponse;
 import com.sakarrobotics.cloud.common.error.ApiException;
 import com.sakarrobotics.cloud.common.error.SakarErrorCode;
 import com.sakarrobotics.cloud.mqtt.MqttGatewayService;
@@ -313,6 +314,31 @@ public class RobotCommandService {
     public Page<RobotCommand> listByRobot(UserPrincipal principal, UUID robotId, int page, int pageSize) {
         robotService.getAccessibleOrThrow(principal, robotId);
         return robotCommandRepository.findByRobotIdOrderByIdDesc(robotId, PageRequest.of(page, pageSize));
+    }
+
+    /**
+     * Newest-first {@code command_results} history for one command — the
+     * append-only ledger {@link CommandResultIngestionService}/{@link
+     * CommandExpiryService}/{@link #recordResult} write to, never mutated in
+     * place. Reuses both existing tenant-safe resolvers rather than
+     * inventing new authorization logic: {@link RobotService#getAccessibleOrThrow}
+     * (robot-level org access) and {@link #getAccessibleOrThrow(UserPrincipal, UUID)}
+     * (command-level org access) — then adds the one check neither already
+     * performs, that the resolved command actually belongs to the resolved
+     * robot. A command belonging to a different robot (even one in the same
+     * organization) is reported identically to an unknown command —
+     * {@code COMMAND_NOT_FOUND} — the same anti-enumeration posture
+     * {@link TenantAccessGuard} already applies to cross-tenant robots.
+     */
+    public Page<CommandResultResponse> listResultsByCommand(
+            UserPrincipal principal, UUID robotId, UUID commandId, int page, int pageSize) {
+        Robot robot = robotService.getAccessibleOrThrow(principal, robotId);
+        RobotCommand command = getAccessibleOrThrow(principal, commandId);
+        if (!command.getRobotId().equals(robot.getId())) {
+            throw new ApiException(SakarErrorCode.COMMAND_NOT_FOUND, "Command not found: " + commandId);
+        }
+        return commandResultRepository.findByCommandIdOrderByCreatedAtDesc(commandId, PageRequest.of(page, pageSize))
+                .map(CommandResultResponse::from);
     }
 
     private static NonLockCommandType parseCommandType(String raw) {

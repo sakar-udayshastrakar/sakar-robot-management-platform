@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sakarrobotics.cloud.command.dto.CommandResponse;
+import com.sakarrobotics.cloud.command.dto.CommandResultResponse;
 import com.sakarrobotics.cloud.command.dto.IssueCommandRequest;
 import com.sakarrobotics.cloud.common.web.ApiResponse;
 import com.sakarrobotics.cloud.security.UserPrincipal;
@@ -73,6 +74,22 @@ public class RobotCommandController {
         Page<CommandResponse> result = robotCommandService.listByRobot(principal, robotId, page, pageSize)
                 .map(c -> CommandResponse.from(c, c.getSentAt() != null, dispatchNoteFor(c)));
         return ApiResponse.ok(result);
+    }
+
+    @GetMapping("/{commandId}/results")
+    @PreAuthorize("hasAuthority('ROBOT_VIEW')")
+    @Operation(summary = "List a command's append-only lifecycle/result history, newest first (paginated, same "
+            + "page/pageSize convention as GET /robots/{robotId}/commands). Never fabricated — reflects only what "
+            + "the agent (or, for a KEENON_CLOUD robot, the synchronous vendor round trip) actually reported. "
+            + "Returns COMMAND_NOT_FOUND if commandId does not exist, does not belong to robotId, or is outside "
+            + "the caller's organization.")
+    public ApiResponse<Page<CommandResultResponse>> results(
+            @AuthenticationPrincipal UserPrincipal principal,
+            @PathVariable UUID robotId,
+            @PathVariable UUID commandId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "25") int pageSize) {
+        return ApiResponse.ok(robotCommandService.listResultsByCommand(principal, robotId, commandId, page, pageSize));
     }
 
     /**

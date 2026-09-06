@@ -1,6 +1,8 @@
 package com.sakarrobotics.cloud.command;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -11,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MvcResult;
 
 import com.sakarrobotics.cloud.IntegrationTestSupport;
 import com.sakarrobotics.cloud.iam.PermissionCode;
@@ -31,6 +34,9 @@ import com.sakarrobotics.cloud.robot.registry.RobotModel;
 import com.sakarrobotics.cloud.robot.registry.RobotModelRepository;
 import com.sakarrobotics.cloud.robot.registry.RobotRepository;
 
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+
 /**
  * Non-lock-only enforcement + capability gating + honest dispatch reporting
  * (Roadmap Phase 6 "Remote Commands (non-lock)"). {@code sakar.mqtt.enabled}
@@ -48,6 +54,10 @@ class RobotCommandControllerTest extends IntegrationTestSupport {
     private RobotCapabilityRepository capabilityRepository;
     @Autowired
     private RobotRepository robotRepository;
+    @Autowired
+    private CommandResultRepository commandResultRepository;
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
     void lockCommandType_isRejected_noEndpointAnywhereAcceptsLockOrUnlock() throws Exception {
@@ -260,6 +270,208 @@ class RobotCommandControllerTest extends IntegrationTestSupport {
                         .content("{\"commandType\":\"RETURN_TO_DOCK\"}"))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.error.code").value("ROBOT_NOT_FOUND"));
+    }
+
+    // ---------------------------------------------------------------
+    // GET /{commandId}/results — command lifecycle/result history
+    // (CommandResultResponse integration). Every CommandResult row here is
+    // written directly to commandResultRepository, exactly as the real
+    // writers (CommandResultIngestionService/CommandExpiryService/
+    // RobotCommandService#recordResult) would, since MQTT is disabled in
+    // tests and no agent exists to report one through the real pipeline.
+    // ---------------------------------------------------------------
+
+    @Test
+    void commandResults_returnsHistoryNewestFirst_withCorrectFieldMapping() throws Exception {
+        Role orgAdmin = ensureRole(RoleName.ORG_ADMIN, PermissionCode.ROBOT_CONTROL, PermissionCode.ROBOT_VIEW);
+        Organization org = createOrganization("Org " + UUID.randomUUID(), OrganizationType.DIRECT_CLIENT, null);
+        String email = "admin-" + UUID.randomUUID() + "@example.com";
+        createUser(email, "Password1!", orgAdmin, org.getId());
+        String token = login(email, "Password1!");
+
+        RobotModel model = modelWithCapabilities(RobotCapabilityType.RETURN_TO_DOCK);
+        Robot robot = registerRobot(org.getId(), model.getId());
+        UUID commandId = issueCommand(token, robot.getId(), "RETURN_TO_DOCK");
+
+        CommandResult first = saveResult(commandId, "COMMAND_RECEIVED", "received by agent", null);
+        Thread.sleep(5);
+        CommandResult second = saveResult(commandId, "COMMAND_SUCCESS", "docked", 4200L);
+
+        mockMvc.perform(get("/api/v1/robots/" + robot.getId() + "/commands/" + commandId + "/results")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.content.length()").value(2))
+                .andExpect(jsonPath("$.data.content[0].commandId").value(commandId.toString()))
+                .andExpect(jsonPath("$.data.content[0].result").value("COMMAND_SUCCESS"))
+                .andExpect(jsonPath("$.data.content[0].detail").value("docked"))
+                .andExpect(jsonPath("$.data.content[0].durationMs").value(4200))
+                .andExpect(jsonPath("$.data.content[1].result").value("COMMAND_RECEIVED"))
+                .andExpect(jsonPath("$.data.content[1].detail").value("received by agent"))
+                .andExpect(jsonPath("$.data.content[1].durationMs").doesNotExist())
+                .andExpect(jsonPath("$.data.totalElements").value(2));
+
+        assertThat(first.getId()).isNotEqualTo(second.getId());
+    }
+
+    @Test
+    void commandResults_pagination_respectsPageAndPageSizeParams() throws Exception {
+        Role orgAdmin = ensureRole(RoleName.ORG_ADMIN, PermissionCode.ROBOT_CONTROL, PermissionCode.ROBOT_VIEW);
+        Organization org = createOrganization("Org " + UUID.randomUUID(), OrganizationType.DIRECT_CLIENT, null);
+        String email = "admin-" + UUID.randomUUID() + "@example.com";
+        createUser(email, "Password1!", orgAdmin, org.getId());
+        String token = login(email, "Password1!");
+
+        RobotModel model = modelWithCapabilities(RobotCapabilityType.RETURN_TO_DOCK);
+        Robot robot = registerRobot(org.getId(), model.getId());
+        UUID commandId = issueCommand(token, robot.getId(), "RETURN_TO_DOCK");
+
+        saveResult(commandId, "COMMAND_RECEIVED", "r1", null);
+        Thread.sleep(5);
+        saveResult(commandId, "RUNNING", "r2", null);
+        Thread.sleep(5);
+        saveResult(commandId, "COMMAND_SUCCESS", "r3", 1000L);
+
+        mockMvc.perform(get("/api/v1/robots/" + robot.getId() + "/commands/" + commandId
+                        + "/results?page=0&pageSize=1")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.content.length()").value(1))
+                .andExpect(jsonPath("$.data.content[0].detail").value("r3"))
+                .andExpect(jsonPath("$.data.totalElements").value(3))
+                .andExpect(jsonPath("$.data.totalPages").value(3));
+
+        mockMvc.perform(get("/api/v1/robots/" + robot.getId() + "/commands/" + commandId
+                        + "/results?page=1&pageSize=1")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.content.length()").value(1))
+                .andExpect(jsonPath("$.data.content[0].detail").value("r2"));
+    }
+
+    @Test
+    void commandResults_noResultsYet_returnsNormalEmptyPage() throws Exception {
+        Role orgAdmin = ensureRole(RoleName.ORG_ADMIN, PermissionCode.ROBOT_CONTROL, PermissionCode.ROBOT_VIEW);
+        Organization org = createOrganization("Org " + UUID.randomUUID(), OrganizationType.DIRECT_CLIENT, null);
+        String email = "admin-" + UUID.randomUUID() + "@example.com";
+        createUser(email, "Password1!", orgAdmin, org.getId());
+        String token = login(email, "Password1!");
+
+        // A plain non-Keenon dispatch with MQTT disabled in tests never writes a
+        // CommandResult row at all (see RobotCommandService#issue) — a genuine
+        // "no history yet" case, not a fabricated empty list.
+        RobotModel model = modelWithCapabilities(RobotCapabilityType.RETURN_TO_DOCK);
+        Robot robot = registerRobot(org.getId(), model.getId());
+        UUID commandId = issueCommand(token, robot.getId(), "RETURN_TO_DOCK");
+
+        mockMvc.perform(get("/api/v1/robots/" + robot.getId() + "/commands/" + commandId + "/results")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.content.length()").value(0))
+                .andExpect(jsonPath("$.data.totalElements").value(0));
+    }
+
+    @Test
+    void commandResults_unknownCommandId_returnsCommandNotFound() throws Exception {
+        Role orgAdmin = ensureRole(RoleName.ORG_ADMIN, PermissionCode.ROBOT_CONTROL, PermissionCode.ROBOT_VIEW);
+        Organization org = createOrganization("Org " + UUID.randomUUID(), OrganizationType.DIRECT_CLIENT, null);
+        String email = "admin-" + UUID.randomUUID() + "@example.com";
+        createUser(email, "Password1!", orgAdmin, org.getId());
+        String token = login(email, "Password1!");
+
+        RobotModel model = modelWithCapabilities(RobotCapabilityType.RETURN_TO_DOCK);
+        Robot robot = registerRobot(org.getId(), model.getId());
+
+        mockMvc.perform(get("/api/v1/robots/" + robot.getId() + "/commands/" + UUID.randomUUID() + "/results")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error.code").value("COMMAND_NOT_FOUND"));
+    }
+
+    @Test
+    void commandResults_commandBelongingToAnotherRobot_isRejectedAsCommandNotFound() throws Exception {
+        Role orgAdmin = ensureRole(RoleName.ORG_ADMIN, PermissionCode.ROBOT_CONTROL, PermissionCode.ROBOT_VIEW);
+        Organization org = createOrganization("Org " + UUID.randomUUID(), OrganizationType.DIRECT_CLIENT, null);
+        String email = "admin-" + UUID.randomUUID() + "@example.com";
+        createUser(email, "Password1!", orgAdmin, org.getId());
+        String token = login(email, "Password1!");
+
+        RobotModel model = modelWithCapabilities(RobotCapabilityType.RETURN_TO_DOCK);
+        Robot robotA = registerRobot(org.getId(), model.getId());
+        Robot robotB = registerRobot(org.getId(), model.getId());
+        UUID commandForRobotA = issueCommand(token, robotA.getId(), "RETURN_TO_DOCK");
+        saveResult(commandForRobotA, "COMMAND_RECEIVED", "belongs to robot A", null);
+
+        // Same organization, same caller, but commandForRobotA does not belong to robotB —
+        // must be indistinguishable from an unknown commandId, never a different error.
+        mockMvc.perform(get("/api/v1/robots/" + robotB.getId() + "/commands/" + commandForRobotA + "/results")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error.code").value("COMMAND_NOT_FOUND"));
+    }
+
+    @Test
+    void commandResults_crossOrganizationRobot_isRejectedAsRobotNotFound() throws Exception {
+        Role orgAdmin = ensureRole(RoleName.ORG_ADMIN, PermissionCode.ROBOT_CONTROL, PermissionCode.ROBOT_VIEW);
+        Organization orgA = createOrganization("Org A " + UUID.randomUUID(), OrganizationType.DIRECT_CLIENT, null);
+        Organization orgB = createOrganization("Org B " + UUID.randomUUID(), OrganizationType.DIRECT_CLIENT, null);
+        String emailA = "admin-a-" + UUID.randomUUID() + "@example.com";
+        createUser(emailA, "Password1!", orgAdmin, orgA.getId());
+        String tokenA = login(emailA, "Password1!");
+        String emailB = "admin-b-" + UUID.randomUUID() + "@example.com";
+        createUser(emailB, "Password1!", orgAdmin, orgB.getId());
+        String tokenB = login(emailB, "Password1!");
+
+        RobotModel model = modelWithCapabilities(RobotCapabilityType.RETURN_TO_DOCK);
+        Robot robotInOrgB = registerRobot(orgB.getId(), model.getId());
+        UUID commandId = issueCommand(tokenB, robotInOrgB.getId(), "RETURN_TO_DOCK");
+
+        // Caller from Org A must never see Org B's robot or its command history —
+        // same 404-not-403 anti-enumeration posture as every other robot endpoint.
+        mockMvc.perform(get("/api/v1/robots/" + robotInOrgB.getId() + "/commands/" + commandId + "/results")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + tokenA))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error.code").value("ROBOT_NOT_FOUND"));
+    }
+
+    @Test
+    void commandResults_callerWithoutRobotViewPermission_isForbidden() throws Exception {
+        // A role granted ROBOT_CONTROL (enough to issue the command that sets up this test)
+        // but deliberately never ROBOT_VIEW — a fresh RoleName unused by any other test in
+        // this class, so it cannot accidentally inherit ROBOT_VIEW from another test's grant.
+        Role technician = ensureRole(RoleName.TECHNICIAN, PermissionCode.ROBOT_CONTROL);
+        Organization org = createOrganization("Org " + UUID.randomUUID(), OrganizationType.DIRECT_CLIENT, null);
+        String email = "tech-" + UUID.randomUUID() + "@example.com";
+        createUser(email, "Password1!", technician, org.getId());
+        String token = login(email, "Password1!");
+
+        RobotModel model = modelWithCapabilities(RobotCapabilityType.RETURN_TO_DOCK);
+        Robot robot = registerRobot(org.getId(), model.getId());
+        UUID commandId = issueCommand(token, robot.getId(), "RETURN_TO_DOCK");
+
+        mockMvc.perform(get("/api/v1/robots/" + robot.getId() + "/commands/" + commandId + "/results")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.error.code").value("FORBIDDEN"));
+    }
+
+    private UUID issueCommand(String token, UUID robotId, String commandType) throws Exception {
+        MvcResult result = mockMvc.perform(post("/api/v1/robots/" + robotId + "/commands")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"commandType\":\"" + commandType + "\"}"))
+                .andExpect(status().isCreated())
+                .andReturn();
+        JsonNode body = objectMapper.readTree(result.getResponse().getContentAsString());
+        return UUID.fromString(body.get("data").get("id").asText());
+    }
+
+    private CommandResult saveResult(UUID commandId, String result, String detail, Long durationMs) {
+        CommandResult commandResult = new CommandResult();
+        commandResult.setCommandId(commandId);
+        commandResult.setResult(result);
+        commandResult.setDetail(detail);
+        commandResult.setDurationMs(durationMs);
+        return commandResultRepository.save(commandResult);
     }
 
     private RobotModel modelWithCapabilities(RobotCapabilityType... capabilities) {
