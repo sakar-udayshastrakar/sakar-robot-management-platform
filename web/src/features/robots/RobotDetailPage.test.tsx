@@ -165,6 +165,7 @@ describe('RobotDetailPage', () => {
     vi.spyOn(robotsApi, 'getRobotAreas').mockResolvedValue([
       { vendorAreaId: 'area-1', displayName: 'Lobby' },
     ]);
+    vi.spyOn(robotsApi, 'getRobotMapImage').mockRejectedValue(new ApiRequestError('Map image not found', 404, null));
 
     renderDetailPage();
     await waitFor(() => expect(screen.getByRole('heading', { name: 'CleanBot Alpha' })).toBeInTheDocument());
@@ -173,7 +174,7 @@ describe('RobotDetailPage', () => {
 
     expect(await screen.findByText('Lobby')).toBeInTheDocument();
     expect(screen.getByText('area-1')).toBeInTheDocument();
-    expect(screen.getByText('Robot position: not available.')).toBeInTheDocument();
+    expect(screen.getByText('Map data unavailable')).toBeInTheDocument();
     expect(screen.queryByText('This feature is not connected yet.')).not.toBeInTheDocument();
   });
 

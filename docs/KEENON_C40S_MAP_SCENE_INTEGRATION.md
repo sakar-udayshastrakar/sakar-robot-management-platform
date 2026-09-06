@@ -58,7 +58,7 @@ Live-captured response (pinned as `KeenonRobotAdapterTest.LIVE_CLEANING_STATUS_R
 
 ## 14. Why historical `dTW2N7` must not be hardcoded
 
-`dTW2N7` was Demo Piece's sceneCode at one earlier point (recorded in the archived `SAKAR_KEENON_C40S_LIVE_API_TESTING_REFERENCE.pdf` test-environment table, alongside the same stable `mapId`). It is absent from the current store scene list (`GET scene/v1/info/list`) and was never re-tested against the map endpoints. Between then and the current `7ClJPR`, this robot's sceneCode changed at least once — proof that sceneCode is not stable over time and must never be a compiled-in constant.
+`dTW2N7` was Demo Piece's sceneCode at one earlier point (recorded in the archived `SAKAR_KEENON_C40S_LIVE_API_TESTING_REFERENCE.pdf` test-environment table, alongside the same stable `mapId`). It is absent from the current store scene list (`GET scene/v1/info/list`) and was never re-tested against the map endpoints. **This change was a manual operator action, not an automatic or vendor-driven change**: the robot's active map/scene was manually switched by the operator (from "SR Cleaning" / `dTW2N7` to "F" / `7ClJPR`) between the two observations — nothing in this investigation found or claims that Keenon or the robot ever reassigns a scene on its own. The architectural conclusion is unaffected either way: a scene manually changed once can be manually changed again, so `sceneCode` must still never be a compiled-in constant, must remain per-robot configurable data, and `dTW2N7` must never be used as a fallback.
 
 ## 15. Why mapId and mapMd5 must remain separate concepts
 

@@ -104,6 +104,20 @@ export interface RobotArea {
   displayName: string | null;
 }
 
+// backend/.../map/RobotMapResponse.java — vendorMapId/name/width/height/
+// mapMd5/updatedAt only, mirroring the backend DTO exactly. Deliberately no
+// image URL/path field here: the backend response never includes one (see
+// RobotMapResponse's own Javadoc) — the PNG itself is fetched separately via
+// getRobotMapImage, never a client-constructed path.
+export interface RobotMapMetadata {
+  vendorMapId: string | null;
+  name: string | null;
+  width: number | null;
+  height: number | null;
+  mapMd5: string | null;
+  updatedAt: string;
+}
+
 // backend/.../robot/registry/dto/RobotMqttCredentialResponse.java
 export interface RobotMqttCredentialResponse {
   robotId: string;
