@@ -14,6 +14,7 @@ import { LoadingState, ErrorState, EmptyState } from '../../components/ui/States
 import { ConfirmDialog } from '../../components/ui/ConfirmDialog';
 import { RobotStatusPanel } from './RobotStatusPanel';
 import { RobotMapPanel } from './RobotMapPanel';
+import { KeenonSceneConfigPanel } from './KeenonSceneConfigPanel';
 import { MqttCredentialsPanel } from './MqttCredentialsPanel';
 import { LockUnlockPanel } from './LockUnlockPanel';
 import { RobotDiagnosticsPanel } from './RobotDiagnosticsPanel';
@@ -32,14 +33,17 @@ import './robots.css';
 
 // The 7 Keenon-inspired tabs below "Overview" started as a visual shell only
 // (SAKAR_KEENON_UI_AUDIT.md, Section O — first implementation slice). 'map'
-// is now wired to the real GET /robots/{id}/areas endpoint (RobotMapPanel) —
-// see that component for exactly what is and isn't available. The remaining
-// 6 are still intentionally NOT wired to a backend endpoint: no such API
-// exists today (recurring schedules, cleaning-run history/report
-// generation, fleet statistics aggregation, or per-robot push-notification
-// config are all real gaps tracked in the audit, Sections F/K/N). Rendering
-// a mock table/chart here would misrepresent real robot capability, so each
-// one shows a plain "not connected yet" empty state instead.
+// is wired to the real GET /robots/{id}/areas + map metadata/image endpoints
+// (RobotMapPanel) — see that component for exactly what is and isn't
+// available. 'configuration' is now wired to the real GET/PUT
+// .../keenon/scene-config endpoints (KeenonSceneConfigPanel) — the
+// prerequisite step for 'map' to resolve anything for a KEENON_CLOUD robot
+// at all. The remaining 5 are still intentionally NOT wired to a backend
+// endpoint: no such API exists today (recurring schedules, cleaning-run
+// history/report generation, fleet statistics aggregation, or per-robot
+// push-notification config are all real gaps tracked in the audit, Sections
+// F/K/N). Rendering a mock table/chart here would misrepresent real robot
+// capability, so each one shows a plain "not connected yet" empty state instead.
 type PlannedTabKey = 'map' | 'taskManagement' | 'taskRecord' | 'statistics' | 'trialRunRecord' | 'configuration' | 'cleaningDailyReport';
 type TabKey = 'overview' | PlannedTabKey | 'telemetry' | 'events' | 'errors' | 'alerts' | 'tasks' | 'cleaning' | 'commands' | 'logs' | 'timeline' | 'diagnostics' | 'audit';
 
@@ -269,7 +273,7 @@ export function RobotDetailPage() {
 
       {tab === 'trialRunRecord' && <NotConnectedTab label="Trial Run Record" />}
 
-      {tab === 'configuration' && <NotConnectedTab label="Configuration" />}
+      {tab === 'configuration' && <KeenonSceneConfigPanel robotId={robot.id} />}
 
       {tab === 'cleaningDailyReport' && <NotConnectedTab label="Cleaning Daily Report" />}
 

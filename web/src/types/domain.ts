@@ -118,6 +118,15 @@ export interface RobotMapMetadata {
   updatedAt: string;
 }
 
+// backend/.../integration/keenon/dto/SceneConfigResponse.java — Sakar-owned
+// per-robot Keenon sceneCode configuration, never a live vendor read (see
+// KeenonMapMetadataSyncService's backend Javadoc for why no Keenon endpoint
+// can supply this for C-series robots on this account).
+export interface SceneConfig {
+  sceneCode: string;
+  sceneName: string | null;
+}
+
 // backend/.../robot/registry/dto/RobotMqttCredentialResponse.java
 export interface RobotMqttCredentialResponse {
   robotId: string;
