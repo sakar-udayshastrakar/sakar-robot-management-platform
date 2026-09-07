@@ -76,7 +76,9 @@ class KeenonAreaSyncControllerTest extends IntegrationTestSupport {
         Robot robot = registerKeenonRobot(org.getId(), model.getId(), "94:BA:06:CA:99:F3");
 
         when(keenonApiClient.getAreaList("C00715655", "94:BA:06:CA:99:F3")).thenReturn(objectMapper.readTree(
-                "{\"data\":[{\"areaId\":\"area-1\",\"areaName\":\"Lobby\"},{\"areaId\":\"area-2\",\"areaName\":\"Conference Room\"}]}"));
+                "{\"code\":610000,\"data\":{\"count\":1,\"currentPage\":1,\"pageSize\":100,\"entities\":"
+                        + "[{\"mapId\":\"map-1\",\"floor\":1,\"areaIdList\":[\"area-1\",\"area-2\"],"
+                        + "\"areaNameList\":[\"Lobby\",\"Conference Room\"]}]}}"));
 
         mockMvc.perform(post("/api/v1/robots/" + robot.getId() + "/keenon/areas/sync")
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
@@ -112,7 +114,8 @@ class KeenonAreaSyncControllerTest extends IntegrationTestSupport {
         Robot robot = registerKeenonRobot(org.getId(), model.getId(), "94:BA:06:CA:99:F4");
 
         when(keenonApiClient.getAreaList("C00715655", "94:BA:06:CA:99:F4"))
-                .thenReturn(objectMapper.readTree("{\"data\":[{\"areaId\":\"area-1\",\"areaName\":\"Lobby\"}]}"));
+                .thenReturn(objectMapper.readTree("{\"code\":610000,\"data\":{\"entities\":"
+                        + "[{\"mapId\":\"map-1\",\"floor\":1,\"areaIdList\":[\"area-1\"],\"areaNameList\":[\"Lobby\"]}]}}"));
 
         String body = "{\"storeId\":\"C00715655\"}";
         mockMvc.perform(post("/api/v1/robots/" + robot.getId() + "/keenon/areas/sync")
@@ -225,14 +228,16 @@ class KeenonAreaSyncControllerTest extends IntegrationTestSupport {
         RobotModel model = keenonModelWithGetAreas();
         Robot robot = registerKeenonRobot(org.getId(), model.getId(), "94:BA:06:CA:99:F7");
         when(keenonApiClient.getAreaList("C00715655", "94:BA:06:CA:99:F7"))
-                .thenReturn(objectMapper.readTree("{\"data\":[{\"areaId\":\"area-1\",\"areaName\":\"Lobby\"}]}"));
+                .thenReturn(objectMapper.readTree("{\"code\":610000,\"data\":{\"entities\":"
+                        + "[{\"mapId\":\"map-1\",\"floor\":1,\"areaIdList\":[\"area-1\"],\"areaNameList\":[\"Lobby\"]}]}}"));
         mockMvc.perform(post("/api/v1/robots/" + robot.getId() + "/keenon/areas/sync")
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON).content("{\"storeId\":\"C00715655\"}"))
                 .andExpect(status().isOk());
         assertThat(areaMappingRepository.findByRobotIdAndActiveTrue(robot.getId())).hasSize(1);
 
-        when(keenonApiClient.getAreaList("C00715655", "94:BA:06:CA:99:F7")).thenReturn(objectMapper.readTree("{\"data\":[]}"));
+        when(keenonApiClient.getAreaList("C00715655", "94:BA:06:CA:99:F7"))
+                .thenReturn(objectMapper.readTree("{\"code\":610000,\"data\":{\"entities\":[]}}"));
         mockMvc.perform(post("/api/v1/robots/" + robot.getId() + "/keenon/areas/sync")
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON).content("{\"storeId\":\"C00715655\"}"))

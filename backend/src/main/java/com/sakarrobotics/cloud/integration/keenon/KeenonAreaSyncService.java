@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.StreamSupport;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +34,11 @@ import tools.jackson.databind.JsonNode;
  * exists — never deactivated on a failed/exceptional call, which carries no
  * evidence at all. No area id, map id, or display name is ever invented —
  * a vendor entry with no {@code areaId} is skipped, not fabricated.
+ *
+ * <p><strong>Response envelope:</strong> see {@link KeenonAreaListParser}
+ * for the confirmed-live, raw-captured shape ({@code data.entities[]}, each
+ * entity a per-map/floor group of two parallel arrays) and the two prior
+ * wrong assumptions this replaces.
  */
 @Service
 @RequiredArgsConstructor
@@ -52,29 +56,15 @@ public class KeenonAreaSyncService {
         String robotSn = robot.getExternalRobotId();
 
         JsonNode response = client.getAreaList(storeId, robotSn);
-        JsonNode list = response != null ? response.get("data") : null;
-        List<JsonNode> vendorAreas = list != null && list.isArray()
-                ? StreamSupport.stream(list.spliterator(), false).toList()
-                : List.of();
+        List<KeenonAreaListParser.VendorArea> vendorAreas = KeenonAreaListParser.flatten(response);
 
         Instant now = Instant.now();
         Set<String> seenVendorAreaIds = new HashSet<>();
         List<AreaInfo> result = new ArrayList<>();
 
-        for (JsonNode node : vendorAreas) {
-            String vendorAreaId = textOrNull(node, "areaId");
-            if (vendorAreaId == null) {
-                // A malformed vendor entry with no id — never invent one, just skip it.
-                continue;
-            }
+        for (KeenonAreaListParser.VendorArea vendorArea : vendorAreas) {
+            String vendorAreaId = vendorArea.areaId();
             seenVendorAreaIds.add(vendorAreaId);
-
-            String displayName = textOrNull(node, "areaName");
-            // "mapId" is not part of any live-verified response shape for this endpoint
-            // today (SAKAR_LIVE_API_VALIDATION_MATRIX.md documents only areaId/areaName) —
-            // read defensively in case a future/different account ever returns one, but
-            // never invented: null here is the honest, already-nullable column default.
-            String mapId = textOrNull(node, "mapId");
 
             KeenonAreaMapping mapping = areaMappingRepository.findByRobotIdAndKeenonAreaId(robot.getId(), vendorAreaId)
                     .orElseGet(KeenonAreaMapping::new);
@@ -82,12 +72,12 @@ public class KeenonAreaSyncService {
             mapping.setSiteId(robot.getSiteId());
             mapping.setRobotId(robot.getId());
             mapping.setKeenonStoreId(storeId);
-            mapping.setKeenonMapId(mapId);
+            mapping.setKeenonMapId(vendorArea.mapId());
             mapping.setKeenonAreaId(vendorAreaId);
             // display_name is NOT NULL in the schema — falling back to the vendor's own area
             // id (real data, not a fabricated name) only in the edge case Keenon reports an
             // area with no name at all.
-            mapping.setDisplayName(displayName != null ? displayName : vendorAreaId);
+            mapping.setDisplayName(vendorArea.areaName() != null ? vendorArea.areaName() : vendorAreaId);
             mapping.setActive(true);
             mapping.setLastSyncedAt(now);
             KeenonAreaMapping saved = areaMappingRepository.save(mapping);
@@ -106,9 +96,5 @@ public class KeenonAreaSyncService {
         }
 
         return result;
-    }
-
-    private static String textOrNull(JsonNode node, String field) {
-        return node != null && node.hasNonNull(field) ? node.get(field).asText() : null;
     }
 }
