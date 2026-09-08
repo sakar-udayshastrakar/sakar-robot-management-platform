@@ -8,6 +8,7 @@ import { AuthProvider } from '../auth/AuthContext';
 import { ToastProvider } from '../../components/ui/Toast';
 import * as robotsApi from '../../api/robots';
 import * as sitesApi from '../../api/sites';
+import * as keenonApi from '../../api/keenon';
 import { ApiRequestError } from '../../api/client';
 import type { Robot, Site } from '../../types/domain';
 
@@ -175,6 +176,19 @@ describe('RobotDetailPage', () => {
     expect(await screen.findByText('Lobby')).toBeInTheDocument();
     expect(screen.getByText('area-1')).toBeInTheDocument();
     expect(screen.getByText('Map data unavailable')).toBeInTheDocument();
+    expect(screen.queryByText('This feature is not connected yet.')).not.toBeInTheDocument();
+  });
+
+  it('renders real Keenon scene configuration on the Configuration tab', async () => {
+    vi.spyOn(robotsApi, 'getRobot').mockResolvedValue(sampleRobot);
+    vi.spyOn(keenonApi, 'getSceneConfig').mockResolvedValue({ sceneCode: '7ClJPR', sceneName: 'F' });
+
+    renderDetailPage();
+    await waitFor(() => expect(screen.getByRole('heading', { name: 'CleanBot Alpha' })).toBeInTheDocument());
+
+    await userEvent.click(screen.getByRole('button', { name: 'Configuration' }));
+
+    expect(await screen.findByText('7ClJPR')).toBeInTheDocument();
     expect(screen.queryByText('This feature is not connected yet.')).not.toBeInTheDocument();
   });
 
