@@ -47,6 +47,16 @@ public class Robot extends BaseEntity {
     @Column(name = "external_robot_id")
     private String externalRobotId;
 
+    /**
+     * The vendor's own manufacturer serial (e.g. Keenon {@code mftCode}) —
+     * distinct from {@link #serialNumber}, which is Sakar's own generated
+     * identity ({@code SR-CB-YYYY-NNNNNN}, see {@code
+     * SakarSerialNumberService}). Nullable: not every vendor/robot supplies
+     * one.
+     */
+    @Column(name = "vendor_serial_number")
+    private String vendorSerialNumber;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 16)
     private RobotLifecycleStatus status = RobotLifecycleStatus.REGISTERED;
