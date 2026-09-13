@@ -36,6 +36,15 @@ import tools.jackson.databind.JsonNode;
  * display name falls back to the point id itself — never fabricated, and
  * the observed point id {@code 39} ("1_Charging pile" per
  * SAKAR_LIVE_API_VALIDATION_MATRIX.md §9) is never hardcoded anywhere here.
+ *
+ * <p><strong>Response envelope:</strong> confirmed live by a raw capture —
+ * {@code {data: {robotSn, backPointList: [...]}}}. {@code data} is an
+ * OBJECT, not an array; the points live at {@code data.backPointList}. An
+ * earlier version of this service (and {@link
+ * KeenonRobotAdapter#defaultBackPointId}) read {@code response.get("data")}
+ * directly as the array, which is always non-array for this endpoint's real
+ * shape — silently producing zero back points regardless of what Keenon
+ * actually had configured.
  */
 @Service
 @RequiredArgsConstructor
@@ -52,10 +61,14 @@ public class KeenonBackPointSyncService {
         }
         String robotSn = robot.getExternalRobotId();
 
+        // Confirmed live (raw capture): {"data":{"robotSn":..., "backPointList":[...]}} —
+        // "data" is an OBJECT, the points live at data.backPointList, never a bare array
+        // directly under "data".
         JsonNode response = client.getBackPoints(robotSn);
-        JsonNode list = response != null ? response.get("data") : null;
-        List<JsonNode> vendorPoints = list != null && list.isArray()
-                ? StreamSupport.stream(list.spliterator(), false).toList()
+        JsonNode data = response != null ? response.get("data") : null;
+        JsonNode backPointList = data != null ? data.get("backPointList") : null;
+        List<JsonNode> vendorPoints = backPointList != null && backPointList.isArray()
+                ? StreamSupport.stream(backPointList.spliterator(), false).toList()
                 : List.of();
 
         Instant now = Instant.now();

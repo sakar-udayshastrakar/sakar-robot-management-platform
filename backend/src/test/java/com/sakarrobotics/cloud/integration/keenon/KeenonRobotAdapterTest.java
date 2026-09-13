@@ -522,7 +522,8 @@ class KeenonRobotAdapterTest {
         mapping.setKeenonStoreId("C00715655");
         when(areaMappingRepository.findByIdAndActiveTrue(areaMappingId)).thenReturn(Optional.of(mapping));
 
-        JsonNode backPoints = objectMapper.readTree("{\"data\":[{\"backPointId\":\"BP-1\"}]}");
+        JsonNode backPoints = objectMapper.readTree(
+                "{\"code\":610000,\"data\":{\"robotSn\":\"94:BA:06:CA:99:F3\",\"backPointList\":[{\"backPointId\":\"BP-1\"}]}}");
         when(client.getBackPoints("94:BA:06:CA:99:F3")).thenReturn(backPoints);
 
         JsonNode accepted = objectMapper.readTree("{\"code\":\"610000\",\"bizType\":\"CleanRobotTemporaryTask\"}");
@@ -570,7 +571,8 @@ class KeenonRobotAdapterTest {
         KeenonAreaMapping mapping = new KeenonAreaMapping();
         mapping.setKeenonAreaId("live-area-42");
         when(areaMappingRepository.findByIdAndActiveTrue(areaMappingId)).thenReturn(Optional.of(mapping));
-        when(client.getBackPoints(anyString())).thenReturn(objectMapper.readTree("{\"data\":[{\"backPointId\":\"BP-1\"}]}"));
+        when(client.getBackPoints(anyString())).thenReturn(objectMapper.readTree(
+                "{\"code\":610000,\"data\":{\"robotSn\":\"94:BA:06:CA:99:F3\",\"backPointList\":[{\"backPointId\":\"BP-1\"}]}}"));
         when(client.postTemporaryTask(any())).thenReturn(objectMapper.readTree("{\"code\":\"500001\",\"message\":\"failure\"}"));
 
         var request = new com.sakarrobotics.cloud.robot.adapter.dto.AdapterTaskRequest(
@@ -589,7 +591,8 @@ class KeenonRobotAdapterTest {
         KeenonAreaMapping mapping = new KeenonAreaMapping();
         mapping.setKeenonAreaId("live-area-42");
         when(areaMappingRepository.findByIdAndActiveTrue(areaMappingId)).thenReturn(Optional.of(mapping));
-        when(client.getBackPoints(anyString())).thenReturn(objectMapper.readTree("{\"data\":[{\"backPointId\":\"BP-1\"}]}"));
+        when(client.getBackPoints(anyString())).thenReturn(objectMapper.readTree(
+                "{\"code\":610000,\"data\":{\"robotSn\":\"94:BA:06:CA:99:F3\",\"backPointList\":[{\"backPointId\":\"BP-1\"}]}}"));
         when(client.postTemporaryTask(any()))
                 .thenThrow(new ApiException(SakarErrorCode.VENDOR_API_ERROR, "Keenon Open Platform request failed"));
 
@@ -607,7 +610,80 @@ class KeenonRobotAdapterTest {
         KeenonAreaMapping mapping = new KeenonAreaMapping();
         mapping.setKeenonAreaId("live-area-42");
         when(areaMappingRepository.findByIdAndActiveTrue(areaMappingId)).thenReturn(Optional.of(mapping));
-        when(client.getBackPoints(anyString())).thenReturn(objectMapper.readTree("{\"data\":[]}"));
+        when(client.getBackPoints(anyString())).thenReturn(
+                objectMapper.readTree("{\"code\":610000,\"data\":{\"robotSn\":\"94:BA:06:CA:99:F3\",\"backPointList\":[]}}"));
+
+        var request = new com.sakarrobotics.cloud.robot.adapter.dto.AdapterTaskRequest(
+                "CLEANING", List.of(areaMappingId.toString()), "SWEEP", 1, false);
+
+        assertThatThrownBy(() -> adapter().startTask(robotWithExternalId("94:BA:06:CA:99:F3"), request))
+                .isInstanceOfSatisfying(ApiException.class,
+                        ex -> assertThat(ex.getErrorCode()).isEqualTo(SakarErrorCode.RESOURCE_NOT_FOUND));
+        org.mockito.Mockito.verify(client, org.mockito.Mockito.never()).postTemporaryTask(any());
+    }
+
+    @Test
+    void startTask_missingDataField_throwsResourceNotFound_neverInventsOne() throws Exception {
+        UUID areaMappingId = UUID.randomUUID();
+        KeenonAreaMapping mapping = new KeenonAreaMapping();
+        mapping.setKeenonAreaId("live-area-42");
+        when(areaMappingRepository.findByIdAndActiveTrue(areaMappingId)).thenReturn(Optional.of(mapping));
+        when(client.getBackPoints(anyString())).thenReturn(objectMapper.readTree("{\"code\":610000}"));
+
+        var request = new com.sakarrobotics.cloud.robot.adapter.dto.AdapterTaskRequest(
+                "CLEANING", List.of(areaMappingId.toString()), "SWEEP", 1, false);
+
+        assertThatThrownBy(() -> adapter().startTask(robotWithExternalId("94:BA:06:CA:99:F3"), request))
+                .isInstanceOfSatisfying(ApiException.class,
+                        ex -> assertThat(ex.getErrorCode()).isEqualTo(SakarErrorCode.RESOURCE_NOT_FOUND));
+        org.mockito.Mockito.verify(client, org.mockito.Mockito.never()).postTemporaryTask(any());
+    }
+
+    @Test
+    void startTask_missingBackPointListField_throwsResourceNotFound_neverInventsOne() throws Exception {
+        UUID areaMappingId = UUID.randomUUID();
+        KeenonAreaMapping mapping = new KeenonAreaMapping();
+        mapping.setKeenonAreaId("live-area-42");
+        when(areaMappingRepository.findByIdAndActiveTrue(areaMappingId)).thenReturn(Optional.of(mapping));
+        when(client.getBackPoints(anyString()))
+                .thenReturn(objectMapper.readTree("{\"code\":610000,\"data\":{\"robotSn\":\"94:BA:06:CA:99:F3\"}}"));
+
+        var request = new com.sakarrobotics.cloud.robot.adapter.dto.AdapterTaskRequest(
+                "CLEANING", List.of(areaMappingId.toString()), "SWEEP", 1, false);
+
+        assertThatThrownBy(() -> adapter().startTask(robotWithExternalId("94:BA:06:CA:99:F3"), request))
+                .isInstanceOfSatisfying(ApiException.class,
+                        ex -> assertThat(ex.getErrorCode()).isEqualTo(SakarErrorCode.RESOURCE_NOT_FOUND));
+    }
+
+    @Test
+    void startTask_malformedNonArrayBackPointList_throwsResourceNotFound_neverInventsOne() throws Exception {
+        UUID areaMappingId = UUID.randomUUID();
+        KeenonAreaMapping mapping = new KeenonAreaMapping();
+        mapping.setKeenonAreaId("live-area-42");
+        when(areaMappingRepository.findByIdAndActiveTrue(areaMappingId)).thenReturn(Optional.of(mapping));
+        when(client.getBackPoints(anyString())).thenReturn(objectMapper.readTree(
+                "{\"code\":610000,\"data\":{\"robotSn\":\"94:BA:06:CA:99:F3\",\"backPointList\":\"not-an-array\"}}"));
+
+        var request = new com.sakarrobotics.cloud.robot.adapter.dto.AdapterTaskRequest(
+                "CLEANING", List.of(areaMappingId.toString()), "SWEEP", 1, false);
+
+        assertThatThrownBy(() -> adapter().startTask(robotWithExternalId("94:BA:06:CA:99:F3"), request))
+                .isInstanceOfSatisfying(ApiException.class,
+                        ex -> assertThat(ex.getErrorCode()).isEqualTo(SakarErrorCode.RESOURCE_NOT_FOUND));
+    }
+
+    @Test
+    void startTask_oldIncorrectDataAsArrayBackPointShape_isNotTreatedAsValid_throwsResourceNotFound() throws Exception {
+        // Regression test for the exact bug this fix closes: the real back points live
+        // under "data.backPointList", never a flat array directly under "data" — a
+        // response shaped like the OLD (incorrect) assumption must still resolve to "no
+        // back point configured", not silently mined for a point from the wrong field.
+        UUID areaMappingId = UUID.randomUUID();
+        KeenonAreaMapping mapping = new KeenonAreaMapping();
+        mapping.setKeenonAreaId("live-area-42");
+        when(areaMappingRepository.findByIdAndActiveTrue(areaMappingId)).thenReturn(Optional.of(mapping));
+        when(client.getBackPoints(anyString())).thenReturn(objectMapper.readTree("{\"data\":[{\"backPointId\":\"BP-1\"}]}"));
 
         var request = new com.sakarrobotics.cloud.robot.adapter.dto.AdapterTaskRequest(
                 "CLEANING", List.of(areaMappingId.toString()), "SWEEP", 1, false);

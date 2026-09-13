@@ -198,10 +198,16 @@ public class KeenonRobotAdapter implements RobotAdapter {
     }
 
     private String defaultBackPointId(Robot robot) {
+        // Confirmed live (raw capture): {"data":{"robotSn":..., "backPointList":[...]}} —
+        // "data" is an OBJECT, the points live at data.backPointList, never a bare array
+        // directly under "data" (that earlier assumption never actually matched Keenon's
+        // real shape for this endpoint, which is why this robot's real, live-configured
+        // charging point was never found).
         JsonNode response = client.getBackPoints(externalId(robot));
         JsonNode data = dataOf(response);
-        if (data != null && data.isArray() && !data.isEmpty()) {
-            return textOrNull(data.get(0), "backPointId");
+        JsonNode backPointList = data != null ? data.get("backPointList") : null;
+        if (backPointList != null && backPointList.isArray() && !backPointList.isEmpty()) {
+            return textOrNull(backPointList.get(0), "backPointId");
         }
         throw new ApiException(SakarErrorCode.RESOURCE_NOT_FOUND, "No return/charging point configured for this robot");
     }
