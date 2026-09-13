@@ -72,6 +72,13 @@ class KeenonApiClient {
         return get("/api/open/custom/clean/robot/status?robotSn=" + encode(robotSn));
     }
 
+    // Confirmed live (raw capture): {"code":610000,"msg":"...","data":[{...robot...}]} —
+    // "data" is a flat ARRAY of robot records directly, unlike area-list/back-point (neither
+    // of which is a bare array directly under "data").
+    JsonNode getRobotList(String storeId) {
+        return get("/api/open/data/v1/store/robot/list?storeId=" + encode(storeId));
+    }
+
     JsonNode getAreaList(String storeId, String robotSn) {
         return get("/api/open/custom/clean/robot/area/list?storeId=" + encode(storeId)
                 + "&robotSn=" + encode(robotSn) + "&currentPage=1&pageSize=100");
