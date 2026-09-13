@@ -29,6 +29,20 @@ public class RobotService {
     @Transactional
     public Robot register(UUID organizationId, UUID siteId, UUID robotModelId, String name,
             String serialNumber, String externalRobotId) {
+        return register(organizationId, siteId, robotModelId, name, serialNumber, externalRobotId, null);
+    }
+
+    /**
+     * Same as {@link #register(UUID, UUID, UUID, String, String, String)},
+     * additionally recording the vendor's own manufacturer serial (e.g.
+     * Keenon {@code mftCode}) — distinct from {@code serialNumber}, which is
+     * always Sakar's own generated identity. {@code vendorSerialNumber} is
+     * never validated for uniqueness: it is vendor-owned reference data, not
+     * a Sakar identity field.
+     */
+    @Transactional
+    public Robot register(UUID organizationId, UUID siteId, UUID robotModelId, String name,
+            String serialNumber, String externalRobotId, String vendorSerialNumber) {
         if (robotRepository.existsBySerialNumber(serialNumber)) {
             throw new ApiException(SakarErrorCode.DUPLICATE_SERIAL_NUMBER,
                     "A robot with serial number " + serialNumber + " is already registered");
@@ -58,6 +72,7 @@ public class RobotService {
         robot.setName(name);
         robot.setSerialNumber(serialNumber);
         robot.setExternalRobotId(externalRobotId);
+        robot.setVendorSerialNumber(vendorSerialNumber);
         robot.setStatus(RobotLifecycleStatus.REGISTERED);
         return robotRepository.save(robot);
     }

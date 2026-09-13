@@ -110,16 +110,12 @@ public class KeenonRobotAdapter implements RobotAdapter {
                 .filter(m -> m.getKeenonAreaId() != null)
                 .collect(Collectors.toMap(KeenonAreaMapping::getKeenonAreaId, m -> m.getId().toString(), (a, b) -> a));
 
+        // Response envelope: see KeenonAreaListParser for the confirmed-live, raw-captured
+        // shape (data.entities[], each entity a per-map/floor group of two parallel arrays).
         JsonNode response = client.getAreaList(storeId, externalId(robot));
-        JsonNode list = response != null ? response.get("data") : null;
-        if (list == null || !list.isArray()) {
-            return List.of();
-        }
-        return list.spliterator() == null ? List.of() : java.util.stream.StreamSupport.stream(list.spliterator(), false)
-                .map(node -> {
-                    String vendorAreaId = textOrNull(node, "areaId");
-                    return new AreaInfo(vendorAreaId, textOrNull(node, "areaName"), sakarAreaIdByVendorAreaId.get(vendorAreaId));
-                })
+        return KeenonAreaListParser.flatten(response).stream()
+                .map(vendorArea -> new AreaInfo(vendorArea.areaId(), vendorArea.areaName(),
+                        sakarAreaIdByVendorAreaId.get(vendorArea.areaId())))
                 .toList();
     }
 

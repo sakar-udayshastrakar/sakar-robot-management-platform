@@ -37,6 +37,16 @@ public class RobotModel extends BaseEntity {
     @Column(name = "sakar_product_name")
     private String sakarProductName;
 
+    /**
+     * Sakar-owned model-family prefix used to build this model's serial numbers (e.g. {@code
+     * "CB"} for C40 S — {@code SR-CB-YYYY-NNNNNN}) — see {@code SakarSerialNumberService}. {@code
+     * null} means no prefix has been configured for this model yet; registering a robot of this
+     * model then fails safely ({@code UNSUPPORTED_ROBOT_MODEL_SERIAL_PREFIX}) rather than
+     * inventing one.
+     */
+    @Column(name = "serial_prefix", length = 8)
+    private String serialPrefix;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "adapter_type", nullable = false, length = 32)
     private AdapterType adapterType;

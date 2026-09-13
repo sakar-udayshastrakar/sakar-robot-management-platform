@@ -303,7 +303,33 @@ class KeenonRobotAdapterTest {
     }
 
     @Test
-    void getAreas_mapsAreaIdAndAreaNameFields_andResolvesTheSakarMappingIdForASyncedArea() throws Exception {
+    void getAreas_realCapturedResponse_mapsMapIdFloorAreaIdAndAreaNameFields() throws Exception {
+        // The exact raw body captured live for storeId=C00715655, robotSn=94:BA:06:CA:99:F3.
+        Robot robot = robotWithExternalId("94:BA:06:CA:99:F3");
+        robot.setId(UUID.randomUUID());
+        KeenonAreaMapping mapping = new KeenonAreaMapping();
+        mapping.setId(UUID.randomUUID());
+        mapping.setKeenonStoreId("C00715655");
+        mapping.setKeenonAreaId("8a7bd155598342d08158d34d5a07007d");
+        when(areaMappingRepository.findByRobotIdAndActiveTrue(robot.getId())).thenReturn(java.util.List.of(mapping));
+
+        JsonNode response = objectMapper.readTree("{\"msg\":\"success\",\"code\":610000,\"data\":{\"currentPage\":1,"
+                + "\"pageSize\":100,\"count\":1,\"entities\":[{\"storeId\":\"C00715655\",\"robotSn\":\"94:BA:06:CA:99:F3\","
+                + "\"mapId\":\"4c0075859805496eb452187b3cd91107\",\"floor\":1,"
+                + "\"areaIdList\":[\"8a7bd155598342d08158d34d5a07007d\"],\"areaNameList\":[\"Area5\"]}]},"
+                + "\"errorMsg\":\"success\"}");
+        when(client.getAreaList("C00715655", "94:BA:06:CA:99:F3")).thenReturn(response);
+
+        var areas = adapter().getAreas(robot);
+
+        assertThat(areas).hasSize(1);
+        assertThat(areas.get(0).vendorAreaId()).isEqualTo("8a7bd155598342d08158d34d5a07007d");
+        assertThat(areas.get(0).displayName()).isEqualTo("Area5");
+        assertThat(areas.get(0).sakarAreaId()).isEqualTo(mapping.getId().toString());
+    }
+
+    @Test
+    void getAreas_oneEntityWithMultipleAreas_pairsEachIdWithItsNameByIndex() throws Exception {
         Robot robot = robotWithExternalId("94:BA:06:CA:99:F3");
         robot.setId(UUID.randomUUID());
         KeenonAreaMapping mapping = new KeenonAreaMapping();
@@ -314,8 +340,9 @@ class KeenonRobotAdapterTest {
         mapping.setKeenonAreaId("area-1");
         when(areaMappingRepository.findByRobotIdAndActiveTrue(robot.getId())).thenReturn(java.util.List.of(mapping));
 
-        JsonNode response = objectMapper.readTree(
-                "{\"data\":[{\"areaId\":\"area-1\",\"areaName\":\"Lobby\"},{\"areaId\":\"area-2\",\"areaName\":\"Conference Room\"}]}");
+        JsonNode response = objectMapper.readTree("{\"code\":610000,\"data\":{\"currentPage\":1,\"pageSize\":100,"
+                + "\"count\":1,\"entities\":[{\"mapId\":\"map-1\",\"floor\":1,"
+                + "\"areaIdList\":[\"area-1\",\"area-2\"],\"areaNameList\":[\"Lobby\",\"Conference Room\"]}]}}");
         when(client.getAreaList("C00715655", "94:BA:06:CA:99:F3")).thenReturn(response);
 
         var areas = adapter().getAreas(robot);
@@ -328,6 +355,107 @@ class KeenonRobotAdapterTest {
         assertThat(areas.get(1).displayName()).isEqualTo("Conference Room");
         // No synced mapping row for "area-2" — null, never fabricated.
         assertThat(areas.get(1).sakarAreaId()).isNull();
+    }
+
+    @Test
+    void getAreas_multipleMapFloorEntities_processesAreasFromEveryGroup() throws Exception {
+        Robot robot = robotWithExternalId("94:BA:06:CA:99:F3");
+        robot.setId(UUID.randomUUID());
+        when(areaMappingRepository.findByRobotIdAndActiveTrue(robot.getId()))
+                .thenReturn(java.util.List.of(mappingWithStoreId("C00715655")));
+
+        JsonNode response = objectMapper.readTree("{\"code\":610000,\"data\":{\"entities\":["
+                + "{\"mapId\":\"map-1\",\"floor\":1,\"areaIdList\":[\"area-a\"],\"areaNameList\":[\"AreaA\"]},"
+                + "{\"mapId\":\"map-2\",\"floor\":2,\"areaIdList\":[\"area-b\"],\"areaNameList\":[\"AreaB\"]}"
+                + "]}}");
+        when(client.getAreaList("C00715655", "94:BA:06:CA:99:F3")).thenReturn(response);
+
+        var areas = adapter().getAreas(robot);
+
+        assertThat(areas).extracting(a -> a.vendorAreaId()).containsExactlyInAnyOrder("area-a", "area-b");
+    }
+
+    @Test
+    void getAreas_emptyEntitiesArray_returnsZeroAreas() throws Exception {
+        Robot robot = robotWithExternalId("94:BA:06:CA:99:F3");
+        robot.setId(UUID.randomUUID());
+        when(areaMappingRepository.findByRobotIdAndActiveTrue(robot.getId()))
+                .thenReturn(java.util.List.of(mappingWithStoreId("C00715655")));
+        when(client.getAreaList("C00715655", "94:BA:06:CA:99:F3"))
+                .thenReturn(objectMapper.readTree("{\"code\":610000,\"data\":{\"currentPage\":1,\"pageSize\":100,\"count\":0,\"entities\":[]}}"));
+
+        var areas = adapter().getAreas(robot);
+
+        assertThat(areas).isEmpty();
+    }
+
+    @Test
+    void getAreas_missingDataField_isTreatedAsEmpty() throws Exception {
+        Robot robot = robotWithExternalId("94:BA:06:CA:99:F3");
+        robot.setId(UUID.randomUUID());
+        when(areaMappingRepository.findByRobotIdAndActiveTrue(robot.getId()))
+                .thenReturn(java.util.List.of(mappingWithStoreId("C00715655")));
+        when(client.getAreaList("C00715655", "94:BA:06:CA:99:F3")).thenReturn(objectMapper.readTree("{\"code\":610000}"));
+
+        var areas = adapter().getAreas(robot);
+
+        assertThat(areas).isEmpty();
+    }
+
+    @Test
+    void getAreas_mismatchedIdNameArrayLengths_onlyPairsUpToTheShorterList() throws Exception {
+        Robot robot = robotWithExternalId("94:BA:06:CA:99:F3");
+        robot.setId(UUID.randomUUID());
+        when(areaMappingRepository.findByRobotIdAndActiveTrue(robot.getId()))
+                .thenReturn(java.util.List.of(mappingWithStoreId("C00715655")));
+        JsonNode response = objectMapper.readTree("{\"code\":610000,\"data\":{\"entities\":[{\"mapId\":\"map-1\",\"floor\":1,"
+                + "\"areaIdList\":[\"area-a\",\"area-b\",\"area-c\"],\"areaNameList\":[\"AreaA\",\"AreaB\"]}]}}");
+        when(client.getAreaList("C00715655", "94:BA:06:CA:99:F3")).thenReturn(response);
+
+        var areas = adapter().getAreas(robot);
+
+        assertThat(areas).extracting(a -> a.vendorAreaId()).containsExactly("area-a", "area-b");
+    }
+
+    @Test
+    void getAreas_oldTopLevelEntitiesShape_isNotTreatedAsAValidAreaResponse() throws Exception {
+        // A prior (wrong) fix attempt assumed a top-level "entities" array with no "data"
+        // wrapper. The real envelope nests entities under "data" — this shape must still
+        // resolve to zero areas, not silently succeed.
+        Robot robot = robotWithExternalId("94:BA:06:CA:99:F3");
+        robot.setId(UUID.randomUUID());
+        when(areaMappingRepository.findByRobotIdAndActiveTrue(robot.getId()))
+                .thenReturn(java.util.List.of(mappingWithStoreId("C00715655")));
+        JsonNode response = objectMapper.readTree("{\"entities\":[{\"areaId\":\"area-1\",\"areaName\":\"Lobby\"}]}");
+        when(client.getAreaList("C00715655", "94:BA:06:CA:99:F3")).thenReturn(response);
+
+        var areas = adapter().getAreas(robot);
+
+        assertThat(areas).isEmpty();
+    }
+
+    @Test
+    void getAreas_oldDataAsArrayShape_isNotTreatedAsAValidAreaResponse() throws Exception {
+        // Regression test: the real areas live under "data.entities[].{areaIdList,
+        // areaNameList}", never a flat array directly under "data" — a response shaped
+        // like the OLD (incorrect) assumption must still resolve to zero areas, not
+        // silently mined for areas from the wrong field/shape.
+        Robot robot = robotWithExternalId("94:BA:06:CA:99:F3");
+        robot.setId(UUID.randomUUID());
+        when(areaMappingRepository.findByRobotIdAndActiveTrue(robot.getId()))
+                .thenReturn(java.util.List.of(mappingWithStoreId("C00715655")));
+        JsonNode response = objectMapper.readTree("{\"data\":[{\"areaId\":\"area-1\",\"areaName\":\"Lobby\"}]}");
+        when(client.getAreaList("C00715655", "94:BA:06:CA:99:F3")).thenReturn(response);
+
+        var areas = adapter().getAreas(robot);
+
+        assertThat(areas).isEmpty();
+    }
+
+    private static KeenonAreaMapping mappingWithStoreId(String storeId) {
+        KeenonAreaMapping mapping = new KeenonAreaMapping();
+        mapping.setKeenonStoreId(storeId);
+        return mapping;
     }
 
     @Test
