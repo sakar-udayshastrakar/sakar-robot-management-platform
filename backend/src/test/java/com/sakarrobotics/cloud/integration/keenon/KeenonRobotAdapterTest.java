@@ -39,11 +39,21 @@ class KeenonRobotAdapterTest {
     private KeenonApiClient client;
     @Mock
     private KeenonAreaMappingRepository areaMappingRepository;
+    @Mock
+    private KeenonAreaSyncService areaSyncService;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     private KeenonRobotAdapter adapter() {
-        return new KeenonRobotAdapter(client, areaMappingRepository);
+        return new KeenonRobotAdapter(client, areaMappingRepository, areaSyncService);
+    }
+
+    /** Wires the REAL {@link KeenonAreaSyncService} (built from this test's own client/repository
+     * mocks) instead of the mocked {@link #areaSyncService} field above — used only by the one
+     * test that needs to prove the auto-sync path actually understands Keenon's real response
+     * envelope end to end, not just that {@code getAreas} calls a (mocked) sync service. */
+    private KeenonRobotAdapter adapterWithRealSyncService() {
+        return new KeenonRobotAdapter(client, areaMappingRepository, new KeenonAreaSyncService(client, areaMappingRepository));
     }
 
     private Robot robotWithExternalId(String externalId) {
@@ -302,155 +312,18 @@ class KeenonRobotAdapterTest {
         assertThat(result.vendorContacted()).isFalse();
     }
 
-    @Test
-    void getAreas_realCapturedResponse_mapsMapIdFloorAreaIdAndAreaNameFields() throws Exception {
-        // The exact raw body captured live for storeId=C00715655, robotSn=94:BA:06:CA:99:F3.
-        Robot robot = robotWithExternalId("94:BA:06:CA:99:F3");
-        robot.setId(UUID.randomUUID());
-        KeenonAreaMapping mapping = new KeenonAreaMapping();
-        mapping.setId(UUID.randomUUID());
-        mapping.setKeenonStoreId("C00715655");
-        mapping.setKeenonAreaId("8a7bd155598342d08158d34d5a07007d");
-        when(areaMappingRepository.findByRobotIdAndActiveTrue(robot.getId())).thenReturn(java.util.List.of(mapping));
-
-        JsonNode response = objectMapper.readTree("{\"msg\":\"success\",\"code\":610000,\"data\":{\"currentPage\":1,"
-                + "\"pageSize\":100,\"count\":1,\"entities\":[{\"storeId\":\"C00715655\",\"robotSn\":\"94:BA:06:CA:99:F3\","
-                + "\"mapId\":\"4c0075859805496eb452187b3cd91107\",\"floor\":1,"
-                + "\"areaIdList\":[\"8a7bd155598342d08158d34d5a07007d\"],\"areaNameList\":[\"Area5\"]}]},"
-                + "\"errorMsg\":\"success\"}");
-        when(client.getAreaList("C00715655", "94:BA:06:CA:99:F3")).thenReturn(response);
-
-        var areas = adapter().getAreas(robot);
-
-        assertThat(areas).hasSize(1);
-        assertThat(areas.get(0).vendorAreaId()).isEqualTo("8a7bd155598342d08158d34d5a07007d");
-        assertThat(areas.get(0).displayName()).isEqualTo("Area5");
-        assertThat(areas.get(0).sakarAreaId()).isEqualTo(mapping.getId().toString());
-    }
-
-    @Test
-    void getAreas_oneEntityWithMultipleAreas_pairsEachIdWithItsNameByIndex() throws Exception {
-        Robot robot = robotWithExternalId("94:BA:06:CA:99:F3");
-        robot.setId(UUID.randomUUID());
-        KeenonAreaMapping mapping = new KeenonAreaMapping();
-        mapping.setId(UUID.randomUUID());
-        mapping.setKeenonStoreId("C00715655");
-        // Only "area-1" has a synced Sakar mapping row — "area-2" below is a real vendor
-        // area Keenon currently reports that has no corresponding Sakar row yet.
-        mapping.setKeenonAreaId("area-1");
-        when(areaMappingRepository.findByRobotIdAndActiveTrue(robot.getId())).thenReturn(java.util.List.of(mapping));
-
-        JsonNode response = objectMapper.readTree("{\"code\":610000,\"data\":{\"currentPage\":1,\"pageSize\":100,"
-                + "\"count\":1,\"entities\":[{\"mapId\":\"map-1\",\"floor\":1,"
-                + "\"areaIdList\":[\"area-1\",\"area-2\"],\"areaNameList\":[\"Lobby\",\"Conference Room\"]}]}}");
-        when(client.getAreaList("C00715655", "94:BA:06:CA:99:F3")).thenReturn(response);
-
-        var areas = adapter().getAreas(robot);
-
-        assertThat(areas).hasSize(2);
-        assertThat(areas.get(0).vendorAreaId()).isEqualTo("area-1");
-        assertThat(areas.get(0).displayName()).isEqualTo("Lobby");
-        assertThat(areas.get(0).sakarAreaId()).isEqualTo(mapping.getId().toString());
-        assertThat(areas.get(1).vendorAreaId()).isEqualTo("area-2");
-        assertThat(areas.get(1).displayName()).isEqualTo("Conference Room");
-        // No synced mapping row for "area-2" — null, never fabricated.
-        assertThat(areas.get(1).sakarAreaId()).isNull();
-    }
-
-    @Test
-    void getAreas_multipleMapFloorEntities_processesAreasFromEveryGroup() throws Exception {
-        Robot robot = robotWithExternalId("94:BA:06:CA:99:F3");
-        robot.setId(UUID.randomUUID());
-        when(areaMappingRepository.findByRobotIdAndActiveTrue(robot.getId()))
-                .thenReturn(java.util.List.of(mappingWithStoreId("C00715655")));
-
-        JsonNode response = objectMapper.readTree("{\"code\":610000,\"data\":{\"entities\":["
-                + "{\"mapId\":\"map-1\",\"floor\":1,\"areaIdList\":[\"area-a\"],\"areaNameList\":[\"AreaA\"]},"
-                + "{\"mapId\":\"map-2\",\"floor\":2,\"areaIdList\":[\"area-b\"],\"areaNameList\":[\"AreaB\"]}"
-                + "]}}");
-        when(client.getAreaList("C00715655", "94:BA:06:CA:99:F3")).thenReturn(response);
-
-        var areas = adapter().getAreas(robot);
-
-        assertThat(areas).extracting(a -> a.vendorAreaId()).containsExactlyInAnyOrder("area-a", "area-b");
-    }
-
-    @Test
-    void getAreas_emptyEntitiesArray_returnsZeroAreas() throws Exception {
-        Robot robot = robotWithExternalId("94:BA:06:CA:99:F3");
-        robot.setId(UUID.randomUUID());
-        when(areaMappingRepository.findByRobotIdAndActiveTrue(robot.getId()))
-                .thenReturn(java.util.List.of(mappingWithStoreId("C00715655")));
-        when(client.getAreaList("C00715655", "94:BA:06:CA:99:F3"))
-                .thenReturn(objectMapper.readTree("{\"code\":610000,\"data\":{\"currentPage\":1,\"pageSize\":100,\"count\":0,\"entities\":[]}}"));
-
-        var areas = adapter().getAreas(robot);
-
-        assertThat(areas).isEmpty();
-    }
-
-    @Test
-    void getAreas_missingDataField_isTreatedAsEmpty() throws Exception {
-        Robot robot = robotWithExternalId("94:BA:06:CA:99:F3");
-        robot.setId(UUID.randomUUID());
-        when(areaMappingRepository.findByRobotIdAndActiveTrue(robot.getId()))
-                .thenReturn(java.util.List.of(mappingWithStoreId("C00715655")));
-        when(client.getAreaList("C00715655", "94:BA:06:CA:99:F3")).thenReturn(objectMapper.readTree("{\"code\":610000}"));
-
-        var areas = adapter().getAreas(robot);
-
-        assertThat(areas).isEmpty();
-    }
-
-    @Test
-    void getAreas_mismatchedIdNameArrayLengths_onlyPairsUpToTheShorterList() throws Exception {
-        Robot robot = robotWithExternalId("94:BA:06:CA:99:F3");
-        robot.setId(UUID.randomUUID());
-        when(areaMappingRepository.findByRobotIdAndActiveTrue(robot.getId()))
-                .thenReturn(java.util.List.of(mappingWithStoreId("C00715655")));
-        JsonNode response = objectMapper.readTree("{\"code\":610000,\"data\":{\"entities\":[{\"mapId\":\"map-1\",\"floor\":1,"
-                + "\"areaIdList\":[\"area-a\",\"area-b\",\"area-c\"],\"areaNameList\":[\"AreaA\",\"AreaB\"]}]}}");
-        when(client.getAreaList("C00715655", "94:BA:06:CA:99:F3")).thenReturn(response);
-
-        var areas = adapter().getAreas(robot);
-
-        assertThat(areas).extracting(a -> a.vendorAreaId()).containsExactly("area-a", "area-b");
-    }
-
-    @Test
-    void getAreas_oldTopLevelEntitiesShape_isNotTreatedAsAValidAreaResponse() throws Exception {
-        // A prior (wrong) fix attempt assumed a top-level "entities" array with no "data"
-        // wrapper. The real envelope nests entities under "data" — this shape must still
-        // resolve to zero areas, not silently succeed.
-        Robot robot = robotWithExternalId("94:BA:06:CA:99:F3");
-        robot.setId(UUID.randomUUID());
-        when(areaMappingRepository.findByRobotIdAndActiveTrue(robot.getId()))
-                .thenReturn(java.util.List.of(mappingWithStoreId("C00715655")));
-        JsonNode response = objectMapper.readTree("{\"entities\":[{\"areaId\":\"area-1\",\"areaName\":\"Lobby\"}]}");
-        when(client.getAreaList("C00715655", "94:BA:06:CA:99:F3")).thenReturn(response);
-
-        var areas = adapter().getAreas(robot);
-
-        assertThat(areas).isEmpty();
-    }
-
-    @Test
-    void getAreas_oldDataAsArrayShape_isNotTreatedAsAValidAreaResponse() throws Exception {
-        // Regression test: the real areas live under "data.entities[].{areaIdList,
-        // areaNameList}", never a flat array directly under "data" — a response shaped
-        // like the OLD (incorrect) assumption must still resolve to zero areas, not
-        // silently mined for areas from the wrong field/shape.
-        Robot robot = robotWithExternalId("94:BA:06:CA:99:F3");
-        robot.setId(UUID.randomUUID());
-        when(areaMappingRepository.findByRobotIdAndActiveTrue(robot.getId()))
-                .thenReturn(java.util.List.of(mappingWithStoreId("C00715655")));
-        JsonNode response = objectMapper.readTree("{\"data\":[{\"areaId\":\"area-1\",\"areaName\":\"Lobby\"}]}");
-        when(client.getAreaList("C00715655", "94:BA:06:CA:99:F3")).thenReturn(response);
-
-        var areas = adapter().getAreas(robot);
-
-        assertThat(areas).isEmpty();
-    }
+    // ------------------------------------------------------------------
+    // GET /areas — DB-first read, with on-demand re-sync via the EXISTING
+    // KeenonAreaSyncService when no area mapping is currently active for
+    // this robot (auto area-sync slice). This method no longer parses
+    // Keenon's own entities[] envelope itself — it always delegates that to
+    // the one existing sync service, never a second implementation.
+    // Envelope-shape parsing itself (real captured response, multiple
+    // entities, mismatched array lengths, the two previously-wrong shapes,
+    // etc.) is exhaustively covered by KeenonAreaSyncServiceTest, which
+    // exercises the exact same KeenonAreaListParser this read path now
+    // reaches only through KeenonAreaSyncService#sync.
+    // ------------------------------------------------------------------
 
     private static KeenonAreaMapping mappingWithStoreId(String storeId) {
         KeenonAreaMapping mapping = new KeenonAreaMapping();
@@ -459,29 +332,129 @@ class KeenonRobotAdapterTest {
     }
 
     @Test
-    void getAreas_withoutSyncedStoreMapping_throwsResourceNotFound() {
+    void getAreas_activeMappingsExist_returnsThemDirectlyFromTheDb_neverTriggersASync() {
         Robot robot = robotWithExternalId("94:BA:06:CA:99:F3");
         robot.setId(UUID.randomUUID());
-        when(areaMappingRepository.findByRobotIdAndActiveTrue(robot.getId())).thenReturn(java.util.List.of());
+        KeenonAreaMapping mapping = new KeenonAreaMapping();
+        mapping.setId(UUID.randomUUID());
+        mapping.setKeenonAreaId("area-1");
+        mapping.setDisplayName("Lobby");
+        when(areaMappingRepository.findByRobotIdAndActiveTrue(robot.getId())).thenReturn(List.of(mapping));
+
+        var areas = adapter().getAreas(robot);
+
+        assertThat(areas).hasSize(1);
+        assertThat(areas.get(0).vendorAreaId()).isEqualTo("area-1");
+        assertThat(areas.get(0).displayName()).isEqualTo("Lobby");
+        assertThat(areas.get(0).sakarAreaId()).isEqualTo(mapping.getId().toString());
+        org.mockito.Mockito.verifyNoInteractions(areaSyncService);
+        org.mockito.Mockito.verifyNoInteractions(client);
+    }
+
+    @Test
+    void getAreas_noActiveMappings_triggersTheExistingSyncService_returnsTheNewlySyncedAreas() {
+        Robot robot = robotWithExternalId("94:BA:06:CA:99:F3");
+        robot.setId(UUID.randomUUID());
+        KeenonAreaMapping syncedMapping = new KeenonAreaMapping();
+        syncedMapping.setId(UUID.randomUUID());
+        syncedMapping.setKeenonAreaId("area-new");
+        syncedMapping.setDisplayName("New Area");
+        when(areaMappingRepository.findByRobotIdAndActiveTrue(robot.getId()))
+                .thenReturn(List.of())
+                .thenReturn(List.of(syncedMapping));
+        // A previously-known store id, recovered from a mapping row even though it is not
+        // currently active — this robot has been synced before, so no store id is invented.
+        when(areaMappingRepository.findByRobotId(robot.getId())).thenReturn(List.of(mappingWithStoreId("C00715655")));
+
+        var areas = adapter().getAreas(robot);
+
+        verify(areaSyncService).sync(robot, "C00715655");
+        assertThat(areas).hasSize(1);
+        assertThat(areas.get(0).vendorAreaId()).isEqualTo("area-new");
+        assertThat(areas.get(0).displayName()).isEqualTo("New Area");
+    }
+
+    @Test
+    void getAreas_noActiveMappings_syncReturnsZeroAreas_returnsAnEmptyListRatherThanFabricatingAny() {
+        Robot robot = robotWithExternalId("94:BA:06:CA:99:F3");
+        robot.setId(UUID.randomUUID());
+        when(areaMappingRepository.findByRobotIdAndActiveTrue(robot.getId())).thenReturn(List.of());
+        when(areaMappingRepository.findByRobotId(robot.getId())).thenReturn(List.of(mappingWithStoreId("C00715655")));
+        when(areaSyncService.sync(robot, "C00715655")).thenReturn(List.of());
+
+        var areas = adapter().getAreas(robot);
+
+        assertThat(areas).isEmpty();
+        verify(areaSyncService).sync(robot, "C00715655");
+    }
+
+    @Test
+    void getAreas_noMappingRowAtAll_throwsResourceNotFound_neverAttemptsASyncWithAnInventedStoreId() {
+        Robot robot = robotWithExternalId("94:BA:06:CA:99:F3");
+        robot.setId(UUID.randomUUID());
+        when(areaMappingRepository.findByRobotIdAndActiveTrue(robot.getId())).thenReturn(List.of());
+        when(areaMappingRepository.findByRobotId(robot.getId())).thenReturn(List.of());
 
         assertThatThrownBy(() -> adapter().getAreas(robot))
                 .isInstanceOfSatisfying(ApiException.class,
                         ex -> assertThat(ex.getErrorCode()).isEqualTo(SakarErrorCode.RESOURCE_NOT_FOUND));
+        org.mockito.Mockito.verifyNoInteractions(areaSyncService);
     }
 
     @Test
-    void getAreas_whenVendorApiFails_propagatesTheFailureRatherThanReturningEmptyAreas() {
+    void getAreas_noActiveMappings_syncFailsWithAVendorError_propagatesIt_neverReportsAnEmptyListInstead() {
         Robot robot = robotWithExternalId("94:BA:06:CA:99:F3");
         robot.setId(UUID.randomUUID());
-        KeenonAreaMapping mapping = new KeenonAreaMapping();
-        mapping.setKeenonStoreId("C00715655");
-        when(areaMappingRepository.findByRobotIdAndActiveTrue(robot.getId())).thenReturn(java.util.List.of(mapping));
-        when(client.getAreaList(anyString(), anyString()))
+        when(areaMappingRepository.findByRobotIdAndActiveTrue(robot.getId())).thenReturn(List.of());
+        when(areaMappingRepository.findByRobotId(robot.getId())).thenReturn(List.of(mappingWithStoreId("C00715655")));
+        when(areaSyncService.sync(robot, "C00715655"))
                 .thenThrow(new ApiException(SakarErrorCode.VENDOR_API_ERROR, "Keenon Open Platform request failed"));
 
         assertThatThrownBy(() -> adapter().getAreas(robot))
                 .isInstanceOfSatisfying(ApiException.class,
                         ex -> assertThat(ex.getErrorCode()).isEqualTo(SakarErrorCode.VENDOR_API_ERROR));
+    }
+
+    @Test
+    void getAreas_endToEndWithTheRealSyncService_handlesTheActualEntitiesResponseShape() throws Exception {
+        // Unlike the tests above (which mock areaSyncService itself), this wires the REAL
+        // KeenonAreaSyncService against this test's own client/repository mocks — proving
+        // this read path actually understands Keenon's real {data:{entities:[...]}}
+        // envelope end to end, not merely that getAreas calls a mocked sync service.
+        Robot robot = robotWithExternalId("94:BA:06:CA:99:F3");
+        robot.setId(UUID.randomUUID());
+        robot.setOrganizationId(UUID.randomUUID());
+        robot.setSiteId(UUID.randomUUID());
+        when(areaMappingRepository.findByRobotId(robot.getId())).thenReturn(List.of(mappingWithStoreId("C00715655")));
+        when(areaMappingRepository.findByRobotIdAndKeenonAreaId(any(), any())).thenReturn(Optional.empty());
+        JsonNode response = objectMapper.readTree("{\"msg\":\"success\",\"code\":610000,\"data\":{\"currentPage\":1,"
+                + "\"pageSize\":100,\"count\":1,\"entities\":[{\"storeId\":\"C00715655\",\"robotSn\":\"94:BA:06:CA:99:F3\","
+                + "\"mapId\":\"4c0075859805496eb452187b3cd91107\",\"floor\":1,"
+                + "\"areaIdList\":[\"8a7bd155598342d08158d34d5a07007d\"],\"areaNameList\":[\"Area5\"]}]},"
+                + "\"errorMsg\":\"success\"}");
+        when(client.getAreaList("C00715655", "94:BA:06:CA:99:F3")).thenReturn(response);
+        List<KeenonAreaMapping> persisted = new java.util.ArrayList<>();
+        when(areaMappingRepository.save(any())).thenAnswer(inv -> {
+            KeenonAreaMapping saved = inv.getArgument(0);
+            if (saved.getId() == null) {
+                saved.setId(UUID.randomUUID());
+            }
+            persisted.add(saved);
+            return saved;
+        });
+        // First call (getAreas' own initial check) sees nothing yet; every call after the
+        // real sync's own save() (its internal deactivation check, and getAreas' final
+        // re-query) sees whatever has actually been persisted by then.
+        when(areaMappingRepository.findByRobotIdAndActiveTrue(robot.getId()))
+                .thenReturn(List.of())
+                .thenAnswer(inv -> List.copyOf(persisted));
+
+        var areas = adapterWithRealSyncService().getAreas(robot);
+
+        assertThat(areas).hasSize(1);
+        assertThat(areas.get(0).vendorAreaId()).isEqualTo("8a7bd155598342d08158d34d5a07007d");
+        assertThat(areas.get(0).displayName()).isEqualTo("Area5");
+        assertThat(areas.get(0).sakarAreaId()).isNotBlank();
     }
 
     @Test

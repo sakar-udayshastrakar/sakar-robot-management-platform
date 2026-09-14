@@ -79,6 +79,8 @@ class KeenonStartTaskEndToEndTest {
     private KeenonApiClient keenonApiClient;
     @Mock
     private KeenonAreaMappingRepository areaMappingRepository;
+    @Mock
+    private KeenonAreaSyncService keenonAreaSyncService;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
     private UserPrincipal principal;
@@ -104,7 +106,7 @@ class KeenonStartTaskEndToEndTest {
         principal = new UserPrincipal(UUID.randomUUID(), "admin@example.com", UUID.randomUUID(), "/org",
                 RoleName.ORG_ADMIN, Set.of());
         // Real adapter, real registry — only the HTTP-boundary client is a mock.
-        realKeenonAdapter = new KeenonRobotAdapter(keenonApiClient, areaMappingRepository);
+        realKeenonAdapter = new KeenonRobotAdapter(keenonApiClient, areaMappingRepository, keenonAreaSyncService);
         realRegistry = new RobotAdapterRegistry(List.of(realKeenonAdapter));
         lenient().when(robotCommandRepository.save(any())).thenAnswer(inv -> {
             RobotCommand command = inv.getArgument(0);

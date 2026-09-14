@@ -23,4 +23,13 @@ public interface KeenonAreaMappingRepository extends JpaRepository<KeenonAreaMap
      * the scheduler never invents a storeId for a robot that has never been synced before.
      */
     List<KeenonAreaMapping> findByActiveTrue();
+
+    /**
+     * Every mapping for a robot regardless of {@code active} — used by {@code
+     * KeenonRobotAdapter#getAreas} to recover a previously-known Keenon store id when every
+     * active mapping has been deactivated (e.g. a prior sync's live response reported zero
+     * areas), so an on-demand re-sync can still be attempted. Never used to fabricate a store
+     * id for a robot with no prior mapping row at all.
+     */
+    List<KeenonAreaMapping> findByRobotId(UUID robotId);
 }
