@@ -4,7 +4,6 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
@@ -24,6 +23,7 @@ import com.sakarrobotics.cloud.robot.registry.Robot;
 import com.sakarrobotics.cloud.robot.registry.RobotCapabilityType;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * The current, live-tested, KEENON-CLOUD DEPENDENT integration
@@ -39,6 +39,7 @@ import lombok.RequiredArgsConstructor;
  * Peanut-SDK-based local path remains {@code REQUIRES PHYSICAL C40 TEST}
  * (Part 11) — no adapter in this codebase implements lock/unlock.
  */
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class KeenonRobotAdapter implements RobotAdapter {
@@ -57,6 +58,7 @@ public class KeenonRobotAdapter implements RobotAdapter {
 
     private final KeenonApiClient client;
     private final KeenonAreaMappingRepository areaMappingRepository;
+    private final KeenonAreaSyncService areaSyncService;
 
     @Override
     public AdapterType adapterType() {
@@ -96,27 +98,37 @@ public class KeenonRobotAdapter implements RobotAdapter {
 
     @Override
     public List<AreaInfo> getAreas(Robot robot) {
-        List<KeenonAreaMapping> mappings = areaMappingRepository.findByRobotIdAndActiveTrue(robot.getId());
-        String storeId = mappings.stream()
+        List<KeenonAreaMapping> activeMappings = areaMappingRepository.findByRobotIdAndActiveTrue(robot.getId());
+        if (!activeMappings.isEmpty()) {
+            return activeMappings.stream().map(KeenonRobotAdapter::toAreaInfo).toList();
+        }
+
+        // No currently-synced area for this robot — before failing outright, recover the
+        // Keenon store id from ANY prior mapping row (active or not; a previous sync's live
+        // response may have deactivated every area without erasing the store id itself) and
+        // re-run the existing KeenonAreaSyncService, the same writer KeenonAreaSyncController
+        // already exposes — no second sync implementation, no duplicated Keenon call/parsing
+        // logic. A robot with no mapping row at all has never been configured with a store
+        // id, and none is fabricated here.
+        String storeId = areaMappingRepository.findByRobotId(robot.getId()).stream()
                 .findFirst()
                 .map(KeenonAreaMapping::getKeenonStoreId)
                 .orElseThrow(() -> new ApiException(SakarErrorCode.RESOURCE_NOT_FOUND,
                         "No synced Keenon store mapping for robot " + robot.getId()));
-        // Correlates each LIVE vendor area (by its current keenonAreaId) back to the Sakar
-        // mapping row a caller needs for START_TASK — a vendor area with no synced row yet
-        // simply has no entry here, never a fabricated one. first-wins on a duplicate
-        // keenonAreaId rather than assuming the data is always perfectly deduplicated.
-        Map<String, String> sakarAreaIdByVendorAreaId = mappings.stream()
-                .filter(m -> m.getKeenonAreaId() != null)
-                .collect(Collectors.toMap(KeenonAreaMapping::getKeenonAreaId, m -> m.getId().toString(), (a, b) -> a));
 
-        // Response envelope: see KeenonAreaListParser for the confirmed-live, raw-captured
-        // shape (data.entities[], each entity a per-map/floor group of two parallel arrays).
-        JsonNode response = client.getAreaList(storeId, externalId(robot));
-        return KeenonAreaListParser.flatten(response).stream()
-                .map(vendorArea -> new AreaInfo(vendorArea.areaId(), vendorArea.areaName(),
-                        sakarAreaIdByVendorAreaId.get(vendorArea.areaId())))
+        List<AreaInfo> synced = areaSyncService.sync(robot, storeId);
+        if (synced.isEmpty()) {
+            log.info("Keenon area sync for robot {} (store {}) returned zero areas", robot.getId(), storeId);
+        }
+        // Re-read from the DB rather than trusting sync()'s own return value directly — the
+        // mapping table is the single source of truth this method always reads from.
+        return areaMappingRepository.findByRobotIdAndActiveTrue(robot.getId()).stream()
+                .map(KeenonRobotAdapter::toAreaInfo)
                 .toList();
+    }
+
+    private static AreaInfo toAreaInfo(KeenonAreaMapping mapping) {
+        return new AreaInfo(mapping.getKeenonAreaId(), mapping.getDisplayName(), mapping.getId().toString());
     }
 
     @Override
@@ -198,10 +210,16 @@ public class KeenonRobotAdapter implements RobotAdapter {
     }
 
     private String defaultBackPointId(Robot robot) {
+        // Confirmed live (raw capture): {"data":{"robotSn":..., "backPointList":[...]}} —
+        // "data" is an OBJECT, the points live at data.backPointList, never a bare array
+        // directly under "data" (that earlier assumption never actually matched Keenon's
+        // real shape for this endpoint, which is why this robot's real, live-configured
+        // charging point was never found).
         JsonNode response = client.getBackPoints(externalId(robot));
         JsonNode data = dataOf(response);
-        if (data != null && data.isArray() && !data.isEmpty()) {
-            return textOrNull(data.get(0), "backPointId");
+        JsonNode backPointList = data != null ? data.get("backPointList") : null;
+        if (backPointList != null && backPointList.isArray() && !backPointList.isEmpty()) {
+            return textOrNull(backPointList.get(0), "backPointId");
         }
         throw new ApiException(SakarErrorCode.RESOURCE_NOT_FOUND, "No return/charging point configured for this robot");
     }

@@ -29,7 +29,13 @@ import tools.jackson.databind.ObjectMapper;
  * Keenon back/charging-point-sync slice. Mirrors
  * {@code KeenonCleaningModeSyncServiceTest}: upsert-not-duplicate,
  * deactivate-only-on-real-evidence, never inventing a point id or
- * display name — and never hardcoding the observed point id {@code 39}.
+ * display name — and never hardcoding the observed point id.
+ *
+ * <p>Every mocked response here uses the REAL, raw-captured live envelope
+ * (see {@link KeenonBackPointSyncService}'s Javadoc) — {@code {data:
+ * {robotSn, backPointList: [...]}}} — where {@code data} is an OBJECT and
+ * the points live at {@code data.backPointList}, never a bare array
+ * directly under {@code data}.
  */
 @ExtendWith(MockitoExtension.class)
 class KeenonBackPointSyncServiceTest {
@@ -64,14 +70,42 @@ class KeenonBackPointSyncServiceTest {
         });
     }
 
+    /** Builds the real, confirmed-live envelope shape around a hand-supplied {@code backPointList} JSON array literal. */
+    private JsonNode envelope(String backPointListJsonArray) throws Exception {
+        return objectMapper.readTree("{\"msg\":\"success\",\"code\":610000,\"data\":{\"robotSn\":\"94:BA:06:CA:99:F3\","
+                + "\"backPointList\":" + backPointListJsonArray + "},\"errorMsg\":\"success\"}");
+    }
+
+    @Test
+    void sync_realCapturedResponse_producesTheExactLiveEvidencedBackPoint() throws Exception {
+        // The exact raw body captured live for robotSn=94:BA:06:CA:99:F3.
+        Robot robot = aKeenonRobot();
+        stubSaveEchoesArgumentWithGeneratedId();
+        when(backPointMappingRepository.findByRobotIdAndKeenonBackPointId(robot.getId(), "1")).thenReturn(Optional.empty());
+        when(backPointMappingRepository.findByRobotIdAndActiveTrue(robot.getId())).thenReturn(List.of());
+        JsonNode response = objectMapper.readTree("{\"msg\":\"success\",\"code\":610000,\"data\":{\"robotSn\":\"94:BA:06:CA:99:F3\","
+                + "\"backPointList\":[{\"backPointId\":\"1\",\"backPointName\":\"1_Charging pile2\","
+                + "\"backPointType\":\"charge\",\"backPointFloor\":1}]},\"errorMsg\":\"success\"}");
+        when(client.getBackPoints("94:BA:06:CA:99:F3")).thenReturn(response);
+
+        List<KeenonBackPointMapping> result = service().sync(robot);
+
+        assertThat(result).hasSize(1);
+        assertThat(result.get(0).getKeenonBackPointId()).isEqualTo("1");
+        assertThat(result.get(0).getDisplayName()).isEqualTo("1_Charging pile2");
+
+        verify(backPointMappingRepository).save(argThatMapping(m ->
+                "1".equals(m.getKeenonBackPointId()) && "1_Charging pile2".equals(m.getDisplayName())
+                        && m.getRobotId().equals(robot.getId()) && m.isActive() && m.getLastSyncedAt() != null));
+    }
+
     @Test
     void sync_newBackPoints_createsMappings() throws Exception {
         Robot robot = aKeenonRobot();
         stubSaveEchoesArgumentWithGeneratedId();
         when(backPointMappingRepository.findByRobotIdAndKeenonBackPointId(robot.getId(), "39")).thenReturn(Optional.empty());
         when(backPointMappingRepository.findByRobotIdAndActiveTrue(robot.getId())).thenReturn(List.of());
-        JsonNode response = objectMapper.readTree(
-                "{\"data\":[{\"backPointId\":\"39\",\"backPointName\":\"1_Charging pile\"}]}");
+        JsonNode response = envelope("[{\"backPointId\":\"39\",\"backPointName\":\"1_Charging pile\"}]");
         when(client.getBackPoints("94:BA:06:CA:99:F3")).thenReturn(response);
 
         List<KeenonBackPointMapping> result = service().sync(robot);
@@ -91,7 +125,7 @@ class KeenonBackPointSyncServiceTest {
         Robot robot = aKeenonRobot();
         robot.setSerialNumber("SR-CB-2026-000001");
         when(backPointMappingRepository.findByRobotIdAndActiveTrue(robot.getId())).thenReturn(List.of());
-        when(client.getBackPoints(anyString())).thenReturn(objectMapper.readTree("{\"data\":[]}"));
+        when(client.getBackPoints(anyString())).thenReturn(envelope("[]"));
 
         service().sync(robot);
 
@@ -104,7 +138,7 @@ class KeenonBackPointSyncServiceTest {
     void sync_repeatedSync_updatesTheSameRowRatherThanCreatingADuplicate() throws Exception {
         Robot robot = aKeenonRobot();
         stubSaveEchoesArgumentWithGeneratedId();
-        JsonNode response = objectMapper.readTree("{\"data\":[{\"backPointId\":\"39\",\"backPointName\":\"1_Charging pile\"}]}");
+        JsonNode response = envelope("[{\"backPointId\":\"39\",\"backPointName\":\"1_Charging pile\"}]");
         when(client.getBackPoints("94:BA:06:CA:99:F3")).thenReturn(response);
 
         when(backPointMappingRepository.findByRobotIdAndKeenonBackPointId(robot.getId(), "39")).thenReturn(Optional.empty());
@@ -138,7 +172,7 @@ class KeenonBackPointSyncServiceTest {
         stale.setActive(true);
         when(backPointMappingRepository.findByRobotIdAndActiveTrue(robot.getId())).thenReturn(List.of(stale));
         when(backPointMappingRepository.findByRobotIdAndKeenonBackPointId(robot.getId(), "39")).thenReturn(Optional.empty());
-        JsonNode response = objectMapper.readTree("{\"data\":[{\"backPointId\":\"39\",\"backPointName\":\"1_Charging pile\"}]}");
+        JsonNode response = envelope("[{\"backPointId\":\"39\",\"backPointName\":\"1_Charging pile\"}]");
         when(client.getBackPoints("94:BA:06:CA:99:F3")).thenReturn(response);
 
         service().sync(robot);
@@ -147,7 +181,7 @@ class KeenonBackPointSyncServiceTest {
     }
 
     @Test
-    void sync_emptyVendorResponse_deactivatesEveryPreviouslyActiveMapping() throws Exception {
+    void sync_emptyBackPointList_deactivatesEveryPreviouslyActiveMapping() throws Exception {
         Robot robot = aKeenonRobot();
         stubSaveEchoesArgumentWithGeneratedId();
         KeenonBackPointMapping stale = new KeenonBackPointMapping();
@@ -156,12 +190,66 @@ class KeenonBackPointSyncServiceTest {
         stale.setKeenonBackPointId("39");
         stale.setActive(true);
         when(backPointMappingRepository.findByRobotIdAndActiveTrue(robot.getId())).thenReturn(List.of(stale));
-        when(client.getBackPoints("94:BA:06:CA:99:F3")).thenReturn(objectMapper.readTree("{\"data\":[]}"));
+        when(client.getBackPoints("94:BA:06:CA:99:F3")).thenReturn(envelope("[]"));
 
         List<KeenonBackPointMapping> result = service().sync(robot);
 
         assertThat(result).isEmpty();
         verify(backPointMappingRepository).save(argThatMapping(m -> !m.isActive()));
+    }
+
+    @Test
+    void sync_missingDataField_isTreatedAsEmpty_neverThrows() throws Exception {
+        Robot robot = aKeenonRobot();
+        when(backPointMappingRepository.findByRobotIdAndActiveTrue(robot.getId())).thenReturn(List.of());
+        when(client.getBackPoints("94:BA:06:CA:99:F3")).thenReturn(objectMapper.readTree("{\"code\":610000,\"msg\":\"success\"}"));
+
+        List<KeenonBackPointMapping> result = service().sync(robot);
+
+        assertThat(result).isEmpty();
+        verify(backPointMappingRepository, never()).save(any());
+    }
+
+    @Test
+    void sync_missingBackPointListField_isTreatedAsEmpty_neverThrows() throws Exception {
+        Robot robot = aKeenonRobot();
+        when(backPointMappingRepository.findByRobotIdAndActiveTrue(robot.getId())).thenReturn(List.of());
+        when(client.getBackPoints("94:BA:06:CA:99:F3"))
+                .thenReturn(objectMapper.readTree("{\"code\":610000,\"data\":{\"robotSn\":\"94:BA:06:CA:99:F3\"}}"));
+
+        List<KeenonBackPointMapping> result = service().sync(robot);
+
+        assertThat(result).isEmpty();
+        verify(backPointMappingRepository, never()).save(any());
+    }
+
+    @Test
+    void sync_malformedNonArrayBackPointList_isTreatedAsEmpty_neverThrows() throws Exception {
+        Robot robot = aKeenonRobot();
+        when(backPointMappingRepository.findByRobotIdAndActiveTrue(robot.getId())).thenReturn(List.of());
+        when(client.getBackPoints("94:BA:06:CA:99:F3")).thenReturn(objectMapper.readTree(
+                "{\"code\":610000,\"data\":{\"robotSn\":\"94:BA:06:CA:99:F3\",\"backPointList\":\"not-an-array\"}}"));
+
+        List<KeenonBackPointMapping> result = service().sync(robot);
+
+        assertThat(result).isEmpty();
+        verify(backPointMappingRepository, never()).save(any());
+    }
+
+    @Test
+    void sync_oldIncorrectDataAsArrayShape_isNotTreatedAsAValidBackPointResponse() throws Exception {
+        // Regression test for the exact bug this fix closes: the real points live under
+        // "data.backPointList", never a flat array directly under "data" — a response
+        // shaped like the OLD (incorrect) assumption must still resolve to zero points.
+        Robot robot = aKeenonRobot();
+        when(backPointMappingRepository.findByRobotIdAndActiveTrue(robot.getId())).thenReturn(List.of());
+        JsonNode response = objectMapper.readTree("{\"data\":[{\"backPointId\":\"39\",\"backPointName\":\"1_Charging pile\"}]}");
+        when(client.getBackPoints("94:BA:06:CA:99:F3")).thenReturn(response);
+
+        List<KeenonBackPointMapping> result = service().sync(robot);
+
+        assertThat(result).isEmpty();
+        verify(backPointMappingRepository, never()).save(any());
     }
 
     @Test
@@ -181,7 +269,7 @@ class KeenonBackPointSyncServiceTest {
     void sync_malformedVendorEntryMissingBackPointId_isSkippedNeverFabricated() throws Exception {
         Robot robot = aKeenonRobot();
         when(backPointMappingRepository.findByRobotIdAndActiveTrue(robot.getId())).thenReturn(List.of());
-        JsonNode response = objectMapper.readTree("{\"data\":[{\"backPointName\":\"No id here\"}]}");
+        JsonNode response = envelope("[{\"backPointName\":\"No id here\"}]");
         when(client.getBackPoints("94:BA:06:CA:99:F3")).thenReturn(response);
 
         List<KeenonBackPointMapping> result = service().sync(robot);
@@ -196,7 +284,7 @@ class KeenonBackPointSyncServiceTest {
         stubSaveEchoesArgumentWithGeneratedId();
         when(backPointMappingRepository.findByRobotIdAndKeenonBackPointId(robot.getId(), "39")).thenReturn(Optional.empty());
         when(backPointMappingRepository.findByRobotIdAndActiveTrue(robot.getId())).thenReturn(List.of());
-        JsonNode response = objectMapper.readTree("{\"data\":[{\"backPointId\":\"39\"}]}");
+        JsonNode response = envelope("[{\"backPointId\":\"39\"}]");
         when(client.getBackPoints("94:BA:06:CA:99:F3")).thenReturn(response);
 
         List<KeenonBackPointMapping> result = service().sync(robot);

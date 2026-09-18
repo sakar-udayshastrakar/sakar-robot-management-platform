@@ -79,6 +79,8 @@ class KeenonStartTaskEndToEndTest {
     private KeenonApiClient keenonApiClient;
     @Mock
     private KeenonAreaMappingRepository areaMappingRepository;
+    @Mock
+    private KeenonAreaSyncService keenonAreaSyncService;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
     private UserPrincipal principal;
@@ -104,7 +106,7 @@ class KeenonStartTaskEndToEndTest {
         principal = new UserPrincipal(UUID.randomUUID(), "admin@example.com", UUID.randomUUID(), "/org",
                 RoleName.ORG_ADMIN, Set.of());
         // Real adapter, real registry — only the HTTP-boundary client is a mock.
-        realKeenonAdapter = new KeenonRobotAdapter(keenonApiClient, areaMappingRepository);
+        realKeenonAdapter = new KeenonRobotAdapter(keenonApiClient, areaMappingRepository, keenonAreaSyncService);
         realRegistry = new RobotAdapterRegistry(List.of(realKeenonAdapter));
         lenient().when(robotCommandRepository.save(any())).thenAnswer(inv -> {
             RobotCommand command = inv.getArgument(0);
@@ -146,7 +148,8 @@ class KeenonStartTaskEndToEndTest {
         when(robotModelRepository.findById(modelId)).thenReturn(Optional.of(keenonModel(modelId)));
         when(areaMappingRepository.findByIdAndActiveTrue(areaMappingId)).thenReturn(Optional.of(mapping));
         when(keenonApiClient.getBackPoints("94:BA:06:CA:99:F3"))
-                .thenReturn(objectMapper.readTree("{\"data\":[{\"backPointId\":\"BP-1\"}]}"));
+                .thenReturn(objectMapper.readTree(
+                        "{\"code\":610000,\"data\":{\"robotSn\":\"94:BA:06:CA:99:F3\",\"backPointList\":[{\"backPointId\":\"BP-1\"}]}}"));
         JsonNode acceptedResponse = objectMapper.readTree("{\"code\":\"610000\",\"bizType\":\"CleanRobotTemporaryTask\"}");
         when(keenonApiClient.postTemporaryTask(any())).thenReturn(acceptedResponse);
 
@@ -189,7 +192,8 @@ class KeenonStartTaskEndToEndTest {
         when(robotService.getAccessibleOrThrow(principal, robot.getId())).thenReturn(robot);
         when(robotModelRepository.findById(modelId)).thenReturn(Optional.of(keenonModel(modelId)));
         when(areaMappingRepository.findByIdAndActiveTrue(areaMappingId)).thenReturn(Optional.of(mapping));
-        when(keenonApiClient.getBackPoints(anyString())).thenReturn(objectMapper.readTree("{\"data\":[{\"backPointId\":\"BP-1\"}]}"));
+        when(keenonApiClient.getBackPoints(anyString())).thenReturn(objectMapper.readTree(
+                "{\"code\":610000,\"data\":{\"robotSn\":\"94:BA:06:CA:99:F3\",\"backPointList\":[{\"backPointId\":\"BP-1\"}]}}"));
         when(keenonApiClient.postTemporaryTask(any())).thenReturn(objectMapper.readTree("{\"code\":\"500001\",\"message\":\"failure\"}"));
 
         Map<String, Object> params = Map.of("areaIds", List.of(areaMappingId.toString()), "mode", "SWEEP");
