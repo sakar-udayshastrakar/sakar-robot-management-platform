@@ -101,13 +101,17 @@
   font-size: 13.5px;
 }
 
+/* Header/row heights are token-driven. On table cells `height` behaves as a
+   minimum, so a wrapped cell still grows instead of clipping. Sentence case
+   replaces the former all-caps treatment — it scans better at 12px and
+   matches the denser console idiom. */
 .sakar-table th {
   text-align: left;
-  padding: 7px 12px;
-  font-size: 11px;
+  height: var(--sakar-table-head-h);
+  padding: 0 var(--sakar-sp-3);
+  font-size: 12px;
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
   color: var(--sakar-text-faint);
   background: var(--sakar-bg);
   border-bottom: 1px solid var(--sakar-border-subtle);
@@ -115,7 +119,8 @@
 }
 
 .sakar-table td {
-  padding: 7px 12px;
+  height: var(--sakar-table-row-h);
+  padding: 6px var(--sakar-sp-3);
   border-bottom: 1px solid var(--sakar-border-subtle);
   color: var(--sakar-text-muted);
   vertical-align: middle;
@@ -204,14 +209,24 @@
 .sakar-btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
-  padding: 7px 13px;
+  height: var(--sakar-control-h);
+  padding: 0 var(--sakar-sp-3);
   border-radius: var(--sakar-radius-sm);
   border: 1px solid transparent;
   font-size: 13px;
   font-weight: 600;
+  white-space: nowrap;
   cursor: pointer;
   transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* Compact variant for dense toolbars and inline row actions. */
+.sakar-btn--sm {
+  height: var(--sakar-control-h-sm);
+  padding: 0 var(--sakar-sp-2);
+  font-size: 12px;
 }
 
 .sakar-btn--primary {
@@ -252,7 +267,18 @@
 
 .sakar-field input,
 .sakar-field select {
-  padding: 8px 12px;
+  height: var(--sakar-control-h);
+  padding: 0 var(--sakar-sp-3);
+  border-radius: var(--sakar-radius-sm);
+  border: 1px solid var(--sakar-border-strong);
+  background: var(--sakar-surface);
+  color: var(--sakar-text);
+  font-size: 13.5px;
+}
+
+/* Multi-line inputs keep real padding — a fixed control height would clip. */
+.sakar-field textarea {
+  padding: var(--sakar-sp-2) var(--sakar-sp-3);
   border-radius: var(--sakar-radius-sm);
   border: 1px solid var(--sakar-border-strong);
   background: var(--sakar-surface);
@@ -292,8 +318,11 @@
 }
 
 .sakar-filter-bar select,
-.sakar-filter-bar input {
-  padding: 7px 10px;
+.sakar-filter-bar input,
+.sakar-filter-grid select,
+.sakar-filter-grid input {
+  height: var(--sakar-control-h);
+  padding: 0 10px;
   border-radius: var(--sakar-radius-sm);
   border: 1px solid var(--sakar-border-strong);
   background: var(--sakar-surface);
@@ -302,7 +331,9 @@
 }
 
 .sakar-filter-bar select:focus,
-.sakar-filter-bar input:focus {
+.sakar-filter-bar input:focus,
+.sakar-filter-grid select:focus,
+.sakar-filter-grid input:focus {
   outline: none;
   border-color: var(--sakar-primary);
   box-shadow: 0 0 0 3px rgba(255, 145, 77, 0.25);
@@ -503,8 +534,9 @@
 }
 
 .sakar-search input {
-  padding: 9px 12px 9px 36px;
-  border-radius: var(--sakar-radius-md);
+  height: var(--sakar-control-h);
+  padding: 0 var(--sakar-sp-3) 0 36px;
+  border-radius: var(--sakar-radius-sm);
   border: 1px solid var(--sakar-border-strong);
   background: var(--sakar-surface);
   color: var(--sakar-text);
@@ -981,4 +1013,134 @@
   margin-right: auto;
   font-size: 12.5px;
   color: var(--sakar-text-faint);
+}
+
+.sakar-pagination select {
+  height: var(--sakar-control-h-sm);
+  padding: 0 var(--sakar-sp-2);
+  border-radius: var(--sakar-radius-sm);
+  border: 1px solid var(--sakar-border-strong);
+  background: var(--sakar-surface);
+  color: var(--sakar-text);
+  font-size: 12.5px;
+}
+
+.sakar-pagination select:focus {
+  outline: none;
+  border-color: var(--sakar-primary);
+  box-shadow: 0 0 0 3px rgba(255, 145, 77, 0.25);
+}
+
+/* ------------------------------------------------------------------ */
+/* Tabs — moved here from features/robots/robots.css so any page can use */
+/* the same strip (Tabs.tsx). Height is now token-driven; the visual     */
+/* treatment (underline, orange active) is unchanged.                    */
+/* ------------------------------------------------------------------ */
+
+.sakar-tabs {
+  display: flex;
+  gap: 28px;
+  border-bottom: 1px solid var(--sakar-border);
+  margin-bottom: 14px;
+}
+
+.sakar-tab {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--sakar-tab-h);
+  padding: 0 2px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--sakar-text-faint);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  margin-bottom: -1px;
+  white-space: nowrap;
+}
+
+.sakar-tab:hover {
+  color: var(--sakar-text);
+}
+
+.sakar-tab--active {
+  color: var(--sakar-primary);
+  border-bottom-color: var(--sakar-primary);
+  font-weight: 700;
+}
+
+/* ------------------------------------------------------------------ */
+/* DataTable — sorting, row expansion, selection, skeleton loading      */
+/* All opt-in; a table that passes none of these renders as before.     */
+/* ------------------------------------------------------------------ */
+
+.sakar-table th.sakar-table-sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.sakar-table th.sakar-table-sortable:hover {
+  color: var(--sakar-text);
+}
+
+.sakar-sort-indicator {
+  display: inline-block;
+  margin-left: 4px;
+  font-size: 9px;
+  line-height: 1;
+  color: var(--sakar-text-subtle);
+}
+
+.sakar-sort-indicator--active {
+  color: var(--sakar-primary);
+}
+
+.sakar-table th.sakar-table-select,
+.sakar-table td.sakar-table-select {
+  width: 40px;
+  text-align: center;
+}
+
+.sakar-table th.sakar-table-expander,
+.sakar-table td.sakar-table-expander {
+  width: 36px;
+  text-align: center;
+}
+
+.sakar-expander-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--sakar-text-subtle);
+  cursor: pointer;
+  border-radius: var(--sakar-radius-sm);
+}
+
+.sakar-expander-btn:hover {
+  background: var(--sakar-bg);
+  color: var(--sakar-text);
+}
+
+.sakar-expander-btn svg {
+  transition: transform 0.15s ease;
+}
+
+.sakar-expander-btn--open svg {
+  transform: rotate(90deg);
+}
+
+.sakar-table-expanded-row > td {
+  height: auto;
+  padding: var(--sakar-sp-3);
+  background: var(--sakar-bg);
+}
+
+.sakar-table-skeleton-row > td {
+  height: var(--sakar-table-row-h);
 }

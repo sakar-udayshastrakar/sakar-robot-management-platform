@@ -1,32 +1,7 @@
-.sakar-tabs {
-  display: flex;
-  gap: 28px;
-  border-bottom: 1px solid var(--sakar-border);
-  margin-bottom: 14px;
-}
-
-.sakar-tab {
-  padding: 7px 6px;
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--sakar-text-faint);
-  background: none;
-  border: none;
-  border-bottom: 2px solid transparent;
-  cursor: pointer;
-  margin-bottom: -1px;
-  white-space: nowrap;
-}
-
-.sakar-tab:hover {
-  color: var(--sakar-text);
-}
-
-.sakar-tab--active {
-  color: var(--sakar-primary);
-  border-bottom-color: var(--sakar-primary);
-  font-weight: 700;
-}
+/* .sakar-tabs / .sakar-tab* moved to styles/components.css (globally
+   imported) so pages outside Robot Detail can share the same strip — see
+   Tabs.tsx. Robot Detail's own markup is unchanged and still picks up
+   those rules. */
 
 .sakar-robot-header-meta {
   display: flex;

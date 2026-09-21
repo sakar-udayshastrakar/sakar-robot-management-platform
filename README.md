@@ -193,6 +193,60 @@ The direction came from a read-only structural comparison against the Keenon Clo
 - The known Group 10 baseline is **unchanged** across all three phases: `npx tsc -b` reports exactly 8 pre-existing errors, all `TS2353 'sakarAreaId'` in the untracked `web/src/features/tasks/RobotTasksPanel.test.tsx`; `npx vitest run` reports **82 passed / 13 failed (95)** with all 13 failures in that same file. Those failures pre-date this work and were deliberately not "fixed" — the test file is in-progress work that runs ahead of its component. Consequently `npm run build` (which gates on `tsc -b`) still fails at the typecheck step, while the bundler itself is green.
 - Shell geometry was verified by measuring the real stylesheet at 1366×768, 1440×900 and 1920×1080: header 56px, sidebar top 56px and flush to the viewport bottom, content origin `x=224, y=56`, nav items 40px, collapsed sidebar 60px with content at `x=60`, and no horizontal overflow at any width. This was measured against a DOM replica of the shell rather than the authenticated application — **no login, authentication flow, page behaviour, or physical robot was validated by this work.**
 
+## Shared UI Primitives — Phase C
+
+*Scope note: Phase C standardises the shared component layer only. **No page was redesigned and no page JSX was modified.** The new capabilities below are opt-in and, as of this phase, **no page consumes any of them** — adoption happens in the later page phases. This does not make the frontend redesign complete.*
+
+### DataTable
+
+Extended with five opt-in capabilities. A table that passes none of them renders byte-identical DOM to before — asserted by a dedicated regression test.
+
+- **Sorting** — `Column.sortable` plus controlled `sortKey` / `sortDirection` / `onSort`. This renders the header affordance and `aria-sort` and reports the sort *intent* only. **It does not sort the data, and it is not backend sorting** — the calling page owns ordering. Without an `onSort` handler the header stays inert.
+- **Expandable rows** — `renderExpanded(row)` adds an expander column and a full-width detail row, with internal open/closed state.
+- **Selection foundation** — `selectable` plus controlled `selectedKeys` / `onSelectionChange`, including select-all. **This is a presentational foundation only: it performs no bulk action and implies no backend bulk-operation support.** Checkboxes are disabled unless both props are supplied.
+- **Loading state** — `loading` / `skeletonRows` renders skeleton rows (consuming the previously-unused `.sakar-skeleton` styling) and takes precedence over the empty state so the table keeps its shape mid-fetch.
+- **Error state** — `error` / `onRetry` renders an inline error surface with a retry affordance in place of the table.
+
+### Pagination
+
+- Added an optional rows-per-page selector (`pageSize` / `onPageSizeChange` / `pageSizeOptions`, defaulting to 10/20/50/100). It renders only when both the value and the handler are supplied.
+- The existing six consumers pass none of the new props and are behaviourally unchanged.
+
+### Tabs
+
+- Promoted to a shared primitive (`components/ui/Tabs.tsx`) with accessible `role="tablist"` / `role="tab"` / `aria-selected` semantics.
+- `.sakar-tabs` / `.sakar-tab` / `.sakar-tab--active` moved out of `features/robots/robots.css` into the globally-imported `styles/components.css`.
+- **Robot Detail has not been migrated to it** — that page keeps its existing hand-rolled tab markup and continues to render correctly from the now-shared styles. Migration is deferred to the Robot Detail phase, as is `Breadcrumb` adoption.
+
+### Density
+
+The Phase A tokens that were previously declared but unconsumed now drive the shared layer. Verified by measuring the live stylesheet in a browser:
+
+| Element | Value |
+|---|---|
+| Table header | 36px (12px, sentence case — previously 11px all-caps) |
+| Table row | 42px |
+| Control (button, select, search input) | 32px |
+| Small control (`.sakar-btn--sm`, page-size select) | 28px |
+| Tabs | 36px |
+
+Card radius resolves to 6px and the primary action colour to `#FF914D`, with no horizontal overflow introduced. On table cells `height` acts as a minimum, so wrapped content grows rather than clipping.
+
+### Validation
+
+- **9 new `DataTable` tests** covering the default-unchanged contract, index offset, skeleton loading, error/retry, sort intent and direction toggling, inert-without-handler, row expansion, and controlled selection including select-all.
+- `npx vitest run` — **91 passed / 13 failed (104)**. The passing count rose from 82 solely because of those 9 additions; the **13 failures are unchanged and remain exclusively in the protected, untracked `web/src/features/tasks/RobotTasksPanel.test.tsx`** (Group 10, which runs ahead of its component and was not touched).
+- `npx tsc -b` — 8 pre-existing errors, all in that same Group 10 file; none introduced.
+- `npx vite build` — **SUCCESS**.
+- The 16 passing test files include `RobotsListPage`, `AlertsPage`, `UsersPage`, `TelemetryPage`, `RobotDetailPage`, `CommandsPanel`, `RobotMapPanel` and `KeenonSceneConfigPanel` — all consumers of the changed primitives — which is the regression evidence for this phase.
+
+### Known limitations
+
+- Every advanced `DataTable` capability is opt-in and currently has **zero consumers**.
+- `Tabs.tsx` and `Breadcrumb.tsx` exist but are **not yet used by any page**.
+- The `.sakar-filter-card` / `.sakar-toolbar` / `.sakar-stack` layout helpers remain unused, reserved for the list-page phase.
+- No data source, API call, or capability claim changed in this phase; nothing was fabricated.
+
 ## Project Status
 
 | Field | Value |
