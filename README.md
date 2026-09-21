@@ -40,6 +40,159 @@ Separately, Phase 3's own MQTT pipeline was validated against a real (locally-ho
 
 **Fourteenth pass, Keenon cleaning-area-list response parsing fix (branch `feature/map-point-overlay`, not yet committed):** closes the root cause behind the CLEANING task form's "Could not load areas: No synced Keenon store mapping" blocker. A live, raw (unparsed) capture of `GET /api/open/custom/clean/robot/area/list` for the real account/store/robot revealed the true response envelope — `{code, msg, data: {count, currentPage, pageSize, entities: [...]}}` — where each `entities` element is a per-map/floor GROUP carrying `mapId`/`floor` plus two PARALLEL arrays, `areaIdList`/`areaNameList` (paired by index), never a flat list of `{areaId, areaName}` objects. Two earlier assumptions about this shape were both wrong and both silently produced zero areas instead of failing loudly: the original code read a flat array directly under `data`; an intermediate fix (based on this endpoint's sibling `clean/log/list` envelope) read a top-level `entities` array with no `data` wrapper. Neither matches this endpoint's real shape. Fixed with a new shared `KeenonAreaListParser` (used identically by `KeenonRobotAdapter.getAreas` and `KeenonAreaSyncService.sync`, avoiding duplicated flattening logic) that reads `data.entities[]` and pairs `areaIdList[i]`/`areaNameList[i]` strictly by index — a real vendor length mismatch drops the unpaired trailing entry rather than guessing a pairing. `mapId` is preserved via the pre-existing `keenon_map_id` column; `floor` is parsed (available for future use) but not persisted — no existing column represents it and nothing downstream needs it today, so no schema change was made for it. 27 new/updated tests across `KeenonAreaSyncServiceTest` (21), `KeenonRobotAdapterTest` (33), and `KeenonAreaSyncControllerTest` (7), including explicit regressions proving neither of the two previously-wrong shapes is silently accepted again; full backend suite **425/425 passing**, `BUILD SUCCESS`, `./mvnw -DskipTests package` succeeds. **Live-verified end to end** against the real Keenon account: `POST .../keenon/areas/sync` with `storeId=C00715655` now returns the real area **"Area5"** (vendor id `8a7bd155598342d08158d34d5a07007d`, map `4c0075859805496eb452187b3cd91107`), a real `keenon_area_mappings` row was created, `GET /robots/{id}/areas` now returns `200` with that area, and the CLEANING task form's Areas selector now shows it as a selectable checkbox — the original blocker is resolved. No frontend/schema/OAuth/RBAC code touched. No cleaning task was created or started as part of this verification.
 
+## Current Project Status
+
+*Independent, evidence-based audit performed 2026-09-21 against the actual repository state on branch `dev` (not a copy-forward of the narrative passes above, which are self-reported at the time each was written). Methodology: parallel code-path inspection of every backend/frontend/Android/simulator/database/deployment area with file:line evidence, plus an attempted full test-suite run. Percentages are an equal-weighted mean across the 15 categories in the matrix below; they are estimates grounded in the evidence cited, not a precise formula. The working tree currently carries known, protected, uncommitted work (Group 8 OAuth diagnostics, Group 10 frontend CLEANING task UI, Group 11 configurable bootstrap admin password) — this audit reports on that state as it actually stands, including where that in-progress work currently breaks the build.*
+
+### Overall Status
+
+**Software Implementation:** ~62%
+**Integration / E2E:** ~28%
+**Production Readiness:** ~22%
+**Physical C40 Validation:** NOT VALIDATED — the only physical-hardware evidence anywhere in the system is one Keenon-Cloud-dispatched cleaning task ("Lobby") confirmed via a matching Keenon cleaning-log entry. That confirms the *Keenon Cloud* path only; no code Sakar has written for direct on-robot control (the Android agent's `OperatingMode.HARDWARE_TEST`-gated executors) has ever run on a connected physical device outside a unit test.
+
+These are three deliberately separate numbers, not one blended score — a high software-implementation percentage does not imply the pieces have been proven to work together, and neither implies the deployment is production-safe. See Master Requirements Part 40's "API accepted ≠ robot executed ≠ verified" rule, which this audit applies throughout.
+
+### Completion Matrix
+
+| # | Category | Completion % | Notes |
+|---|---|---|---|
+| 1 | Authentication & Security | 80% | JWT issuance/validation, BCrypt hashing, Redis-backed login rate limiting/lockout, refresh-token rotation all IMPLEMENTED (`backend/.../auth/`). Refresh-token reuse detection blocks only the single reused token, not the whole rotation chain (PARTIAL, `RefreshTokenService.java:56-58`). Swagger/OpenAPI has no environment gate — reachable in any deployment of current code; CORS origins are hardcoded to `localhost` rather than externalized (`SecurityConfig.java`). |
+| 2 | RBAC & Tenant Isolation | 75% | 52 of 56 controller endpoints are `@PreAuthorize`-gated (the 4 exceptions are justified: pre-auth login/refresh, JWT-authenticated logout, shared-secret-authenticated Keenon webhook). `TenantAccessGuard` enforces organization-hierarchy scoping at the service layer (IMPLEMENTED). Only 6 of 34 repositories filter by organization at the query level — isolation today is guard-by-convention at the service layer, not defense-in-depth at the data layer; no per-user site/robot scoping narrower than "everything in my organization" exists. |
+| 3 | Robot Management | 90% | Registration, per-model-prefix serial number generation (sequence-based, race-safe), Keenon robot discovery/sync, and legacy-serial reconciliation are all IMPLEMENTED and tested. External-robot-id uniqueness is enforced at the application layer only, not by a DB unique constraint (minor race-condition gap). |
+| 4 | Keenon Integration | 68% | Robot list, area list, back points, cleaning modes, cleaning logs, battery, and cleaning status are all IMPLEMENTED with live-captured response shapes. Task START is the only capability with real physical-execution evidence (one confirmed "Lobby" cleaning run). STOP/PAUSE task commands are API-accepted but never confirmed against a real vendor response (SCAFFOLDED). RESUME_TASK and LOCK/UNLOCK are genuine vendor-side gaps, honestly reported (`UNSUPPORTED_CAPABILITY`) rather than faked. Map/scene resolution now rests on a Sakar-owned manual configuration workaround (`KeenonRobotSceneConfig`) because no Keenon endpoint reliably returns it for this account's robot class. |
+| 5 | Task Management | 58% | CRUD, the lifecycle state machine, and full event/audit history are IMPLEMENTED. Only the `START` transition takes a DB row lock; nothing prevents dispatching a second task to a robot that already has one RUNNING (MISSING busy-state check). PAUSE/RESUME/STOP/CANCEL via the Tasks panel only update Sakar-side bookkeeping and never contact the robot — real vendor dispatch for those actions exists only via the separate Commands panel/API. `SPOT_CLEAN` does not exist anywhere in the codebase. **Confirmed by history inspection (2026-09-21):** the only Task-panel dispatch bridge present in current `dev` (`RobotTaskService.transition`) is `CLEANING`/`START`; a Task-panel `RETURN_TO_DOCK` task type and a `CLEANING` task's `STOP` transition dispatching to the vendor are both **NOT IMPLEMENTED** in current `dev` — a prior attempt at this work exists only as a dangling, unreferenced commit (verified via `git merge-base --is-ancestor` and `git fsck --unreachable`) that was superseded by a rebase and is not an ancestor of `dev`; it must not be inferred as present. |
+| 6 | Maps & Areas | 55% | Area and back-point DB-first sync (with on-demand refresh) and raw map PNG storage/serving are IMPLEMENTED. Map points are synced into the database but no endpoint ever reads them back out (SCAFFOLDED, write-only). Pixel↔world coordinate conversion is deliberately MISSING — no vendor-confirmed fields exist for it. Frontend map overlays, live position, and zoom/pan are explicitly not built; `FleetMapPage` is a pure empty-state stub. |
+| 7 | Telemetry | 72% | MQTT ingestion, deduplication, per-robot rate limiting, tenant-identity cross-checking, and WebSocket fan-out are all IMPLEMENTED on the backend. The frontend's STOMP client exists (`src/websocket/stompClient.ts`) but `subscribeToRobot()` is never called anywhere in `web/src` — all "live" data in the UI is actually REST polling / manual refresh, not push updates. |
+| 8 | MQTT / Device Communication | 62% | Inbound structural validation, outbound publish, idempotent command-result ingestion, and per-robot/org/site identity cross-checks are all IMPLEMENTED in software. The committed dev broker config (`backend/docker/mosquitto.conf`) sets `allow_anonymous true` with no TLS and no ACL file; per-robot MQTT credentials are issued and hashed (`RobotCredentialService`) but are not enforced by the broker at all today. |
+| 9 | Android Agent | 38% | MQTT client, command dispatch, and idempotency are real (Eclipse Paho-based, not stubbed). `GO_TO_POINT` and `RETURN_TO_DOCK` make genuine Peanut SDK calls — but both are gated behind `OperatingMode.HARDWARE_TEST`, which no shipped code path (`MainActivity`, `SakarC40Application`) ever enables, making them unreachable outside a unit test. `START_TASK` is a software simulation (the bundled Peanut SDK AAR has no cleaning-control API at all, confirmed by decompilation). STOP/PAUSE/RESUME and motor lock/unlock have no registered executor whatsoever. No watchdog, no foreground service, and no signed release-build configuration exist. |
+| 10 | Simulator | 45% | `:virtual-agent` implements `GO_TO_POINT`/`RETURN_TO_DOCK` only (every other command type reports "not supported"), is deterministic, and supports host-controlled (not remote-command-controlled) failure injection. It reuses the real agent MQTT stack but has never been run against a live broker. The backend's `VirtualRobotSimulatorIntegrationTest` only exercises the REST authorization path for virtual robots, not MQTT delivery. No frontend integration and no true Simulator→MQTT→Backend→WebSocket→Frontend end-to-end test exists anywhere in the repo. |
+| 11 | Frontend | 68% | Most pages are wired to real REST endpoints: auth, robots, alerts, users, roles, audit log, tasks, telemetry, events/errors/logs, non-lock commands, cleaning history, and the robot map image. Lock/Unlock buttons are permanently disabled. 5 of 7 Robot Detail tabs (Task Management, Task Record, Statistics, Trial Run Record, Cleaning Daily Report) render the `NotConnectedTab` placeholder. Fleet Map and Analytics are empty-state stubs. Two widgets (Dashboard "Recent Robot Events", Robot Detail Timeline) remain clearly-labeled simulated/random data. **The current working tree does not build**: `tsc -b` fails and 13 of 95 tests fail because the in-progress `RobotTasksPanel.test.tsx` was written ahead of `RobotTasksPanel.tsx`/the `RobotArea` type (`sakarAreaId` field). |
+| 12 | Database | 75% | 18 Flyway migrations (`V1`–`V18`) map 1:1 to all 33 JPA entities with real foreign keys, unique constraints, and indexes on the hot-path columns. No telemetry/event retention or purge job exists (MISSING — `robot_telemetry`/`robot_events` grow unbounded). No table partitioning. Audit-log immutability is enforced only by application-code discipline, not a DB-role-level `REVOKE UPDATE/DELETE` (a gap the migration's own header comment documents). `audit_logs`/`application_logs` have no FK constraints on their `*_id` columns. |
+| 13 | Testing | 45% | Historically strong coverage is documented across backend/frontend/agent modules (hundreds of tests at prior commits), but **the backend test suite currently fails to compile** on `dev` — `DevAdminSeederTest` (uncommitted) calls `BootstrapProperties.setAdminPassword(...)`, a method that does not exist in `src/main/java`, so zero backend tests currently execute via `mvn test`. The frontend build/typecheck also currently fails for the same class of reason (a test file ahead of its component — see Frontend row). Android/simulator modules were reviewed statically this pass, not executed. |
+| 14 | Deployment / Production | 25% | Flyway auto-applies migrations on startup and a minimal Actuator health/info endpoint is exposed (IMPLEMENTED). Nginx/TLS termination, a CI/CD pipeline, a secrets manager, backup automation, and an APM/monitoring stack beyond bare health checks are all MISSING. The committed Docker Compose file and Mosquitto config are explicitly labeled dev-only in their own comments; no production topology exists anywhere in the repo. |
+| 15 | Documentation | 68% | The root README and most sub-READMEs are unusually candid, using explicit ✅/⚠️/❌ status markers and self-flagged staleness where known. `database/README.md` was found stale — it stated "NOT YET IMPLEMENTED" despite 18 real Flyway migrations existing under `backend/` (this audit corrects the equivalent claim in this file; `database/README.md` itself was intentionally left unmodified per this audit's scope). |
+
+### Completed
+
+- JWT authentication, BCrypt password hashing, refresh-token rotation, Redis-backed login rate limiting and account lockout
+- RBAC permission/role model with `@PreAuthorize` enforced on effectively every endpoint that needs it
+- Robot registration, per-model serial number generation, Keenon robot sync, legacy serial number reconciliation
+- Keenon read endpoints: robot list, area list, back points, cleaning modes, cleaning logs, battery level, cleaning status — all confirmed against live-captured response shapes
+- Area and back-point DB-first synchronization with on-demand refresh
+- Map PNG storage and authenticated serving to the frontend
+- MQTT telemetry ingestion pipeline (dedup, rate limiting, tenant identity cross-check) and WebSocket fan-out, backend-side
+- Non-lock remote command dispatch, idempotent command-result ingestion, and command expiry sweep
+- 18 Flyway migrations with foreign-key, unique-constraint, and index coverage matching all JPA entities
+- Android agent MQTT client, command dispatch, and idempotency (real Paho-based networking)
+- Most frontend pages wired to real backend endpoints (robots, alerts, users, roles, audit log, telemetry, events/errors/logs, cleaning history, commands)
+
+### Partially Implemented
+
+- Keenon STOP/PAUSE task commands — accepted by the API, never confirmed against a real vendor response payload
+- Task lifecycle PAUSE/RESUME/STOP/CANCEL — Sakar-side bookkeeping only, do not reach the robot (real dispatch exists only via the separate Commands panel)
+- RETURN_TO_DOCK **as a non-lock Command** (Commands panel / `RobotCommandService` → `KeenonRobotAdapter`/`PeanutSdkReturnToDockExecutor`) — Keenon API-accepted and Peanut-SDK-dispatched in software; physical docking behavior never confirmed. This is distinct from a Task-panel `RETURN_TO_DOCK` task type, which is NOT IMPLEMENTED — see Task Management in the matrix above.
+- MQTT broker security — per-robot credentials are issued and hashed, but the broker itself allows anonymous, unencrypted connections and enforces no ACL
+- Tenant isolation — enforced by convention at the service layer (`TenantAccessGuard`); most repositories have no query-level organization filter as a second line of defense
+- "Live" telemetry/status updates — the WebSocket client is built but never invoked by any frontend component; the UI is effectively REST-polled
+- Refresh-token reuse detection — blocks the single reused token, not the rest of that session's rotation chain
+
+### Scaffolded / Mocked
+
+- `SakarRobotAdapter` — every method throws `FEATURE_NOT_YET_IMPLEMENTED`; a deliberate, fully-labeled 100% stub
+- `START_TASK` on the Android agent — `SimulatedRobotCommandExecutor`, no SDK call; the bundled Peanut SDK AAR has no cleaning-control API to call
+- Map points — synced into the database by `KeenonMapPointSyncService`, but no endpoint anywhere exposes them to a client
+- Virtual robot simulator — implements only `GO_TO_POINT`/`RETURN_TO_DOCK`, never run against a live MQTT broker
+- Dashboard "Recent Robot Events" and Robot Detail Timeline — clearly-labeled simulated/random data (`src/mocks/simulated.ts`)
+- Lock/Unlock — `RobotLock` schema exists, no controller ever creates a row; frontend buttons are permanently disabled by design
+
+### Not Yet Implemented
+
+- `SPOT_CLEAN` task type — no trace anywhere in the backend (not in `RobotCapabilityType`, not in `NonLockCommandType`)
+- Motor lock/unlock — no concept anywhere in the Android agent codebase
+- Watchdog and foreground service on the Android agent
+- Signed release build configuration for the Android agent (no `signingConfigs` block anywhere)
+- Coordinate conversion (pixel↔world) for maps
+- Fleet-wide map positioning, area-polygon overlays, live robot position, zoom/pan
+- Analytics (frontend routes straight to a stub; no backend API exists)
+- CI/CD pipeline (no `.github/workflows` or equivalent anywhere in the repo)
+- Nginx/TLS termination, secrets manager integration, backup automation, APM/monitoring stack beyond bare Actuator health
+- Telemetry/event/audit-log retention, purge, or partitioning strategy
+- STOP/PAUSE/RESUME executors on the Android agent (no registered executor for any of the three command types)
+- A Task-panel `RETURN_TO_DOCK` task type, and a `CLEANING` task's `STOP` transition dispatching to the vendor — `RobotTaskService` bridges only `CLEANING`/`START` to `RobotCommandService`; a prior attempt at this (a commit titled "dispatch return-to-dock and cleaning stop tasks") is a dangling, unreferenced commit not reachable from `dev` (confirmed by `git merge-base --is-ancestor` returning false and `git fsck --unreachable` listing it as unreachable) — do not treat it as present in this codebase
+
+### Validation Status
+
+- **Automated tests:** Backend currently executes **0 tests** — `mvn test` fails to compile on `dev` because the uncommitted `DevAdminSeederTest` references a `BootstrapProperties.setAdminPassword` method that doesn't exist yet in `src/main/java`; prior to this in-progress work the suite was last reported at 425/425 passing. Frontend: 82 of 95 tests pass, 13 fail (`RobotTasksPanel.test.tsx`, same root cause — ahead of its component); `tsc -b`/`npm run build` currently fail. Android `:api`/`:robot`/`:sdk`/`:virtual-agent` modules were statically reviewed, not executed, this pass.
+- **Simulator tests:** `:virtual-agent` module tests pass in isolation (deterministic engine, registry, command executor, SDK-isolation guard) but have never been exercised against a live MQTT broker or the real backend's MQTT ingestion path.
+- **Live service integration:** One real, live-verified integration chain exists — the Keenon Cloud API round trip (OAuth token flow, area/back-point/cleaning-mode/cleaning-log sync, task dispatch) — confirmed against the real Keenon account for one physical C40 S ("Demo Piece", `94:BA:06:CA:99:F3`). No Simulator→MQTT→Backend→WebSocket→Frontend chain has ever been exercised end-to-end in a single test or script.
+- **Physical C40 testing:** One indirect physical confirmation exists — a Keenon-Cloud-dispatched cleaning task ("Lobby") whose completion was verified via a matching Keenon cleaning-log entry. This confirms the Keenon Cloud path only; the Android agent's own `OperatingMode.HARDWARE_TEST`-gated executors (`GO_TO_POINT`, `RETURN_TO_DOCK`) have never run on a connected physical device outside a unit test.
+
+### Known Limitations
+
+- The backend test suite does not currently compile on `dev` — anyone pulling this branch right now cannot run `mvn test` until the in-progress `BootstrapProperties.adminPassword` feature is completed.
+- The frontend build (`tsc -b`, `npm run build`) currently fails, and 13 of 95 tests fail, for the same reason (`RobotTasksPanel.test.tsx` ahead of its component).
+- Task-panel Pause/Resume/Stop/Cancel do not reach the physical robot — only the separate Commands panel dispatches a real vendor command; this distinction is easy for an operator to miss.
+- The committed dev MQTT broker config allows anonymous, unencrypted connections; per-robot credentials exist in software but are not enforced by the broker.
+- No production deployment topology exists: no Nginx/TLS termination, no CI/CD, no secrets manager, no backup automation, no monitoring/APM stack beyond a bare Actuator health endpoint.
+- Swagger/OpenAPI UI has no environment gate and is reachable in any deployment of the current code.
+- No telemetry/event/audit-log retention, purge, or partitioning strategy is implemented — these tables grow unbounded.
+- Physical robot validation is essentially absent: only one Keenon-Cloud-mediated task has ever been confirmed against real hardware; the Sakar-built Android agent's own actuation paths have never run on a connected device.
+
+### Next Development Priorities
+
+Ordered by technical dependency, not subjective preference:
+
+1. Fix the backend (`BootstrapProperties.adminPassword`) and frontend (`RobotArea.sakarAreaId`) build breaks — nothing else can be verified by tests until the working tree compiles again.
+2. Reconcile Task-panel Pause/Resume/Stop/Cancel with the real Commands dispatch pipeline (or visibly separate "bookkeeping-only" from "reaches the robot" in the UI).
+3. Add busy-state enforcement so a second task cannot be dispatched to a robot that already has one RUNNING.
+4. Wire the frontend's existing STOMP client into at least one live view so "live updates" stop meaning REST polling.
+5. Harden the MQTT broker for any non-local deployment (TLS, per-robot credential enforcement, topic ACLs) — the credential-issuance code already exists and only needs the broker side turned on.
+6. Decide and implement Android agent STOP/PAUSE/RESUME executors, and separately resolve how `START_TASK` will ever move past simulation (requires either a Keenon SDK extension or a reviewed business decision on undocumented endpoints).
+7. Add a watchdog, a foreground service, and a signed release build configuration to the Android agent before any real deployment to a fleet tablet.
+8. Build CI/CD, a production Docker/Nginx/secrets topology, and telemetry/audit retention before considering any environment beyond local development.
+9. Schedule physical C40 hardware validation under `OperatingMode.HARDWARE_TEST` for `GO_TO_POINT`/`RETURN_TO_DOCK` — the only two Android-agent commands with real, non-simulated SDK wiring today.
+
+## Frontend Foundation — Completed
+
+*Scope note: this section records a completed **foundation**, not a completed redesign. The Sakar web platform redesign is still in progress — no page has been redesigned yet, the Robot Detail tab structure is unchanged, and Keenon's two-tier navigation architecture has deliberately not been implemented. What follows is the shared-primitive, token, and shell-geometry groundwork the later page work depends on. All of it is frontend-only: no backend, API, Android, simulator, or database file was modified in any of these phases.*
+
+The direction came from a read-only structural comparison against the Keenon Cloud console (measured live, `1920×799`). Sakar branding, terminology, navigation structure, routing, RBAC and the existing honesty affordances (`SimulatedDataBanner`, `UnavailableFeature`, `NotConnectedTab`, and the sidebar `SIM`/`SOON` tags) are all unchanged. No Keenon branding, illustrations, imagery or CSS was copied.
+
+### Phase 2 — shared UI primitives
+
+- `DataTable` gained optional `Column.align` (`left`/`right`/`center`), plus optional `indexColumn` and `indexOffset` for a leading "No." column that numbers correctly across pages. All three are opt-in; every existing caller renders byte-identical DOM, which `DataTable.test.tsx` verifies.
+- `Pagination` gained an optional `total` prop for a "Total N" record count. Behaviour is unchanged when it is omitted.
+- New `Breadcrumb` primitive (`components/ui/Breadcrumb.tsx`). **Not yet consumed by any page** — breadcrumb rollout is a later phase.
+- Shared styling foundation: `.sakar-breadcrumb*` moved out of `features/robots/robots.css` into the globally-imported `styles/components.css` so pages outside Robot Detail can use it; added table cell-alignment, index-column and pagination-total rules, plus filter-card/toolbar/stack layout helpers that are **currently unused** and reserved for the list-page work.
+
+### Phase A — design tokens and density foundation
+
+- Added a 4px spacing ramp: `--sakar-sp-1` … `--sakar-sp-8`.
+- Added shell/density tokens: `--sakar-header-h: 56px`, `--sakar-nav-item-h: 40px`, `--sakar-control-h: 32px`, `--sakar-control-h-sm: 28px`, `--sakar-table-row-h: 42px`, `--sakar-table-head-h: 36px`, `--sakar-tab-h: 36px`, `--sakar-page-gutter: 20px`. The existing `--sakar-sidebar-width` / `--sakar-sidebar-width-collapsed` were reused at their current values rather than duplicated under new names.
+- Radius refinement: `--sakar-radius-sm` 5px → 4px, `--sakar-radius-md` 7px → 6px (`-lg` unchanged at 8px).
+- Shadow refinement: `--sakar-shadow-md` replaced a stacked two-layer shadow with a single soft `0 2px 8px rgba(15,23,42,.06)`.
+- Fixed a latent bug: `features/misc/StatusPages.tsx` used `.sakar-auth-page` without importing `auth.css`, so `/403` and `/404` only styled correctly when the login page's stylesheet happened to be loaded.
+- Brand colours, status colours, page background and the Roboto stack were **not** changed. `--sakar-table-row-h` and the other list tokens are declared but not yet consumed.
+
+### Phase B — application shell and layout geometry
+
+- Global header is now **56px**, driven by `height: var(--sakar-header-h)` instead of being an implicit ~43px result of padding.
+- The two hardcoded `top: 43px` / `calc(100vh - 43px)` values that coupled the sidebar to the header were replaced with `var(--sakar-header-h)`, so the two can no longer drift apart. `grep 43px` over `web/src` now returns nothing.
+- Desktop sidebar remains **224px**; collapsed remains **60px**; both token-driven.
+- Navigation items are now a token-driven **40px** (previously ~33px, derived from padding); nav type 13px → 13.5px.
+- Header separation changed from a 1px bottom border to the soft `--sakar-shadow-md` elevation; header icon button and logout control normalised to `--sakar-control-h`.
+- Page gutter tokenised — the shell content wrapper now uses `--sakar-page-gutter` rather than hardcoded `18px 22px` / `18px` values.
+- Navigation group labels made modestly more readable (9.5px/500/0.75-opacity → 10.5px/600, opacity removed, wider letter-spacing) while remaining visually quieter than the nav items themselves. No group was added, renamed or reorganised.
+- **Sakar's orange active indicator is preserved** — 3px left border `#FF914D`, `#FFF6F0` background, `#FF6100` text. Keenon's blue right-side indicator was deliberately not adopted.
+- Only `layout.css` changed; `AppShell.tsx`, `Sidebar.tsx`, `TopNav.tsx` and `navConfig.ts` needed no edits. No control, menu or data source was added to the header.
+
+### Validation
+
+- `npx vite build` — **SUCCESS**.
+- The known Group 10 baseline is **unchanged** across all three phases: `npx tsc -b` reports exactly 8 pre-existing errors, all `TS2353 'sakarAreaId'` in the untracked `web/src/features/tasks/RobotTasksPanel.test.tsx`; `npx vitest run` reports **82 passed / 13 failed (95)** with all 13 failures in that same file. Those failures pre-date this work and were deliberately not "fixed" — the test file is in-progress work that runs ahead of its component. Consequently `npm run build` (which gates on `tsc -b`) still fails at the typecheck step, while the bundler itself is green.
+- Shell geometry was verified by measuring the real stylesheet at 1366×768, 1440×900 and 1920×1080: header 56px, sidebar top 56px and flush to the viewport bottom, content origin `x=224, y=56`, nav items 40px, collapsed sidebar 60px with content at `x=60`, and no horizontal overflow at any width. This was measured against a DOM replica of the shell rather than the authenticated application — **no login, authentication flow, page behaviour, or physical robot was validated by this work.**
+
 ## Project Status
 
 | Field | Value |
@@ -127,7 +280,7 @@ Backend module status as implemented in `backend/src/main/java/com/sakarrobotics
 | Robot Adapter (abstraction) | ✅ Complete | `robot/adapter/` — interface + registry; `KeenonRobotAdapter` functional, `SakarRobotAdapter` intentionally a stub |
 | Keenon Integration Foundation | ✅ Complete (read/control path) | `integration/keenon/` — OAuth token caching, area-id sync mapping, webhook intake with idempotency, manual on-demand cleaning-history sync trigger (`POST .../keenon/cleaning-history/sync`). Robot status now correctly calls the C-series `custom/clean/robot/status` endpoint (`scene/v1/robot/status` is T/W-series only — live-verified `610403` for this account's C40 S robots, see CURRENT PHASE Sixth pass). Map sync's `sceneCode` source (Sixth pass's open question) is resolved (Seventh pass): a robot's `sceneCode` is now Sakar-owned per-robot configuration (`KeenonRobotSceneConfig`, `PUT`/`GET .../keenon/scene-config`), with a new manual sync trigger `POST .../keenon/map/sync` — see `docs/KEENON_C40S_MAP_SCENE_INTEGRATION.md`. **KEENON-CLOUD DEPENDENT**, not a substitute for the local path |
 | PostgreSQL | ✅ Complete (schema) | Full Part 13 schema via Flyway; production data-volume/performance not yet exercised |
-| Flyway | ✅ Complete | 10 versioned migrations, `V1`–`V10` |
+| Flyway | ✅ Complete | 18 versioned migrations, `V1`–`V18` (corrected 2026-09-21 audit — this row previously undercounted; see Current Project Status above) |
 | Redis | ✅ Complete (foundation) | Login rate limiting and Keenon OAuth token caching implemented; not yet used for caching/pub-sub beyond that |
 | Audit | ✅ Complete (foundation) | `audit/` — append-only `audit_logs`, recorded on login/logout; DB-role-level tamper hardening (`REVOKE UPDATE/DELETE`) not yet applied |
 | OpenAPI / Swagger | ✅ Complete | `config/OpenApiConfig.java`, served at `/swagger-ui.html` |
@@ -154,11 +307,11 @@ Backend module status as implemented in `backend/src/main/java/com/sakarrobotics
 
 ## Database Status
 
-The PostgreSQL + Flyway foundation is implemented: 11 migrations (`backend/src/main/resources/db/migration/V1__core_and_iam.sql` through `V11__mqtt_inbound_messages.sql`) create the full schema and seed the RBAC matrix plus Keenon C40 S / Sakar CleanBot 5000 Plus reference data. Current tables:
+The PostgreSQL + Flyway foundation is implemented: **18 migrations** (`backend/src/main/resources/db/migration/V1__core_and_iam.sql` through `V18__robot_model_serial_prefix.sql`, corrected by the 2026-09-21 audit — see Current Project Status above) create the full schema and seed the RBAC matrix plus Keenon C40 S / Sakar CleanBot 5000 Plus reference data. Current tables:
 
-`organizations`, `sites`, `roles`, `permissions`, `role_permissions`, `users`, `refresh_tokens`, `robot_manufacturers`, `robot_models`, `robot_capabilities`, `robots`, `robot_credentials`, `robot_status`, `robot_telemetry`, `robot_events`, `robot_errors`, `robot_alerts`, `application_logs`, `robot_commands`, `command_results`, `robot_locks`, `robot_tasks`, `task_events`, `cleaning_sessions`, `charging_sessions`, `maps`, `map_points`, `notifications`, `audit_logs`, `keenon_area_mappings`, `vendor_webhook_events`, `mqtt_inbound_messages`, `keenon_robot_scene_configs` (Seventh pass — Sakar-owned per-robot Keenon `sceneCode` configuration, migration `V16`).
+`organizations`, `sites`, `roles`, `permissions`, `role_permissions`, `users`, `refresh_tokens`, `robot_manufacturers`, `robot_models`, `robot_capabilities`, `robots`, `robot_credentials`, `robot_status`, `robot_telemetry`, `robot_events`, `robot_errors`, `robot_alerts`, `application_logs`, `robot_commands`, `command_results`, `robot_locks`, `robot_tasks`, `task_events`, `cleaning_sessions`, `charging_sessions`, `maps`, `map_points`, `notifications`, `audit_logs`, `keenon_area_mappings`, `vendor_webhook_events`, `mqtt_inbound_messages`, `keenon_cleaning_mode_mappings` (`V12`), `keenon_back_point_mappings` (`V13`), `keenon_robot_scene_configs` (Seventh pass — Sakar-owned per-robot Keenon `sceneCode` configuration, migration `V16`). `V17`/`V18` add the Sakar serial-number sequence, `vendor_serial_number` column, and per-model serial prefix.
 
-The migration count/list above (`V1`–`V11`) is itself stale pre-existing documentation debt (the repository actually has migrations through `V16` — see the Sixth pass note on undocumented existing Keenon work); reconciling the full migration history is out of scope for this pass, which only adds `V16__keenon_robot_scene_config.sql`.
+Production safeguards not yet implemented for this schema: no telemetry/event retention, purge, or archival job (`robot_telemetry`/`robot_events` grow unbounded), no table partitioning, and audit-log immutability is enforced only by application-code discipline rather than a DB-role-level `REVOKE UPDATE/DELETE` (see Current Project Status above).
 
 **Schema existing does not mean the corresponding workflow is complete.** As of Phase 3, `robot_status`, `robot_telemetry`, `robot_events`, `robot_errors`, `robot_credentials`, and `mqtt_inbound_messages` have real application code populating them (via the MQTT ingestion pipeline). As of Phase 6, `robot_commands`, `robot_tasks`, `task_events`, `cleaning_sessions`, `robot_alerts`, and `users`/`roles` (write paths, not just seed data) also have real application code populating them. `robot_locks` still has no application code populating it at all — see Implementation Status above.
 

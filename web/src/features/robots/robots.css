@@ -60,26 +60,6 @@
   border-bottom: 1px solid var(--sakar-border-subtle);
 }
 
-.sakar-breadcrumb {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12.5px;
-  color: var(--sakar-text-faint);
-  margin: 0 0 8px;
-}
-
-.sakar-breadcrumb a {
-  color: var(--sakar-text-faint);
-  text-decoration: none;
-}
-
-.sakar-breadcrumb a:hover {
-  color: var(--sakar-primary);
-  text-decoration: underline;
-}
-
-.sakar-breadcrumb-current {
-  color: var(--sakar-text-muted);
-  font-weight: 600;
-}
+/* .sakar-breadcrumb* moved to styles/components.css (globally imported) so
+   pages outside Robot Detail can share the same trail — see Breadcrumb.tsx.
+   Robot Detail's own markup is unchanged and still picks up those rules. */

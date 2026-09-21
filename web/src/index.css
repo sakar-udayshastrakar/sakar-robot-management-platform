@@ -70,20 +70,58 @@
   --sakar-overlay: rgba(15, 23, 42, 0.45);
 
   --sakar-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
-  --sakar-shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.06);
+  /* Single soft, diffuse elevation rather than a stacked two-layer shadow —
+     a lifted card surface reads better against the cool page background at
+     operational-console density. */
+  --sakar-shadow-md: 0 2px 8px rgba(15, 23, 42, 0.06);
   --sakar-shadow-lg: 0 12px 24px -4px rgba(15, 23, 42, 0.14);
 
   /* Radius scale — tightened from the Support Portal's rounded-lg/xl/2xl
-     for a denser, operational-console feel (Keenon-inspired UI pass).
-     Keenon's own cards/tags/buttons read as rounded rectangles, not
-     capsule/pill shapes, so this scale stays deliberately small. */
-  --sakar-radius-sm: 5px;
-  --sakar-radius-md: 7px;
+     for a denser, operational-console feel. Cards/tags/buttons should read
+     as rounded rectangles, not capsule/pill shapes, so this scale stays
+     deliberately small. */
+  --sakar-radius-sm: 4px;
+  --sakar-radius-md: 6px;
   --sakar-radius-lg: 8px;
 
   --sakar-font-sans: Roboto, system-ui, Avenir, Helvetica, Arial, sans-serif;
   --sakar-font-mono: ui-monospace, SFMono-Regular, 'Roboto Mono', Menlo, Consolas, monospace;
 
+  /* ---------------------------------------------------------------- */
+  /* Spacing scale                                                      */
+  /* A single 4px-based ramp so padding/gap/margin stop being ad-hoc    */
+  /* literals. Existing rules keep their current values until a later   */
+  /* phase migrates them deliberately.                                  */
+  /* ---------------------------------------------------------------- */
+  --sakar-sp-1: 4px;
+  --sakar-sp-2: 8px;
+  --sakar-sp-3: 12px;
+  --sakar-sp-4: 16px;
+  --sakar-sp-5: 20px;
+  --sakar-sp-6: 24px;
+  --sakar-sp-8: 32px;
+
+  /* ---------------------------------------------------------------- */
+  /* Density scale                                                      */
+  /* Canonical heights for the shell and for repeating list/table       */
+  /* chrome. Declared here in Phase A; consumed from Phase B onward.    */
+  /* Nothing reads these yet — in particular layout.css still uses its  */
+  /* own hardcoded header offset, which is migrated in Phase B.         */
+  /* ---------------------------------------------------------------- */
+  --sakar-header-h: 56px;
+  --sakar-nav-item-h: 40px;
+
+  --sakar-control-h: 32px;
+  --sakar-control-h-sm: 28px;
+
+  --sakar-table-row-h: 42px;
+  --sakar-table-head-h: 36px;
+
+  --sakar-tab-h: 36px;
+  --sakar-page-gutter: 20px;
+
+  /* Sidebar widths already existed at the approved values — reused as-is
+     rather than redeclared under a second name. */
   --sakar-sidebar-width: 224px;
   --sakar-sidebar-width-collapsed: 60px;
 

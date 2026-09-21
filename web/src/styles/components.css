@@ -855,3 +855,130 @@
   letter-spacing: 0.03em;
   color: var(--sakar-text-faint);
 }
+
+/* ------------------------------------------------------------------ */
+/* Breadcrumb — moved here from features/robots/robots.css so pages     */
+/* outside Robot Detail can use the same trail (Breadcrumb.tsx).        */
+/* Rules are unchanged; only their file moved.                          */
+/* ------------------------------------------------------------------ */
+
+.sakar-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  color: var(--sakar-text-faint);
+  margin: 0 0 8px;
+}
+
+.sakar-breadcrumb a {
+  color: var(--sakar-text-faint);
+  text-decoration: none;
+}
+
+.sakar-breadcrumb a:hover {
+  color: var(--sakar-primary);
+  text-decoration: underline;
+}
+
+.sakar-breadcrumb-current {
+  color: var(--sakar-text-muted);
+  font-weight: 600;
+}
+
+/* ------------------------------------------------------------------ */
+/* Filter card — a labeled filter grid on its own white surface with a  */
+/* right-aligned action cluster, matching the reference console's       */
+/* "filter panel above the results table" convention. Distinct from the */
+/* bare .sakar-filter-bar, which stays as-is for pages already using it.*/
+/* ------------------------------------------------------------------ */
+
+/* Spacing below is expressed with the --sakar-sp-* scale. The few original
+   off-scale literals (14px, 10px) were snapped to the nearest step; these
+   rules have no consumers yet, so the change is not visible anywhere. */
+
+.sakar-filter-card {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--sakar-sp-3) var(--sakar-sp-5);
+  background: var(--sakar-surface);
+  border: 1px solid var(--sakar-border);
+  border-radius: var(--sakar-radius-md);
+  box-shadow: var(--sakar-shadow-sm);
+  padding: var(--sakar-sp-3) var(--sakar-sp-4);
+  margin-bottom: var(--sakar-sp-4);
+}
+
+.sakar-filter-grid {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sakar-sp-3) var(--sakar-sp-6);
+  min-width: 0;
+}
+
+.sakar-filter-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--sakar-sp-2);
+  margin-left: auto;
+}
+
+/* Toolbar strip directly above a table — record count on the left,
+   actions on the right. */
+.sakar-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--sakar-sp-2) var(--sakar-sp-3);
+  margin-bottom: var(--sakar-sp-3);
+}
+
+.sakar-toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--sakar-sp-2);
+  margin-left: auto;
+}
+
+/* Vertical rhythm for stacked page sections. */
+.sakar-stack {
+  display: grid;
+  gap: var(--sakar-sp-4);
+}
+
+/* ------------------------------------------------------------------ */
+/* Table cell alignment + leading index column                          */
+/* ------------------------------------------------------------------ */
+
+.sakar-table th.sakar-table-cell--right,
+.sakar-table td.sakar-table-cell--right {
+  text-align: right;
+}
+
+.sakar-table th.sakar-table-cell--center,
+.sakar-table td.sakar-table-cell--center {
+  text-align: center;
+}
+
+.sakar-table th.sakar-table-index,
+.sakar-table td.sakar-table-index {
+  width: 52px;
+  text-align: center;
+  color: var(--sakar-text-subtle);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Numeric columns line up when digits are tabular. */
+.sakar-table td.sakar-table-cell--right {
+  font-variant-numeric: tabular-nums;
+}
+
+.sakar-pagination-total {
+  margin-right: auto;
+  font-size: 12.5px;
+  color: var(--sakar-text-faint);
+}

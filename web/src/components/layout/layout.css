@@ -11,18 +11,24 @@
 }
 
 /* ------------------------------------------------------------------ */
-/* Header — matches AdminLayout.jsx's header exactly: white, thin bottom */
-/* border, logo + separator + product name on the left.                */
+/* Header — white, logo + separator + product name on the left, account */
+/* controls on the right. Height is token-driven (--sakar-header-h) and */
+/* the sidebar's sticky offset below is derived from the same token, so */
+/* the two can never drift apart.                                       */
 /* ------------------------------------------------------------------ */
 
 .sakar-topnav {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  padding: 8px 16px;
+  gap: var(--sakar-sp-4);
+  height: var(--sakar-header-h);
+  flex-shrink: 0;
+  padding: 0 var(--sakar-sp-4);
   background: var(--sakar-surface);
-  border-bottom: 1px solid var(--sakar-border);
+  /* Soft elevation instead of a hairline border — separates the header
+     from the cool page background without adding a hard rule. */
+  box-shadow: var(--sakar-shadow-md);
   position: sticky;
   top: 0;
   z-index: 30;
@@ -81,8 +87,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: var(--sakar-control-h);
+  height: var(--sakar-control-h);
   border-radius: var(--sakar-radius-sm);
   border: none;
   background: none;
@@ -119,8 +125,9 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 8px 12px;
-  border-radius: var(--sakar-radius-md);
+  height: var(--sakar-control-h);
+  padding: 0 var(--sakar-sp-3);
+  border-radius: var(--sakar-radius-sm);
   border: none;
   background: none;
   color: var(--sakar-text-muted);
@@ -143,8 +150,10 @@
   display: flex;
   flex-direction: column;
   position: sticky;
-  top: 43px;
-  height: calc(100vh - 43px);
+  /* Both derived from --sakar-header-h so the sidebar can never drift out
+     of alignment with the header (previously two hardcoded 43px values). */
+  top: var(--sakar-header-h);
+  height: calc(100vh - var(--sakar-header-h));
   overflow-y: auto;
   transition: width 0.15s ease;
 }
@@ -162,18 +171,16 @@
   margin-bottom: 4px;
 }
 
-/* Deliberately subtle — Keenon's top-level nav has no category dividers
-   at all, so this reads as a faint grouping hint rather than a heading
-   (kept, not removed, so the existing IA/permission structure and
-   usability grouping are unchanged — SAKAR_KEENON_UI_AUDIT.md Section D). */
+/* A quiet grouping label, not a heading — it must stay visually lighter
+   than the nav items beneath it. Nudged up from 9.5px/500/0.75-opacity,
+   which was too faint to scan; still well below the 13.5px/600 items. */
 .sakar-sidebar-section-title {
-  font-size: 9.5px;
-  font-weight: 500;
+  font-size: 10.5px;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.06em;
   color: var(--sakar-text-subtle);
-  opacity: 0.75;
-  padding: 2px 10px;
+  padding: var(--sakar-sp-2) 10px var(--sakar-sp-1);
 }
 
 .sakar-sidebar-section + .sakar-sidebar-section {
@@ -186,10 +193,13 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 8px 12px 8px 9px;
+  /* Height is token-driven rather than derived from padding, so every nav
+     row lands on the same rhythm regardless of label length. */
+  min-height: var(--sakar-nav-item-h);
+  padding: 0 var(--sakar-sp-3) 0 9px;
   border-radius: var(--sakar-radius-sm);
   border-left: 3px solid transparent;
-  font-size: 13px;
+  font-size: 13.5px;
   font-weight: 600;
   color: var(--sakar-sidebar-text);
   text-decoration: none;
@@ -199,7 +209,7 @@
 
 .sakar-sidebar--collapsed .sakar-sidebar-link {
   justify-content: center;
-  padding: 9px;
+  padding: 0;
   border-left-width: 0;
 }
 
@@ -251,12 +261,14 @@
   align-items: center;
   gap: 8px;
   justify-content: center;
+  flex-shrink: 0;
+  min-height: var(--sakar-nav-item-h);
   background: none;
   border: none;
   border-top: 1px solid var(--sakar-border-subtle);
   color: var(--sakar-text-faint);
   cursor: pointer;
-  padding: 12px;
+  padding: 0 var(--sakar-sp-3);
   font-size: 12.5px;
   font-weight: 600;
 }
@@ -269,9 +281,11 @@
   min-width: 0;
 }
 
+/* The shell owns the global page gutter; pages supply their own internal
+   spacing only. */
 .sakar-shell-content {
   flex: 1;
-  padding: 18px 22px 32px;
+  padding: var(--sakar-page-gutter) var(--sakar-page-gutter) var(--sakar-sp-8);
   min-width: 0;
 }
 
@@ -319,6 +333,6 @@
   }
 
   .sakar-shell-content {
-    padding: 18px;
+    padding: var(--sakar-page-gutter);
   }
 }

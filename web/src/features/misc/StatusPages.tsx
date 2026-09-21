@@ -1,5 +1,9 @@
 import { Link } from 'react-router-dom';
 import { EmptyState } from '../../components/ui/States';
+// Both pages below use .sakar-auth-page, which is defined in auth.css.
+// Without this import they only rendered correctly when the login page
+// happened to have loaded that stylesheet first.
+import '../auth/auth.css';
 
 export function ForbiddenPage() {
   return (
