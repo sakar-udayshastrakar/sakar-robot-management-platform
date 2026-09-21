@@ -970,6 +970,22 @@
   border-radius: 0;
 }
 
+/* Compact horizontal form row — fields sit side by side instead of stacking,
+   for short create/scope forms in a console page. Opt-in; a .sakar-field
+   outside this wrapper keeps its original stacked layout. */
+.sakar-form-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--sakar-sp-3) var(--sakar-sp-4);
+}
+
+.sakar-form-row .sakar-field {
+  margin-bottom: 0;
+  flex: 1 1 180px;
+  min-width: 180px;
+}
+
 /* Left-hand side of a toolbar: result count with an optional caveat line. */
 .sakar-toolbar-info {
   display: flex;

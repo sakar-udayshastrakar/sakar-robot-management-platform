@@ -6,6 +6,7 @@ import { getOrganization, getOrganizationChildren, createOrganization } from '..
 import { listSitesByOrganization } from '../../api/sites';
 import { listRobots } from '../../api/robots';
 import type { Organization, OrganizationType } from '../../types/domain';
+import { Breadcrumb } from '../../components/ui/Breadcrumb';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
@@ -109,93 +110,123 @@ export function OrganizationDetailPage() {
 
   return (
     <div>
+      <Breadcrumb
+        items={[
+          { label: 'Administration' },
+          { label: 'Organizations', to: '/organizations' },
+          { label: org.name },
+        ]}
+      />
       <PageHeader
         title={org.name}
         subtitle={`${org.orgType} · ${org.id}`}
-        actions={<Badge tone={org.status === 'ACTIVE' ? 'success' : 'danger'}>{org.status}</Badge>}
+        actions={
+          <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
+            <Badge tone={org.status === 'ACTIVE' ? 'success' : 'danger'}>{org.status}</Badge>
+            <button type="button" className="sakar-btn sakar-btn--secondary" onClick={() => navigate(`/sites?organizationId=${org.id}`)}>
+              View sites
+            </button>
+            {hasPermission('USER_MANAGE') && (
+              <button type="button" className="sakar-btn sakar-btn--primary" onClick={() => setShowCreate((v) => !v)}>
+                {showCreate ? 'Cancel' : 'Add child organization'}
+              </button>
+            )}
+          </div>
+        }
       />
 
-      <Card title="Details">
-        <dl style={{ display: 'grid', gridTemplateColumns: '160px 1fr', rowGap: 10 }}>
-          <dt className="sakar-page-subtitle">Path</dt>
-          <dd style={{ margin: 0, fontFamily: 'monospace', fontSize: 12.5 }}>{org.path}</dd>
-          <dt className="sakar-page-subtitle">Parent</dt>
-          <dd style={{ margin: 0 }}>
-            {org.parentOrganizationId ? (
-              <button type="button" className="sakar-btn sakar-btn--secondary" onClick={() => navigate(`/organizations/${org.parentOrganizationId}`)}>
-                View parent
+      {showCreate && (
+        <Card title="New child organization">
+          <form onSubmit={handleCreateChild}>
+            <div className="sakar-form-row">
+              <div className="sakar-field">
+                <label htmlFor="new-org-name">Name</label>
+                <input id="new-org-name" required value={name} onChange={(e) => setName(e.target.value)} />
+              </div>
+              <div className="sakar-field">
+                <label htmlFor="new-org-type">Type</label>
+                <select id="new-org-type" value={orgType} onChange={(e) => setOrgType(e.target.value as OrganizationType)}>
+                  {ORG_TYPES.map((t) => (
+                    <option key={t} value={t}>
+                      {t}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <button type="submit" className="sakar-btn sakar-btn--primary" disabled={submitting}>
+                {submitting ? 'Creating…' : 'Create'}
               </button>
-            ) : (
-              '— (root)'
-            )}
-          </dd>
-          <dt className="sakar-page-subtitle">Created</dt>
-          <dd style={{ margin: 0 }}>{new Date(org.createdAt).toLocaleString()}</dd>
-        </dl>
+            </div>
+            {createError && <div className="sakar-field-error" style={{ marginTop: 10 }}>{createError}</div>}
+          </form>
+        </Card>
+      )}
+
+      <Card title="Details">
+        <div className="sakar-fact-group">
+          <span className="sakar-kv-row">
+            <span className="sakar-kv-label">Path:</span>
+            <span className="sakar-kv-value sakar-mono">{org.path}</span>
+          </span>
+          <span className="sakar-kv-row">
+            <span className="sakar-kv-label">Parent:</span>
+            <span className="sakar-kv-value">
+              {org.parentOrganizationId ? (
+                <button type="button" className="sakar-link-btn" onClick={() => navigate(`/organizations/${org.parentOrganizationId}`)}>
+                  View parent
+                </button>
+              ) : (
+                '— (root)'
+              )}
+            </span>
+          </span>
+          <span className="sakar-kv-row">
+            <span className="sakar-kv-label">Created:</span>
+            <span className="sakar-kv-value">{new Date(org.createdAt).toLocaleString()}</span>
+          </span>
+        </div>
       </Card>
 
-      <div style={{ height: 16 }} />
+      <div className="sakar-toolbar" style={{ marginTop: 'var(--sakar-sp-4)' }}>
+        <div className="sakar-toolbar-info">
+          <span className="sakar-toolbar-count">
+            {children === null ? 'Child organizations' : `${children.length} child organization${children.length === 1 ? '' : 's'}`}
+          </span>
+          <span className="sakar-toolbar-note">
+            Site and robot counts are tallied client-side from the real sites and robots APIs; the robot tally reads the
+            first 100 robots visible to you.
+          </span>
+        </div>
+      </div>
 
-      <Card
-        title="Child organizations"
-        actions={
-          hasPermission('USER_MANAGE') && (
-            <button type="button" className="sakar-btn sakar-btn--primary" onClick={() => setShowCreate((v) => !v)}>
-              {showCreate ? 'Cancel' : 'Add child organization'}
-            </button>
-          )
-        }
-      >
-        {showCreate && (
-          <form onSubmit={handleCreateChild} style={{ marginBottom: 20, paddingBottom: 20, borderBottom: '1px solid var(--sakar-border)' }}>
-            <div className="sakar-field">
-              <label htmlFor="new-org-name">Name</label>
-              <input id="new-org-name" required value={name} onChange={(e) => setName(e.target.value)} />
-            </div>
-            <div className="sakar-field">
-              <label htmlFor="new-org-type">Type</label>
-              <select id="new-org-type" value={orgType} onChange={(e) => setOrgType(e.target.value as OrganizationType)}>
-                {ORG_TYPES.map((t) => (
-                  <option key={t} value={t}>
-                    {t}
-                  </option>
-                ))}
-              </select>
-            </div>
-            {createError && <div className="sakar-field-error" style={{ marginBottom: 12 }}>{createError}</div>}
-            <button type="submit" className="sakar-btn sakar-btn--primary" disabled={submitting}>
-              {submitting ? 'Creating…' : 'Create'}
-            </button>
-          </form>
-        )}
-
-        <DataTable
-          rows={children ?? []}
-          rowKey={(c) => c.id}
-          emptyTitle="No child organizations"
-          columns={[
-            { key: 'name', header: 'Name', render: (c) => (
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <button type="button" className="sakar-btn sakar-btn--secondary" onClick={() => navigate(`/organizations/${c.id}`)}>
+      <div className="sakar-card sakar-card--flush">
+        <div className="sakar-card-body">
+          <DataTable
+            rows={children ?? []}
+            rowKey={(c) => c.id}
+            loading={children === null}
+            indexColumn
+            emptyTitle="No child organizations"
+            emptyDetail="This organization has no children in the tenant hierarchy."
+            columns={[
+              { key: 'name', header: 'Organization', render: (c) => (
+                  <button type="button" className="sakar-link-btn sakar-nowrap" onClick={() => navigate(`/organizations/${c.id}`)}>
                     {c.name}
                   </button>
-                  <span className="sakar-page-subtitle">{c.orgType}</span>
-                </div>
-              ) },
-            { key: 'sites', header: 'Sites', render: (c) => siteCounts.get(c.id) ?? '—' },
-            { key: 'robots', header: 'Robots', render: (c) => robotCounts.get(c.id) ?? '—' },
-            { key: 'status', header: 'Status', render: (c) => <Badge tone={c.status === 'ACTIVE' ? 'success' : 'danger'}>{c.status}</Badge> },
-          ]}
-        />
-      </Card>
-
-      <div style={{ height: 16 }} />
-
-      <Card title="Sites in this organization">
-        <button type="button" className="sakar-btn sakar-btn--secondary" onClick={() => navigate(`/sites?organizationId=${org.id}`)}>
-          View sites
-        </button>
-      </Card>
+                ) },
+              { key: 'type', header: 'Type', render: (c) => <span className="sakar-nowrap">{c.orgType}</span> },
+              { key: 'sites', header: 'Sites', align: 'right', render: (c) => siteCounts.get(c.id) ?? '—' },
+              { key: 'robots', header: 'Robots', align: 'right', render: (c) => robotCounts.get(c.id) ?? '—' },
+              { key: 'status', header: 'Status', render: (c) => <Badge tone={c.status === 'ACTIVE' ? 'success' : 'danger'}>{c.status}</Badge> },
+              { key: 'actions', header: 'Actions', align: 'right', render: (c) => (
+                  <button type="button" className="sakar-btn sakar-btn--secondary sakar-btn--sm" onClick={() => navigate(`/organizations/${c.id}`)}>
+                    Open
+                  </button>
+                ) },
+            ]}
+          />
+        </div>
+      </div>
     </div>
   );
 }
