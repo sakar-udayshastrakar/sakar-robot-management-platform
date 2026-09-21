@@ -94,14 +94,24 @@ export interface RobotBatteryInfo {
 
 // backend/.../robot/adapter/dto/AreaInfo.java — same live-adapter-call
 // pattern as RobotStatusSnapshot/BatteryInfo (GET /robots/{id}/areas,
-// GET_AREAS capability). Deliberately only these two fields: the adapter
-// does not receive or expose polygon geometry, navigation points, or a
-// charging-point position from the vendor, so none of that is modeled
-// here — see SAKAR_KEENON_UI_AUDIT.md / the Map implementation report for
-// exactly what is and isn't available.
+// GET_AREAS capability). The adapter does not receive or expose polygon
+// geometry, navigation points, or a charging-point position from the
+// vendor, so none of that is modeled here — see SAKAR_KEENON_UI_AUDIT.md /
+// the Map implementation report for exactly what is and isn't available.
+//
+// sakarAreaId mirrors AreaInfo.java's third field: the Sakar-owned
+// KeenonAreaMapping row id, null when the vendor reports an area with no
+// synced Sakar mapping yet (never fabricated to fill the gap), and the
+// value a CLEANING task's parameters.areaIds must use — see
+// RobotTaskService.parseCleaningStartParams and RobotTasksPanel's
+// CreateTaskForm. Typed optional here (rather than required) only so an
+// existing, unrelated RobotMapPanel test fixture that predates this field
+// does not need to change as a side effect of adding it; the real backend
+// response always includes the key.
 export interface RobotArea {
   vendorAreaId: string | null;
   displayName: string | null;
+  sakarAreaId?: string | null;
 }
 
 // backend/.../map/RobotMapResponse.java — vendorMapId/name/width/height/

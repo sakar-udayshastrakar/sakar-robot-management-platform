@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import { cancelTask, createTask, listRobotTasks, pauseTask, resumeTask, startTask, stopTask } from '../../api/tasks';
+import { getRobotAreas } from '../../api/robots';
 import { useApi } from '../../hooks/useApi';
 import { usePermissions } from '../../hooks/usePermissions';
 import { useToast } from '../../components/ui/Toast';
@@ -9,7 +10,20 @@ import { DataTable } from '../../components/ui/DataTable';
 import { Pagination } from '../../components/ui/Pagination';
 import { Badge } from '../../components/ui/Badge';
 import { LoadingState, ErrorState } from '../../components/ui/States';
-import type { RobotTask, TaskStatus } from '../../types/domain';
+import type { RobotArea, RobotTask, TaskStatus } from '../../types/domain';
+
+// Sakar's generic `mode` values — mirrors the literal switch in
+// KeenonRobotAdapter.cleanModelIdFor (backend has no "list cleaning modes"
+// endpoint yet, so this is hardcoded client-side, the same convention
+// CommandsPanel.tsx already uses for NonLockCommandType) plus the labels
+// used across the rest of this codebase's cleaning-related UI.
+const CLEANING_MODES: { value: string; label: string }[] = [
+  { value: 'SWEEP', label: 'Sweep' },
+  { value: 'SWEEP_MOP', label: 'Sweep + Mop' },
+  { value: 'SWEEP_VACUUM', label: 'Sweep + Vacuum' },
+  { value: 'SWEEP_PUSH', label: 'Sweep (push)' },
+  { value: 'WATER_SUCTION', label: 'Water suction' },
+];
 
 const STATUS_TONE: Record<TaskStatus, 'neutral' | 'info' | 'warning' | 'success' | 'danger'> = {
   CREATED: 'neutral',
@@ -70,15 +84,50 @@ function TaskActions({ task, onChanged }: { task: RobotTask; onChanged: () => vo
 function CreateTaskForm({ robotId, onCreated }: { robotId: string; onCreated: () => void }) {
   const toast = useToast();
   const [taskType, setTaskType] = useState('CLEANING');
+  const [mode, setMode] = useState('');
+  const [selectedAreaIds, setSelectedAreaIds] = useState<string[]>([]);
+  const [repeatCount, setRepeatCount] = useState(1);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Every area the vendor currently reports, but only ones with a synced
+  // Sakar mapping (sakarAreaId) are ever selectable — an unsynced area has
+  // no id a CLEANING task's parameters could legally reference (see
+  // AreaInfo.java's Javadoc), so it is filtered out entirely rather than
+  // shown disabled or with a fabricated id.
+  const { data: areas, status: areasStatus, error: areasError } = useApi(() => getRobotAreas(robotId), [robotId]);
+  const selectableAreas = (areas ?? []).filter(
+    (a): a is RobotArea & { sakarAreaId: string } => Boolean(a.sakarAreaId),
+  );
+
+  function toggleArea(sakarAreaId: string) {
+    setSelectedAreaIds((prev) =>
+      prev.includes(sakarAreaId) ? prev.filter((id) => id !== sakarAreaId) : [...prev, sakarAreaId],
+    );
+  }
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setError(null);
+
+    if (taskType === 'CLEANING') {
+      if (!mode) {
+        setError('Cleaning mode is required.');
+        return;
+      }
+      if (selectedAreaIds.length === 0) {
+        setError('Select at least one area.');
+        return;
+      }
+    }
+
     setSubmitting(true);
     try {
-      await createTask(robotId, { taskType });
+      const input =
+        taskType === 'CLEANING'
+          ? { taskType, parameters: JSON.stringify({ mode, areaIds: selectedAreaIds, repeatCount }) }
+          : { taskType };
+      await createTask(robotId, input);
       toast.show('Task created', 'success');
       onCreated();
     } catch (err) {
@@ -98,6 +147,54 @@ function CreateTaskForm({ robotId, onCreated }: { robotId: string; onCreated: ()
           <option value="SPOT_CLEAN">Spot clean</option>
         </select>
       </div>
+
+      {taskType === 'CLEANING' && (
+        <>
+          <div className="sakar-field" style={{ marginBottom: 0 }}>
+            <label htmlFor="cleaning-mode">Cleaning mode</label>
+            <select id="cleaning-mode" value={mode} onChange={(e) => setMode(e.target.value)}>
+              <option value="">Select a mode…</option>
+              {CLEANING_MODES.map((m) => (
+                <option key={m.value} value={m.value}>{m.label}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="sakar-field" style={{ marginBottom: 0 }}>
+            <label htmlFor="repeat-count">Repeat count</label>
+            <input
+              id="repeat-count"
+              type="number"
+              min={1}
+              value={repeatCount}
+              onChange={(e) => setRepeatCount(Math.max(1, Number(e.target.value) || 1))}
+              style={{ width: 70 }}
+            />
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+            {areasStatus === 'loading' || areasStatus === 'idle' ? (
+              <span>Loading areas…</span>
+            ) : areasStatus === 'error' ? (
+              <span className="sakar-field-error">Could not load areas: {areasError}</span>
+            ) : selectableAreas.length === 0 ? (
+              <span>No synced areas available for this robot.</span>
+            ) : (
+              selectableAreas.map((area) => (
+                <label key={area.sakarAreaId} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <input
+                    type="checkbox"
+                    checked={selectedAreaIds.includes(area.sakarAreaId)}
+                    onChange={() => toggleArea(area.sakarAreaId)}
+                  />
+                  {area.displayName ?? area.vendorAreaId}
+                </label>
+              ))
+            )}
+          </div>
+        </>
+      )}
+
       <button type="submit" className="sakar-btn sakar-btn--primary" disabled={submitting}>
         {submitting ? 'Creating…' : 'Create task'}
       </button>
