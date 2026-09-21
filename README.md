@@ -247,6 +247,60 @@ Card radius resolves to 6px and the primary action colour to `#FF914D`, with no 
 - The `.sakar-filter-card` / `.sakar-toolbar` / `.sakar-stack` layout helpers remain unused, reserved for the list-page phase.
 - No data source, API call, or capability claim changed in this phase; nothing was fabricated.
 
+## Robots List — Phase D1
+
+*Scope note: D1 covers the `/robots` page only. No other page was modified, and no backend, API, Android, simulator or database file was touched. This is a presentation change — every API call, filter, permission gate and workflow on the page behaves exactly as before.*
+
+### Structure
+
+`/robots` now follows the enterprise list-page pattern rather than a single wrapper card:
+
+```
+Breadcrumb            Fleet / Robots
+PageHeader            "Robots" + subtitle + Register Robot
+FilterCard            Search · Status · Model · Sort          [Reset]
+Toolbar               result count + API-limitation note      [Refresh]
+TableCard             DataTable → Pagination
+```
+
+The filter controls were lifted out of the table card into their own filter card, and a toolbar band now sits between filters and table. A new opt-in `.sakar-card--flush` modifier removes the previous card-inside-a-card nesting so the table runs edge-to-edge within its card.
+
+### Shared primitives consumed
+
+The page is the first consumer of several primitives built in earlier phases: the shared `Breadcrumb` (previously unused), the Phase C `DataTable` index column and skeleton loading state, and the Phase C `Pagination` `Total N` and page-size selector. No second table or pagination implementation was introduced.
+
+### Density
+
+Verified by measurement against the compiled stylesheet: table header **36px**, table rows **42px**, row-action buttons on the compact 28px variant. A new `.sakar-nowrap` utility keeps dense cells on one line — without it, wrapping names and serials inflated rows to 48px. The table's own wrapper scrolls **horizontally** when the column set exceeds the available width (observed at 1280px; the columns fit without scrolling at 1440px and above), while the page itself never overflows horizontally.
+
+### Real API-backed additions
+
+- **`Total N`** in the pagination, from `data.totalElements`.
+- **Page-size selector** (10/25/50/100), wired to the existing `pageSize` parameter of `GET /robots`; changing it resets to the first page.
+
+Both are backed by the existing API. No filtering, sorting or counting was fabricated.
+
+### Columns
+
+The table now shows: `No. · Robot · Serial number · Model · Site · Connection · Registration · Current state · Last heartbeat · Actions`.
+
+**Battery, Charging and Agent Version were removed** because the robot registry API does not provide those fields — every row rendered "Not available", consuming roughly a quarter of the table width. They were not replaced with invented columns, and the omission is still disclosed in the toolbar note, which also records that current state and last heartbeat come from a bounded live status probe (up to 12 robots) and that filtering and sorting apply to the loaded page only.
+
+Sorting remains the existing client-side dropdown, which orders the loaded page. Column-header sorting was deliberately **not** added, because the API offers no server-side sort and a sortable header would imply dataset-wide ordering.
+
+### Verification
+
+Checked against the real authenticated application at `localhost:5173/robots` (viewport 1536): header 56px, sidebar 224px, content and all page sections aligned to the 20px gutter, no page-level horizontal overflow, empty state rendering correctly.
+
+That pass **found and fixed a real defect**: the page-size selector displayed "10 / page" while the effective size was 25, because 25 was absent from the selector's default option list. Corrected by supplying `[10, 25, 50, 100]`; re-verified live as "25 / page".
+
+### Known limitations
+
+- **The local registry currently returns zero robots.** `GET /api/v1/robots` responds `200` with `totalElements: 0`, so the page legitimately shows its empty state. Robots visible in Keenon Cloud have not been synced into this local Sakar registry.
+- Consequently, **row rendering was not verified against live data**: row height, cell nowrap behaviour, action-button fit and horizontal table scrolling were confirmed against the compiled stylesheet using a DOM replica at 1280/1440/1920, not with real rows.
+- Live verification at 1280/1440/1920 was not possible — the browser window on this machine is maximised and cannot be resized (display caps at 1536).
+- Loading now renders skeleton rows instead of the previous `LoadingState`, which removes that view's `role="status"` announcement; queued for the accessibility phase.
+
 ## Project Status
 
 | Field | Value |

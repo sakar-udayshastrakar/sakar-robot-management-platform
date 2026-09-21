@@ -958,6 +958,37 @@
   margin-left: auto;
 }
 
+/* Table card — the card is itself the surface, so the table sits flush to
+   its edges instead of nesting a second bordered box inside a bordered
+   card. Opt-in; plain .sakar-card is unchanged. */
+.sakar-card--flush > .sakar-card-body {
+  padding: 0;
+}
+
+.sakar-card--flush .sakar-table-wrap {
+  border: 0;
+  border-radius: 0;
+}
+
+/* Left-hand side of a toolbar: result count with an optional caveat line. */
+.sakar-toolbar-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.sakar-toolbar-count {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--sakar-text);
+}
+
+.sakar-toolbar-note {
+  font-size: 12px;
+  color: var(--sakar-text-faint);
+}
+
 /* Toolbar strip directly above a table — record count on the left,
    actions on the right. */
 .sakar-toolbar {

@@ -172,6 +172,12 @@ textarea {
   font-family: var(--sakar-font-mono);
 }
 
+/* Keeps a dense table cell on one line so rows hold their token height;
+   the table's own wrapper scrolls horizontally instead of the row growing. */
+.sakar-nowrap {
+  white-space: nowrap;
+}
+
 .sakar-spin {
   animation: sakar-spin 0.9s linear infinite;
   color: var(--sakar-primary);
