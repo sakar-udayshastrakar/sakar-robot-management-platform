@@ -6,7 +6,6 @@ import { useAuth } from '../../features/auth/AuthContext';
 import { listSitesByOrganization, createSite } from '../../api/sites';
 import { getOrganization } from '../../api/organizations';
 import { listRobots } from '../../api/robots';
-import { useRobotStatusProbe } from '../shared/useRobotStatusProbe';
 import { Breadcrumb } from '../../components/ui/Breadcrumb';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { Card } from '../../components/ui/Card';
@@ -47,7 +46,6 @@ export function SitesPage() {
     () => (robotsPage?.content ?? []).filter((r) => r.organizationId === organizationId),
     [robotsPage, organizationId],
   );
-  const { statuses } = useRobotStatusProbe(robotsForOrg);
 
   function handleSwitchOrg(e: FormEvent) {
     e.preventDefault();
@@ -150,8 +148,8 @@ export function SitesPage() {
               </span>
               <span className="sakar-toolbar-note">
                 The sites API returns one organization at a time and is not paginated. Robot counts and online counts are
-                tallied from the first 100 robots visible to you; a robot with no successful status probe is not counted
-                as online.
+                tallied from the first 100 robots visible to you. A robot counts as online only when its last
+                heartbeat/telemetry is within the configured offline threshold.
               </span>
             </div>
             <div className="sakar-toolbar-actions">
@@ -188,11 +186,13 @@ export function SitesPage() {
                         const count = robotsForOrg.filter((r) => r.siteId === s.id).length;
                         return <Link to={`/robots?siteId=${s.id}`}>{count}</Link>;
                       } },
+                    // Counted from each robot's backend-authoritative connectionStatus, the same
+                    // value the Robots page and the offline-alert layer use — not from a live
+                    // vendor probe, which only proves the vendor API answered.
                     { key: 'online', header: 'Online', align: 'right', render: (s) => {
-                        const siteRobotIds = robotsForOrg.filter((r) => r.siteId === s.id).map((r) => r.id);
-                        const probed = siteRobotIds.map((id) => statuses.get(id)).filter((v) => v && v !== 'unavailable') as { online: boolean }[];
-                        if (probed.length === 0) return <span className="sakar-page-subtitle">—</span>;
-                        return probed.filter((p) => p.online).length;
+                        const siteRobots = robotsForOrg.filter((r) => r.siteId === s.id);
+                        if (siteRobots.length === 0) return <span className="sakar-page-subtitle">—</span>;
+                        return siteRobots.filter((r) => r.connectionStatus === 'ONLINE').length;
                       } },
                     { key: 'status', header: 'Status', render: (s) => {
                         const count = robotsForOrg.filter((r) => r.siteId === s.id).length;

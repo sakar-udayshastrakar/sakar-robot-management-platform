@@ -438,7 +438,9 @@
 }
 
 .sakar-status-dot--online { background: var(--sakar-success); }
-.sakar-status-dot--offline { background: var(--sakar-text-subtle); }
+/* Destructive, not neutral — a robot with no recent heartbeat is a real fault
+   condition. Used only by StatusBadge's robot-connectivity vocabulary. */
+.sakar-status-dot--offline { background: var(--sakar-danger); }
 .sakar-status-dot--charging { background: var(--sakar-info); }
 .sakar-status-dot--warning { background: var(--sakar-warning); }
 .sakar-status-dot--error { background: var(--sakar-danger); }

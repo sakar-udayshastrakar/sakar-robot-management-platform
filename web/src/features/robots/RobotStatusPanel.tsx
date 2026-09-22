@@ -3,12 +3,13 @@ import { getRobotBattery, getRobotStatus } from '../../api/robots';
 import { ApiRequestError } from '../../api/client';
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
-import { ConnectionIndicator } from '../../components/ui/StatusBadge';
+import { StatusBadge } from '../../components/ui/StatusBadge';
+import type { RobotConnectionStatus } from '../../types/domain';
 
 type StatusProbe =
   | { kind: 'idle' }
   | { kind: 'loading' }
-  | { kind: 'success'; mainState: string; online: boolean; observedAt: string }
+  | { kind: 'success'; mainState: string; observedAt: string }
   | { kind: 'error'; message: string };
 
 type BatteryProbe =
@@ -17,7 +18,21 @@ type BatteryProbe =
   | { kind: 'success'; percentage: number; charging: boolean }
   | { kind: 'error'; message: string };
 
-export function RobotStatusPanel({ robotId }: { robotId: string }) {
+// `connectionStatus`/`lastSeenAt` are the backend's authoritative connectivity
+// verdict, passed down from the robot resource rather than probed here. The
+// live probe below still drives Current state and Battery — genuine vendor
+// readings — but it must never drive the connection badge: its `online` flag
+// only means the vendor API answered, which is what let this panel show
+// "Connected" for a robot with an open no-heartbeat alert.
+export function RobotStatusPanel({
+  robotId,
+  connectionStatus,
+  lastSeenAt,
+}: {
+  robotId: string;
+  connectionStatus: RobotConnectionStatus;
+  lastSeenAt: string | null;
+}) {
   const [status, setStatus] = useState<StatusProbe>({ kind: 'idle' });
   const [battery, setBattery] = useState<BatteryProbe>({ kind: 'idle' });
 
@@ -32,7 +47,7 @@ export function RobotStatusPanel({ robotId }: { robotId: string }) {
 
     if (statusResult.status === 'fulfilled') {
       const snapshot = statusResult.value;
-      setStatus({ kind: 'success', mainState: snapshot.mainState, online: snapshot.online, observedAt: snapshot.observedAt });
+      setStatus({ kind: 'success', mainState: snapshot.mainState, observedAt: snapshot.observedAt });
     } else {
       setStatus({ kind: 'error', message: statusResult.reason instanceof ApiRequestError ? statusResult.reason.message : 'Status check failed' });
     }
@@ -67,16 +82,38 @@ export function RobotStatusPanel({ robotId }: { robotId: string }) {
       {status.kind === 'idle' && (
         <p className="sakar-page-subtitle" style={{ marginBottom: 12 }}>
           Calls the real <code>GET /robots/{'{id}'}/status</code> and <code>GET /robots/{'{id}'}/battery</code>{' '}
-          endpoints through a live robot adapter. Without a connected robot these commonly fail — a failure here
-          means "unavailable", never "offline" or "0%".
+          endpoints through a live robot adapter — this checks whether <strong>Keenon</strong> answers, a separate
+          concept from Sakar <strong>Connection</strong> below (heartbeat/telemetry freshness). Without a connected
+          robot these commonly fail — a failure here means "unavailable", never "offline" or "0%", and a success
+          here never changes Connection.
         </p>
       )}
       {errorMessage && <p className="sakar-page-subtitle" style={{ marginBottom: 12 }}>{errorMessage}</p>}
 
       <div className="sakar-status-strip">
+        {/* Sakar connectivity — backend-authoritative, from the robot resource, never
+            re-derived here. */}
         <div className="sakar-status-strip-item">
           <span className="sakar-status-strip-label">Connection</span>
-          <ConnectionIndicator connected={status.kind === 'success' ? status.online : null} />
+          <StatusBadge status={connectionStatus} />
+        </div>
+        <div className="sakar-status-strip-item">
+          <span className="sakar-status-strip-label">Last heartbeat</span>
+          <span>{lastSeenAt ? new Date(lastSeenAt).toLocaleString() : 'Never received'}</span>
+        </div>
+        {/* Keenon vendor reachability — a DIFFERENT axis from Connection above, kept in
+            its own cell with its own vocabulary (Reachable/Unreachable, not
+            Online/Offline) precisely so a successful vendor probe can never read as
+            "the robot is online". Plain Badge, not StatusBadge — StatusBadge's dot+label
+            pairing is reserved for robot connectivity only. */}
+        <div className="sakar-status-strip-item">
+          <span className="sakar-status-strip-label">Keenon</span>
+          <Badge tone={status.kind === 'success' ? 'info' : status.kind === 'error' ? 'warning' : 'neutral'}>
+            {status.kind === 'success' ? 'Reachable'
+              : status.kind === 'error' ? 'Unreachable'
+              : status.kind === 'loading' ? 'Checking…'
+              : 'Not checked'}
+          </Badge>
         </div>
         <div className="sakar-status-strip-item">
           <span className="sakar-status-strip-label">Current state</span>
@@ -97,10 +134,6 @@ export function RobotStatusPanel({ robotId }: { robotId: string }) {
           ) : (
             <Badge tone="neutral">Not available</Badge>
           )}
-        </div>
-        <div className="sakar-status-strip-item">
-          <span className="sakar-status-strip-label">Last update</span>
-          <span>{status.kind === 'success' ? new Date(status.observedAt).toLocaleString() : 'Not available'}</span>
         </div>
       </div>
     </Card>

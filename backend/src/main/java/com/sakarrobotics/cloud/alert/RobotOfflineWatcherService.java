@@ -10,6 +10,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.sakarrobotics.cloud.telemetry.RobotConnectivityService;
 import com.sakarrobotics.cloud.telemetry.RobotStatus;
 import com.sakarrobotics.cloud.telemetry.RobotStatusRepository;
 
@@ -35,12 +36,10 @@ public class RobotOfflineWatcherService {
 
     private final RobotStatusRepository robotStatusRepository;
     private final AlertGenerationService alertGenerationService;
+    private final RobotConnectivityService robotConnectivityService;
 
     @Value("${sakar.alerts.enabled:true}")
     private boolean enabled;
-
-    @Value("${sakar.alerts.offline-threshold-seconds:300}")
-    private long offlineThresholdSeconds;
 
     @Scheduled(fixedDelayString = "${sakar.alerts.offline-check-interval-ms:60000}")
     @Transactional
@@ -48,7 +47,10 @@ public class RobotOfflineWatcherService {
         if (!enabled) {
             return;
         }
-        Instant cutoff = Instant.now().minusSeconds(offlineThresholdSeconds);
+        // The threshold itself is owned by RobotConnectivityService — the one place the
+        // whole application evaluates "stale", so this sweep and every status the UI
+        // renders can never drift apart on the cutoff.
+        Instant cutoff = robotConnectivityService.staleCutoff();
         List<RobotStatus> stale = robotStatusRepository.findByOnlineTrueAndLastSeenAtBefore(cutoff);
         for (RobotStatus status : stale) {
             status.setOnline(false);

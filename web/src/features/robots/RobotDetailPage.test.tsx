@@ -21,6 +21,8 @@ const sampleRobot: Robot = {
   serialNumber: 'SN-ALPHA-001',
   status: 'ACTIVE',
   capabilities: ['GET_STATUS', 'GET_BATTERY'],
+  connectionStatus: 'UNKNOWN',
+  lastSeenAt: null,
   createdAt: '2026-01-01T00:00:00.000Z',
 };
 
@@ -99,6 +101,25 @@ describe('RobotDetailPage', () => {
     expect(screen.getAllByText('ACTIVE').length).toBeGreaterThan(0);
     expect(screen.getByText('GET_STATUS')).toBeInTheDocument();
     expect(screen.getByText('GET_BATTERY')).toBeInTheDocument();
+    // Before "Check Live Status" is ever clicked, Keenon reachability reads
+    // "Not checked" — never a stale or defaulted "Reachable"/"Online".
+    expect(screen.getByText('Not checked')).toBeInTheDocument();
+  });
+
+  it('shows Keenon as "Unreachable" (not "Offline") when the vendor probe fails, without touching Connection', async () => {
+    vi.spyOn(robotsApi, 'getRobot').mockResolvedValue({ ...sampleRobot, connectionStatus: 'ONLINE', lastSeenAt: new Date().toISOString() });
+    vi.spyOn(robotsApi, 'getRobotStatus').mockRejectedValue(new ApiRequestError('unavailable', 503, null));
+    vi.spyOn(robotsApi, 'getRobotBattery').mockRejectedValue(new ApiRequestError('unavailable', 503, null));
+
+    renderDetailPage();
+    await waitFor(() => expect(screen.getByRole('heading', { name: 'CleanBot Alpha' })).toBeInTheDocument());
+    await userEvent.click(screen.getByRole('button', { name: 'Check Live Status' }));
+
+    expect(await screen.findByText('Unreachable')).toBeInTheDocument();
+    // A failed vendor call is a Keenon-axis fact only — it must never downgrade a
+    // genuinely fresh Sakar heartbeat to Offline.
+    expect(screen.getAllByText('Online').length).toBeGreaterThan(0);
+    expect(screen.queryByText(/^Offline$/)).not.toBeInTheDocument();
   });
 
   it('renders live status from GET /robots/{id}/status after checking', async () => {
@@ -117,8 +138,57 @@ describe('RobotDetailPage', () => {
 
     await userEvent.click(screen.getByRole('button', { name: 'Check Live Status' }));
 
-    expect(await screen.findByText('Connected')).toBeInTheDocument();
-    expect(screen.getByText('IDLE')).toBeInTheDocument();
+    // The live vendor probe still supplies Current state...
+    expect(await screen.findByText('IDLE')).toBeInTheDocument();
+    // ...and is surfaced as a distinct "Keenon: Reachable" fact...
+    expect(screen.getByText('Reachable')).toBeInTheDocument();
+    // ...but it must NOT drive the connection badge. This robot's backend
+    // connectionStatus is UNKNOWN, and a vendor call returning online:true is not
+    // evidence the robot is connected — rendering "Connected"/"Online" here is
+    // precisely the bug that let the Robots page contradict an open no-heartbeat alert.
+    expect(screen.queryByText('Connected')).not.toBeInTheDocument();
+    expect(screen.getAllByText('Unknown').length).toBeGreaterThan(0);
+  });
+
+  it('renders the backend connection status, not the live probe, in the header and status panel', async () => {
+    vi.spyOn(robotsApi, 'getRobot').mockResolvedValue({
+      ...sampleRobot,
+      connectionStatus: 'OFFLINE',
+      lastSeenAt: new Date(Date.now() - 7200_000).toISOString(),
+    });
+    // A perfectly successful vendor status call, reporting online.
+    vi.spyOn(robotsApi, 'getRobotStatus').mockResolvedValue({
+      mainState: 'IDLE', subState: null, online: true, observedAt: new Date().toISOString(), raw: {},
+    });
+    vi.spyOn(robotsApi, 'getRobotBattery').mockRejectedValue(new ApiRequestError('unavailable', 503, null));
+
+    renderDetailPage();
+    await waitFor(() => expect(screen.getByRole('heading', { name: 'CleanBot Alpha' })).toBeInTheDocument());
+    await userEvent.click(screen.getByRole('button', { name: 'Check Live Status' }));
+    await screen.findByText('IDLE');
+
+    // Stale heartbeat wins over a successful vendor poll, everywhere on the page —
+    // and the two facts are shown as separate concepts, not merged into one.
+    expect(screen.getAllByText('Offline').length).toBeGreaterThan(0);
+    expect(screen.queryByText('Online')).not.toBeInTheDocument();
+    expect(screen.getByText('Reachable')).toBeInTheDocument();
+  });
+
+  it('renders ONLINE when the backend reports a fresh heartbeat', async () => {
+    vi.spyOn(robotsApi, 'getRobot').mockResolvedValue({
+      ...sampleRobot,
+      connectionStatus: 'ONLINE',
+      lastSeenAt: new Date().toISOString(),
+    });
+    vi.spyOn(robotsApi, 'getRobotStatus').mockRejectedValue(new ApiRequestError('unavailable', 503, null));
+    vi.spyOn(robotsApi, 'getRobotBattery').mockRejectedValue(new ApiRequestError('unavailable', 503, null));
+
+    renderDetailPage();
+    await waitFor(() => expect(screen.getByRole('heading', { name: 'CleanBot Alpha' })).toBeInTheDocument());
+
+    // A failed vendor probe never downgrades a genuinely fresh heartbeat.
+    expect(screen.getAllByText('Online').length).toBeGreaterThan(0);
+    expect(screen.queryByText('Offline')).not.toBeInTheDocument();
   });
 
   it('renders battery percentage and charging state from GET /robots/{id}/battery after checking', async () => {

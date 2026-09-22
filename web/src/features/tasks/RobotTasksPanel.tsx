@@ -144,7 +144,6 @@ function CreateTaskForm({ robotId, onCreated }: { robotId: string; onCreated: ()
         <select id="task-type" value={taskType} onChange={(e) => setTaskType(e.target.value)}>
           <option value="CLEANING">Cleaning</option>
           <option value="RETURN_TO_DOCK">Return to dock</option>
-          <option value="SPOT_CLEAN">Spot clean</option>
         </select>
       </div>
 

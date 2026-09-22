@@ -120,14 +120,18 @@ public class KeenonStatusSyncService {
             return;
         }
 
-        robotStatusService.applyKnownMetric(robotId, "main_state", null, snapshot.mainState(), snapshot.observedAt());
+        // Vendor-sourced state only — deliberately NOT a liveness signal. snapshot.observedAt()
+        // is the moment *Sakar polled Keenon*, not the moment the robot last spoke, so writing it
+        // to last_seen_at would keep resetting the offline clock every sync cycle and make a
+        // silent robot render ONLINE while its "no heartbeat" alert stayed open.
+        robotStatusService.applyVendorMetric(robotId, "main_state", null, snapshot.mainState());
 
         if (!robotCapabilityService.isSupported(robot.getRobotModelId(), RobotCapabilityType.GET_BATTERY)) {
             return;
         }
         try {
             BatteryInfo battery = adapter.getBattery(robot);
-            robotStatusService.applyKnownMetric(robotId, "battery_percent", (double) battery.percentage(), null, battery.observedAt());
+            robotStatusService.applyVendorMetric(robotId, "battery_percent", (double) battery.percentage(), null);
         } catch (ApiException ex) {
             log.warn("Keenon status sync: getBattery failed for robot {}: {}", robotId, ex.getMessage());
         }

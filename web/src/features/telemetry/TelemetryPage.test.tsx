@@ -43,6 +43,8 @@ const sampleRobot: Robot = {
   serialNumber: 'SN-ALPHA-001',
   status: 'ACTIVE',
   capabilities: [],
+  connectionStatus: 'UNKNOWN',
+  lastSeenAt: null,
   createdAt: new Date().toISOString(),
 };
 

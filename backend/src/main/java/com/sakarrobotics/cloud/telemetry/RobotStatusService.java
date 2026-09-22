@@ -51,9 +51,48 @@ public class RobotStatusService {
         return robotStatusRepository.save(status);
     }
 
+    /**
+     * Applies a metric that came from the <em>vendor cloud</em> (Keenon) rather
+     * than from the robot itself, and therefore deliberately does <strong>not</strong>
+     * touch {@code online}/{@code last_seen_at}.
+     *
+     * <p>A successful Keenon API call proves that Keenon's cloud answered — it is
+     * no evidence at all that the robot is alive and talking. Treating it as a
+     * heartbeat is exactly what made the Robots page render ONLINE for a robot the
+     * alert layer had already flagged with "No heartbeat or telemetry received
+     * within the configured offline threshold". Vendor-reported battery/state is
+     * still worth storing; vendor-reported <em>liveness</em> is not something this
+     * endpoint can honestly supply.
+     *
+     * @see #applyKnownMetric for the real-robot (MQTT heartbeat/telemetry) path,
+     *      which does update liveness because the robot genuinely spoke.
+     */
+    @Transactional
+    public RobotStatus applyVendorMetric(UUID robotId, String metric, Double valueNumeric, String valueText) {
+        RobotStatus status = findOrCreate(robotId);
+        if (!applyMetricValue(status, robotId, metric, valueNumeric, valueText)) {
+            // Unrecognized metrics are stored in robot_telemetry only — never fabricated onto robot_status.
+            return status;
+        }
+        status.setUpdatedAt(Instant.now());
+        return robotStatusRepository.save(status);
+    }
+
     @Transactional
     public RobotStatus applyKnownMetric(UUID robotId, String metric, Double valueNumeric, String valueText, Instant recordedAt) {
         RobotStatus status = findOrCreate(robotId);
+        if (!applyMetricValue(status, robotId, metric, valueNumeric, valueText)) {
+            // Unrecognized metrics are stored in robot_telemetry only — never fabricated onto robot_status.
+            return status;
+        }
+        status.setOnline(true);
+        status.setLastSeenAt(recordedAt);
+        status.setUpdatedAt(Instant.now());
+        return robotStatusRepository.save(status);
+    }
+
+    /** @return {@code true} if the metric was recognized and written onto {@code status}. */
+    private boolean applyMetricValue(RobotStatus status, UUID robotId, String metric, Double valueNumeric, String valueText) {
         boolean recognized = true;
         switch (metric) {
             case "battery_percent" -> {
@@ -69,14 +108,7 @@ public class RobotStatusService {
             case "sub_state" -> status.setSubState(valueText);
             default -> recognized = false;
         }
-        if (!recognized) {
-            // Unrecognized metrics are stored in robot_telemetry only — never fabricated onto robot_status.
-            return status;
-        }
-        status.setOnline(true);
-        status.setLastSeenAt(recordedAt);
-        status.setUpdatedAt(Instant.now());
-        return robotStatusRepository.save(status);
+        return recognized;
     }
 
     /** Read-only snapshot for realtime/UI purposes — never persists a not-yet-existing row. */

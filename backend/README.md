@@ -55,6 +55,6 @@ updating this section.
 also native PostgreSQL running this same way — that's an infrastructure choice made
 independently, not something to assume from this local dev setup.
 
-## What's explicitly NOT implemented yet (see the phase-1 final report for the full list)
+## What's explicitly NOT implemented yet (see the phase-1 final report for the full list, and the root README's "Current Project Status" for what's changed since)
 
-Command dispatch/signing, task/cleaning orchestration, telemetry ingestion, alerting, analytics business logic, Sakar Robot Agent integration, and anything requiring physical C40 access (remote lock/unlock remains software-scaffolding only, per Part 11/38).
+**Status note (documentation sync, 2026-09-22):** command dispatch, task/cleaning orchestration, telemetry ingestion, and alerting — listed below as of Phase 1 — are now implemented (Phases 3/6/7 onward; see root `README.md`). What remains genuinely not implemented: analytics business logic (frontend routes to a stub, no backend API), the Sakar Robot Agent's real on-robot actuation for most command types (`SakarRobotAdapter` is a 100% stub; the Android agent's own SDK-backed executors are gated behind `OperatingMode.HARDWARE_TEST`, never enabled in shipped code), and anything requiring physical C40 access — remote lock/unlock remains software-scaffolding only, per Master Requirements Part 11/38, with no physical validation performed to date.

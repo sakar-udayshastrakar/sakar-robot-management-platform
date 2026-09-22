@@ -18,6 +18,8 @@ const sampleRobot: Robot = {
   serialNumber: 'SN-ALPHA-001',
   status: 'ACTIVE',
   capabilities: ['RETURN_TO_DOCK'],
+  connectionStatus: 'UNKNOWN',
+  lastSeenAt: null,
   createdAt: '2026-01-01T00:00:00.000Z',
 };
 

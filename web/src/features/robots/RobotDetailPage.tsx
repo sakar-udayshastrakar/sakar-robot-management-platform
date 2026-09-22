@@ -5,7 +5,6 @@ import { useApi } from '../../hooks/useApi';
 import { usePermissions } from '../../hooks/usePermissions';
 import { useToast } from '../../components/ui/Toast';
 import { useSiteNames } from '../shared/useSiteNames';
-import { useRobotStatusProbe } from '../shared/useRobotStatusProbe';
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { Icon } from '../../components/ui/Icon';
@@ -108,8 +107,6 @@ export function RobotDetailPage() {
 
   const robotArray = useMemo(() => (robot ? [robot] : null), [robot]);
   const siteNames = useSiteNames(robotArray);
-  const { statuses } = useRobotStatusProbe(robotArray, 1);
-  const headerStatus = robot ? statuses.get(robot.id) : undefined;
 
   if (status === 'loading' || status === 'idle') {
     return <LoadingState title="Loading robot…" />;
@@ -175,11 +172,10 @@ export function RobotDetailPage() {
           </dl>
         </div>
         <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
-          {headerStatus && headerStatus !== 'unavailable' ? (
-            <StatusBadge status={headerStatus.online ? 'ONLINE' : 'OFFLINE'} />
-          ) : (
-            <StatusBadge status="UNKNOWN" />
-          )}
+          {/* Backend-authoritative connectivity — identical to the value the Robots list
+              renders and the value the offline-alert sweep acts on, so this page can never
+              disagree with either. */}
+          <StatusBadge status={robot.connectionStatus} />
           <Badge tone={robot.status === 'ACTIVE' ? 'success' : robot.status === 'DEACTIVATED' ? 'warning' : 'neutral'}>{robot.status}</Badge>
         </div>
       </div>
@@ -221,7 +217,7 @@ export function RobotDetailPage() {
 
       {tab === 'overview' && (
         <div style={{ display: 'grid', gap: 16 }}>
-          <RobotStatusPanel robotId={robot.id} />
+          <RobotStatusPanel robotId={robot.id} connectionStatus={robot.connectionStatus} lastSeenAt={robot.lastSeenAt} />
 
           <div className="sakar-info-grid">
             <Card title="Basic Information">

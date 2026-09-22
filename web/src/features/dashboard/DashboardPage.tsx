@@ -22,7 +22,7 @@ export function DashboardPage() {
   const navigate = useNavigate();
   const { data: robotsPage, status, error, refetch } = useApi(() => listRobots(0, 100), []);
   const robots = robotsPage?.content ?? null;
-  const { statuses, probing } = useRobotStatusProbe(robots);
+  const { statuses } = useRobotStatusProbe(robots);
   const siteNames = useSiteNames(robots);
 
   // Real, organization-scoped alerts (up to the most recent 200) — used for
@@ -53,10 +53,14 @@ export function DashboardPage() {
   }
 
   const total = robotsPage?.totalElements ?? 0;
-  const probedEntries = Array.from(statuses.values()).filter((v) => v !== 'unavailable') as { online: boolean }[];
-  const onlineCount = probedEntries.filter((s) => s.online).length;
-  const offlineCount = probedEntries.filter((s) => !s.online).length;
-  const anyProbed = probedEntries.length > 0;
+  // Fleet connectivity comes from the backend's authoritative connectionStatus on each
+  // robot, not from the live vendor probe — a successful probe only proves the vendor
+  // API answered, which is why these counters used to disagree with the Alerts page.
+  const listedRobots = robots ?? [];
+  const onlineCount = listedRobots.filter((r) => r.connectionStatus === 'ONLINE').length;
+  const offlineCount = listedRobots.filter((r) => r.connectionStatus === 'OFFLINE').length;
+  const unknownCount = listedRobots.filter((r) => r.connectionStatus === 'UNKNOWN').length;
+  const anyRobots = listedRobots.length > 0;
 
   return (
     <div>
@@ -66,17 +70,24 @@ export function DashboardPage() {
         <MetricCard label="Total Robots" value={total} icon={<Icon.robot />} tone="default" />
         <MetricCard
           label="Online"
-          value={anyProbed ? onlineCount : '—'}
+          value={anyRobots ? onlineCount : '—'}
           icon={<Icon.wifi />}
           tone="success"
-          trend={anyProbed ? `of ${probedEntries.length} probed` : probing ? 'Probing…' : 'Unavailable'}
+          trend={anyRobots ? `of ${listedRobots.length} listed` : 'Unavailable'}
         />
         <MetricCard
           label="Offline"
-          value={anyProbed ? offlineCount : '—'}
+          value={anyRobots ? offlineCount : '—'}
           icon={<Icon.xCircle />}
+          tone="danger"
+          trend={anyRobots ? `of ${listedRobots.length} listed` : 'Unavailable'}
+        />
+        <MetricCard
+          label="Unknown"
+          value={anyRobots ? unknownCount : '—'}
+          icon={<Icon.alertTriangle />}
           tone="neutral"
-          trend={anyProbed ? `of ${probedEntries.length} probed` : probing ? 'Probing…' : 'Unavailable'}
+          trend={anyRobots ? 'Never reported' : 'Unavailable'}
         />
         <MetricCard label="Locked" value="—" icon={<Icon.lock />} tone="neutral" trend="Unavailable" />
         <MetricCard label="Low Battery" value={lowBatteryRobotCount} icon={<Icon.battery />} tone="warning" trend="Open LOW_BATTERY alerts" />
@@ -86,14 +97,15 @@ export function DashboardPage() {
       </div>
 
       <UnavailableFeature reason="Locked, Faulted, Cleaning, and Charging have no backend-derivable source today: robot lock/unlock is not implemented, there is no fleet-wide fault/error status field, and there is no fleet-wide task-list endpoint to derive an active-cleaning count from (only per-robot task listing exists). These are marked Unavailable rather than fabricated. Low Battery is real — a count of robots with an open LOW_BATTERY alert." />
-      {!anyProbed && (
-        <UnavailableFeature reason="Online/Offline counts require at least one successful GET /robots/{id}/status probe (up to 12 robots). None succeeded — most likely no live robot adapter connection is configured." />
+      {anyRobots && unknownCount === listedRobots.length && (
+        <UnavailableFeature reason="No robot has ever reported heartbeat or telemetry, so every robot's connection status is Unknown. Connectivity is derived from the robot's own heartbeat/telemetry against the configured offline threshold — a successful Keenon synchronization is not a heartbeat and never marks a robot online." />
       )}
 
       <Card title="Robot Fleet Overview" actions={<button type="button" className="sakar-btn sakar-btn--secondary" onClick={() => navigate('/robots')}>View all</button>}>
         <p className="sakar-page-subtitle" style={{ marginBottom: 12 }}>
-          Status/Current state/Last heartbeat reflect a live status probe where it succeeded. Battery and Agent
-          version are not exposed by any backend endpoint today.
+          Status and Last heartbeat come from the backend's authoritative connection status (heartbeat/telemetry
+          against the configured offline threshold). Current state reflects a live vendor status probe where it
+          succeeded. Battery and Agent version are not exposed by any backend endpoint today.
         </p>
         <DataTable
           rows={(robots ?? []).slice(0, 8)}
@@ -103,21 +115,16 @@ export function DashboardPage() {
             { key: 'name', header: 'Robot', render: (r) => (
                 <button type="button" className="sakar-link-btn" onClick={() => navigate(`/robots/${r.id}`)}>{r.name}</button>
               ) },
-            { key: 'status', header: 'Status', render: (r) => {
-                const s = statuses.get(r.id);
-                if (!s || s === 'unavailable') return <StatusBadge status="UNKNOWN" />;
-                return <StatusBadge status={s.online ? 'ONLINE' : 'OFFLINE'} />;
-              } },
+            { key: 'status', header: 'Status', render: (r) => <StatusBadge status={r.connectionStatus} /> },
             { key: 'battery', header: 'Battery', render: () => <span className="sakar-page-subtitle">Not available</span> },
             { key: 'state', header: 'Current State', render: (r) => {
                 const s = statuses.get(r.id);
                 return s && s !== 'unavailable' ? s.mainState : <span className="sakar-page-subtitle">—</span>;
               } },
             { key: 'site', header: 'Site', render: (r) => (r.siteId ? siteNames.get(r.siteId) ?? r.siteId : '—') },
-            { key: 'heartbeat', header: 'Last Heartbeat', render: (r) => {
-                const s = statuses.get(r.id);
-                return s && s !== 'unavailable' ? new Date(s.observedAt).toLocaleString() : <span className="sakar-page-subtitle">—</span>;
-              } },
+            { key: 'heartbeat', header: 'Last Heartbeat', render: (r) => (
+                r.lastSeenAt ? new Date(r.lastSeenAt).toLocaleString() : <span className="sakar-page-subtitle">Never received</span>
+              ) },
             { key: 'agent', header: 'Agent Version', render: () => <span className="sakar-page-subtitle">Not available</span> },
           ]}
         />

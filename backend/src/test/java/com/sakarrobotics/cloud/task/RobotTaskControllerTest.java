@@ -102,11 +102,14 @@ class RobotTaskControllerTest extends IntegrationTestSupport {
         createUser(email, "Password1!", orgAdmin, org.getId());
         String token = login(email, "Password1!");
 
-        RobotModel model = modelWithCapabilities(RobotCapabilityType.START_TASK);
+        RobotModel model = modelWithCapabilities(RobotCapabilityType.START_TASK, RobotCapabilityType.STOP_TASK);
         Robot robot = registerRobot(org.getId(), model.getId());
         RobotCommand dispatchedCommand = new RobotCommand();
         dispatchedCommand.setStatus(CommandStatus.COMMAND_DISPATCHED);
         when(robotCommandService.issue(any(), eq(robot.getId()), eq("START_TASK"), any()))
+                .thenReturn(new RobotCommandService.Issued(dispatchedCommand, true,
+                        "Accepted by the Keenon Open Platform (not yet physically confirmed): accepted"));
+        when(robotCommandService.issue(any(), eq(robot.getId()), eq("STOP_TASK"), any()))
                 .thenReturn(new RobotCommandService.Issued(dispatchedCommand, true,
                         "Accepted by the Keenon Open Platform (not yet physically confirmed): accepted"));
 
@@ -126,6 +129,8 @@ class RobotTaskControllerTest extends IntegrationTestSupport {
         mockMvc.perform(post("/api/v1/tasks/" + taskId + "/stop").header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.status").value("COMPLETED"));
+
+        verify(robotCommandService).issue(any(), eq(robot.getId()), eq("STOP_TASK"), any());
 
         mockMvc.perform(get("/api/v1/tasks/" + taskId).header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
                 .andExpect(status().isOk())
@@ -286,6 +291,61 @@ class RobotTaskControllerTest extends IntegrationTestSupport {
                 .andExpect(jsonPath("$.data.events.length()").value(2)) // CREATED, START_FAILED
                 .andExpect(jsonPath("$.data.events[1].eventType").value("START_FAILED"))
                 .andExpect(jsonPath("$.data.events[1].detail").value("Not dispatched: no active area mapping"));
+    }
+
+    @Test
+    void stoppingACleaningTask_whoseCommandIsNotDispatched_marksTheTaskFailed_neverCompleted() throws Exception {
+        // TASK PANEL STOP -> ROBOT COMMAND PIPELINE slice: a STOP_TASK command that
+        // is not dispatched (rejected pre-vendor-call, OAuth/network failure, or a
+        // definitive vendor rejection) must never let the task report COMPLETED —
+        // mirrors the equivalent START test above, now for STOP.
+        Role orgAdmin = ensureRole(RoleName.ORG_ADMIN, PermissionCode.ROBOT_TASK_CREATE, PermissionCode.ROBOT_CONTROL,
+                PermissionCode.ROBOT_VIEW, PermissionCode.ROBOT_CONFIGURE);
+        Organization org = createOrganization("Org " + UUID.randomUUID(), OrganizationType.DIRECT_CLIENT, null);
+        String email = "admin-" + UUID.randomUUID() + "@example.com";
+        createUser(email, "Password1!", orgAdmin, org.getId());
+        String token = login(email, "Password1!");
+
+        RobotModel model = modelWithCapabilities(RobotCapabilityType.START_TASK, RobotCapabilityType.STOP_TASK);
+        Robot robot = registerRobot(org.getId(), model.getId());
+        RobotCommand dispatchedCommand = new RobotCommand();
+        dispatchedCommand.setStatus(CommandStatus.COMMAND_DISPATCHED);
+        when(robotCommandService.issue(any(), eq(robot.getId()), eq("START_TASK"), any()))
+                .thenReturn(new RobotCommandService.Issued(dispatchedCommand, true, "accepted"));
+        RobotCommand failedCommand = new RobotCommand();
+        failedCommand.setStatus(CommandStatus.COMMAND_FAILED);
+        when(robotCommandService.issue(any(), eq(robot.getId()), eq("STOP_TASK"), any()))
+                .thenReturn(new RobotCommandService.Issued(failedCommand, false, "Not dispatched: Keenon OAuth failure"));
+
+        String createResponse = mockMvc.perform(post("/api/v1/robots/" + robot.getId() + "/tasks")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(cleaningTaskRequestBody("SWEEP", UUID.randomUUID().toString())))
+                .andReturn().getResponse().getContentAsString();
+        String taskId = objectMapper.readTree(createResponse).get("data").get("id").asText();
+
+        mockMvc.perform(post("/api/v1/tasks/" + taskId + "/start").header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.status").value("RUNNING"));
+
+        // Not an HTTP error — mirrors the same "200 with an honest dispatched=false
+        // payload" convention the START failure path already uses.
+        mockMvc.perform(post("/api/v1/tasks/" + taskId + "/stop").header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.status").value("FAILED"));
+
+        mockMvc.perform(get("/api/v1/tasks/" + taskId).header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.task.status").value("FAILED"))
+                .andExpect(jsonPath("$.data.events.length()").value(3)) // CREATED, START, STOP_FAILED
+                .andExpect(jsonPath("$.data.events[2].eventType").value("STOP_FAILED"))
+                .andExpect(jsonPath("$.data.events[2].detail").value("Not dispatched: Keenon OAuth failure"));
+
+        // Never a completed cleaning session for a stop that never reached the robot.
+        mockMvc.perform(get("/api/v1/robots/" + robot.getId() + "/cleaning/history")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.content.length()").value(0));
     }
 
     @Test

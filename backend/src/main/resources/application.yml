@@ -201,6 +201,20 @@ sakar:
         enabled: ${SAKAR_KEENON_MAP_IMAGE_SYNC_ENABLED:false}
         interval-ms: ${SAKAR_KEENON_MAP_IMAGE_SYNC_INTERVAL_MS:21600000}
         default-floor-info: ${SAKAR_KEENON_MAP_IMAGE_SYNC_DEFAULT_FLOOR_INFO:1}
+      sync-orchestration:
+        # KeenonSyncOrchestrationService — one central, wall-clock-aligned (:00/:15/:30/:45)
+        # entry point that calls every category's own syncAll() above (robot status, areas,
+        # cleaning modes, back points, cleaning history, map metadata/points/images) in one
+        # 15-minute cycle, instead of each category needing its own separately-enabled
+        # schedule to achieve the same cadence. Does NOT include robot discovery
+        # (KeenonRobotSyncService) — see that class's own Javadoc for why an
+        # (organizationId, storeId) pair can never be auto-discovered. Defaults to enabled
+        # (unlike every category flag above) because automatic 15-minute sync is the actual
+        # requirement this exists to satisfy — the real safety gate remains the top-level
+        # `enabled` flag above (no real Keenon credentials = no outbound call is ever
+        # attempted, exactly like every other Keenon feature).
+        enabled: ${SAKAR_KEENON_SYNC_ORCHESTRATION_ENABLED:true}
+        cron: "${SAKAR_KEENON_SYNC_ORCHESTRATION_CRON:0 0,15,30,45 * * * *}"
 
   maps:
     # Persistent, filesystem-backed storage for raw Keenon map PNGs — see

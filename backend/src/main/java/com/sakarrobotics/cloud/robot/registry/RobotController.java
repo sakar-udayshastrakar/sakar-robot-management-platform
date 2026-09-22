@@ -1,6 +1,7 @@
 package com.sakarrobotics.cloud.robot.registry;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -35,6 +36,8 @@ import com.sakarrobotics.cloud.robot.adapter.dto.RobotStatusSnapshot;
 import com.sakarrobotics.cloud.robot.registry.dto.RegisterRobotRequest;
 import com.sakarrobotics.cloud.robot.registry.dto.RobotMqttCredentialResponse;
 import com.sakarrobotics.cloud.robot.registry.dto.RobotResponse;
+import com.sakarrobotics.cloud.telemetry.RobotConnectivityService;
+import com.sakarrobotics.cloud.telemetry.RobotStatus;
 import com.sakarrobotics.cloud.security.UserPrincipal;
 import com.sakarrobotics.cloud.security.access.TenantAccessGuard;
 
@@ -62,6 +65,7 @@ public class RobotController {
     private final TenantAccessGuard tenantAccessGuard;
     private final RobotMapRepository robotMapRepository;
     private final RobotMapImageService robotMapImageService;
+    private final RobotConnectivityService robotConnectivityService;
 
     @GetMapping
     @PreAuthorize("hasAuthority('ROBOT_VIEW')")
@@ -70,8 +74,15 @@ public class RobotController {
             @AuthenticationPrincipal UserPrincipal principal,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "25") int pageSize) {
-        Page<RobotResponse> result = robotService.listAccessible(principal, page, pageSize)
-                .map(robot -> RobotResponse.from(robot, robotCapabilityService.supportedCapabilities(robot.getRobotModelId())));
+        Page<Robot> robots = robotService.listAccessible(principal, page, pageSize);
+        // One robot_status query for the whole page, not one per row.
+        Map<UUID, RobotStatus> statuses = robotConnectivityService.rowsFor(
+                robots.getContent().stream().map(Robot::getId).toList());
+        Page<RobotResponse> result = robots.map(robot -> {
+            RobotStatus status = statuses.get(robot.getId());
+            return RobotResponse.from(robot, robotCapabilityService.supportedCapabilities(robot.getRobotModelId()),
+                    robotConnectivityService.evaluate(status), status);
+        });
         return ApiResponse.ok(result);
     }
 
@@ -80,7 +91,7 @@ public class RobotController {
     @Operation(summary = "Get a single robot's registry detail")
     public ApiResponse<RobotResponse> get(@AuthenticationPrincipal UserPrincipal principal, @PathVariable UUID id) {
         Robot robot = robotService.getAccessibleOrThrow(principal, id);
-        return ApiResponse.ok(RobotResponse.from(robot, robotCapabilityService.supportedCapabilities(robot.getRobotModelId())));
+        return ApiResponse.ok(respond(robot));
     }
 
     @PostMapping
@@ -95,7 +106,7 @@ public class RobotController {
         tenantAccessGuard.assertOrganizationAccess(principal, request.organizationId());
         var guardedRobot = robotService.register(request.organizationId(), request.siteId(), request.robotModelId(),
                 request.name(), request.serialNumber(), request.externalRobotId());
-        RobotResponse response = RobotResponse.from(guardedRobot, robotCapabilityService.supportedCapabilities(guardedRobot.getRobotModelId()));
+        RobotResponse response = respond(guardedRobot);
         return ResponseEntity.status(201).body(ApiResponse.ok(response));
     }
 
@@ -104,7 +115,7 @@ public class RobotController {
     @Operation(summary = "Activate a registered robot")
     public ApiResponse<RobotResponse> activate(@AuthenticationPrincipal UserPrincipal principal, @PathVariable UUID id) {
         Robot robot = robotService.activate(principal, id);
-        return ApiResponse.ok(RobotResponse.from(robot, robotCapabilityService.supportedCapabilities(robot.getRobotModelId())));
+        return ApiResponse.ok(respond(robot));
     }
 
     @PostMapping("/{id}/deactivate")
@@ -112,7 +123,7 @@ public class RobotController {
     @Operation(summary = "Deactivate a robot")
     public ApiResponse<RobotResponse> deactivate(@AuthenticationPrincipal UserPrincipal principal, @PathVariable UUID id) {
         Robot robot = robotService.deactivate(principal, id);
-        return ApiResponse.ok(RobotResponse.from(robot, robotCapabilityService.supportedCapabilities(robot.getRobotModelId())));
+        return ApiResponse.ok(respond(robot));
     }
 
     @GetMapping("/{id}/status")
@@ -231,5 +242,17 @@ public class RobotController {
         RobotModel model = robotModelRepository.findById(robot.getRobotModelId())
                 .orElseThrow(() -> new ApiException(SakarErrorCode.ROBOT_MODEL_NOT_FOUND, "Robot model not found"));
         return robotAdapterRegistry.resolve(model.getAdapterType());
+    }
+
+    /**
+     * Single-robot response builder — every non-list endpoint goes through here so a
+     * robot's connectionStatus is produced by exactly one calculation
+     * ({@link RobotConnectivityService}), identical to the one the list endpoint and
+     * the offline-alert sweep use.
+     */
+    private RobotResponse respond(Robot robot) {
+        RobotStatus status = robotConnectivityService.rowFor(robot.getId());
+        return RobotResponse.from(robot, robotCapabilityService.supportedCapabilities(robot.getRobotModelId()),
+                robotConnectivityService.evaluate(status), status);
     }
 }

@@ -2,8 +2,12 @@ import { useEffect, useState } from 'react';
 import { getRobotStatus } from '../../api/robots';
 import type { Robot } from '../../types/domain';
 
+// Deliberately excludes the raw snapshot's `online` field: it means "the
+// vendor API answered", not "the robot is connected", and this hook's only
+// remaining consumers (Robots list / Dashboard "Current state" columns) must
+// never be tempted to read it as connectivity. Use `Robot.connectionStatus`
+// for that instead — see StatusBadge's own header comment.
 export interface ProbedStatus {
-  online: boolean;
   mainState: string;
   observedAt: string;
 }
@@ -33,7 +37,7 @@ export function useRobotStatusProbe(robots: Robot[] | null, limit = 12) {
       results.forEach((result, i) => {
         const robotId = sample[i].id;
         if (result.status === 'fulfilled') {
-          next.set(robotId, { online: result.value.online, mainState: result.value.mainState, observedAt: result.value.observedAt });
+          next.set(robotId, { mainState: result.value.mainState, observedAt: result.value.observedAt });
         } else {
           next.set(robotId, 'unavailable');
         }

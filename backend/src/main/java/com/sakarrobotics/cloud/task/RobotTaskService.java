@@ -28,11 +28,13 @@ import tools.jackson.databind.ObjectMapper;
 /**
  * Real task lifecycle bookkeeping (Roadmap Phase 6, API spec §1.6 shape).
  * This is Sakar-side orchestration record-keeping only — it does not itself
- * talk to any vendor API; the one exception is starting a {@code CLEANING}
- * task, which bridges into the EXISTING {@link RobotCommandService#issue}
- * (the same internal service method {@code RobotCommandController} calls)
- * rather than duplicating any Keenon/command validation or dispatch logic
- * here. Every transition is recorded as both an updated {@link
+ * talk to any vendor API; the exceptions are starting and stopping a {@code
+ * CLEANING} task, both of which bridge into the EXISTING {@link
+ * RobotCommandService#issue} (the same internal service method {@code
+ * RobotCommandController} calls) rather than duplicating any Keenon/command
+ * validation or dispatch logic here. PAUSE/RESUME/CANCEL remain
+ * bookkeeping-only for now — bridging them is a separate, not-yet-approved
+ * slice. Every transition is recorded as both an updated {@link
  * RobotTask#getStatus()} and an immutable {@link TaskEvent} row, so a
  * task's full history is always reconstructable.
  */
@@ -95,9 +97,10 @@ public class RobotTaskService {
     /**
      * Same tenant-access resolution as {@link #getAccessibleOrThrow}, but via
      * {@link RobotTaskRepository#lockByIdForUpdate} — used ONLY for the START
-     * transition (see {@link #transition}), never for a plain read (GET
-     * endpoints, other transitions), so this never adds lock contention to
-     * anything but the one action that can trigger a physical dispatch.
+     * and STOP transitions (see {@link #transition}), never for a plain read
+     * (GET endpoints, PAUSE/RESUME/CANCEL), so this never adds lock
+     * contention to anything but the two actions that can trigger a physical
+     * dispatch.
      */
     private RobotTask getAccessibleOrThrowForUpdate(UserPrincipal principal, UUID taskId) {
         RobotTask task = robotTaskRepository.lockByIdForUpdate(taskId)
@@ -120,13 +123,16 @@ public class RobotTaskService {
 
     @Transactional
     public RobotTask transition(UserPrincipal principal, UUID taskId, String action) {
-        // START is the only transition that can trigger a real, physical dispatch
-        // (CLEANING tasks — see dispatchCleaningStart), so it's the only one that
-        // needs the pessimistic row lock: a second concurrent START for the same
-        // task blocks here until the first transaction commits, then re-reads the
-        // now-updated status (RUNNING/FAILED) and is correctly rejected by the
-        // ALLOWED_FROM check below — it can never reach dispatchCleaningStart.
-        RobotTask task = "START".equals(action)
+        // START and STOP are the only transitions that can trigger a real, physical
+        // dispatch (CLEANING tasks — see dispatchCleaningStart/dispatchCleaningStop),
+        // so they're the only ones that need the pessimistic row lock: a second
+        // concurrent START/STOP for the same task blocks here until the first
+        // transaction commits, then re-reads the now-updated status and is correctly
+        // rejected by the ALLOWED_FROM check below — it can never reach the dispatch
+        // methods a second time. PAUSE/RESUME/CANCEL never dispatch, so they keep
+        // using the plain unlocked read.
+        boolean lockForDispatch = "START".equals(action) || "STOP".equals(action);
+        RobotTask task = lockForDispatch
                 ? getAccessibleOrThrowForUpdate(principal, taskId)
                 : getAccessibleOrThrow(principal, taskId);
         Set<String> allowedFrom = ALLOWED_FROM.get(action);
@@ -141,6 +147,17 @@ public class RobotTaskService {
                 // Never dispatched — the task must not move to RUNNING for an attempt
                 // that never reached the robot. dispatchCleaningStart already recorded
                 // the FAILED status, its own TaskEvent, and its own audit entry.
+                return failed;
+            }
+        }
+
+        if ("STOP".equals(action) && "CLEANING".equalsIgnoreCase(task.getTaskType())) {
+            RobotTask failed = dispatchCleaningStop(principal, task);
+            if (failed != null) {
+                // Never dispatched — the task must not report COMPLETED for a stop
+                // attempt that never reached the robot. dispatchCleaningStop already
+                // recorded the FAILED status, its own TaskEvent, and its own audit
+                // entry.
                 return failed;
             }
         }
@@ -193,6 +210,40 @@ public class RobotTaskService {
         RobotTask saved = robotTaskRepository.save(task);
         recordEvent(task.getId(), "START_FAILED", issued.dispatchNote());
         auditService.record(principal, task.getOrganizationId(), task.getRobotId(), "TASK_START", "FAILED",
+                issued.dispatchNote(), null, null);
+        return saved;
+    }
+
+    /**
+     * Bridges a CLEANING task's STOP transition into the EXISTING {@link
+     * RobotCommandService#issue} — mirrors {@link #dispatchCleaningStart}
+     * exactly, using {@code STOP_TASK} instead of {@code START_TASK}.
+     * Unlike START, no task-supplied parameters are required or sent:
+     * {@code STOP_TASK} maps to {@link
+     * com.sakarrobotics.cloud.integration.keenon.KeenonRobotAdapter#stopTask}
+     * (the real, already-implemented {@code POST
+     * /api/open/custom/clean/robot/finish/task} call), which takes only the
+     * robot itself — there is no per-call payload for it to validate or
+     * forward.
+     *
+     * <p>Returns {@code null} when the command was dispatched (the caller
+     * should proceed to the normal COMPLETED transition), or the
+     * already-saved {@code FAILED} task when it was not — the same
+     * "not an uncaught exception, a normal reported outcome" convention
+     * {@code dispatchCleaningStart} already uses, so a rejected/undispatched
+     * STOP_TASK command can never be reported to the caller as a
+     * successfully stopped task.
+     */
+    private RobotTask dispatchCleaningStop(UserPrincipal principal, RobotTask task) {
+        RobotCommandService.Issued issued = robotCommandService.issue(principal, task.getRobotId(), "STOP_TASK", Map.of());
+        if (issued.dispatched()) {
+            return null;
+        }
+
+        task.setStatus(TaskLifecycleStatus.FAILED.name());
+        RobotTask saved = robotTaskRepository.save(task);
+        recordEvent(task.getId(), "STOP_FAILED", issued.dispatchNote());
+        auditService.record(principal, task.getOrganizationId(), task.getRobotId(), "TASK_STOP", "FAILED",
                 issued.dispatchNote(), null, null);
         return saved;
     }

@@ -238,19 +238,21 @@ export function RobotsListPage() {
                   { key: 'serial', header: 'Serial number', render: (r) => <span className="sakar-mono sakar-nowrap" style={{ fontSize: 12 }}>{r.serialNumber}</span> },
                   { key: 'model', header: 'Model', render: (r) => <span className="sakar-mono sakar-nowrap" style={{ fontSize: 12 }}>{r.robotModelId.slice(0, 8)}…</span> },
                   { key: 'site', header: 'Site', render: (r) => <span className="sakar-nowrap">{r.siteId ? siteNames.get(r.siteId) ?? r.siteId : '—'}</span> },
-                  { key: 'connection', header: 'Connection', render: (r) => {
-                      const s = statuses.get(r.id);
-                      return s && s !== 'unavailable' ? <StatusBadge status={s.online ? 'ONLINE' : 'OFFLINE'} /> : <StatusBadge status="UNKNOWN" />;
-                    } },
+                  // Backend-authoritative connectivity (RobotConnectivityService): heartbeat/telemetry
+                  // freshness against the configured offline threshold. Previously this read the live
+                  // status probe's `online` flag, which only means "the Keenon API answered" — that is
+                  // why a robot with an open "no heartbeat" alert could still show Online here.
+                  { key: 'connection', header: 'Connection', render: (r) => <StatusBadge status={r.connectionStatus} /> },
                   { key: 'status', header: 'Registration', render: (r) => <Badge tone={STATUS_TONE[r.status]}>{r.status}</Badge> },
                   { key: 'state', header: 'Current state', render: (r) => {
                       const s = statuses.get(r.id);
                       return <span className="sakar-nowrap">{s && s !== 'unavailable' ? s.mainState : <span className="sakar-page-subtitle">—</span>}</span>;
                     } },
-                  { key: 'heartbeat', header: 'Last heartbeat', render: (r) => {
-                      const s = statuses.get(r.id);
-                      return <span className="sakar-nowrap">{s && s !== 'unavailable' ? new Date(s.observedAt).toLocaleString() : <span className="sakar-page-subtitle">—</span>}</span>;
-                    } },
+                  // The robot's own last heartbeat/telemetry, not the probe's observedAt (which is
+                  // the moment Sakar polled the vendor, not the moment the robot reported).
+                  { key: 'heartbeat', header: 'Last heartbeat', render: (r) => (
+                      <span className="sakar-nowrap">{r.lastSeenAt ? new Date(r.lastSeenAt).toLocaleString() : <span className="sakar-page-subtitle">Never received</span>}</span>
+                    ) },
                   { key: 'actions', header: 'Actions', align: 'right', render: (r) => (
                       <div style={{ display: 'flex', gap: 6, justifyContent: 'flex-end' }}>
                         <button type="button" className="sakar-btn sakar-btn--secondary sakar-btn--sm" onClick={() => navigate(`/robots/${r.id}`)}>View</button>

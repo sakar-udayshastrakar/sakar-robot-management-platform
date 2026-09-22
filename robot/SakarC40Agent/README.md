@@ -23,7 +23,7 @@ for exactly what has and has not been verified.
 over MQTT from the Sakar Cloud backend (`CommandDispatcher`, in `:api`,
 routing by command type via `CompositeRobotCommandExecutor`) and reports
 RECEIVED/EXECUTING/COMPLETED/DISPATCHED/FAILED/TIMEOUT lifecycle results
-back. Two command types are wired, with two very different executors:
+back. **Status note (documentation sync, 2026-09-22): three command types are wired as of Roadmap Phase 8 (see the `GO_TO_POINT` addition further down this file) — the "two" below reflects the state at the time this paragraph was first written.** Three very different executors:
 
 - `START_TASK` → `SimulatedRobotCommandExecutor` (in `:app`), an
   **explicitly-labeled software placeholder that never calls the Peanut

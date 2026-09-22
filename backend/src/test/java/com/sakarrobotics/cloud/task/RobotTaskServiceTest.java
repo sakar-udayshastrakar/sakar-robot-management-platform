@@ -97,6 +97,17 @@ class RobotTaskServiceTest {
         return task;
     }
 
+    // Only needed once a STOP (or START) actually reaches TaskLifecycleStatus.COMPLETED
+    // for a CLEANING task — transition() then resolves the robot's siteId for
+    // cleaningSessionService.recordFromCompletedTask.
+    private Robot aRobot(UUID robotId, UUID orgId) {
+        Robot robot = new Robot();
+        robot.setId(robotId);
+        robot.setOrganizationId(orgId);
+        robot.setSiteId(UUID.randomUUID());
+        return robot;
+    }
+
     // ------------------------------------------------------------------
     // CLEANING START -> RobotCommandService.issue bridge.
     // ------------------------------------------------------------------
@@ -221,6 +232,113 @@ class RobotTaskServiceTest {
         verify(auditService).record(eq(principal), eq(orgId), eq(robotId), eq("TASK_START"), eq("FAILED"),
                 eq("Not dispatched: At least one area must be specified"), any(), any());
         verify(auditService, never()).record(any(), any(), any(), eq("TASK_START"), eq("SUCCESS"), any(), any(), any());
+    }
+
+    // ------------------------------------------------------------------
+    // CLEANING STOP -> RobotCommandService.issue bridge ("TASK PANEL STOP ->
+    // ROBOT COMMAND PIPELINE" slice). Mirrors the START block above exactly.
+    // ------------------------------------------------------------------
+
+    @Test
+    void stoppingARunningCleaningTask_issuesAStopTaskCommand_andReachesCompleted() {
+        UUID robotId = UUID.randomUUID();
+        UUID orgId = UUID.randomUUID();
+        RobotTask task = aTask(robotId, orgId, "CLEANING", null, TaskLifecycleStatus.RUNNING);
+        when(robotTaskRepository.lockByIdForUpdate(task.getId())).thenReturn(Optional.of(task));
+        RobotCommand command = new RobotCommand();
+        command.setStatus(CommandStatus.COMMAND_DISPATCHED);
+        when(robotCommandService.issue(eq(principal), eq(robotId), eq("STOP_TASK"), any()))
+                .thenReturn(new RobotCommandService.Issued(command, true, "Accepted by the Keenon Open Platform"));
+        when(robotService.getAccessibleOrThrow(eq(principal), eq(robotId))).thenReturn(aRobot(robotId, orgId));
+
+        RobotTask result = service().transition(principal, task.getId(), "STOP");
+
+        assertThat(result.getStatus()).isEqualTo("COMPLETED");
+        verify(robotCommandService).issue(eq(principal), eq(robotId), eq("STOP_TASK"), any());
+        verify(auditService).record(eq(principal), eq(orgId), eq(robotId), eq("TASK_STOP"), eq("SUCCESS"), any(), any(), any());
+    }
+
+    @Test
+    void stoppingAPausedCleaningTask_alsoIssuesAStopTaskCommand() {
+        // STOP is allowed from both RUNNING and PAUSED (ALLOWED_FROM) — the bridge
+        // must fire from either starting state, not just RUNNING.
+        UUID robotId = UUID.randomUUID();
+        UUID orgId = UUID.randomUUID();
+        RobotTask task = aTask(robotId, orgId, "CLEANING", null, TaskLifecycleStatus.PAUSED);
+        when(robotTaskRepository.lockByIdForUpdate(task.getId())).thenReturn(Optional.of(task));
+        RobotCommand command = new RobotCommand();
+        command.setStatus(CommandStatus.COMMAND_DISPATCHED);
+        when(robotCommandService.issue(eq(principal), eq(robotId), eq("STOP_TASK"), any()))
+                .thenReturn(new RobotCommandService.Issued(command, true, "accepted"));
+        when(robotService.getAccessibleOrThrow(eq(principal), eq(robotId))).thenReturn(aRobot(robotId, orgId));
+
+        RobotTask result = service().transition(principal, task.getId(), "STOP");
+
+        assertThat(result.getStatus()).isEqualTo("COMPLETED");
+        verify(robotCommandService).issue(eq(principal), eq(robotId), eq("STOP_TASK"), any());
+    }
+
+    @Test
+    void stoppingACleaningTask_whoseCommandIsNotDispatched_marksTheTaskFailed_recordsAnEventAndAudit_neverCompleted() {
+        UUID robotId = UUID.randomUUID();
+        UUID orgId = UUID.randomUUID();
+        RobotTask task = aTask(robotId, orgId, "CLEANING", null, TaskLifecycleStatus.RUNNING);
+        when(robotTaskRepository.lockByIdForUpdate(task.getId())).thenReturn(Optional.of(task));
+        RobotCommand command = new RobotCommand();
+        command.setStatus(CommandStatus.COMMAND_FAILED);
+        when(robotCommandService.issue(eq(principal), eq(robotId), eq("STOP_TASK"), any()))
+                .thenReturn(new RobotCommandService.Issued(command, false, "Not dispatched: Keenon OAuth failure"));
+
+        RobotTask result = service().transition(principal, task.getId(), "STOP");
+
+        assertThat(result.getStatus()).isEqualTo("FAILED");
+        verify(taskEventRepository).save(argThat(e -> e.getEventType().equals("STOP_FAILED")
+                && e.getDetail().equals("Not dispatched: Keenon OAuth failure")));
+        verify(auditService).record(eq(principal), eq(orgId), eq(robotId), eq("TASK_STOP"), eq("FAILED"),
+                eq("Not dispatched: Keenon OAuth failure"), any(), any());
+        verify(auditService, never()).record(any(), any(), any(), eq("TASK_STOP"), eq("SUCCESS"), any(), any(), any());
+        verifyNoInteractions(cleaningSessionService);
+    }
+
+    @Test
+    void stoppingANonCleaningTask_neverCallsRobotCommandService() {
+        UUID robotId = UUID.randomUUID();
+        RobotTask task = aTask(robotId, UUID.randomUUID(), "RETURN_TO_DOCK", null, TaskLifecycleStatus.RUNNING);
+        when(robotTaskRepository.lockByIdForUpdate(task.getId())).thenReturn(Optional.of(task));
+
+        RobotTask result = service().transition(principal, task.getId(), "STOP");
+
+        assertThat(result.getStatus()).isEqualTo("COMPLETED");
+        verifyNoInteractions(robotCommandService);
+    }
+
+    @Test
+    void stoppingATaskFromCreatedState_isRejectedAsInvalidTransition_withoutCallingRobotCommandService() {
+        // ALLOWED_FROM (RUNNING/PAUSED only) must reject before the dispatch bridge
+        // is ever reached — no STOP_TASK command is issued for an invalid transition.
+        UUID robotId = UUID.randomUUID();
+        RobotTask task = aTask(robotId, UUID.randomUUID(), "CLEANING", null, TaskLifecycleStatus.CREATED);
+        when(robotTaskRepository.lockByIdForUpdate(task.getId())).thenReturn(Optional.of(task));
+
+        ApiException ex = Assertions.assertThrows(ApiException.class, () -> service().transition(principal, task.getId(), "STOP"));
+
+        assertThat(ex.getErrorCode()).isEqualTo(SakarErrorCode.INVALID_TASK_TRANSITION);
+        verifyNoInteractions(robotCommandService);
+    }
+
+    @Test
+    void stoppingATask_usesThePessimisticLockingReadRow_neverThePlainUnlockedFindById() {
+        // Mirrors the equivalent START test — STOP can now also trigger a physical
+        // dispatch (dispatchCleaningStop), so it needs the same duplicate-dispatch
+        // protection.
+        UUID robotId = UUID.randomUUID();
+        RobotTask task = aTask(robotId, UUID.randomUUID(), "RETURN_TO_DOCK", null, TaskLifecycleStatus.RUNNING);
+        when(robotTaskRepository.lockByIdForUpdate(task.getId())).thenReturn(Optional.of(task));
+
+        service().transition(principal, task.getId(), "STOP");
+
+        verify(robotTaskRepository).lockByIdForUpdate(task.getId());
+        verify(robotTaskRepository, never()).findById(any());
     }
 
     // ------------------------------------------------------------------

@@ -102,3 +102,7 @@ Thumbs.db
 logs/
 tmp/
 *.tmp
+
+# ---- Runtime data ----
+# Map images synced from the vendor into the backend storage root at runtime.
+backend/data/

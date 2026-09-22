@@ -69,13 +69,28 @@ export interface Robot {
   serialNumber: string;
   status: RobotLifecycleStatus;
   capabilities: RobotCapabilityType[];
+  // The backend's single authoritative connectivity verdict
+  // (RobotConnectivityService): derived from the robot's own
+  // heartbeat/telemetry against the configured offline threshold. Render it
+  // as-is — never re-derive connectivity in the browser from lastSeenAt,
+  // which is display-only and would reintroduce the clock-skew and
+  // stale-badge problems this field exists to remove.
+  connectionStatus: RobotConnectionStatus;
+  lastSeenAt: string | null;
   createdAt: string;
 }
+
+// backend/.../telemetry/RobotConnectionStatus.java
+export type RobotConnectionStatus = 'ONLINE' | 'OFFLINE' | 'UNKNOWN';
 
 // backend/.../robot/adapter/dto/RobotStatusSnapshot.java
 export interface RobotStatusSnapshot {
   mainState: string;
   subState: string | null;
+  // CAUTION: this is a vendor-reachability flag — true means the adapter's
+  // status call returned data, NOT that the robot is connected. Use
+  // Robot.connectionStatus for connectivity; this field must never drive a
+  // connection badge.
   online: boolean;
   observedAt: string;
   raw: unknown;

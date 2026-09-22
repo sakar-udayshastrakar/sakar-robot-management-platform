@@ -32,6 +32,8 @@ const sampleRobots: Robot[] = [
     serialNumber: 'SN-ALPHA-001',
     status: 'ACTIVE',
     capabilities: ['GET_STATUS'],
+    connectionStatus: 'ONLINE',
+    lastSeenAt: new Date().toISOString(),
     createdAt: new Date().toISOString(),
   },
   {
@@ -42,6 +44,8 @@ const sampleRobots: Robot[] = [
     name: 'CleanBot Beta',
     serialNumber: 'SN-BETA-002',
     status: 'REGISTERED',
+    connectionStatus: 'OFFLINE',
+    lastSeenAt: new Date(Date.now() - 7200_000).toISOString(),
     capabilities: ['GET_STATUS'],
     createdAt: new Date().toISOString(),
   },
@@ -58,6 +62,59 @@ describe('RobotsListPage', () => {
     vi.restoreAllMocks();
     vi.spyOn(sitesApi, 'listSitesByOrganization').mockResolvedValue([]);
     vi.spyOn(robotsApi, 'getRobotStatus').mockRejectedValue(new ApiRequestError('unavailable', 503, null));
+  });
+
+  it('renders the backend connection status for each robot, not a live vendor probe', async () => {
+    // Every vendor status probe fails here (see beforeEach) — connectivity must still
+    // render correctly, because it comes from the robots list payload itself.
+    vi.spyOn(robotsApi, 'listRobots').mockResolvedValue(mockPage(sampleRobots));
+
+    renderPage();
+
+    await waitFor(() => expect(screen.getByText('CleanBot Alpha')).toBeInTheDocument());
+    expect(screen.getByText('Online')).toBeInTheDocument();
+    expect(screen.getByText('Offline')).toBeInTheDocument();
+  });
+
+  it('never renders a stale-heartbeat robot as Online, even when the vendor probe succeeds', async () => {
+    // The exact reported inconsistency: Keenon answers happily, but this robot has not
+    // been heard from within the configured offline threshold, so the backend says
+    // OFFLINE and the badge must follow the backend.
+    vi.spyOn(robotsApi, 'listRobots').mockResolvedValue(mockPage([
+      { ...sampleRobots[1], connectionStatus: 'OFFLINE' },
+    ]));
+    vi.spyOn(robotsApi, 'getRobotStatus').mockResolvedValue({
+      mainState: 'IDLE', subState: null, online: true, observedAt: new Date().toISOString(), raw: {},
+    });
+
+    renderPage();
+
+    await waitFor(() => expect(screen.getByText('CleanBot Beta')).toBeInTheDocument());
+    expect(screen.getByText('Offline')).toBeInTheDocument();
+    expect(screen.queryByText('Online')).not.toBeInTheDocument();
+  });
+
+  it('renders Unknown for a robot that has never reported', async () => {
+    vi.spyOn(robotsApi, 'listRobots').mockResolvedValue(mockPage([
+      { ...sampleRobots[0], connectionStatus: 'UNKNOWN', lastSeenAt: null },
+    ]));
+
+    renderPage();
+
+    await waitFor(() => expect(screen.getByText('CleanBot Alpha')).toBeInTheDocument());
+    expect(screen.getByText('Unknown')).toBeInTheDocument();
+    expect(screen.queryByText('Online')).not.toBeInTheDocument();
+  });
+
+  it('shows "Never received" for a null lastSeenAt, and the real timestamp otherwise', async () => {
+    vi.spyOn(robotsApi, 'listRobots').mockResolvedValue(mockPage([
+      { ...sampleRobots[0], connectionStatus: 'UNKNOWN', lastSeenAt: null },
+    ]));
+
+    renderPage();
+
+    await waitFor(() => expect(screen.getByText('CleanBot Alpha')).toBeInTheDocument());
+    expect(screen.getByText('Never received')).toBeInTheDocument();
   });
 
   it('renders robots returned by the real GET /robots shape', async () => {

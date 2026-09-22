@@ -91,9 +91,13 @@ class KeenonStatusSyncServiceTest {
 
         service().syncOne(robot, adapter);
 
-        verify(robotStatusService).applyKnownMetric(eq(robot.getId()), eq("main_state"), isNull(), eq("IDLE"), eq(observedAt));
-        verify(robotStatusService).applyKnownMetric(eq(robot.getId()), eq("battery_percent"), eq(77.0), isNull(), eq(observedAt));
+        // Vendor-sourced metrics only. applyVendorMetric deliberately never writes
+        // online/last_seen_at: a successful Keenon poll is not a robot heartbeat, so it must
+        // not reset the offline clock (that is what made a silent robot render ONLINE).
+        verify(robotStatusService).applyVendorMetric(eq(robot.getId()), eq("main_state"), isNull(), eq("IDLE"));
+        verify(robotStatusService).applyVendorMetric(eq(robot.getId()), eq("battery_percent"), eq(77.0), isNull());
         verify(robotStatusService, never()).markOffline(any(), any());
+        verify(robotStatusService, never()).applyKnownMetric(any(), any(), any(), any(), any());
     }
 
     @Test
@@ -161,7 +165,8 @@ class KeenonStatusSyncServiceTest {
 
         service().syncOne(robot, adapter);
 
-        verify(robotStatusService).applyKnownMetric(eq(robot.getId()), eq("main_state"), isNull(), eq("IDLE"), eq(observedAt));
+        verify(robotStatusService).applyVendorMetric(eq(robot.getId()), eq("main_state"), isNull(), eq("IDLE"));
+        verify(robotStatusService, never()).applyKnownMetric(any(), any(), any(), any(), any());
         verify(adapter, never()).getBattery(any());
     }
 
@@ -177,8 +182,9 @@ class KeenonStatusSyncServiceTest {
 
         service().syncOne(robot, adapter);
 
-        verify(robotStatusService).applyKnownMetric(eq(robot.getId()), eq("main_state"), isNull(), eq("IDLE"), eq(observedAt));
-        verify(robotStatusService, never()).applyKnownMetric(any(), eq("battery_percent"), anyDouble(), any(), any());
+        verify(robotStatusService).applyVendorMetric(eq(robot.getId()), eq("main_state"), isNull(), eq("IDLE"));
+        verify(robotStatusService, never()).applyVendorMetric(any(), eq("battery_percent"), anyDouble(), any());
+        verify(robotStatusService, never()).applyKnownMetric(any(), any(), any(), any(), any());
     }
 
     @Test
