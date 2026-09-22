@@ -100,4 +100,34 @@ describe('AlertsPage', () => {
 
     await waitFor(() => expect(ackSpy).toHaveBeenCalledWith('alert-1'));
   });
+
+  it('shows the robot\'s current connectionStatus as a connectivity badge for an OFFLINE-type alert', async () => {
+    vi.spyOn(robotsApi, 'listRobots').mockResolvedValue({
+      content: [{ ...sampleRobot, connectionStatus: 'OFFLINE' }],
+      totalElements: 1, totalPages: 1, number: 0, size: 100, first: true, last: true, empty: false,
+    });
+    const offlineAlert: RobotAlert = { ...sampleAlert, id: 'alert-2', alertType: 'OFFLINE', message: 'No heartbeat received' };
+    vi.spyOn(alertsApi, 'listAlerts').mockResolvedValue(mockAlertsPage([offlineAlert]));
+
+    renderPage();
+
+    await waitFor(() => expect(screen.getByText('No heartbeat received')).toBeInTheDocument());
+    // Two "Offline" texts are expected: the Alert Type column ("Offline", from
+    // TYPE_LABEL) and the connectivity badge showing the robot's live status —
+    // confirm the latter specifically, by its danger-styled badge class.
+    const offlineTexts = screen.getAllByText('Offline');
+    expect(offlineTexts.length).toBe(2);
+    expect(offlineTexts.some((el) => el.closest('.sakar-badge--danger'))).toBe(true);
+  });
+
+  it('does not show a connectivity badge for a LOW_BATTERY-type alert', async () => {
+    vi.spyOn(alertsApi, 'listAlerts').mockResolvedValue(mockAlertsPage([sampleAlert]));
+
+    renderPage();
+
+    await waitFor(() => expect(screen.getByText('Battery at 5%')).toBeInTheDocument());
+    expect(screen.queryByText('Offline')).not.toBeInTheDocument();
+    expect(screen.queryByText('Online')).not.toBeInTheDocument();
+    expect(screen.queryByText('Unknown')).not.toBeInTheDocument();
+  });
 });

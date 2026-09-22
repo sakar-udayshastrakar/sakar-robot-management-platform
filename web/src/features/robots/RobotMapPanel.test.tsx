@@ -165,4 +165,88 @@ describe('RobotMapPanel', () => {
     expect(screen.getByText('Keenon Open Platform request failed')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Retry' })).toBeInTheDocument();
   });
+
+  // Map Overlay Foundation — areas are loaded dynamically from the backend;
+  // nothing about area count, names, or selection is hardcoded. These cases
+  // deliberately use a count other than 5 (the count shown in the Keenon
+  // reference screenshots) to prove nothing assumes a fixed number of areas.
+  it('renders however many areas the backend returns, with no assumption about count', async () => {
+    vi.spyOn(robotsApi, 'getRobotMapImage').mockResolvedValue(pngBlob());
+    const threeAreas = [
+      { vendorAreaId: 'a1', displayName: 'Kitchen' },
+      { vendorAreaId: 'a2', displayName: 'Hallway' },
+      { vendorAreaId: 'a3', displayName: 'Office' },
+    ];
+    vi.spyOn(robotsApi, 'getRobotAreas').mockResolvedValue(threeAreas);
+
+    render(<RobotMapPanel robotId="robot-1" />);
+
+    expect(await screen.findByText('Kitchen')).toBeInTheDocument();
+    expect(screen.getByText('Hallway')).toBeInTheDocument();
+    expect(screen.getByText('Office')).toBeInTheDocument();
+    expect(screen.getByText('0 of 3 areas selected')).toBeInTheDocument();
+  });
+
+  it('supports selecting multiple areas independently, purely as local view state', async () => {
+    vi.spyOn(robotsApi, 'getRobotMapImage').mockResolvedValue(pngBlob());
+    vi.spyOn(robotsApi, 'getRobotAreas').mockResolvedValue([
+      { vendorAreaId: 'a1', displayName: 'Kitchen' },
+      { vendorAreaId: 'a2', displayName: 'Hallway' },
+      { vendorAreaId: 'a3', displayName: 'Office' },
+    ]);
+
+    render(<RobotMapPanel robotId="robot-1" />);
+    await screen.findByText('Kitchen');
+
+    const rowCheckboxes = screen.getAllByRole('checkbox').filter((c) => c.getAttribute('aria-label')?.startsWith('Select row'));
+    expect(rowCheckboxes).toHaveLength(3);
+
+    await userEvent.click(rowCheckboxes[0]);
+    expect(screen.getByText('1 of 3 areas selected')).toBeInTheDocument();
+
+    await userEvent.click(rowCheckboxes[2]);
+    expect(screen.getByText('2 of 3 areas selected')).toBeInTheDocument();
+
+    await userEvent.click(rowCheckboxes[0]);
+    expect(screen.getByText('1 of 3 areas selected')).toBeInTheDocument();
+  });
+
+  it('shows no selection count and no checkboxes when the robot has zero areas', async () => {
+    vi.spyOn(robotsApi, 'getRobotMapImage').mockResolvedValue(pngBlob());
+    vi.spyOn(robotsApi, 'getRobotAreas').mockResolvedValue([]);
+
+    render(<RobotMapPanel robotId="robot-1" />);
+
+    expect(await screen.findByText('No areas returned for this robot')).toBeInTheDocument();
+    expect(screen.queryByText(/areas selected/)).not.toBeInTheDocument();
+    expect(screen.queryByRole('checkbox')).not.toBeInTheDocument();
+  });
+
+  it('sizes the map viewport from the real backend-reported width/height, not a guessed ratio', async () => {
+    vi.spyOn(robotsApi, 'getRobotMapImage').mockResolvedValue(pngBlob());
+    vi.spyOn(robotsApi, 'getRobotMap').mockResolvedValue({
+      vendorMapId: '7ClJPR',
+      name: 'F',
+      width: 570,
+      height: 763,
+      mapMd5: 'a3cb0d75faa17c9ab12b9a6434173b42',
+      updatedAt: '2026-09-06T00:00:00Z',
+    });
+
+    render(<RobotMapPanel robotId="robot-1" />);
+
+    const img = await screen.findByRole('img', { name: 'Robot floor-plan map' });
+    const viewport = img.parentElement;
+    expect(viewport).toHaveClass('sakar-map-viewport');
+    expect(viewport).toHaveStyle({ aspectRatio: (570 / 763).toString() });
+  });
+
+  it('shows an honest, evidence-based explanation for why back/charging points are not rendered', async () => {
+    vi.spyOn(robotsApi, 'getRobotMapImage').mockResolvedValue(pngBlob());
+
+    render(<RobotMapPanel robotId="robot-1" />);
+
+    expect(await screen.findByText('Back Points')).toBeInTheDocument();
+    expect(screen.getByText(/No backend endpoint exposes back\/charging points/)).toBeInTheDocument();
+  });
 });

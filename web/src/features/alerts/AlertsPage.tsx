@@ -10,6 +10,7 @@ import { PageHeader } from '../../components/ui/PageHeader';
 import { Card } from '../../components/ui/Card';
 import { DataTable } from '../../components/ui/DataTable';
 import { Badge } from '../../components/ui/Badge';
+import { ConnectionStatusBadge } from '../../components/ui/ConnectionStatusBadge';
 import { SeverityBadge } from '../../components/ui/SeverityBadge';
 import { SearchBar } from '../../components/ui/SearchBar';
 import { FilterBar, FilterField } from '../../components/ui/FilterBar';
@@ -43,7 +44,7 @@ export function AlertsPage() {
   const [busyId, setBusyId] = useState<string | null>(null);
 
   const { data, status, error, refetch } = useApi(() => listAlerts(page, 25), [page]);
-  const robotName = useMemo(() => new Map(robots.map((r) => [r.id, r.name])), [robots]);
+  const robotById = useMemo(() => new Map(robots.map((r) => [r.id, r])), [robots]);
 
   const filtered = (data?.content ?? []).filter((a) => {
     if (severityFilter !== 'ALL' && a.severity !== severityFilter) return false;
@@ -127,7 +128,24 @@ export function AlertsPage() {
           emptyTitle="No alerts match these filters"
           columns={[
             { key: 'severity', header: 'Severity', render: (a) => <SeverityBadge severity={a.severity} /> },
-            { key: 'robot', header: 'Robot', render: (a) => robotName.get(a.robotId) ?? a.robotId },
+            { key: 'robot', header: 'Robot', render: (a) => {
+                const robot = robotById.get(a.robotId);
+                const name = robot?.name ?? a.robotId;
+                // Current connectivity, shown only for OFFLINE-type alerts — this is the
+                // robot's live connectionStatus right now, which may already differ from
+                // the state that triggered this alert (e.g. it has since reconnected).
+                // Omitted (not defaulted to Unknown) when the robot isn't in this capped
+                // lookup, rather than guessing its status.
+                if (a.alertType !== 'OFFLINE' || !robot) {
+                  return name;
+                }
+                return (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+                    <span>{name}</span>
+                    <ConnectionStatusBadge status={robot.connectionStatus} />
+                  </div>
+                );
+              } },
             { key: 'type', header: 'Alert Type', render: (a) => TYPE_LABEL[a.alertType] ?? a.alertType },
             { key: 'alert', header: 'Message', render: (a) => a.message },
             { key: 'created', header: 'Created', render: (a) => new Date(a.createdAt).toLocaleString() },

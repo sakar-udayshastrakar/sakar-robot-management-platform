@@ -114,7 +114,10 @@ describe('DashboardPage', () => {
   });
 
   it('displays lastSeenAt from backend data in the fleet table, not "Never received" for a robot that has reported', async () => {
-    const seenAt = new Date('2026-09-22T09:15:05.000Z');
+    // A recent-but-past timestamp so the relative label is deterministic
+    // ("X min ago") regardless of exactly when this test runs, while the
+    // full absolute timestamp is still checked via its tooltip.
+    const seenAt = new Date(Date.now() - 5 * 60_000);
     vi.spyOn(robotsApi, 'listRobots').mockResolvedValue(mockRobotsPage([
       robot({ id: 'r1', name: 'Reporting Bot', connectionStatus: 'OFFLINE', lastSeenAt: seenAt.toISOString() }),
     ]));
@@ -122,7 +125,10 @@ describe('DashboardPage', () => {
     renderPage();
 
     await waitFor(() => expect(screen.getByText('Reporting Bot')).toBeInTheDocument());
-    expect(screen.getByText(seenAt.toLocaleString())).toBeInTheDocument();
+    // Relative text is the visible primary content...
+    expect(screen.getByText('5 min ago')).toBeInTheDocument();
+    // ...and the absolute timestamp is still available, as a tooltip.
+    expect(screen.getByTitle(seenAt.toLocaleString())).toBeInTheDocument();
     expect(screen.queryByText('Never received')).not.toBeInTheDocument();
   });
 });

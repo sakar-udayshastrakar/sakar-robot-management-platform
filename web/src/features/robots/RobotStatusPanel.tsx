@@ -3,7 +3,8 @@ import { getRobotBattery, getRobotStatus } from '../../api/robots';
 import { ApiRequestError } from '../../api/client';
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
-import { StatusBadge } from '../../components/ui/StatusBadge';
+import { ConnectionStatusBadge } from '../../components/ui/ConnectionStatusBadge';
+import { Heartbeat } from '../../components/ui/Heartbeat';
 import type { RobotConnectionStatus } from '../../types/domain';
 
 type StatusProbe =
@@ -95,11 +96,11 @@ export function RobotStatusPanel({
             re-derived here. */}
         <div className="sakar-status-strip-item">
           <span className="sakar-status-strip-label">Connection</span>
-          <StatusBadge status={connectionStatus} />
+          <ConnectionStatusBadge status={connectionStatus} />
         </div>
         <div className="sakar-status-strip-item">
           <span className="sakar-status-strip-label">Last heartbeat</span>
-          <span>{lastSeenAt ? new Date(lastSeenAt).toLocaleString() : 'Never received'}</span>
+          <Heartbeat lastSeenAt={lastSeenAt} />
         </div>
         {/* Keenon vendor reachability — a DIFFERENT axis from Connection above, kept in
             its own cell with its own vocabulary (Reachable/Unreachable, not

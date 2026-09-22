@@ -10,7 +10,8 @@ import { Card } from '../../components/ui/Card';
 import { MetricCard } from '../../components/ui/MetricCard';
 import { Badge } from '../../components/ui/Badge';
 import { Icon } from '../../components/ui/Icon';
-import { StatusBadge } from '../../components/ui/StatusBadge';
+import { ConnectionStatusBadge } from '../../components/ui/ConnectionStatusBadge';
+import { Heartbeat } from '../../components/ui/Heartbeat';
 import { SeverityBadge } from '../../components/ui/SeverityBadge';
 import { DataTable } from '../../components/ui/DataTable';
 import { LoadingState, ErrorState } from '../../components/ui/States';
@@ -115,16 +116,14 @@ export function DashboardPage() {
             { key: 'name', header: 'Robot', render: (r) => (
                 <button type="button" className="sakar-link-btn" onClick={() => navigate(`/robots/${r.id}`)}>{r.name}</button>
               ) },
-            { key: 'status', header: 'Status', render: (r) => <StatusBadge status={r.connectionStatus} /> },
+            { key: 'status', header: 'Status', render: (r) => <ConnectionStatusBadge status={r.connectionStatus} /> },
             { key: 'battery', header: 'Battery', render: () => <span className="sakar-page-subtitle">Not available</span> },
             { key: 'state', header: 'Current State', render: (r) => {
                 const s = statuses.get(r.id);
                 return s && s !== 'unavailable' ? s.mainState : <span className="sakar-page-subtitle">—</span>;
               } },
             { key: 'site', header: 'Site', render: (r) => (r.siteId ? siteNames.get(r.siteId) ?? r.siteId : '—') },
-            { key: 'heartbeat', header: 'Last Heartbeat', render: (r) => (
-                r.lastSeenAt ? new Date(r.lastSeenAt).toLocaleString() : <span className="sakar-page-subtitle">Never received</span>
-              ) },
+            { key: 'heartbeat', header: 'Last Heartbeat', render: (r) => <Heartbeat lastSeenAt={r.lastSeenAt} /> },
             { key: 'agent', header: 'Agent Version', render: () => <span className="sakar-page-subtitle">Not available</span> },
           ]}
         />

@@ -1064,6 +1064,32 @@
   color: var(--sakar-text-faint);
 }
 
+/* ------------------------------------------------------------------ */
+/* Map viewport — fits the stored map PNG inside a bounded box at its   */
+/* own aspect ratio (from real, backend-confirmed width/height), rather */
+/* than letting the raw image dictate layout. No geometry is drawn      */
+/* inside this container — see RobotMapPanel for why.                   */
+/* ------------------------------------------------------------------ */
+
+.sakar-map-viewport {
+  width: 100%;
+  max-height: 520px;
+  background: var(--sakar-bg);
+  border: 1px solid var(--sakar-border);
+  border-radius: var(--sakar-radius-md);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sakar-map-viewport img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
 .sakar-pagination select {
   height: var(--sakar-control-h-sm);
   padding: 0 var(--sakar-sp-2);

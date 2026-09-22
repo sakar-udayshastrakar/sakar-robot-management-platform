@@ -8,7 +8,7 @@ import { useSiteNames } from '../shared/useSiteNames';
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { Icon } from '../../components/ui/Icon';
-import { StatusBadge } from '../../components/ui/StatusBadge';
+import { ConnectionStatusBadge } from '../../components/ui/ConnectionStatusBadge';
 import { LoadingState, ErrorState, EmptyState } from '../../components/ui/States';
 import { ConfirmDialog } from '../../components/ui/ConfirmDialog';
 import { RobotStatusPanel } from './RobotStatusPanel';
@@ -175,7 +175,7 @@ export function RobotDetailPage() {
           {/* Backend-authoritative connectivity — identical to the value the Robots list
               renders and the value the offline-alert sweep acts on, so this page can never
               disagree with either. */}
-          <StatusBadge status={robot.connectionStatus} />
+          <ConnectionStatusBadge status={robot.connectionStatus} />
           <Badge tone={robot.status === 'ACTIVE' ? 'success' : robot.status === 'DEACTIVATED' ? 'warning' : 'neutral'}>{robot.status}</Badge>
         </div>
       </div>

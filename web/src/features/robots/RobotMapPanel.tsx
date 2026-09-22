@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { getRobotAreas, getRobotMap } from '../../api/robots';
 import { useApi } from '../../hooks/useApi';
 import { useRobotMapImage, type RobotMapImageStatus } from './useRobotMapImage';
@@ -15,10 +16,20 @@ import type { RobotArea, RobotMapMetadata } from '../../types/domain';
 // Sakar's own backend (never a Keenon URL, never a filesystem path) — see
 // getRobotMapImage's own Javadoc.
 //
-// Slice 1 scope: the stored PNG plus name/dimensions metadata only. Map
-// points, area polygon geometry, live robot position, and zoom/pan are
-// deliberately not implemented here yet — see the UnavailableFeature note
-// below, which states this plainly instead of faking any of it.
+// Overlay scope (evidence-based, not a TODO placeholder): the Keenon
+// area-list endpoint returns only an area id and name — no polygon,
+// bounding box, or any other geometry field exists anywhere upstream of
+// this call (KeenonAreaListParser/KeenonAreaMapping have no geometry
+// column). Area *selection* is therefore implemented below as a plain
+// list with checkboxes (functionally equivalent to picking an area, per
+// the reference Keenon C40 UI), never as a shape drawn on the map, because
+// there is no shape to draw. Back/charging points are not rendered at
+// all: no REST endpoint exposes them to the frontend today (the backing
+// entities, KeenonBackPointMapping and MapPoint, are sync-only), and even
+// MapPoint's real x/y values have no documented unit or confirmed
+// relationship to this PNG's pixel space — plotting them would be a
+// guess, not a rendering. See the Back Points card below for the same
+// explanation surfaced to the user.
 export function RobotMapPanel({ robotId }: { robotId: string }) {
   const mapImage = useRobotMapImage(robotId);
   const { data: mapMeta } = useApi(() => getRobotMap(robotId), [robotId]);
@@ -38,12 +49,17 @@ export function RobotMapPanel({ robotId }: { robotId: string }) {
 
       <Card title="Areas">
         <AreasSection
+          robotId={robotId}
           status={areas.status}
           areas={areas.data ?? []}
           error={areas.error}
           errorStatus={areas.errorStatus}
           refetch={areas.refetch}
         />
+      </Card>
+
+      <Card title="Back Points">
+        <UnavailableFeature reason="No backend endpoint exposes back/charging points to the frontend yet (they are synced from Keenon for internal command dispatch only). Even once one exists, the stored coordinates have no documented unit or confirmed relationship to this map image's pixel grid, so a position could not be plotted accurately — see docs/KEENON_C40S_MAP_SCENE_INTEGRATION.md." />
       </Card>
     </div>
   );
@@ -81,25 +97,31 @@ function MapImageSection({ status, imageUrl, error, refetch, metadata }: MapImag
     );
   }
 
+  // Real, backend-confirmed width/height (RobotMap.width/height) size the
+  // viewport so the image keeps its true aspect ratio instead of being
+  // shown at whatever size the raw PNG happens to be. Falls back to an
+  // unconstrained box when metadata hasn't loaded (or a model doesn't
+  // report dimensions) rather than guessing a ratio.
+  const aspectRatio = metadata?.width && metadata?.height ? metadata.width / metadata.height : undefined;
+
   return (
     <div>
-      <img
-        src={imageUrl ?? undefined}
-        alt="Robot floor-plan map"
-        style={{ maxWidth: '100%', display: 'block', border: '1px solid var(--sakar-border, #ddd)' }}
-      />
+      <div className="sakar-map-viewport" style={aspectRatio ? { aspectRatio } : undefined}>
+        <img src={imageUrl ?? undefined} alt="Robot floor-plan map" />
+      </div>
       {metadata && (
         <p className="sakar-page-subtitle" style={{ marginTop: 12, marginBottom: 0 }}>
           {metadata.name ?? 'Unnamed map'}
           {metadata.width != null && metadata.height != null ? ` · ${metadata.width}×${metadata.height}` : ''}
         </p>
       )}
-      <UnavailableFeature reason="Map points, area overlays, live robot position, and zoom/pan are not part of this view yet." />
+      <UnavailableFeature reason="Area boundaries are not drawn on the map image: the Keenon area-list endpoint returns only an area id and name for this account, no polygon or bounding-box geometry. Live robot position and zoom/pan are also not part of this view yet." />
     </div>
   );
 }
 
 interface AreasSectionProps {
+  robotId: string;
   status: 'idle' | 'loading' | 'success' | 'error';
   areas: RobotArea[];
   error: string | null;
@@ -107,7 +129,24 @@ interface AreasSectionProps {
   refetch: () => void;
 }
 
-function AreasSection({ status, areas, error, errorStatus, refetch }: AreasSectionProps) {
+function areaRowKey(a: RobotArea): string {
+  return `${a.vendorAreaId ?? ''}-${a.displayName ?? ''}`;
+}
+
+function AreasSection({ robotId, status, areas, error, errorStatus, refetch }: AreasSectionProps) {
+  // Selection is a local, view-only concept here — it does not call any
+  // API and does not start a task (task creation already has its own,
+  // separate area-selection flow in RobotTasksPanel). It exists purely so
+  // a user can mark which of a robot's real, dynamically-loaded areas
+  // they're looking at, the same functional idea as the reference Keenon
+  // UI's checkmarked areas, without drawing shapes that don't exist.
+  const [selected, setSelected] = useState<string[]>([]);
+
+  // Never carry a stale selection across robots.
+  useEffect(() => {
+    setSelected([]);
+  }, [robotId]);
+
   if (status === 'loading' || status === 'idle') {
     return <LoadingState title="Loading areas…" />;
   }
@@ -135,14 +174,24 @@ function AreasSection({ status, areas, error, errorStatus, refetch }: AreasSecti
   }
 
   return (
-    <DataTable
-      rows={areas}
-      rowKey={(a) => `${a.vendorAreaId ?? ''}-${a.displayName ?? ''}`}
-      emptyTitle="No areas returned for this robot"
-      columns={[
-        { key: 'name', header: 'Area', render: (a) => a.displayName ?? '—' },
-        { key: 'id', header: 'Vendor area ID', render: (a) => <span className="sakar-mono">{a.vendorAreaId ?? '—'}</span> },
-      ]}
-    />
+    <div style={{ display: 'grid', gap: 10 }}>
+      {areas.length > 0 && (
+        <p className="sakar-page-subtitle" style={{ margin: 0 }}>
+          {selected.length} of {areas.length} area{areas.length === 1 ? '' : 's'} selected
+        </p>
+      )}
+      <DataTable
+        rows={areas}
+        rowKey={areaRowKey}
+        emptyTitle="No areas returned for this robot"
+        selectable
+        selectedKeys={selected}
+        onSelectionChange={setSelected}
+        columns={[
+          { key: 'name', header: 'Area', render: (a) => a.displayName ?? '—' },
+          { key: 'id', header: 'Vendor area ID', render: (a) => <span className="sakar-mono">{a.vendorAreaId ?? '—'}</span> },
+        ]}
+      />
+    </div>
   );
 }

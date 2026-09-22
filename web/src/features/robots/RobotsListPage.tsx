@@ -10,7 +10,8 @@ import { Breadcrumb } from '../../components/ui/Breadcrumb';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { DataTable } from '../../components/ui/DataTable';
 import { Badge } from '../../components/ui/Badge';
-import { StatusBadge } from '../../components/ui/StatusBadge';
+import { ConnectionStatusBadge } from '../../components/ui/ConnectionStatusBadge';
+import { Heartbeat } from '../../components/ui/Heartbeat';
 import { Pagination } from '../../components/ui/Pagination';
 import { SearchBar } from '../../components/ui/SearchBar';
 import { FilterField } from '../../components/ui/FilterBar';
@@ -242,7 +243,7 @@ export function RobotsListPage() {
                   // freshness against the configured offline threshold. Previously this read the live
                   // status probe's `online` flag, which only means "the Keenon API answered" — that is
                   // why a robot with an open "no heartbeat" alert could still show Online here.
-                  { key: 'connection', header: 'Connection', render: (r) => <StatusBadge status={r.connectionStatus} /> },
+                  { key: 'connection', header: 'Connection', render: (r) => <ConnectionStatusBadge status={r.connectionStatus} /> },
                   { key: 'status', header: 'Registration', render: (r) => <Badge tone={STATUS_TONE[r.status]}>{r.status}</Badge> },
                   { key: 'state', header: 'Current state', render: (r) => {
                       const s = statuses.get(r.id);
@@ -250,9 +251,9 @@ export function RobotsListPage() {
                     } },
                   // The robot's own last heartbeat/telemetry, not the probe's observedAt (which is
                   // the moment Sakar polled the vendor, not the moment the robot reported).
-                  { key: 'heartbeat', header: 'Last heartbeat', render: (r) => (
-                      <span className="sakar-nowrap">{r.lastSeenAt ? new Date(r.lastSeenAt).toLocaleString() : <span className="sakar-page-subtitle">Never received</span>}</span>
-                    ) },
+                  // Relative text, absolute timestamp on hover — display-only, never used to
+                  // decide connectivity (see Heartbeat/formatHeartbeat).
+                  { key: 'heartbeat', header: 'Last heartbeat', render: (r) => <Heartbeat lastSeenAt={r.lastSeenAt} /> },
                   { key: 'actions', header: 'Actions', align: 'right', render: (r) => (
                       <div style={{ display: 'flex', gap: 6, justifyContent: 'flex-end' }}>
                         <button type="button" className="sakar-btn sakar-btn--secondary sakar-btn--sm" onClick={() => navigate(`/robots/${r.id}`)}>View</button>
