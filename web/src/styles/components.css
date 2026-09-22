@@ -1066,14 +1066,29 @@
 
 /* ------------------------------------------------------------------ */
 /* Map viewport — fits the stored map PNG inside a bounded box at its   */
-/* own aspect ratio (from real, backend-confirmed width/height), rather */
-/* than letting the raw image dictate layout. No geometry is drawn      */
-/* inside this container — see RobotMapPanel for why.                   */
+/* own aspect ratio, rather than letting the raw image dictate layout.  */
+/* No geometry is drawn inside this container — see RobotMapPanel.      */
+/*                                                                        */
+/* Sizing note: `width: auto` + `height: auto` alongside `max-width`     */
+/* and `max-height` (both constraints, at once) is what makes the box's  */
+/* own `aspect-ratio` actually take effect. An earlier version used      */
+/* `width: 100%`, which pins the width to the container regardless of    */
+/* ratio and leaves only the height free to be clamped by `max-height`   */
+/* — for a portrait image that silently produced a landscape-shaped box  */
+/* (verified: 898x520 for a 570x763 image at a 900px container, instead  */
+/* of the correct 388x520), with the image then letterboxed inside its   */
+/* own oversized, mostly-empty-looking background box. `box-sizing:      */
+/* border-box` keeps the 1px border from pushing the box 2px past        */
+/* `max-height`.                                                         */
 /* ------------------------------------------------------------------ */
 
 .sakar-map-viewport {
-  width: 100%;
+  box-sizing: border-box;
+  max-width: 100%;
   max-height: 520px;
+  width: auto;
+  height: auto;
+  margin: 0 auto;
   background: var(--sakar-bg);
   border: 1px solid var(--sakar-border);
   border-radius: var(--sakar-radius-md);
@@ -1088,6 +1103,27 @@
   width: 100%;
   height: 100%;
   object-fit: contain;
+}
+
+/* Cropped mode (useMapContentCrop): the container's own aspect-ratio and
+   the <img>'s width/left/top are all set inline per-image (computeCropStyle,
+   from the image's own detected content bounds) — this modifier only swaps
+   the positioning model from the default flex+contain above to an
+   absolutely-positioned, clipped image, since a cropped image is
+   intentionally rendered LARGER than its container and offset so only the
+   content region shows. Falls back to the default (uncropped) rules above
+   whenever no bounds could be computed, so the map always renders either
+   way — never blank in a browser without canvas pixel-extraction support. */
+.sakar-map-viewport--cropped {
+  position: relative;
+  display: block;
+}
+
+.sakar-map-viewport--cropped img {
+  position: absolute;
+  max-width: none;
+  height: auto;
+  object-fit: unset;
 }
 
 .sakar-pagination select {

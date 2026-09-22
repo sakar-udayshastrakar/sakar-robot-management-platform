@@ -3,6 +3,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { RobotMapPanel } from './RobotMapPanel';
 import * as robotsApi from '../../api/robots';
+import * as mapContentCropModule from './useMapContentCrop';
 import { ApiRequestError } from '../../api/client';
 
 function pngBlob(): Blob {
@@ -24,6 +25,11 @@ describe('RobotMapPanel', () => {
     // only needs to stub the map-image/map-metadata behavior it cares about.
     vi.spyOn(robotsApi, 'getRobotAreas').mockResolvedValue([]);
     vi.spyOn(robotsApi, 'getRobotMap').mockRejectedValue(new ApiRequestError('not found', 404, null));
+    // useMapContentCrop genuinely resolves to "no bounds" in this jsdom test
+    // environment (no real canvas 2D pixel extraction) — this default spy
+    // just makes that real, current behavior explicit and independently
+    // overridable per test, rather than changing anything.
+    vi.spyOn(mapContentCropModule, 'useMapContentCrop').mockReturnValue({ bounds: null, naturalWidth: null, naturalHeight: null });
   });
 
   afterEach(() => {
@@ -222,7 +228,7 @@ describe('RobotMapPanel', () => {
     expect(screen.queryByRole('checkbox')).not.toBeInTheDocument();
   });
 
-  it('sizes the map viewport from the real backend-reported width/height, not a guessed ratio', async () => {
+  it('sizes the map viewport from the real backend-reported width/height, not a guessed ratio, when no content bounds are available', async () => {
     vi.spyOn(robotsApi, 'getRobotMapImage').mockResolvedValue(pngBlob());
     vi.spyOn(robotsApi, 'getRobotMap').mockResolvedValue({
       vendorMapId: '7ClJPR',
@@ -238,7 +244,57 @@ describe('RobotMapPanel', () => {
     const img = await screen.findByRole('img', { name: 'Robot floor-plan map' });
     const viewport = img.parentElement;
     expect(viewport).toHaveClass('sakar-map-viewport');
+    expect(viewport).not.toHaveClass('sakar-map-viewport--cropped');
     expect(viewport).toHaveStyle({ aspectRatio: (570 / 763).toString() });
+  });
+
+  // Map Display Fix — once useMapContentCrop resolves real, pixel-detected
+  // content bounds (which it can only do in a real browser; jsdom has no
+  // canvas pixel extraction, verified by every test above continuing to
+  // exercise the uncropped fallback), the viewport switches to the cropped
+  // presentation instead of showing the full, mostly-empty-margin PNG.
+  it('renders the cropped, content-fitted viewport once content bounds are available', async () => {
+    vi.spyOn(robotsApi, 'getRobotMapImage').mockResolvedValue(pngBlob());
+    const bounds = { x: 144, y: 167, width: 281, height: 449 };
+    vi.spyOn(mapContentCropModule, 'useMapContentCrop').mockReturnValue({ bounds, naturalWidth: 570, naturalHeight: 763 });
+
+    render(<RobotMapPanel robotId="robot-1" />);
+
+    const img = await screen.findByRole('img', { name: 'Robot floor-plan map' });
+    const viewport = img.parentElement;
+    expect(viewport).toHaveClass('sakar-map-viewport--cropped');
+    expect(viewport).toHaveStyle({ aspectRatio: (281 / 449).toString() });
+    // The <img> itself is deliberately rendered LARGER than its container
+    // (then clipped by the container's overflow:hidden) and offset so only
+    // the bounds region shows — this is the crop, expressed as CSS percent.
+    expect(img).toHaveStyle({
+      width: `${(570 / 281) * 100}%`,
+      left: `${-(144 / 281) * 100}%`,
+      top: `${-(167 / 449) * 100}%`,
+    });
+  });
+
+  it('falls back to the uncropped viewport (never a blank map) when bounds cannot be computed, e.g. a blank or undecodable image', async () => {
+    vi.spyOn(robotsApi, 'getRobotMapImage').mockResolvedValue(pngBlob());
+    vi.spyOn(mapContentCropModule, 'useMapContentCrop').mockReturnValue({ bounds: null, naturalWidth: null, naturalHeight: null });
+
+    render(<RobotMapPanel robotId="robot-1" />);
+
+    const img = await screen.findByRole('img', { name: 'Robot floor-plan map' });
+    expect(img.parentElement).not.toHaveClass('sakar-map-viewport--cropped');
+    expect(img).toBeVisible();
+  });
+
+  it('the cropped-viewport math is not tied to the Demo Piece\'s portrait dimensions — a differently-shaped (landscape) map crops correctly too', async () => {
+    vi.spyOn(robotsApi, 'getRobotMapImage').mockResolvedValue(pngBlob());
+    const bounds = { x: 20, y: 10, width: 400, height: 100 };
+    vi.spyOn(mapContentCropModule, 'useMapContentCrop').mockReturnValue({ bounds, naturalWidth: 500, naturalHeight: 200 });
+
+    render(<RobotMapPanel robotId="robot-1" />);
+
+    const img = await screen.findByRole('img', { name: 'Robot floor-plan map' });
+    expect(img.parentElement).toHaveStyle({ aspectRatio: '4' }); // 400/100
+    expect(img).toHaveStyle({ width: '125%' }); // 500/400*100
   });
 
   it('shows an honest, evidence-based explanation for why back/charging points are not rendered', async () => {

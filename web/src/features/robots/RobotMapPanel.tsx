@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { getRobotAreas, getRobotMap } from '../../api/robots';
 import { useApi } from '../../hooks/useApi';
 import { useRobotMapImage, type RobotMapImageStatus } from './useRobotMapImage';
+import { useMapContentCrop } from './useMapContentCrop';
+import { computeCropStyle, type ContentBounds } from '../../utils/mapContentBounds';
 import { Card } from '../../components/ui/Card';
 import { DataTable } from '../../components/ui/DataTable';
 import { LoadingState, ErrorState, EmptyState } from '../../components/ui/States';
@@ -34,6 +36,11 @@ export function RobotMapPanel({ robotId }: { robotId: string }) {
   const mapImage = useRobotMapImage(robotId);
   const { data: mapMeta } = useApi(() => getRobotMap(robotId), [robotId]);
   const areas = useApi(() => getRobotAreas(robotId), [robotId]);
+  // Purely a display-sizing enhancement — see useMapContentCrop/mapContentBounds
+  // for why this can never affect the coordinate-safety boundary documented
+  // above. `imageUrl` is only non-null once the map image has loaded, so this
+  // only ever runs against real, already-fetched bytes, never a placeholder.
+  const crop = useMapContentCrop(mapImage.imageUrl);
 
   return (
     <div style={{ display: 'grid', gap: 16 }}>
@@ -44,6 +51,7 @@ export function RobotMapPanel({ robotId }: { robotId: string }) {
           error={mapImage.error}
           refetch={mapImage.refetch}
           metadata={mapMeta}
+          crop={crop}
         />
       </Card>
 
@@ -71,9 +79,10 @@ interface MapImageSectionProps {
   error: string | null;
   refetch: () => void;
   metadata: RobotMapMetadata | null;
+  crop: { bounds: ContentBounds | null; naturalWidth: number | null; naturalHeight: number | null };
 }
 
-function MapImageSection({ status, imageUrl, error, refetch, metadata }: MapImageSectionProps) {
+function MapImageSection({ status, imageUrl, error, refetch, metadata, crop }: MapImageSectionProps) {
   if (status === 'loading') {
     return <LoadingState title="Loading map…" />;
   }
@@ -97,18 +106,43 @@ function MapImageSection({ status, imageUrl, error, refetch, metadata }: MapImag
     );
   }
 
-  // Real, backend-confirmed width/height (RobotMap.width/height) size the
-  // viewport so the image keeps its true aspect ratio instead of being
-  // shown at whatever size the raw PNG happens to be. Falls back to an
-  // unconstrained box when metadata hasn't loaded (or a model doesn't
-  // report dimensions) rather than guessing a ratio.
-  const aspectRatio = metadata?.width && metadata?.height ? metadata.width / metadata.height : undefined;
+  // Prefer showing only the map's actual content (computeCropStyle, from
+  // useMapContentCrop's pixel-detected bounds) so the floor-plan fills the
+  // viewport instead of sitting small inside the raw PNG's own wide margins
+  // — verified against the real stored map: content occupies only ~29% of
+  // the full 570x763 canvas. Falls back to the full, uncropped image (sized
+  // from real backend-confirmed width/height metadata) whenever bounds
+  // couldn't be computed — never a blank viewport, and never an invented
+  // crop. Either way this is a display-sizing computation only, never a
+  // coordinate/world transform.
+  const cropStyle = crop.bounds && crop.naturalWidth && crop.naturalHeight
+    ? computeCropStyle(crop.bounds, crop.naturalWidth, crop.naturalHeight)
+    : null;
+
+  const fallbackAspectRatio = metadata?.width && metadata?.height ? metadata.width / metadata.height : undefined;
 
   return (
     <div>
-      <div className="sakar-map-viewport" style={aspectRatio ? { aspectRatio } : undefined}>
-        <img src={imageUrl ?? undefined} alt="Robot floor-plan map" />
-      </div>
+      {cropStyle ? (
+        <div
+          className="sakar-map-viewport sakar-map-viewport--cropped"
+          style={{ aspectRatio: cropStyle.containerAspectRatio }}
+        >
+          <img
+            src={imageUrl ?? undefined}
+            alt="Robot floor-plan map"
+            style={{
+              width: `${cropStyle.imgWidthPercent}%`,
+              left: `${cropStyle.imgLeftPercent}%`,
+              top: `${cropStyle.imgTopPercent}%`,
+            }}
+          />
+        </div>
+      ) : (
+        <div className="sakar-map-viewport" style={fallbackAspectRatio ? { aspectRatio: fallbackAspectRatio } : undefined}>
+          <img src={imageUrl ?? undefined} alt="Robot floor-plan map" />
+        </div>
+      )}
       {metadata && (
         <p className="sakar-page-subtitle" style={{ marginTop: 12, marginBottom: 0 }}>
           {metadata.name ?? 'Unnamed map'}
