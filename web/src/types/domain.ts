@@ -666,13 +666,16 @@ export interface DailyTaskCount {
 }
 
 // backend/.../dashboard/dto/HotelTaskRecordResponse.java — Operational
-// Dashboard → Hotel Task Record. Same null-means-not-tracked convention.
+// Dashboard → Hotel Task Record; also reused by the main Dashboard's
+// "Seven-day Overview" / "Task Data Details" cards. Same
+// null-means-not-tracked convention.
 export interface HotelTaskRecordResponse {
   totalVolumeOfTask: number;
   cumulativeMileage: number | null;
   cumulativeDurationSeconds: number;
   numberOfRooms: number | null;
   dailyBreakdown: DailyTaskCount[];
+  taskTypeBreakdown: TaskTypeShare[];
 }
 
 // backend/.../command/dto/CommandResultResponse.java — one append-only

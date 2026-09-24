@@ -204,6 +204,9 @@ class DashboardControllerTest extends IntegrationTestSupport {
                 .andExpect(jsonPath("$.data.totalVolumeOfTask").value(1))
                 .andExpect(jsonPath("$.data.cumulativeDurationSeconds").value(600))
                 .andExpect(jsonPath("$.data.cumulativeMileage").doesNotExist())
-                .andExpect(jsonPath("$.data.numberOfRooms").doesNotExist());
+                .andExpect(jsonPath("$.data.numberOfRooms").doesNotExist())
+                .andExpect(jsonPath("$.data.taskTypeBreakdown[0].taskType").value("SWEEP"))
+                .andExpect(jsonPath("$.data.taskTypeBreakdown[0].count").value(1))
+                .andExpect(jsonPath("$.data.taskTypeBreakdown[0].percentage").value(100.0));
     }
 }

@@ -32,6 +32,7 @@ const response: HotelTaskRecordResponse = {
   cumulativeDurationSeconds: 3660,
   numberOfRooms: null,
   dailyBreakdown: [{ date: '2026-09-23', count: 12 }],
+  taskTypeBreakdown: [{ taskType: 'SWEEP', count: 12, percentage: 100 }],
 };
 
 describe('HotelTaskRecordPage', () => {
