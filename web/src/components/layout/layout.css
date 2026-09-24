@@ -246,6 +246,32 @@
   flex-shrink: 0;
 }
 
+/* Expandable nav group (Account Permission Platform) — the toggle reuses
+   .sakar-sidebar-link's own look exactly, so a group parent is visually
+   indistinguishable from a leaf link except for the trailing chevron. */
+.sakar-sidebar-group-toggle {
+  width: 100%;
+  background: none;
+  border: none;
+  border-left: 3px solid transparent;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.sakar-sidebar-group-toggle svg:last-child {
+  margin-left: auto;
+  flex-shrink: 0;
+  color: var(--sakar-text-subtle);
+}
+
+.sakar-sidebar-subnav {
+  display: flex;
+  flex-direction: column;
+  padding-left: 14px;
+  border-left: 1px solid var(--sakar-border-subtle);
+  margin: 2px 0 4px 20px;
+}
+
 .sakar-nav-tag--sim {
   background: var(--sakar-warning-soft);
   color: var(--sakar-warning-text);

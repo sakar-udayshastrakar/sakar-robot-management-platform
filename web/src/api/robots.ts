@@ -38,6 +38,30 @@ export function deactivateRobot(id: string): Promise<Robot> {
   return unwrap(apiClient.post<ApiResponse<Robot>>(`/robots/${id}/deactivate`));
 }
 
+// "Bind store" (Robot Management, Phase 2) — a full replace of these three
+// fields, not a sparse patch: siteId null unassigns the robot from any site.
+export interface UpdateRobotInventoryInput {
+  siteId: string | null;
+  warrantyStartDate: string | null;
+  warrantyEndDate: string | null;
+}
+
+export function updateRobotInventory(id: string, input: UpdateRobotInventoryInput): Promise<Robot> {
+  return unwrap(apiClient.put<ApiResponse<Robot>>(`/robots/${id}/inventory`, input));
+}
+
+// "Allocate to lower level agent" — organizationId must be a direct child of
+// the robot's current organization (backend-enforced, not just client-side).
+export function allocateRobot(id: string, organizationId: string): Promise<Robot> {
+  return unwrap(apiClient.post<ApiResponse<Robot>>(`/robots/${id}/allocate`, { organizationId }));
+}
+
+// "Returning inventory" — unassigns the robot from any site and resets it to
+// REGISTERED; does not change which organization owns it.
+export function returnRobotToInventory(id: string): Promise<Robot> {
+  return unwrap(apiClient.post<ApiResponse<Robot>>(`/robots/${id}/return-to-inventory`));
+}
+
 // Calls a live robot adapter (GET_STATUS capability). With no physical robot
 // connected this commonly fails or returns UNSUPPORTED_CAPABILITY — callers
 // must treat a rejected promise as "status unavailable", never as "offline".

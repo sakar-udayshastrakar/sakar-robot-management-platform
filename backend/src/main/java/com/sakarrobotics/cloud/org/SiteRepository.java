@@ -8,4 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface SiteRepository extends JpaRepository<Site, UUID> {
 
     List<Site> findByOrganizationId(UUID organizationId);
+
+    List<Site> findByOrganizationIdIn(List<UUID> organizationIds);
 }

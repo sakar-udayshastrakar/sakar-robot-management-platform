@@ -7,6 +7,7 @@ import { RobotsListPage } from './RobotsListPage';
 import { AuthProvider } from '../auth/AuthContext';
 import { ToastProvider } from '../../components/ui/Toast';
 import * as robotsApi from '../../api/robots';
+import * as robotModelsApi from '../../api/robotModels';
 import * as sitesApi from '../../api/sites';
 import * as keenonApi from '../../api/keenon';
 import { ApiRequestError } from '../../api/client';
@@ -79,6 +80,7 @@ describe('RobotDetailPage', () => {
     // every test unless a case overrides it — default to "unavailable" so
     // tests that don't care about the header badge aren't forced to mock it.
     vi.spyOn(robotsApi, 'getRobotStatus').mockRejectedValue(new ApiRequestError('unavailable', 503, null));
+    vi.spyOn(robotModelsApi, 'listRobotModels').mockResolvedValue([]);
   });
 
   it('shows a loading state while the robot is being fetched', () => {

@@ -60,6 +60,16 @@ public class RobotTaskController {
         return ApiResponse.ok(robotTaskService.listByRobot(principal, robotId, page, pageSize).map(TaskResponse::from));
     }
 
+    @GetMapping("/api/v1/tasks")
+    @PreAuthorize("hasAuthority('ROBOT_VIEW')")
+    @Operation(summary = "Mission Log — list every task within the caller's organization scope, newest first")
+    public ApiResponse<Page<TaskResponse>> listAccessible(
+            @AuthenticationPrincipal UserPrincipal principal,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "200") int pageSize) {
+        return ApiResponse.ok(robotTaskService.listAccessible(principal, page, pageSize).map(TaskResponse::from));
+    }
+
     @GetMapping("/api/v1/tasks/{id}")
     @PreAuthorize("hasAuthority('ROBOT_VIEW')")
     @Operation(summary = "Get a task and its full event history")

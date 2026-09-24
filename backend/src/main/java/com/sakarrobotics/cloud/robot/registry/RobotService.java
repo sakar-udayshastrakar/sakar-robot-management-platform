@@ -1,5 +1,6 @@
 package com.sakarrobotics.cloud.robot.registry;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -111,6 +112,49 @@ public class RobotService {
     public Robot deactivate(UserPrincipal principal, UUID robotId) {
         Robot robot = getAccessibleOrThrow(principal, robotId);
         robot.setStatus(RobotLifecycleStatus.DEACTIVATED);
+        return robotRepository.save(robot);
+    }
+
+    /** "Bind store" (Robot Management, Phase 2) — see {@code UpdateRobotInventoryRequest}'s own Javadoc for the full-replace semantics. */
+    @Transactional
+    public Robot updateInventory(UserPrincipal principal, UUID robotId, UUID siteId, LocalDate warrantyStartDate,
+            LocalDate warrantyEndDate) {
+        Robot robot = getAccessibleOrThrow(principal, robotId);
+        robot.setSiteId(siteId);
+        robot.setWarrantyStartDate(warrantyStartDate);
+        robot.setWarrantyEndDate(warrantyEndDate);
+        return robotRepository.save(robot);
+    }
+
+    /**
+     * "Allocate to lower level agent" (Robot Management, Phase 2) — moves a robot exactly one
+     * level down the distributor/sub-distributor/client tree ({@link
+     * com.sakarrobotics.cloud.org.OrganizationService#isDirectChildOf}), never several levels
+     * at once or sideways; rejected before any write if the target is not a direct child of
+     * the robot's own current organization.
+     */
+    @Transactional
+    public Robot allocateToChildOrganization(UserPrincipal principal, UUID robotId, UUID targetOrganizationId) {
+        Robot robot = getAccessibleOrThrow(principal, robotId);
+        if (!organizationService.isDirectChildOf(robot.getOrganizationId(), targetOrganizationId)) {
+            throw new ApiException(SakarErrorCode.VALIDATION_FAILED,
+                    "Target organization is not a direct child of this robot's current organization");
+        }
+        robot.setOrganizationId(targetOrganizationId);
+        return robotRepository.save(robot);
+    }
+
+    /**
+     * "Returning inventory" (Robot Management, Phase 2) — unassigns the robot from any site and
+     * resets it to {@code REGISTERED}, the same state a freshly-registered, not-yet-deployed
+     * robot starts in. Deliberately does not touch {@code organizationId}: returning a robot to
+     * inventory is a deployment-state change, not a re-allocation up the agent hierarchy.
+     */
+    @Transactional
+    public Robot returnToInventory(UserPrincipal principal, UUID robotId) {
+        Robot robot = getAccessibleOrThrow(principal, robotId);
+        robot.setSiteId(null);
+        robot.setStatus(RobotLifecycleStatus.REGISTERED);
         return robotRepository.save(robot);
     }
 }

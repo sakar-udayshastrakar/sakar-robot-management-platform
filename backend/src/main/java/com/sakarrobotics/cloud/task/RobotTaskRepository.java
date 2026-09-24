@@ -1,5 +1,7 @@
 package com.sakarrobotics.cloud.task;
 
+import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -15,6 +17,16 @@ import jakarta.persistence.LockModeType;
 public interface RobotTaskRepository extends JpaRepository<RobotTask, UUID> {
 
     Page<RobotTask> findByRobotIdOrderByIdDesc(UUID robotId, Pageable pageable);
+
+    Page<RobotTask> findByOrganizationIdInOrderByIdDesc(List<UUID> organizationIds, Pageable pageable);
+
+    /** Unpaged, full-history — Operational Dashboard's "Total cumulative" figures (see DashboardService). */
+    List<RobotTask> findByOrganizationIdIn(List<UUID> organizationIds);
+
+    /** Bounded-window variants — retention/hotel-record aggregation only needs a recent slice, not the full table. */
+    List<RobotTask> findByOrganizationIdInAndCreatedAtGreaterThanEqual(List<UUID> organizationIds, Instant since);
+
+    List<RobotTask> findByCreatedAtGreaterThanEqual(Instant since);
 
     /**
      * {@code SELECT ... FOR UPDATE} — used only for the START transition of a

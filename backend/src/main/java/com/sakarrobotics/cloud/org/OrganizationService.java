@@ -53,4 +53,16 @@ public class OrganizationService {
         Organization candidate = getOrThrow(candidateDescendantId);
         return candidate.getPath().startsWith(ancestor.getPath());
     }
+
+    /**
+     * True only for an immediate parent/child relationship — deliberately
+     * narrower than {@link #isSameOrDescendant}, since "allocate to lower
+     * level agent" (Robot Management, Phase 2) must move a robot exactly one
+     * level down the distributor/sub-distributor/client tree, never several
+     * levels at once or sideways.
+     */
+    public boolean isDirectChildOf(UUID parentId, UUID candidateChildId) {
+        Organization candidate = getOrThrow(candidateChildId);
+        return parentId.equals(candidate.getParentOrganizationId());
+    }
 }

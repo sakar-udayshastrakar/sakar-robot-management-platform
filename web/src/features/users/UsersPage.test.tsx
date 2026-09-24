@@ -7,6 +7,7 @@ import { AuthProvider } from '../auth/AuthContext';
 import { ToastProvider } from '../../components/ui/Toast';
 import { clearSession, setTokens } from '../auth/session';
 import * as usersApi from '../../api/users';
+import * as departmentsApi from '../../api/departments';
 import { ApiRequestError } from '../../api/client';
 import type { PlatformUser } from '../../types/domain';
 
@@ -25,13 +26,13 @@ function fakeToken(role: string, perms: string[], organizationId: string | null 
   return `${header}.${payload}.sig`;
 }
 
-function renderPage() {
+function renderPage(scope: 'INTERNAL' | 'EXTERNAL' = 'EXTERNAL') {
   setTokens(fakeToken('ORG_ADMIN', ['USER_MANAGE']), 'refresh-token');
   return render(
     <MemoryRouter>
       <ToastProvider>
         <AuthProvider>
-          <UsersPage />
+          <UsersPage scope={scope} />
         </AuthProvider>
       </ToastProvider>
     </MemoryRouter>,
@@ -53,6 +54,9 @@ const sampleUsers: PlatformUser[] = [
     mfaEnabled: false,
     lastLoginAt: null,
     createdAt: new Date().toISOString(),
+    userType: 'EXTERNAL',
+    departmentId: null,
+    departmentName: null,
   },
 ];
 
@@ -60,6 +64,7 @@ describe('UsersPage', () => {
   beforeEach(() => {
     clearSession();
     vi.restoreAllMocks();
+    vi.spyOn(departmentsApi, 'listDepartments').mockResolvedValue([]);
   });
 
   it('renders users returned by the real GET /users shape', async () => {
@@ -116,5 +121,64 @@ describe('UsersPage', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Suspend' }));
 
     await waitFor(() => expect(suspendSpy).toHaveBeenCalledWith('user-1'));
+  });
+
+  describe('Internal scope (Account Permission Platform, Phase 1)', () => {
+    const internalUser: PlatformUser = {
+      ...sampleUsers[0],
+      id: 'user-3',
+      email: 'carol@sakarrobotics.com',
+      fullName: 'Carol Staff',
+      userType: 'INTERNAL',
+      departmentId: 'dept-1',
+      departmentName: 'Engineering',
+    };
+
+    it('renders the Departments panel with real GET /departments data', async () => {
+      vi.spyOn(usersApi, 'listUsers').mockResolvedValue(mockPage([internalUser]));
+      vi.spyOn(departmentsApi, 'listDepartments').mockResolvedValue([{ id: 'dept-1', name: 'Engineering', createdAt: '', updatedAt: '' }]);
+
+      renderPage('INTERNAL');
+
+      await waitFor(() => expect(screen.getByText('carol@sakarrobotics.com')).toBeInTheDocument());
+      expect(screen.getByText('Departments (1)')).toBeInTheDocument();
+      expect(screen.getAllByText('Engineering').length).toBeGreaterThan(0);
+    });
+
+    it('creates an internal user with userType and departmentId through the real POST /users contract', async () => {
+      vi.spyOn(usersApi, 'listUsers').mockResolvedValue(mockPage([internalUser]));
+      vi.spyOn(departmentsApi, 'listDepartments').mockResolvedValue([{ id: 'dept-1', name: 'Engineering', createdAt: '', updatedAt: '' }]);
+      const createSpy = vi.spyOn(usersApi, 'createUser').mockResolvedValue(internalUser);
+
+      renderPage('INTERNAL');
+      await waitFor(() => expect(screen.getByText('carol@sakarrobotics.com')).toBeInTheDocument());
+
+      await userEvent.click(screen.getByRole('button', { name: 'Create User' }));
+      await userEvent.type(screen.getByLabelText('Email'), 'dave@sakarrobotics.com');
+      await userEvent.type(screen.getByLabelText('Password'), 'SomePassword123!');
+      await userEvent.type(screen.getByLabelText('Full name'), 'Dave Staff');
+      await userEvent.selectOptions(screen.getByLabelText('Department'), 'dept-1');
+      await userEvent.click(screen.getByRole('button', { name: 'Create user' }));
+
+      await waitFor(() =>
+        expect(createSpy).toHaveBeenCalledWith(
+          expect.objectContaining({ email: 'dave@sakarrobotics.com', userType: 'INTERNAL', departmentId: 'dept-1' }),
+        ),
+      );
+    });
+
+    it('creates a new department through the real POST /departments endpoint', async () => {
+      vi.spyOn(usersApi, 'listUsers').mockResolvedValue(mockPage([internalUser]));
+      vi.spyOn(departmentsApi, 'listDepartments').mockResolvedValue([]);
+      const createDeptSpy = vi.spyOn(departmentsApi, 'createDepartment').mockResolvedValue({ id: 'dept-2', name: 'Support', createdAt: '', updatedAt: '' });
+
+      renderPage('INTERNAL');
+      await waitFor(() => expect(screen.getByText('carol@sakarrobotics.com')).toBeInTheDocument());
+
+      await userEvent.type(screen.getByLabelText('New department name'), 'Support');
+      await userEvent.click(screen.getByRole('button', { name: 'New' }));
+
+      await waitFor(() => expect(createDeptSpy).toHaveBeenCalledWith('Support'));
+    });
   });
 });

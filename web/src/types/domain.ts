@@ -28,7 +28,12 @@ export interface Organization {
   updatedAt: string;
 }
 
-// backend/.../org/Site.java
+// backend/.../org/Site.java — also this platform's "Store" (Store
+// Management, Robot Management sidebar group). The 6 store-specific fields
+// are typed optional (rather than required), same convention as
+// Robot.vendorSerialNumber, so the existing Site fixtures across the test
+// suite that predate them don't need to change as a side effect of adding
+// them — the real backend response always includes the keys.
 export interface Site {
   id: string;
   organizationId: string;
@@ -37,6 +42,12 @@ export interface Site {
   timezone: string | null;
   createdAt: string;
   updatedAt: string;
+  area?: string | null;
+  contactName?: string | null;
+  phone?: string | null;
+  email?: string | null;
+  sceneType?: string | null;
+  chainBrand?: boolean;
 }
 
 // backend/.../robot/registry/RobotLifecycleStatus.java
@@ -67,6 +78,13 @@ export interface Robot {
   robotModelId: string;
   name: string;
   serialNumber: string;
+  // The vendor's own manufacturer serial (e.g. Keenon mftCode) — distinct
+  // from serialNumber, which is Sakar's own generated identity. Nullable,
+  // and typed optional (rather than required) purely so the many existing
+  // Robot test fixtures across the suite that predate this field don't need
+  // to change as a side effect of adding it — the real backend response
+  // always includes the key, same convention as RobotArea.sakarAreaId.
+  vendorSerialNumber?: string | null;
   status: RobotLifecycleStatus;
   capabilities: RobotCapabilityType[];
   // The backend's single authoritative connectivity verdict
@@ -78,10 +96,28 @@ export interface Robot {
   connectionStatus: RobotConnectionStatus;
   lastSeenAt: string | null;
   createdAt: string;
+  // backend/.../robot/registry/RobotUseType.java (Robot Management, Phase 2)
+  // — commercial terms, independent of `status`'s deployment lifecycle.
+  // Optional for the same reason as vendorSerialNumber above.
+  useType?: RobotUseType;
+  warrantyStartDate?: string | null;
+  warrantyEndDate?: string | null;
 }
+
+export type RobotUseType = 'TRIAL' | 'PRODUCTION';
 
 // backend/.../telemetry/RobotConnectionStatus.java
 export type RobotConnectionStatus = 'ONLINE' | 'OFFLINE' | 'UNKNOWN';
+
+// backend/.../robot/registry/dto/RobotModelResponse.java — previously
+// nothing exposed this, so the frontend could only show a raw, truncated
+// robotModelId UUID.
+export interface RobotModel {
+  id: string;
+  manufacturerName: string | null;
+  name: string;
+  sakarProductName: string | null;
+}
 
 // backend/.../robot/adapter/dto/RobotStatusSnapshot.java
 export interface RobotStatusSnapshot {
@@ -178,8 +214,23 @@ export interface AuditLog {
 // backend/.../iam/UserStatus.java
 export type UserStatus = 'ACTIVE' | 'SUSPENDED' | 'INVITED';
 
+// backend/.../iam/UserType.java — Sakar-internal staff vs. customer/external
+// account, independent of organizationId nullability.
+export type UserType = 'INTERNAL' | 'EXTERNAL';
+
+// backend/.../iam/Department.java — a flat, Sakar-wide list used only to
+// group INTERNAL users, never organization-scoped.
+export interface Department {
+  id: string;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 // backend/.../iam/dto/UserResponse.java — organizationId is null only for a
-// SUPER_ADMIN-scoped, cross-organization Sakar staff account.
+// SUPER_ADMIN-scoped, cross-organization Sakar staff account. departmentId
+// is only meaningful for userType === 'INTERNAL'; departmentName is
+// resolved server-side (null when departmentId is null).
 export interface PlatformUser {
   id: string;
   organizationId: string | null;
@@ -190,16 +241,29 @@ export interface PlatformUser {
   mfaEnabled: boolean;
   lastLoginAt: string | null;
   createdAt: string;
+  userType: UserType;
+  departmentId: string | null;
+  departmentName: string | null;
 }
 
-// backend/.../iam/dto/RoleResponse.java — roles/permissions are fixed
-// reference data (V9__seed_rbac.sql); this is a read-only list, not an
-// editable resource.
+// backend/.../iam/dto/RoleResponse.java — the role NAME is fixed reference
+// data (V9__seed_rbac.sql) and never editable; description/permissions can
+// now be edited via PUT /api/v1/roles/{id} (Account Permission Platform,
+// Phase 1) — see api/roles.ts's updateRole.
 export interface RoleWithPermissions {
   id: string;
   name: RoleNameLike;
   description: string | null;
   permissions: string[];
+}
+
+// backend/.../iam/dto/PermissionResponse.java — the live source for the
+// role-permission editor; types/permissions.ts's PERMISSION_CODES remains
+// the hardcoded mirror used for UI-gating elsewhere in the app.
+export interface PermissionCatalogEntry {
+  id: string;
+  code: string;
+  description: string | null;
 }
 
 // backend/.../task/TaskLifecycleStatus.java
@@ -304,6 +368,311 @@ export interface RobotCommand {
   dispatched: boolean;
   dispatchNote: string | null;
   createdAt: string;
+}
+
+// backend/.../resourceconfig/{ResourceScene,SceneStatus}.java — New Resource
+// Configuration → Scene list (Robot Management sidebar group). siteId
+// ("store") and robotId are both optional bindings, reusing the existing
+// Site/Robot entities — no separate "Store" concept was invented.
+export type SceneStatus = 'DRAFT' | 'PUBLISHED';
+
+export interface ResourceScene {
+  id: string;
+  organizationId: string;
+  siteId: string | null;
+  robotId: string | null;
+  name: string;
+  resourcePackType: string;
+  status: SceneStatus;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// backend/.../resourceconfig/MarketingMaterial.java — New Resource
+// Configuration → Marketing materials. Named material packages only — no
+// file/asset storage in this pass (see the backend controller's own
+// Javadoc for the scope boundary).
+export interface MarketingMaterial {
+  id: string;
+  organizationId: string;
+  name: string;
+  materialType: string;
+  status: SceneStatus;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// backend/.../ota/SoftwareVersion.java — OTA Management → System Version
+// Management (governance doc Module B, approved for a real build).
+export interface SoftwareVersion {
+  id: string;
+  organizationId: string;
+  packageName: string;
+  wholeMachineSoftware: string | null;
+  packageVersion: string;
+  hardwareVersion: string | null;
+  grayscale: boolean;
+  sizeBytes: number | null;
+  createdBy: string | null;
+  notes: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// backend/.../ota/DeploymentStatus.java — RECORDED means an operator logged
+// the push, never that a robot actually received/applied it (no OTA
+// delivery channel exists). FAILED is for an operator-recorded failure.
+export type DeploymentStatus = 'RECORDED' | 'FAILED';
+
+// backend/.../ota/DeploymentRecord.java — OTA Management → Update record.
+// Append-only.
+export interface DeploymentRecord {
+  id: number;
+  organizationId: string;
+  robotId: string;
+  softwareVersionId: string;
+  oldVersionNumber: string | null;
+  newVersionNumber: string;
+  status: DeploymentStatus;
+  errorMessage: string | null;
+  grayscale: boolean;
+  createdAt: string;
+}
+
+// backend/.../repair/RepairRequest.java — Operation And Maintenance
+// Platform → Customer Repair Requests. "Associated Reseller" is resolved
+// from organizationId by the caller, same convention as Site's own
+// "affiliated agent".
+export type RepairRequestStatus = 'OPEN' | 'IN_PROGRESS' | 'RESOLVED' | 'CLOSED';
+
+export interface RepairRequest {
+  id: string;
+  organizationId: string;
+  siteId: string | null;
+  robotId: string | null;
+  workOrderNumber: string;
+  symptom: string;
+  status: RepairRequestStatus;
+  reportedBy: string | null;
+  reportedAt: string;
+  resolvedAt: string | null;
+  notes: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// backend/.../remotedeployment/RemoteDeploymentRecord.java — Operation And
+// Maintenance Platform → Remote Deployment. RECORDED/COMPLETED/FAILED are
+// only ever set by the operator's own action — see the backend enum's own
+// Javadoc for why this never claims a real remote-push confirmation.
+export type RemoteDeploymentRecordStatus = 'RECORDED' | 'COMPLETED' | 'FAILED';
+
+export interface RemoteDeploymentRecord {
+  id: string;
+  organizationId: string;
+  siteId: string | null;
+  robotId: string;
+  deployedBy: string | null;
+  status: RemoteDeploymentRecordStatus;
+  notes: string | null;
+  completedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// backend/.../iot/ElevatorDevice.java — IoT Platform → Elevator Module →
+// Elevator management. There is deliberately no "online status" field: no
+// elevator vendor telemetry channel exists in this codebase — render an
+// honest "Unknown", never a fabricated live status.
+export interface ElevatorDevice {
+  id: string;
+  organizationId: string;
+  siteId: string;
+  deviceId: string;
+  deviceName: string | null;
+  building: string | null;
+  protocol: string | null;
+  networkingMode: string | null;
+  communicationMode: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// backend/.../iot/ElevatorConfiguration.java — binds an ElevatorDevice to a
+// Robot for a Site ("Elevator configuration").
+export interface ElevatorConfiguration {
+  id: string;
+  organizationId: string;
+  siteId: string;
+  elevatorDeviceId: string;
+  robotId: string;
+  name: string;
+  notes: string | null;
+  modifiedBy: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// backend/.../iot/ElevatorConfigurationEvent.java — "set record", an
+// AppendOnlyEntity with a Long id, so this is a JSON number, not a UUID.
+export interface ElevatorConfigurationEvent {
+  id: number;
+  elevatorConfigurationId: string;
+  eventType: string;
+  detail: string | null;
+  createdAt: string;
+}
+
+// backend/.../iot/ElevatorDeliveryStatus.java — RECORDED means an operator
+// logged the delivery, never a real elevator-controller confirmation.
+export type ElevatorDeliveryStatus = 'RECORDED' | 'FAILED';
+
+// backend/.../iot/ElevatorConfigurationDelivery.java — "The elevator
+// configuration is delivered". Append-only.
+export interface ElevatorConfigurationDelivery {
+  id: number;
+  organizationId: string;
+  elevatorConfigurationId: string;
+  robotId: string;
+  deliveredBy: string | null;
+  status: ElevatorDeliveryStatus;
+  createdAt: string;
+}
+
+// backend/.../iot/LadderControlStoreBinding.java — Cloud ladder control
+// configuration → Store binding. One binding per Site.
+export interface LadderControlStoreBinding {
+  id: string;
+  organizationId: string;
+  siteId: string;
+  manufacturer: string;
+  buildingId: string | null;
+  clientId: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// backend/.../iot/PhoneDevice.java — IoT Platform → Phone Module → Device
+// management. Same "no fabricated online status" convention as ElevatorDevice.
+export interface PhoneDevice {
+  id: string;
+  organizationId: string;
+  siteId: string;
+  deviceId: string;
+  deviceName: string | null;
+  networkingMode: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// backend/.../openplatform/OpenPlatformRegistrationStatus.java — never a
+// fabricated "pass": a registration starts PENDING and only ever moves via
+// an explicit ROLE_MANAGE-gated review action.
+export type OpenPlatformRegistrationStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
+
+// backend/.../openplatform/dto/OpenPlatformRegistrationResponse.java — Open
+// Platform → Customer registration. One per organization.
+export interface OpenPlatformRegistration {
+  id: string;
+  organizationId: string;
+  companyName: string;
+  area: string | null;
+  companyAddress: string | null;
+  systemMatcher: string | null;
+  contactInformation: string | null;
+  dockingRequirements: string | null;
+  status: OpenPlatformRegistrationStatus;
+  submittedBy: string | null;
+  reviewedBy: string | null;
+  reviewedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// backend/.../openplatform/dto/OpenPlatformApplicationResponse.java — Open
+// Platform → Application management. `secretKeyMasked` is the only trace of
+// the secret key ever shown again after creation — see api/openPlatform.ts's
+// own comment for why.
+export interface OpenPlatformApplication {
+  id: string;
+  organizationId: string;
+  appId: string;
+  applicationName: string;
+  businessType: string | null;
+  accessKey: string;
+  secretKeyMasked: string;
+  createdBy: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// backend/.../dashboard/dto/RankingEntry.java
+export interface RankingEntry {
+  id: string;
+  label: string;
+  count: number;
+}
+
+// backend/.../dashboard/dto/OperationRankingResponse.java — Operational
+// Dashboard → Operation Ranking. totalMileage/totalCalls (and their ranking
+// lists) are always null — no distance/odometer or call/summon concept
+// exists anywhere in this codebase, so this never reports a fabricated
+// number for them. Render "Not tracked", never "0".
+export interface OperationRankingResponse {
+  totalTasks: number;
+  totalMileage: number | null;
+  totalCalls: number | null;
+  storeRankingsByTasks: RankingEntry[];
+  robotRankingsByTasks: RankingEntry[];
+  storeRankingsByMileage: RankingEntry[] | null;
+  robotRankingsByMileage: RankingEntry[] | null;
+}
+
+// backend/.../dashboard/dto/TaskTypeShare.java
+export interface TaskTypeShare {
+  taskType: string;
+  count: number;
+  percentage: number;
+}
+
+// backend/.../dashboard/dto/StoreRealtimeStatsResponse.java — Operational
+// Dashboard → Store Real-Time Data Statistics. Same null-means-not-tracked
+// convention as OperationRankingResponse.
+export interface StoreRealtimeStatsResponse {
+  tasksToday: number;
+  taskModeProportionToday: TaskTypeShare[];
+  callsToday: number | null;
+  activeMachines: number;
+  mileageToday: number | null;
+  averageSpeedMetersPerSecond: number | null;
+}
+
+// backend/.../dashboard/dto/RetentionRow.java — one day's real, computed
+// retention snapshot (never simulated) for Use Retention Analytics.
+export interface RetentionRow {
+  date: string;
+  used3: number;
+  used7: number;
+  used15: number;
+  unused3: number;
+  unused7: number;
+  unused15: number;
+}
+
+// backend/.../dashboard/dto/DailyTaskCount.java
+export interface DailyTaskCount {
+  date: string;
+  count: number;
+}
+
+// backend/.../dashboard/dto/HotelTaskRecordResponse.java — Operational
+// Dashboard → Hotel Task Record. Same null-means-not-tracked convention.
+export interface HotelTaskRecordResponse {
+  totalVolumeOfTask: number;
+  cumulativeMileage: number | null;
+  cumulativeDurationSeconds: number;
+  numberOfRooms: number | null;
+  dailyBreakdown: DailyTaskCount[];
 }
 
 // backend/.../command/dto/CommandResultResponse.java — one append-only

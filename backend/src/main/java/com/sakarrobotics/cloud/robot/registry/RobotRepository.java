@@ -24,6 +24,9 @@ public interface RobotRepository extends JpaRepository<Robot, UUID> {
     /** Tenant-scoped listing: pass the caller's own org id plus every accessible descendant id. */
     Page<Robot> findByOrganizationIdIn(List<UUID> organizationIds, Pageable pageable);
 
+    /** Unpaged variant — Operational Dashboard aggregation (see DashboardService), never a paged UI listing. */
+    List<Robot> findByOrganizationIdIn(List<UUID> organizationIds);
+
     /** Unpaged, single-organization listing — used by bulk/administrative operations (e.g. {@code RobotSerialReconciliationService}) that must process every matching row deterministically, not one page at a time. */
     List<Robot> findByOrganizationId(UUID organizationId);
 }

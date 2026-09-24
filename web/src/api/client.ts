@@ -4,6 +4,11 @@ import { clearSession, getAccessToken, getRefreshToken, setTokens } from '../fea
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080/api/v1';
 
+// The backend's own origin, with the /api/v1 prefix stripped — for the rare
+// non-API-versioned endpoint (springdoc's /api-docs, /swagger-ui.html) that
+// a page needs to link to directly (see FileDownloadPage).
+export const API_ORIGIN = BASE_URL.replace(/\/api\/v1\/?$/, '');
+
 export const apiClient = axios.create({
   baseURL: BASE_URL,
   timeout: 15_000,

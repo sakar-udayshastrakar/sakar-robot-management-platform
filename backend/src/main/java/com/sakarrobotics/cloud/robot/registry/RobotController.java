@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,9 +34,11 @@ import com.sakarrobotics.cloud.robot.adapter.RobotAdapterRegistry;
 import com.sakarrobotics.cloud.robot.adapter.dto.AreaInfo;
 import com.sakarrobotics.cloud.robot.adapter.dto.BatteryInfo;
 import com.sakarrobotics.cloud.robot.adapter.dto.RobotStatusSnapshot;
+import com.sakarrobotics.cloud.robot.registry.dto.AllocateRobotRequest;
 import com.sakarrobotics.cloud.robot.registry.dto.RegisterRobotRequest;
 import com.sakarrobotics.cloud.robot.registry.dto.RobotMqttCredentialResponse;
 import com.sakarrobotics.cloud.robot.registry.dto.RobotResponse;
+import com.sakarrobotics.cloud.robot.registry.dto.UpdateRobotInventoryRequest;
 import com.sakarrobotics.cloud.telemetry.RobotConnectivityService;
 import com.sakarrobotics.cloud.telemetry.RobotStatus;
 import com.sakarrobotics.cloud.security.UserPrincipal;
@@ -123,6 +126,38 @@ public class RobotController {
     @Operation(summary = "Deactivate a robot")
     public ApiResponse<RobotResponse> deactivate(@AuthenticationPrincipal UserPrincipal principal, @PathVariable UUID id) {
         Robot robot = robotService.deactivate(principal, id);
+        return ApiResponse.ok(respond(robot));
+    }
+
+    @PutMapping("/{id}/inventory")
+    @PreAuthorize("hasAuthority('ROBOT_CONFIGURE')")
+    @Operation(summary = "Bind a robot to a store (site) and set its warranty dates (Robot Management, Phase 2)")
+    public ApiResponse<RobotResponse> updateInventory(
+            @AuthenticationPrincipal UserPrincipal principal,
+            @PathVariable UUID id,
+            @RequestBody UpdateRobotInventoryRequest request) {
+        Robot robot = robotService.updateInventory(principal, id, request.siteId(), request.warrantyStartDate(),
+                request.warrantyEndDate());
+        return ApiResponse.ok(respond(robot));
+    }
+
+    @PostMapping("/{id}/allocate")
+    @PreAuthorize("hasAuthority('ROBOT_CONFIGURE')")
+    @Operation(summary = "Allocate a robot to a direct child organization (\"lower level agent\") in the distributor hierarchy")
+    public ApiResponse<RobotResponse> allocate(
+            @AuthenticationPrincipal UserPrincipal principal,
+            @PathVariable UUID id,
+            @Valid @RequestBody AllocateRobotRequest request) {
+        Robot robot = robotService.allocateToChildOrganization(principal, id, request.organizationId());
+        return ApiResponse.ok(respond(robot));
+    }
+
+    @PostMapping("/{id}/return-to-inventory")
+    @PreAuthorize("hasAuthority('ROBOT_CONFIGURE')")
+    @Operation(summary = "Unassign a robot from its site and reset it to REGISTERED (Robot Management, Phase 2)")
+    public ApiResponse<RobotResponse> returnToInventory(
+            @AuthenticationPrincipal UserPrincipal principal, @PathVariable UUID id) {
+        Robot robot = robotService.returnToInventory(principal, id);
         return ApiResponse.ok(respond(robot));
     }
 

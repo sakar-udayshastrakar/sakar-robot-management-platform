@@ -67,4 +67,13 @@ public class User extends BaseEntity {
 
     @Column(name = "locked_until")
     private Instant lockedUntil;
+
+    /** Sakar-internal staff vs. customer/external account — independent of {@link #organizationId} nullability. */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "user_type", nullable = false, length = 16)
+    private UserType userType = UserType.EXTERNAL;
+
+    /** Only meaningful for {@code INTERNAL} users; {@code null} is a valid "ungrouped" state. */
+    @Column(name = "department_id")
+    private UUID departmentId;
 }

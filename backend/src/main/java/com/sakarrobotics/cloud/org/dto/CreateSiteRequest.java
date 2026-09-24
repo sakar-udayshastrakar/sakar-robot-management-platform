@@ -9,5 +9,11 @@ public record CreateSiteRequest(
         @NotNull UUID organizationId,
         @NotBlank String name,
         String address,
-        String timezone) {
+        String timezone,
+        String area,
+        String contactName,
+        String phone,
+        String email,
+        String sceneType,
+        Boolean chainBrand) {
 }

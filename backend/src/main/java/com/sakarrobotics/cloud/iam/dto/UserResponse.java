@@ -15,11 +15,19 @@ public record UserResponse(
         String status,
         boolean mfaEnabled,
         Instant lastLoginAt,
-        Instant createdAt) {
+        Instant createdAt,
+        String userType,
+        UUID departmentId,
+        String departmentName) {
 
-    public static UserResponse from(User user) {
+    /**
+     * @param departmentName resolved by the caller (a single batch lookup for a list, not a
+     *                        per-row query) — {@code null} when {@code departmentId} is null.
+     */
+    public static UserResponse from(User user, String departmentName) {
         return new UserResponse(user.getId(), user.getOrganizationId(), user.getEmail(), user.getFullName(),
                 user.getRole().getName().name(), user.getStatus().name(), user.isMfaEnabled(),
-                user.getLastLoginAt(), user.getCreatedAt());
+                user.getLastLoginAt(), user.getCreatedAt(), user.getUserType().name(), user.getDepartmentId(),
+                departmentName);
     }
 }

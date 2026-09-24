@@ -1,6 +1,7 @@
 import { useMemo, useState, type ReactNode } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { activateRobot, deactivateRobot, getRobot } from '../../api/robots';
+import { listRobotModels } from '../../api/robotModels';
 import { useApi } from '../../hooks/useApi';
 import { usePermissions } from '../../hooks/usePermissions';
 import { useToast } from '../../components/ui/Toast';
@@ -107,6 +108,11 @@ export function RobotDetailPage() {
 
   const robotArray = useMemo(() => (robot ? [robot] : null), [robot]);
   const siteNames = useSiteNames(robotArray);
+  const { data: robotModels } = useApi(() => listRobotModels(), []);
+  const model = useMemo(
+    () => (robot ? robotModels?.find((m) => m.id === robot.robotModelId) : undefined),
+    [robotModels, robot],
+  );
 
   if (status === 'loading' || status === 'idle') {
     return <LoadingState title="Loading robot…" />;
@@ -163,11 +169,11 @@ export function RobotDetailPage() {
         <div>
           <h1 className="sakar-page-title">{robot.name}</h1>
           <p className="sakar-page-subtitle">
-            {robot.serialNumber} · Sakar CleanBot 5000 Plus
+            {robot.serialNumber} · {model ? (model.sakarProductName || model.name) : `Model ${robot.robotModelId.slice(0, 8)}…`}
           </p>
           <dl className="sakar-robot-header-meta">
             <div><dt>Robot ID</dt><dd className="sakar-mono">{robot.id}</dd></div>
-            <div><dt>Model</dt><dd className="sakar-mono">{robot.robotModelId.slice(0, 8)}…</dd></div>
+            <div><dt>Model</dt><dd>{model ? (model.sakarProductName || model.name) : <span className="sakar-mono">{robot.robotModelId.slice(0, 8)}…</span>}</dd></div>
             <div><dt>Site</dt><dd>{siteName}</dd></div>
           </dl>
         </div>
@@ -224,8 +230,10 @@ export function RobotDetailPage() {
               <div className="sakar-fact-group">
                 <KvRow label="Robot name" value={robot.name} />
                 <KvRow label="Serial number" value={robot.serialNumber} />
+                {robot.vendorSerialNumber && <KvRow label="Vendor serial number" value={robot.vendorSerialNumber} mono />}
                 <KvRow label="Robot ID" value={robot.id} mono />
-                <KvRow label="Model ID" value={robot.robotModelId} mono />
+                <KvRow label="Model" value={model ? (model.sakarProductName || model.name) : robot.robotModelId} mono={!model} />
+                {model?.manufacturerName && <KvRow label="Manufacturer" value={model.manufacturerName} />}
               </div>
             </Card>
 

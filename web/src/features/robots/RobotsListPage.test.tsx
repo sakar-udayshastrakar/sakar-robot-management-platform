@@ -6,6 +6,7 @@ import { RobotsListPage } from './RobotsListPage';
 import { AuthProvider } from '../auth/AuthContext';
 import { ToastProvider } from '../../components/ui/Toast';
 import * as robotsApi from '../../api/robots';
+import * as robotModelsApi from '../../api/robotModels';
 import * as sitesApi from '../../api/sites';
 import { ApiRequestError } from '../../api/client';
 import type { Robot } from '../../types/domain';
@@ -62,6 +63,7 @@ describe('RobotsListPage', () => {
     vi.restoreAllMocks();
     vi.spyOn(sitesApi, 'listSitesByOrganization').mockResolvedValue([]);
     vi.spyOn(robotsApi, 'getRobotStatus').mockRejectedValue(new ApiRequestError('unavailable', 503, null));
+    vi.spyOn(robotModelsApi, 'listRobotModels').mockResolvedValue([]);
   });
 
   it('renders the backend connection status for each robot, not a live vendor probe', async () => {

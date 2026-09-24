@@ -6,6 +6,12 @@ export function listRobotTasks(robotId: string, page = 0, pageSize = 25): Promis
   return unwrap(apiClient.get<ApiResponse<Page<RobotTask>>>(`/robots/${robotId}/tasks`, { params: { page, pageSize } }));
 }
 
+// Mission Log (Operation And Maintenance Platform) — every task within the
+// caller's organization scope, newest first.
+export function listAllAccessibleTasks(page = 0, pageSize = 200): Promise<Page<RobotTask>> {
+  return unwrap(apiClient.get<ApiResponse<Page<RobotTask>>>('/tasks', { params: { page, pageSize } }));
+}
+
 export interface CreateTaskInput {
   taskType: string;
   parameters?: string | null;

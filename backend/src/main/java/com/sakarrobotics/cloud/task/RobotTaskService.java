@@ -116,6 +116,15 @@ public class RobotTaskService {
         return robotTaskRepository.findByRobotIdOrderByIdDesc(robotId, PageRequest.of(page, pageSize));
     }
 
+    /** Mission Log — every task within the caller's organization scope, newest first. */
+    public Page<RobotTask> listAccessible(UserPrincipal principal, int page, int pageSize) {
+        List<UUID> orgIds = tenantAccessGuard.accessibleOrganizationIds(principal);
+        PageRequest pageRequest = PageRequest.of(page, pageSize);
+        return orgIds == null
+                ? robotTaskRepository.findAll(pageRequest)
+                : robotTaskRepository.findByOrganizationIdInOrderByIdDesc(orgIds, pageRequest);
+    }
+
     public List<TaskEvent> events(UserPrincipal principal, UUID taskId) {
         getAccessibleOrThrow(principal, taskId);
         return taskEventRepository.findByTaskIdOrderByIdAsc(taskId);

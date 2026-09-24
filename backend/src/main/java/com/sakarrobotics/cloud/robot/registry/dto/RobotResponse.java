@@ -1,12 +1,14 @@
 package com.sakarrobotics.cloud.robot.registry.dto;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
 import com.sakarrobotics.cloud.robot.registry.Robot;
 import com.sakarrobotics.cloud.robot.registry.RobotCapabilityType;
 import com.sakarrobotics.cloud.robot.registry.RobotLifecycleStatus;
+import com.sakarrobotics.cloud.robot.registry.RobotUseType;
 import com.sakarrobotics.cloud.telemetry.RobotConnectionStatus;
 import com.sakarrobotics.cloud.telemetry.RobotStatus;
 
@@ -30,11 +32,15 @@ public record RobotResponse(
         UUID robotModelId,
         String name,
         String serialNumber,
+        String vendorSerialNumber,
         RobotLifecycleStatus status,
         List<RobotCapabilityType> capabilities,
         RobotConnectionStatus connectionStatus,
         Instant lastSeenAt,
-        Instant createdAt) {
+        Instant createdAt,
+        RobotUseType useType,
+        LocalDate warrantyStartDate,
+        LocalDate warrantyEndDate) {
 
     /**
      * @param robotStatus the robot's {@code robot_status} row, or {@code null} if it
@@ -44,8 +50,8 @@ public record RobotResponse(
             RobotConnectionStatus connectionStatus, RobotStatus robotStatus) {
         return new RobotResponse(
                 robot.getId(), robot.getOrganizationId(), robot.getSiteId(), robot.getRobotModelId(),
-                robot.getName(), robot.getSerialNumber(), robot.getStatus(), capabilities,
-                connectionStatus, robotStatus != null ? robotStatus.getLastSeenAt() : null,
-                robot.getCreatedAt());
+                robot.getName(), robot.getSerialNumber(), robot.getVendorSerialNumber(), robot.getStatus(),
+                capabilities, connectionStatus, robotStatus != null ? robotStatus.getLastSeenAt() : null,
+                robot.getCreatedAt(), robot.getUseType(), robot.getWarrantyStartDate(), robot.getWarrantyEndDate());
     }
 }

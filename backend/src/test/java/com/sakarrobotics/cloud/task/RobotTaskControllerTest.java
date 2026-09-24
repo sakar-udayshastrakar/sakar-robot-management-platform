@@ -466,6 +466,41 @@ class RobotTaskControllerTest extends IntegrationTestSupport {
                 .andExpect(jsonPath("$.error.code").value("TASK_NOT_FOUND"));
     }
 
+    @Test
+    void missionLog_listsTasksAcrossRobots_scopedToTheCallersOrganization() throws Exception {
+        Role orgAdmin = ensureRole(RoleName.ORG_ADMIN, PermissionCode.ROBOT_TASK_CREATE, PermissionCode.ROBOT_VIEW,
+                PermissionCode.ROBOT_CONFIGURE);
+        Organization orgA = createOrganization("Org A " + UUID.randomUUID(), OrganizationType.DIRECT_CLIENT, null);
+        Organization orgB = createOrganization("Org B " + UUID.randomUUID(), OrganizationType.DIRECT_CLIENT, null);
+        String emailA = "admin-a-" + UUID.randomUUID() + "@example.com";
+        createUser(emailA, "Password1!", orgAdmin, orgA.getId());
+        String emailB = "admin-b-" + UUID.randomUUID() + "@example.com";
+        createUser(emailB, "Password1!", orgAdmin, orgB.getId());
+        String tokenA = login(emailA, "Password1!");
+        String tokenB = login(emailB, "Password1!");
+
+        RobotModel model = modelWithCapabilities(RobotCapabilityType.START_TASK);
+        Robot robotInOrgA = registerRobot(orgA.getId(), model.getId());
+        Robot robotInOrgB = registerRobot(orgB.getId(), model.getId());
+
+        String taskAResponse = mockMvc.perform(post("/api/v1/robots/" + robotInOrgA.getId() + "/tasks")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + tokenA)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"taskType\":\"SWEEP\"}"))
+                .andReturn().getResponse().getContentAsString();
+        String taskAId = objectMapper.readTree(taskAResponse).get("data").get("id").asText();
+
+        mockMvc.perform(post("/api/v1/robots/" + robotInOrgB.getId() + "/tasks")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + tokenB)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"taskType\":\"SWEEP\"}"));
+
+        mockMvc.perform(get("/api/v1/tasks").header(HttpHeaders.AUTHORIZATION, "Bearer " + tokenA))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.content[?(@.id=='" + taskAId + "')]").exists())
+                .andExpect(jsonPath("$.data.content[?(@.robotId=='" + robotInOrgB.getId() + "')]").doesNotExist());
+    }
+
     private RobotModel modelWithCapabilities(RobotCapabilityType... capabilities) {
         RobotManufacturer manufacturer = manufacturerRepository.save(new RobotManufacturer("TestVendor-" + UUID.randomUUID()));
         RobotModel model = new RobotModel();

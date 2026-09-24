@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { activateRobot, deactivateRobot, listRobots } from '../../api/robots';
+import { listRobotModels } from '../../api/robotModels';
 import { useApi } from '../../hooks/useApi';
 import { usePermissions } from '../../hooks/usePermissions';
 import { useToast } from '../../components/ui/Toast';
@@ -58,6 +59,12 @@ export function RobotsListPage() {
   const robots = useMemo(() => data?.content ?? [], [data]);
   const siteNames = useSiteNames(robots);
   const { statuses } = useRobotStatusProbe(robots);
+  const { data: robotModels } = useApi(() => listRobotModels(), []);
+  const modelNames = useMemo(() => {
+    const map = new Map<string, string>();
+    (robotModels ?? []).forEach((m) => map.set(m.id, m.sakarProductName || m.name));
+    return map;
+  }, [robotModels]);
 
   const modelOptions = useMemo(() => Array.from(new Set(robots.map((r) => r.robotModelId))), [robots]);
 
@@ -164,7 +171,7 @@ export function RobotsListPage() {
             <select value={modelFilter} onChange={(e) => setModelFilter(e.target.value)} aria-label="Filter by model">
               <option value="ALL">All models</option>
               {modelOptions.map((m) => (
-                <option key={m} value={m}>{m.slice(0, 8)}…</option>
+                <option key={m} value={m}>{modelNames.get(m) ?? `${m.slice(0, 8)}…`}</option>
               ))}
             </select>
           </FilterField>
@@ -237,7 +244,11 @@ export function RobotsListPage() {
                       <button type="button" className="sakar-link-btn sakar-nowrap" onClick={() => navigate(`/robots/${r.id}`)}>{r.name}</button>
                     ) },
                   { key: 'serial', header: 'Serial number', render: (r) => <span className="sakar-mono sakar-nowrap" style={{ fontSize: 12 }}>{r.serialNumber}</span> },
-                  { key: 'model', header: 'Model', render: (r) => <span className="sakar-mono sakar-nowrap" style={{ fontSize: 12 }}>{r.robotModelId.slice(0, 8)}…</span> },
+                  { key: 'model', header: 'Model', render: (r) => (
+                      <span className="sakar-nowrap">
+                        {modelNames.get(r.robotModelId) ?? <span className="sakar-mono" style={{ fontSize: 12 }}>{r.robotModelId.slice(0, 8)}…</span>}
+                      </span>
+                    ) },
                   { key: 'site', header: 'Site', render: (r) => <span className="sakar-nowrap">{r.siteId ? siteNames.get(r.siteId) ?? r.siteId : '—'}</span> },
                   // Backend-authoritative connectivity (RobotConnectivityService): heartbeat/telemetry
                   // freshness against the configured offline threshold. Previously this read the live

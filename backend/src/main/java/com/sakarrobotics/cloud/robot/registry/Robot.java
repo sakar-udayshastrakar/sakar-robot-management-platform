@@ -1,5 +1,6 @@
 package com.sakarrobotics.cloud.robot.registry;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 import com.sakarrobotics.cloud.common.entity.BaseEntity;
@@ -60,4 +61,15 @@ public class Robot extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 16)
     private RobotLifecycleStatus status = RobotLifecycleStatus.REGISTERED;
+
+    /** Commercial terms, independent of {@link #status}'s deployment lifecycle. */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "use_type", nullable = false, length = 16)
+    private RobotUseType useType = RobotUseType.TRIAL;
+
+    @Column(name = "warranty_start_date")
+    private LocalDate warrantyStartDate;
+
+    @Column(name = "warranty_end_date")
+    private LocalDate warrantyEndDate;
 }

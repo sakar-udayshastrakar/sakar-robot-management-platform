@@ -1,0 +1,9 @@
+package com.sakarrobotics.cloud.resourceconfig.dto;
+
+import java.util.UUID;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
+public record CreateMarketingMaterialRequest(@NotNull UUID organizationId, @NotBlank String name, String materialType) {
+}

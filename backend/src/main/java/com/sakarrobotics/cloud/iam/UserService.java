@@ -1,6 +1,8 @@
 package com.sakarrobotics.cloud.iam;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -29,13 +31,14 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final DepartmentRepository departmentRepository;
     private final PasswordEncoder passwordEncoder;
     private final TenantAccessGuard tenantAccessGuard;
     private final AuditService auditService;
 
     @Transactional
     public User create(UserPrincipal principal, UUID organizationId, String email, String rawPassword,
-            String fullName, RoleName roleName) {
+            String fullName, RoleName roleName, UserType userType, UUID departmentId) {
         if (organizationId != null) {
             tenantAccessGuard.assertOrganizationAccess(principal, organizationId);
         } else if (!principal.isSuperAdmin()) {
@@ -47,6 +50,7 @@ public class UserService {
         }
         Role role = roleRepository.findByName(roleName)
                 .orElseThrow(() -> new ApiException(SakarErrorCode.ROLE_NOT_FOUND, "Role not found: " + roleName));
+        assertDepartmentAssignmentValid(userType, departmentId);
 
         User user = new User();
         user.setOrganizationId(organizationId);
@@ -55,10 +59,51 @@ public class UserService {
         user.setFullName(fullName);
         user.setRole(role);
         user.setStatus(UserStatus.ACTIVE);
+        user.setUserType(userType);
+        user.setDepartmentId(departmentId);
         User saved = userRepository.save(user);
 
         auditService.record(principal, organizationId, null, "USER_CREATED", "SUCCESS", saved.getId().toString(), null, null);
         return saved;
+    }
+
+    @Transactional
+    public User update(UserPrincipal principal, UUID userId, String fullName, UUID departmentId) {
+        User user = getAccessibleOrThrow(principal, userId);
+        assertDepartmentAssignmentValid(user.getUserType(), departmentId);
+        user.setFullName(fullName);
+        user.setDepartmentId(departmentId);
+        User saved = userRepository.save(user);
+        auditService.record(principal, user.getOrganizationId(), null, "USER_UPDATED", "SUCCESS", null, null, null);
+        return saved;
+    }
+
+    /** {@code departmentId} is only meaningful for INTERNAL users, and must reference a real department. */
+    private void assertDepartmentAssignmentValid(UserType userType, UUID departmentId) {
+        if (departmentId == null) {
+            return;
+        }
+        if (userType != UserType.INTERNAL) {
+            throw new ApiException(SakarErrorCode.VALIDATION_FAILED, "departmentId is only valid for INTERNAL users");
+        }
+        if (!departmentRepository.existsById(departmentId)) {
+            throw new ApiException(SakarErrorCode.DEPARTMENT_NOT_FOUND, "Department not found: " + departmentId);
+        }
+    }
+
+    /**
+     * One batch query for a page of users rather than N+1 per-row department lookups. Always a
+     * plain {@link HashMap}, never {@link Map#of()} — most users have a {@code null}
+     * departmentId, and {@code Map.of().get(null)} throws (immutable maps reject a null key),
+     * whereas {@code HashMap.get(null)} safely returns {@code null}.
+     */
+    public Map<UUID, String> departmentNamesFor(List<User> users) {
+        List<UUID> ids = users.stream().map(User::getDepartmentId).filter(java.util.Objects::nonNull).distinct().toList();
+        Map<UUID, String> names = new HashMap<>();
+        if (!ids.isEmpty()) {
+            departmentRepository.findAllById(ids).forEach(d -> names.put(d.getId(), d.getName()));
+        }
+        return names;
     }
 
     /**
@@ -80,9 +125,18 @@ public class UserService {
     }
 
     public Page<User> listAccessible(UserPrincipal principal, int page, int pageSize) {
+        return listAccessible(principal, page, pageSize, null);
+    }
+
+    public Page<User> listAccessible(UserPrincipal principal, int page, int pageSize, UserType userTypeFilter) {
         List<UUID> orgIds = tenantAccessGuard.accessibleOrganizationIds(principal);
         PageRequest pageRequest = PageRequest.of(page, pageSize);
-        return orgIds == null ? userRepository.findAll(pageRequest) : userRepository.findByOrganizationIdIn(orgIds, pageRequest);
+        if (userTypeFilter == null) {
+            return orgIds == null ? userRepository.findAll(pageRequest) : userRepository.findByOrganizationIdIn(orgIds, pageRequest);
+        }
+        return orgIds == null
+                ? userRepository.findByUserType(userTypeFilter, pageRequest)
+                : userRepository.findByOrganizationIdInAndUserType(orgIds, userTypeFilter, pageRequest);
     }
 
     @Transactional

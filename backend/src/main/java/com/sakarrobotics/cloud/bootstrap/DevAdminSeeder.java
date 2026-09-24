@@ -16,6 +16,7 @@ import com.sakarrobotics.cloud.iam.RoleRepository;
 import com.sakarrobotics.cloud.iam.User;
 import com.sakarrobotics.cloud.iam.UserRepository;
 import com.sakarrobotics.cloud.iam.UserStatus;
+import com.sakarrobotics.cloud.iam.UserType;
 
 import lombok.RequiredArgsConstructor;
 
@@ -60,6 +61,7 @@ public class DevAdminSeeder implements ApplicationRunner {
         admin.setRole(roleRepository.findByName(RoleName.SUPER_ADMIN)
                 .orElseThrow(() -> new IllegalStateException("SUPER_ADMIN role missing — Flyway migrations did not run")));
         admin.setStatus(UserStatus.ACTIVE);
+        admin.setUserType(UserType.INTERNAL); // cross-organization Sakar staff, matches V19's own backfill rule
         userRepository.save(admin);
 
         log.warn("=== Bootstrap SUPER_ADMIN created: {} / {} — CHANGE THIS PASSWORD IMMEDIATELY, "
