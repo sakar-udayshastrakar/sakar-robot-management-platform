@@ -1,0 +1,144 @@
+{
+  "reference_id": "SET-09",
+  "image_path": "keenonwebpic/keenonwebpic/cleaning app/Screenshot from 2026-08-31 12-57-34.png",
+  "canvas": {
+    "width": 982,
+    "height": 537
+  },
+  "regions": {
+    "header": { "x": 0, "y": 0, "width": 982, "height": 90 },
+    "sidebar": { "x": 0, "y": 90, "width": 313, "height": 447 },
+    "content_pane": { "x": 325, "y": 90, "width": 657, "height": 447 }
+  },
+  "elements": [
+    {
+      "id": "sidebar_item_screen_lock_settings_partial",
+      "type": "sidebar",
+      "x": 20,
+      "y": 134,
+      "width": 283,
+      "height": 41,
+      "notes": "Unselected, top row visible in this capture (sidebar has scrolled down relative to SET-05/SET-06/SET-07/SET-08 so that the selected item, General Settings, is more centered)."
+    },
+    {
+      "id": "sidebar_item_general_settings",
+      "type": "sidebar",
+      "x": 20,
+      "y": 202,
+      "width": 283,
+      "height": 55,
+      "notes": "SELECTED. Same 283x55 selected-pill treatment as every other selected sidebar item measured in this canvas group."
+    },
+    {
+      "id": "sidebar_item_screen_emoji",
+      "type": "sidebar",
+      "x": 20,
+      "y": 270,
+      "width": 283,
+      "height": 41,
+      "notes": "Unselected, \"Screen Emoji\"."
+    },
+    {
+      "id": "sidebar_item_sound_settings",
+      "type": "sidebar",
+      "x": 20,
+      "y": 338,
+      "width": 283,
+      "height": 41,
+      "notes": "Unselected, \"Sound Settings\"."
+    },
+    {
+      "id": "sidebar_item_dnd_mode",
+      "type": "sidebar",
+      "x": 20,
+      "y": 406,
+      "width": 283,
+      "height": 41,
+      "notes": "Unselected, \"Do Not Disturb (DND) Mode\" (2-line label)."
+    },
+    {
+      "id": "sidebar_item_resource_management",
+      "type": "sidebar",
+      "x": 20,
+      "y": 474,
+      "width": 283,
+      "height": 41,
+      "notes": "Unselected, \"Resource Management\" - cut off by the bottom of the screenshot."
+    },
+    {
+      "id": "content_title",
+      "type": "text",
+      "x": 559,
+      "y": 54,
+      "width": 164,
+      "height": 20,
+      "notes": "\"General Settings\" title."
+    },
+    {
+      "id": "row_language",
+      "type": "card",
+      "x": 334,
+      "y": 113,
+      "width": 614,
+      "height": 44,
+      "notes": "\"Language\" label + right-aligned value \"English\" + chevron. Unlike SET-06's Workstation screen, each setting here is its OWN separate card (not grouped multi-row cards)."
+    },
+    {
+      "id": "row_select_point_to_locate",
+      "type": "card",
+      "x": 334,
+      "y": 181,
+      "width": 614,
+      "height": 42,
+      "notes": "\"Select Point to Locate\" label + chevron, no value shown."
+    },
+    {
+      "id": "row_manual_charging_location",
+      "type": "card",
+      "x": 334,
+      "y": 249,
+      "width": 614,
+      "height": 44,
+      "notes": "\"Manual Charging Location\" label + value \"Select Manual Charging Location\" + chevron."
+    },
+    {
+      "id": "row_resume_cleaning_from_breakpoint",
+      "type": "card",
+      "x": 334,
+      "y": 317,
+      "width": 614,
+      "height": 49,
+      "notes": "\"Resume Cleaning from Breakpoint\" label + a toggle switch in the OFF/gray state (first OFF toggle observed in this Settings batch - all others seen so far were ON/blue or ON/green)."
+    },
+    {
+      "id": "row_sweeping_brush_auto_height",
+      "type": "card",
+      "x": 334,
+      "y": 394,
+      "width": 614,
+      "height": 51,
+      "notes": "\"Sweeping Brush Auto-height Adjustment\" label + a small circular '?' help-icon + a toggle switch in the ON/GREEN state - the first green (rather than blue) toggle observed in this batch."
+    },
+    {
+      "id": "row_wifi_partial",
+      "type": "card",
+      "x": 334,
+      "y": 471,
+      "width": 614,
+      "height": 55,
+      "notes": "\"Wi-Fi\" label begins to appear, with a green toggle visible - this is the start of a new card, cut off by the bottom of the screenshot (see SET-10 for its full, scrolled-into-view content)."
+    }
+  ],
+  "relationships": [
+    { "type": "fixed_row_pitch", "elements": ["sidebar_item_screen_lock_settings_partial", "sidebar_item_general_settings", "sidebar_item_screen_emoji", "sidebar_item_sound_settings", "sidebar_item_dnd_mode", "sidebar_item_resource_management"], "value_px": 68, "notes": "row starts 134/202/270/338/406/474 - the same 68px pitch confirmed for a third time in this canvas group" },
+    { "type": "equal_width", "elements": ["row_language", "row_select_point_to_locate", "row_manual_charging_location", "row_resume_cleaning_from_breakpoint", "row_sweeping_brush_auto_height", "row_wifi_partial"], "value_px": 614 },
+    { "type": "consistent_gap", "elements": ["row_language", "row_select_point_to_locate", "row_manual_charging_location", "row_resume_cleaning_from_breakpoint", "row_sweeping_brush_auto_height"], "notes": "gaps of 24, 26, 24, 28px between successive single-setting cards - consistent with the ~24-28px 'simple row' gap pattern, distinct from the ~60-65px gap used between the grouped multi-row cards on SET-06/SET-07" },
+    { "type": "toggle_color_variant", "elements": ["row_resume_cleaning_from_breakpoint", "row_sweeping_brush_auto_height"], "notes": "toggles are not all the same color: OFF state is gray, but ON state appears as either BLUE (SET-06's Workstation toggles, SET-07's Charging toggles) or GREEN (this screen's Sweeping Brush Auto-height Adjustment, and the Wi-Fi row beginning to appear) - the color distinction's meaning is not stated in-image" }
+  ],
+  "unknowns": [
+    "Why some ON toggles render blue and others green - no in-image explanation (e.g. a different setting category or importance level).",
+    "Full content of row_wifi_partial - cut off by the screenshot; see SET-10 for the continuation.",
+    "Exact corner radius of the cards and toggles.",
+    "Whether the sidebar's scroll position is driven by keeping the selected item vertically centered, or some other rule - it differs from SET-05/06/07/08's scroll position despite Settings General being reached the same way (selecting a sidebar item)."
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "reference_id": "SET-12",
+  "image_path": "keenonwebpic/keenonwebpic/cleaning app/Screenshot from 2026-08-31 12-58-24.png",
+  "canvas": {
+    "width": 982,
+    "height": 537
+  },
+  "regions": {
+    "header": { "x": 0, "y": 0, "width": 982, "height": 90 },
+    "sidebar": { "x": 0, "y": 90, "width": 313, "height": 447 },
+    "content_pane": { "x": 325, "y": 90, "width": 657, "height": 447 }
+  },
+  "elements": [
+    {
+      "id": "sidebar_item_sound_settings",
+      "type": "sidebar",
+      "x": 20,
+      "y": 268,
+      "width": 283,
+      "height": 55,
+      "notes": "SELECTED. Same 283x55 pattern. Sidebar has scrolled further than SET-09/10/11, now showing General Settings/Screen Emoji/Sound Settings(selected)/DND Mode/Resource Management/About the Robot - the last item (About the Robot) is now fully visible, suggesting this is near the bottom of the 11-item list."
+    },
+    {
+      "id": "content_title",
+      "type": "text",
+      "x": 566,
+      "y": 54,
+      "width": 150,
+      "height": 20,
+      "notes": "\"Sound Settings\" title."
+    },
+    {
+      "id": "card_volume_controls",
+      "type": "card",
+      "x": 335,
+      "y": 94,
+      "width": 613,
+      "height": 144,
+      "notes": "Card containing: \"Music Volume\" label + a horizontal slider (speaker-mute icon, blue-filled track, drag handle, value \"32\", speaker-loud icon) on row 1; \"Voice Volume\" label + a similar slider (value \"80\") on row 2; then a gray explanatory line \"Adjust volume for all voice prompts: general, charging, cleaning, and elevator usage\" at the bottom of the card."
+    },
+    {
+      "id": "label_background_music",
+      "type": "text",
+      "x": 347,
+      "y": 333,
+      "width": 150,
+      "height": 14,
+      "notes": "Section label \"Background Music\", gray text, between card_volume_controls and card_music_selection - position is approximate (see unknowns)."
+    },
+    {
+      "id": "card_music_selection",
+      "type": "card",
+      "x": 335,
+      "y": 364,
+      "width": 613,
+      "height": 79,
+      "notes": "Two-row card: \"Music During Cleaning\" + value \"None\" + chevron; \"Music During Navigation\" + value \"None\" + chevron."
+    }
+  ],
+  "relationships": [
+    { "type": "equal_width", "elements": ["card_volume_controls", "card_music_selection"], "value_px": 613 },
+    { "type": "aligned_left", "elements": ["card_volume_controls", "card_music_selection"], "value_px": 335 },
+    { "type": "section_label_pattern", "elements": ["label_background_music", "SET-10.label_available_wifi_networks"], "notes": "both are plain gray section labels sitting between two cards rather than inside either card - same pattern reused across screens" },
+    { "type": "matches_pattern", "elements": ["sidebar_item_sound_settings", "SET-09.sidebar_item_sound_settings"], "notes": "same row, now selected" }
+  ],
+  "unknowns": [
+    "Exact bounding box of label_background_music - its text color is close to the surrounding background, making a clean pixel-threshold measurement unreliable; the value given is a visual approximation.",
+    "Exact bounds of the individual slider tracks/handles/icons within card_volume_controls - measured only as part of the overall card, not sub-element by sub-element, per instructions.",
+    "Exact corner radius of the cards."
+  ]
+}

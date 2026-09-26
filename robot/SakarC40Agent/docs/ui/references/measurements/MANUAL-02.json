@@ -1,0 +1,60 @@
+{
+  "reference_id": "MANUAL-02",
+  "image_path": "keenonwebpic/keenonwebpic/cleaning app/manual push.png",
+  "canvas": {
+    "width": 963,
+    "height": 555
+  },
+  "regions": {
+    "header": { "x": 0, "y": 0, "width": 963, "height": 100 },
+    "main_content": { "x": 0, "y": 100, "width": 963, "height": 455 }
+  },
+  "elements": [
+    {
+      "id": "back_button",
+      "type": "button",
+      "x": 20,
+      "y": 48,
+      "width": 56,
+      "height": 47,
+      "notes": "Same position/pattern as back buttons on other screens."
+    },
+    {
+      "id": "title_text",
+      "type": "text",
+      "x": 417,
+      "y": 64,
+      "width": 127,
+      "height": 15,
+      "notes": "\"Manual Push\" title, centered."
+    },
+    {
+      "id": "illustration",
+      "type": "image",
+      "x": 369,
+      "y": 141,
+      "width": 210,
+      "height": 251,
+      "notes": "Illustration of a person pushing a floor-scrubber machine. No card/container background behind it - it sits directly on the page background. Horizontal center (474) is close to but not exactly the canvas center (481.5)."
+    },
+    {
+      "id": "button_manually_end_pushing",
+      "type": "button",
+      "x": 285,
+      "y": 427,
+      "width": 391,
+      "height": 57,
+      "notes": "Blue gradient rounded rectangle button, bold white \"Manually End Pushing\" label. Unlike the full-width CTA buttons on other screens (e.g. MANUAL-01's Start Cleaning, CLEAN-01's Start Clean), this button is a fixed, centered width, not edge-to-edge."
+    }
+  ],
+  "relationships": [
+    { "type": "horizontal_center", "elements": ["button_manually_end_pushing"], "notes": "button center x=480.5, matches canvas center (481.5) almost exactly - this button is centered, not full-width or left/right anchored" },
+    { "type": "approximately_horizontal_center", "elements": ["illustration"], "notes": "illustration center x=474, close to but ~7.5px left of canvas center (481.5)" },
+    { "type": "no_container_card", "elements": ["illustration", "button_manually_end_pushing"], "notes": "unlike CLEAN-01, SCHED-01, TEACH-01, and MANUAL-01, this screen's content sits directly on the plain page background with no enclosing white card" }
+  ],
+  "unknowns": [
+    "Exact corner radius of button_manually_end_pushing.",
+    "Whether the illustration's bounding box precisely matches its visible artwork or includes some transparent padding within the source image (measured via a color-difference threshold against the page background, not a hard edge).",
+    "Whether this screen has any additional state (e.g. a progress indicator or timer) that simply isn't present/visible in this particular capture."
+  ]
+}

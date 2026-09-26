@@ -14,6 +14,9 @@ import com.sakarrobotics.c40agent.api.mqtt.PeanutSdkReturnToDockExecutor;
 import com.sakarrobotics.c40agent.api.mqtt.RobotCommandExecutor;
 import com.sakarrobotics.c40agent.api.mqtt.SakarMqttConfig;
 import com.sakarrobotics.c40agent.api.mqtt.TelemetryScheduler;
+import com.sakarrobotics.c40agent.data.di.DefaultAppContainer;
+import com.sakarrobotics.c40agent.domain.di.AppContainer;
+import com.sakarrobotics.c40agent.domain.di.AppContainerHolder;
 import com.sakarrobotics.c40agent.logging.SdkCallLogger;
 import com.sakarrobotics.c40agent.robot.C40RobotController;
 import com.sakarrobotics.c40agent.robot.C40RobotControllerHolder;
@@ -27,13 +30,19 @@ import com.sakarrobotics.c40agent.sdk.SdkConnectionConfig;
  * obtain the controller from here rather than constructing their own - the
  * Peanut SDK is a process-wide singleton underneath, so more than one
  * controller instance would fight over the same connection.
+ *
+ * Also the single place that builds the real {@link AppContainer}
+ * ({@link DefaultAppContainer}, from :data) that the Sakar operator UI
+ * (:operator-ui) runs against, and exposes it via {@link AppContainerHolder}
+ * so :operator-ui never has to depend on :data or :robot directly.
  */
-public class SakarC40Application extends Application {
+public class SakarC40Application extends Application implements AppContainerHolder {
 
     private C40RobotController controller;
     private AgentMqttClient mqttClient;
     private HeartbeatScheduler heartbeatScheduler;
     private TelemetryScheduler telemetryScheduler;
+    private AppContainer appContainer;
 
     @Override
     public void onCreate() {
@@ -43,7 +52,14 @@ public class SakarC40Application extends Application {
         // OperatingMode defaults to DIAGNOSTIC_ONLY and is never changed here.
         C40RobotControllerHolder.set(controller);
 
+        appContainer = new DefaultAppContainer(this, controller, BuildConfig.VERSION_NAME);
+
         startMqttIfConfigured();
+    }
+
+    @Override
+    public AppContainer getAppContainer() {
+        return appContainer;
     }
 
     /**

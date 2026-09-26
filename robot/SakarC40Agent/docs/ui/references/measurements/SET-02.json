@@ -1,0 +1,151 @@
+{
+  "reference_id": "SET-02",
+  "image_path": "keenonwebpic/keenonwebpic/cleaning app/Screenshot from 2026-08-29 17-07-42.png",
+  "canvas": {
+    "width": 963,
+    "height": 555
+  },
+  "regions": {
+    "header": { "x": 0, "y": 0, "width": 963, "height": 100 },
+    "sidebar": { "x": 0, "y": 100, "width": 301, "height": 455 },
+    "content_pane": { "x": 310, "y": 100, "width": 653, "height": 455 }
+  },
+  "elements": [
+    {
+      "id": "back_button",
+      "type": "button",
+      "x": 20,
+      "y": 39,
+      "width": 56,
+      "height": 41,
+      "notes": "Identical position to SET-01's back_button."
+    },
+    {
+      "id": "sidebar_title",
+      "type": "text",
+      "x": 120,
+      "y": 62,
+      "width": 80,
+      "height": 19,
+      "notes": "\"Settings\" title, identical position to SET-01."
+    },
+    {
+      "id": "content_title",
+      "type": "text",
+      "x": 517,
+      "y": 61,
+      "width": 234,
+      "height": 15,
+      "notes": "\"Consumables Statistics\" - same title, same position as SET-01."
+    },
+    {
+      "id": "item_card_side_brush",
+      "type": "card",
+      "x": 328,
+      "y": 110,
+      "width": 613,
+      "height": 86,
+      "notes": "Same content and near-identical position (1px variance) as SET-01's item_card_side_brush. Content pane is structurally unchanged from SET-01 - internal sub-elements were verified but not re-measured, see SET-01.json."
+    },
+    {
+      "id": "item_card_sweeping_brush",
+      "type": "card",
+      "x": 328,
+      "y": 233,
+      "width": 613,
+      "height": 85,
+      "notes": "Matches SET-01's item_card_sweeping_brush."
+    },
+    {
+      "id": "item_card_fibre_brush",
+      "type": "card",
+      "x": 328,
+      "y": 358,
+      "width": 613,
+      "height": 86,
+      "notes": "Matches SET-01's item_card_fibre_brush."
+    },
+    {
+      "id": "item_card_washing_brush",
+      "type": "card",
+      "x": 328,
+      "y": 482,
+      "width": 613,
+      "height": 64,
+      "notes": "Matches SET-01's item_card_washing_brush; cut off by the bottom of the screenshot (partial height)."
+    },
+    {
+      "id": "sidebar_item_screen_lock_settings",
+      "type": "sidebar",
+      "x": 13,
+      "y": 109,
+      "width": 283,
+      "height": 40,
+      "notes": "Unselected. NOTE: this is the SAME item as SET-01's sidebar_item_screen_lock_settings (y=381 there) - the sidebar has been scrolled independently of the content pane, since the content pane (Consumables Statistics) is unchanged but the sidebar now shows different rows with none selected/highlighted. The previously-selected \"Consumables Statistics\" row has scrolled out of view above."
+    },
+    {
+      "id": "sidebar_item_general_settings",
+      "type": "sidebar",
+      "x": 13,
+      "y": 177,
+      "width": 283,
+      "height": 42,
+      "notes": "Unselected, \"General Settings\"."
+    },
+    {
+      "id": "sidebar_item_screen_emoji",
+      "type": "sidebar",
+      "x": 13,
+      "y": 245,
+      "width": 283,
+      "height": 41,
+      "notes": "Unselected, \"Screen Emoji\"."
+    },
+    {
+      "id": "sidebar_item_sound_settings",
+      "type": "sidebar",
+      "x": 13,
+      "y": 313,
+      "width": 283,
+      "height": 41,
+      "notes": "Unselected, \"Sound Settings\" - newly observed sidebar item, not visible in SET-01."
+    },
+    {
+      "id": "sidebar_item_dnd_mode",
+      "type": "sidebar",
+      "x": 13,
+      "y": 381,
+      "width": 283,
+      "height": 44,
+      "notes": "Unselected, \"Do Not Disturb (DND) Mode\" - label wraps to 2 lines (\"Do Not Disturb (DND)\" / \"Mode\"), slightly taller than the other 1-line rows. Newly observed, not visible in SET-01."
+    },
+    {
+      "id": "sidebar_item_resource_management",
+      "type": "sidebar",
+      "x": 13,
+      "y": 449,
+      "width": 283,
+      "height": 41,
+      "notes": "Unselected, \"Resource Management\" - newly observed."
+    },
+    {
+      "id": "sidebar_item_about_the_robot",
+      "type": "sidebar",
+      "x": 13,
+      "y": 517,
+      "width": 283,
+      "height": 38,
+      "notes": "Unselected, \"About the Robot\" - newly observed, cut off by the bottom of the screenshot (partial height)."
+    }
+  ],
+  "relationships": [
+    { "type": "fixed_row_pitch", "elements": ["sidebar_item_screen_lock_settings", "sidebar_item_general_settings", "sidebar_item_screen_emoji", "sidebar_item_sound_settings", "sidebar_item_dnd_mode", "sidebar_item_resource_management", "sidebar_item_about_the_robot"], "value_px": 68, "notes": "row start positions are exactly 109, 177, 245, 313, 381, 449, 517 - a perfectly consistent 68px pitch (start-to-start) regardless of each row's own content height (e.g. the 2-line DND row). This matches the same 68px pitch measured in SET-01 (109/177/245/313/381/449/517 there too, for the sidebar's first 6 rows) - confirms the sidebar uses a fixed-height row grid independent of label length." },
+    { "type": "combined_sidebar_order", "elements": ["SET-01.sidebar_item_consumables_statistics", "SET-01.sidebar_item_cleaning_data", "SET-01.sidebar_item_workstation", "SET-01.sidebar_item_charging_settings", "sidebar_item_screen_lock_settings", "sidebar_item_general_settings", "sidebar_item_screen_emoji", "sidebar_item_sound_settings", "sidebar_item_dnd_mode", "sidebar_item_resource_management", "sidebar_item_about_the_robot"], "notes": "combining this capture with SET-01 (which shows the top of the list) gives the full 11-item sidebar order: Consumables Statistics, Cleaning Data, Workstation, Charging Settings, Screen Lock Settings, General Settings, Screen Emoji, Sound Settings, Do Not Disturb (DND) Mode, Resource Management, About the Robot" },
+    { "type": "unchanged_content", "elements": ["item_card_side_brush", "item_card_sweeping_brush", "item_card_fibre_brush", "item_card_washing_brush", "content_title"], "notes": "content pane is structurally identical to SET-01 (same title, same 4 cards, same positions within 1px) - only the sidebar's scroll position differs between these two captures" }
+  ],
+  "unknowns": [
+    "Whether the sidebar and content pane are independently scrollable by user design, or this pair of captures reflects two different intermediate states of the same scroll/selection interaction - not determinable from static images alone.",
+    "Full height of sidebar_item_about_the_robot and item_card_washing_brush - both cut off by the screenshot's bottom edge.",
+    "Whether an 11th+ sidebar item exists below About the Robot (i.e. whether this is genuinely the end of the list) - not confirmable since About the Robot itself is cut off."
+  ]
+}

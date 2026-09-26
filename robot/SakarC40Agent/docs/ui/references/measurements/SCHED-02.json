@@ -1,0 +1,133 @@
+{
+  "reference_id": "SCHED-02",
+  "image_path": "keenonwebpic/keenonwebpic/cleaning app/edit task.png",
+  "canvas": {
+    "width": 963,
+    "height": 555
+  },
+  "regions": {
+    "scrim": { "x": 0, "y": 0, "width": 308, "height": 555 },
+    "dialog_panel": { "x": 308, "y": 0, "width": 655, "height": 550 },
+    "header": { "x": 308, "y": 40, "width": 655, "height": 55 }
+  },
+  "elements": [
+    {
+      "id": "scrim_overlay",
+      "type": "other",
+      "x": 0,
+      "y": 0,
+      "width": 308,
+      "height": 555,
+      "notes": "Dark semi-transparent scrim over the underlying Scheduled Task list, which remains dimly visible behind it. This is a right-side sliding panel/sheet, not a full-screen replacement - the underlying screen (SCHED-01) is still partially visible on the left ~32% of the canvas width."
+    },
+    {
+      "id": "dialog_panel",
+      "type": "dialog",
+      "x": 308,
+      "y": 0,
+      "width": 655,
+      "height": 550,
+      "notes": "Full-height right-side panel (edge-to-edge top/bottom/right), covering the right ~68% of the canvas width. Contains its own header and a scrollable list of form-field cards."
+    },
+    {
+      "id": "back_chevron",
+      "type": "icon",
+      "x": 332,
+      "y": 60,
+      "width": 8,
+      "height": 17,
+      "notes": "Small '<' glyph, top-left of the panel's own header (not a filled button background in this capture)."
+    },
+    {
+      "id": "title_text",
+      "type": "text",
+      "x": 520,
+      "y": 59,
+      "width": 106,
+      "height": 19,
+      "notes": "Bold black title \"Edit Task\", centered within the panel's header."
+    },
+    {
+      "id": "button_delete",
+      "type": "button",
+      "x": 743,
+      "y": 48,
+      "width": 92,
+      "height": 41,
+      "notes": "White rounded rectangle button, black \"Delete\" label."
+    },
+    {
+      "id": "button_save",
+      "type": "button",
+      "x": 849,
+      "y": 49,
+      "width": 93,
+      "height": 41,
+      "notes": "Solid blue rounded rectangle button, white bold \"Save\" label. Rightmost element in the panel header."
+    },
+    {
+      "id": "field_card_task_name",
+      "type": "card",
+      "x": 328,
+      "y": 101,
+      "width": 613,
+      "height": 55,
+      "notes": "Single-row white card: label \"Task Name\" on the left, value \"demo\" + a trailing '>' chevron on the right."
+    },
+    {
+      "id": "field_group_card",
+      "type": "card",
+      "x": 328,
+      "y": 177,
+      "width": 613,
+      "height": 227,
+      "notes": "One white card containing 4 stacked field rows separated by thin 1-3px divider lines: Task Type (\"By Time\"), Clean Cycle (\"Once\"), Scheduled Start Time (\"15:51 - 21:20\"), and Cleaning Counts (a numeric stepper instead of a chevron row). The 4 rows are each approximately 55-56px tall."
+    },
+    {
+      "id": "stepper_cleaning_counts",
+      "type": "other",
+      "x": 753,
+      "y": 359,
+      "width": 190,
+      "height": 37,
+      "notes": "Compound '-' / value(\"5\") / '+' stepper control, replacing the usual chevron on the Cleaning Counts row - the only field row in this card that isn't a plain label+value+chevron pattern."
+    },
+    {
+      "id": "field_card_cleaning_area",
+      "type": "card",
+      "x": 328,
+      "y": 425,
+      "width": 613,
+      "height": 55,
+      "notes": "Single-row white card: label \"Cleaning Area\", value \"Not Set\", trailing chevron."
+    },
+    {
+      "id": "field_card_cleaning_mode",
+      "type": "card",
+      "x": 328,
+      "y": 500,
+      "width": 613,
+      "height": 46,
+      "notes": "Label \"Cleaning Mode(Hard Floor)\", value in red text \"Please select a cleaning area first\". This card is cut off by the bottom of the screenshot/panel viewport - its full height is not visible, so 46px is a PARTIAL height only (see unknowns)."
+    }
+  ],
+  "relationships": [
+    { "type": "equal_width", "elements": ["field_card_task_name", "field_group_card", "field_card_cleaning_area", "field_card_cleaning_mode"], "value_px": 613 },
+    { "type": "aligned_left", "elements": ["field_card_task_name", "field_group_card", "field_card_cleaning_area", "field_card_cleaning_mode"], "value_px": 328 },
+    { "type": "equal_height", "elements": ["button_delete", "button_save"], "value_px": 41 },
+    { "type": "aligned_top", "elements": ["button_delete"], "notes": "button_delete top=48 vs button_save top=49 - within 1px" },
+    { "type": "vertical_gap", "elements": ["field_card_task_name", "field_group_card"], "value_px": 21, "notes": "gap from y=156 to y=177" },
+    { "type": "vertical_gap", "elements": ["field_group_card", "field_card_cleaning_area"], "value_px": 21, "notes": "gap from y=404 to y=425" },
+    { "type": "vertical_gap", "elements": ["field_card_cleaning_area", "field_card_cleaning_mode"], "value_px": 20, "notes": "gap from y=480 to y=500" },
+    { "type": "consistent_gap", "elements": ["field_card_task_name", "field_group_card", "field_card_cleaning_area", "field_card_cleaning_mode"], "notes": "the ~20-21px vertical gap between every field card is consistent across all 3 measured gaps" },
+    { "type": "internal_row_height", "elements": ["field_group_card"], "value_px": 56, "notes": "the 4 rows inside field_group_card (Task Type/Clean Cycle/Scheduled Start Time/Cleaning Counts) are each approximately 55-56px tall" },
+    { "type": "panel_covers_fraction", "elements": ["dialog_panel"], "value_px": 655, "notes": "dialog_panel width (655) is approximately 68% of the canvas width (963); scrim covers the remaining 32% (308px) on the left" }
+  ],
+  "unknowns": [
+    "Full height of field_card_cleaning_mode - it is cut off by the screenshot/viewport, so only a 46px-tall partial view was captured; the card likely continues below and/or the panel scrolls.",
+    "Whether any additional field cards exist below field_card_cleaning_mode.",
+    "Exact corner radius of the dialog panel, buttons, and field cards.",
+    "Whether the scrim's left boundary (x=308) is a fixed panel width or scales with screen width - only one canvas size was available to measure.",
+    "The dialog_panel's precise top/bottom treatment relative to the OS status bar and system nav bar - the panel's background appears to run full-bleed behind both, but this could not be distinguished with certainty from a single static image."
+  ]
+}

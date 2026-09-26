@@ -1,0 +1,89 @@
+{
+  "reference_id": "SET-10",
+  "image_path": "keenonwebpic/keenonwebpic/cleaning app/Screenshot from 2026-08-31 12-57-53.png",
+  "canvas": {
+    "width": 982,
+    "height": 537
+  },
+  "regions": {
+    "header": { "x": 0, "y": 0, "width": 982, "height": 90 },
+    "sidebar": { "x": 0, "y": 90, "width": 313, "height": 447 },
+    "content_pane": { "x": 325, "y": 90, "width": 657, "height": 447 }
+  },
+  "elements": [
+    {
+      "id": "sidebar_item_general_settings",
+      "type": "sidebar",
+      "x": 20,
+      "y": 202,
+      "width": 283,
+      "height": 55,
+      "notes": "SELECTED. Sidebar in the same scroll position as SET-09 (this is the same content pane, scrolled further down, with the sidebar unchanged)."
+    },
+    {
+      "id": "content_title",
+      "type": "text",
+      "x": 559,
+      "y": 54,
+      "width": 164,
+      "height": 20,
+      "notes": "\"General Settings\" - same title/position as SET-09, confirming this is the same screen, just scrolled further down."
+    },
+    {
+      "id": "card_wifi",
+      "type": "card",
+      "x": 334,
+      "y": 101,
+      "width": 614,
+      "height": 156,
+      "notes": "Card containing 2 rows separated by a thin divider line (y=182): row 1 is \"Wi-Fi\" + a green ON toggle; row 2 is a connected-network row (Wi-Fi icon + \"Sakar Robotics\" + right-aligned gray \"Connection successful\" text). This is the continuation of the row_wifi_partial card that began at the bottom of SET-09."
+    },
+    {
+      "id": "label_available_wifi_networks",
+      "type": "text",
+      "x": 377,
+      "y": 289,
+      "width": 200,
+      "height": 14,
+      "notes": "Section label \"Available Wi-Fi Networks\", gray text, sitting between card_wifi and the network list below - appears to be a plain label rather than living inside either card."
+    },
+    {
+      "id": "network_row_sakar_robotics_guest",
+      "type": "card",
+      "x": 334,
+      "y": 337,
+      "width": 614,
+      "height": 68,
+      "notes": "Representative fully-visible network row: Wi-Fi signal icon + \"Sakar Robotics Guest\" + a right-aligned lock icon (indicating a password-protected network). Subsequent rows (DIRECT-mp-EPSON-L6370 Series, Ansec1 2nd Floor) follow the same pattern and were not individually re-measured to the same depth."
+    },
+    {
+      "id": "network_row_direct_epson",
+      "type": "card",
+      "x": 334,
+      "y": 406,
+      "width": 614,
+      "height": 67,
+      "notes": "\"DIRECT-mp-EPSON-L6370 Series\" - same row pattern as network_row_sakar_robotics_guest."
+    },
+    {
+      "id": "network_row_ansec1",
+      "type": "card",
+      "x": 334,
+      "y": 473,
+      "width": 614,
+      "height": 64,
+      "notes": "\"Ansec1 2nd Floor\" - cut off by the bottom of the screenshot, partial height only."
+    }
+  ],
+  "relationships": [
+    { "type": "equal_width", "elements": ["card_wifi", "network_row_sakar_robotics_guest", "network_row_direct_epson", "network_row_ansec1"], "value_px": 614 },
+    { "type": "approximately_equal_height", "elements": ["network_row_sakar_robotics_guest", "network_row_direct_epson"], "notes": "67-68px each" },
+    { "type": "continuation_of", "elements": ["card_wifi", "SET-09.row_wifi_partial"], "notes": "this card is the full view of the Wi-Fi row that appeared cut off at the bottom of SET-09" }
+  ],
+  "unknowns": [
+    "Exact row boundaries within card_wifi and between the network list rows - divider lines are very subtle (only a few RGB units darker than the card background), so the boundaries given are approximate, not derived from a hard color-threshold edge.",
+    "Whether label_available_wifi_networks and the network rows below it belong to the same visual card as card_wifi or are a separate, second card - the screenshot doesn't show a clear card boundary/gap between them.",
+    "Full content of network_row_ansec1 and whether further network rows exist below it - cut off by the screenshot.",
+    "Exact corner radius of the cards."
+  ]
+}

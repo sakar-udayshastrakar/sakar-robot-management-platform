@@ -2,15 +2,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application>
+        <!--
+          No longer the app's launcher: SakarOperatorActivity (:operator-ui) is now the
+          Sakar CleanBot launcher. This diagnostic-only screen is kept, unmodified, as an
+          engineering/debugging entry point - reachable from Super User > System Settings >
+          "Open Legacy Diagnostics" (explicit intent), not from the home screen launcher.
+        -->
         <activity
             android:name=".MainActivity"
-            android:exported="true"
-            android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="false"
+            android:label="@string/app_name" />
     </application>
 
 </manifest>

@@ -1,0 +1,196 @@
+{
+  "reference_id": "SET-01",
+  "image_path": "keenonwebpic/keenonwebpic/cleaning app/settings.png",
+  "canvas": {
+    "width": 963,
+    "height": 555
+  },
+  "regions": {
+    "header": { "x": 0, "y": 0, "width": 963, "height": 100 },
+    "sidebar": { "x": 0, "y": 100, "width": 301, "height": 455 },
+    "content_pane": { "x": 310, "y": 100, "width": 653, "height": 455 }
+  },
+  "elements": [
+    {
+      "id": "back_button",
+      "type": "button",
+      "x": 20,
+      "y": 39,
+      "width": 56,
+      "height": 41,
+      "notes": "Same position/pattern as back buttons on other screens."
+    },
+    {
+      "id": "sidebar_title",
+      "type": "text",
+      "x": 120,
+      "y": 62,
+      "width": 80,
+      "height": 19,
+      "notes": "\"Settings\" title, left-aligned (NOT centered like other screens' titles) - sits to the right of the back button, sharing the header row rather than being centered in it."
+    },
+    {
+      "id": "sidebar_item_consumables_statistics",
+      "type": "sidebar",
+      "x": 13,
+      "y": 109,
+      "width": 283,
+      "height": 55,
+      "notes": "SELECTED sidebar item: solid blue/purple filled pill, white icon + white bold label \"Consumables Statistics\". Taller (55px) than the unselected rows below it (41px each) - see relationships."
+    },
+    {
+      "id": "sidebar_item_cleaning_data",
+      "type": "sidebar",
+      "x": 13,
+      "y": 177,
+      "width": 283,
+      "height": 41,
+      "notes": "Unselected sidebar item, white/transparent row, dark icon + dark label \"Cleaning Data\"."
+    },
+    {
+      "id": "sidebar_item_workstation",
+      "type": "sidebar",
+      "x": 13,
+      "y": 245,
+      "width": 283,
+      "height": 41,
+      "notes": "Unselected sidebar item, \"Workstation\"."
+    },
+    {
+      "id": "sidebar_item_charging_settings",
+      "type": "sidebar",
+      "x": 13,
+      "y": 313,
+      "width": 283,
+      "height": 41,
+      "notes": "Unselected sidebar item, \"Charging Settings\"."
+    },
+    {
+      "id": "sidebar_item_screen_lock_settings",
+      "type": "sidebar",
+      "x": 13,
+      "y": 381,
+      "width": 283,
+      "height": 41,
+      "notes": "Unselected sidebar item, \"Screen Lock Settings\"."
+    },
+    {
+      "id": "sidebar_item_general_settings",
+      "type": "sidebar",
+      "x": 13,
+      "y": 449,
+      "width": 283,
+      "height": 41,
+      "notes": "Unselected sidebar item, \"General Settings\"."
+    },
+    {
+      "id": "sidebar_item_screen_emoji",
+      "type": "sidebar",
+      "x": 13,
+      "y": 517,
+      "width": 283,
+      "height": 38,
+      "notes": "Unselected sidebar item, \"Screen Emoji\" - cut off by the bottom of the screenshot; only a partial row is visible (see unknowns)."
+    },
+    {
+      "id": "content_title",
+      "type": "text",
+      "x": 517,
+      "y": 61,
+      "width": 234,
+      "height": 15,
+      "notes": "\"Consumables Statistics\" title, left-aligned above the content list, same y-band as sidebar_title."
+    },
+    {
+      "id": "item_card_side_brush",
+      "type": "card",
+      "x": 328,
+      "y": 109,
+      "width": 613,
+      "height": 87,
+      "notes": "First consumable item card. Full internal pattern measured here; subsequent cards on this screen follow the same pattern (icon left, name + progress bar + lifespan text middle, 3 action icons right) and were only measured for overall position/size."
+    },
+    {
+      "id": "item_card_side_brush_icon",
+      "type": "image",
+      "x": 343,
+      "y": 124,
+      "width": 82,
+      "height": 50,
+      "notes": "Side-brush product icon/illustration, left edge of the card."
+    },
+    {
+      "id": "item_card_side_brush_name",
+      "type": "text",
+      "x": 446,
+      "y": 129,
+      "width": 88,
+      "height": 10,
+      "notes": "\"Side Brush\" label, bold black text."
+    },
+    {
+      "id": "item_card_side_brush_progress_bar",
+      "type": "other",
+      "x": 445,
+      "y": 165,
+      "width": 299,
+      "height": 4,
+      "notes": "Horizontal progress bar: blue filled portion is 445-727 (282px), light-gray unfilled remainder is 727-744 (17px). Fill ratio (282/299 = 94.3%) closely matches the displayed \"472/500 hours\" (94.4%), cross-confirming the measurement."
+    },
+    {
+      "id": "item_card_side_brush_actions",
+      "type": "button",
+      "x": 761,
+      "y": 144,
+      "width": 162,
+      "height": 41,
+      "notes": "Cluster of 3 small square icon buttons (refresh/reset, manual/book, play) at the right edge of the card. Measured as one cluster bounding box, not per-icon, per instructions."
+    },
+    {
+      "id": "item_card_sweeping_brush",
+      "type": "card",
+      "x": 328,
+      "y": 234,
+      "width": 613,
+      "height": 84,
+      "notes": "Second consumable card (\"Sweeping Brush\") - same internal pattern as item_card_side_brush, not individually re-measured."
+    },
+    {
+      "id": "item_card_fibre_brush",
+      "type": "card",
+      "x": 328,
+      "y": 358,
+      "width": 613,
+      "height": 86,
+      "notes": "Third consumable card (\"Fibre brush\") - same internal pattern, not individually re-measured."
+    },
+    {
+      "id": "item_card_washing_brush",
+      "type": "card",
+      "x": 328,
+      "y": 482,
+      "width": 613,
+      "height": 64,
+      "notes": "Fourth consumable card (\"Washing Brush\") - cut off by the bottom of the screenshot, so 64px is a PARTIAL height only (see unknowns)."
+    }
+  ],
+  "relationships": [
+    { "type": "equal_width", "elements": ["sidebar_item_consumables_statistics", "sidebar_item_cleaning_data", "sidebar_item_workstation", "sidebar_item_charging_settings", "sidebar_item_screen_lock_settings", "sidebar_item_general_settings", "sidebar_item_screen_emoji"], "value_px": 283 },
+    { "type": "equal_height", "elements": ["sidebar_item_cleaning_data", "sidebar_item_workstation", "sidebar_item_charging_settings", "sidebar_item_screen_lock_settings", "sidebar_item_general_settings"], "value_px": 41 },
+    { "type": "consistent_gap", "elements": ["sidebar_item_cleaning_data", "sidebar_item_workstation", "sidebar_item_charging_settings", "sidebar_item_screen_lock_settings", "sidebar_item_general_settings"], "value_px": 27, "notes": "gap between each of these 5 unselected rows is exactly 27px" },
+    { "type": "selected_item_taller_than_unselected", "elements": ["sidebar_item_consumables_statistics", "sidebar_item_cleaning_data"], "notes": "selected item is 55px tall vs 41px for unselected items - the selected pill's extra 14px extends DOWNWARD, shrinking the visual gap before the next row to 12px (177-164) instead of the usual 27px pattern. The next row (sidebar_item_cleaning_data) still starts at the same position (177) it would have if the selected row had been a normal 41px-tall row plus a 27px gap (109+41+27=177), so the selected row's height increase does not shift subsequent rows down." },
+    { "type": "equal_width", "elements": ["item_card_side_brush", "item_card_sweeping_brush", "item_card_fibre_brush", "item_card_washing_brush"], "value_px": 613 },
+    { "type": "aligned_left", "elements": ["item_card_side_brush", "item_card_sweeping_brush", "item_card_fibre_brush", "item_card_washing_brush", "content_title"], "notes": "content_title (517) is not left-aligned with the cards (328) - the title sits further right, roughly centered over the visible card content rather than flush with the card edge" },
+    { "type": "vertical_gap", "elements": ["item_card_side_brush", "item_card_sweeping_brush"], "value_px": 38 },
+    { "type": "vertical_gap", "elements": ["item_card_sweeping_brush", "item_card_fibre_brush"], "value_px": 40 },
+    { "type": "vertical_gap", "elements": ["item_card_fibre_brush", "item_card_washing_brush"], "value_px": 38 },
+    { "type": "same_internal_layout", "elements": ["item_card_side_brush", "item_card_sweeping_brush", "item_card_fibre_brush", "item_card_washing_brush"], "notes": "all 4 cards share the icon-left / name+progress-bar-middle / 3-action-icons-right pattern" }
+  ],
+  "unknowns": [
+    "Full height of sidebar_item_screen_emoji and item_card_washing_brush - both are cut off by the screenshot's bottom edge, so only partial heights were captured.",
+    "Whether additional sidebar items exist below Screen Emoji (SET-05 through SET-15's inventory notes list Sound Settings, Do Not Disturb, Resource Management, and About the Robot as further sidebar items, but they are not visible in this particular capture).",
+    "Exact corner radius of the sidebar pill, item cards, and action-icon buttons.",
+    "Precise sub-bounds of the 3 individual action icons within item_card_side_brush_actions (refresh vs. book vs. play) - only the cluster was measured.",
+    "Whether sidebar_title's left-alignment (rather than the centered title pattern seen on CLEAN-01/SCHED-01/TEACH-01/MANUAL-01/MANUAL-02) is specific to Settings-family screens or just this one."
+  ]
+}

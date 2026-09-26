@@ -1,0 +1,51 @@
+// Sakar Robotics onboard UI - domain layer.
+//
+// Pure Kotlin, zero Android/SDK dependency (same "plain library" pattern
+// :telemetry/:logging/:api already use for exactly this reason: fast,
+// Android-toolchain-free unit tests). Defines the hardware-abstraction
+// interfaces (RobotBatteryRepository, RobotChargingRepository, ...),
+// domain models, and use cases the operator UI is built against. It must
+// NEVER import com.keenon.* or any com.sakarrobotics.c40agent.sdk type -
+// only :data is allowed to bridge this layer to the real Peanut SDK
+// modules (:robot/:sdk/:navigation/:charging), exactly like :virtual-agent
+// is barred from the same thing for the same reason.
+apply plugin: 'org.jetbrains.kotlin.jvm'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+// Deliberately no `kotlin { jvmToolchain(8) }` here: that triggers Gradle's Java toolchain
+// auto-provisioning, which this machine has no JDK 8 for and no download repository configured
+// for (see the rest of this project's build.gradle files, none of which use toolchains either).
+// compileKotlin's own jvmTarget below is enough to produce Java-8-compatible bytecode using
+// whichever JDK is already running Gradle.
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
+// Same reasoning as compileKotlin above - compileTestKotlin defaults to JVM target 17 (this
+// machine's Gradle JDK) with no toolchain configured, which mismatches compileTestJava's 1.8 and
+// fails the build ("Inconsistent JVM-target compatibility"). This module had no test source set
+// until this architecture-preparation pass added one.
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3'
+
+    // Same versions as :robot/:api/:virtual-agent's own build.gradle, for consistency.
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.10.2'
+}
+
+test {
+    useJUnitPlatform()
+}

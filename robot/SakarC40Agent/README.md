@@ -246,8 +246,65 @@ C40
 | `telemetry` | Plain data classes (`RuntimeSnapshot`, `HealthEvent`, `ConnectionStatus`, `RawSnapshot`) shared across modules. No SDK or Android dependency. |
 | `diagnostics` | `DeviceEnvironmentInspector` (Android/Build info, network interfaces) and `SerialPortInspector` (read-only `/dev/ttyS*` existence checks). |
 | `logging` | `LogEntry` + `SdkCallLogger`: the ring buffer behind the on-screen raw SDK log. No SDK or Android dependency. |
-| `ui` | `MainActivity` - the diagnostic dashboard, and the app's only screen. |
+| `ui` | `MainActivity` - the original diagnostic dashboard. No longer the app's launcher (see "Sakar CleanBot Operator UI" below) but kept, unmodified, as an engineering screen reachable from Super User. |
 | `api` | The Sakar Backend integration boundary: MQTT client (`AgentMqttClient`, Eclipse Paho), presence/heartbeat/telemetry/event/error publishing, and (Phase 7) inbound command consumption (`CommandDispatcher`) + lifecycle result reporting. Never imports `com.keenon.*` - see `api/README.md`. |
+| `domain` | **New.** Pure Kotlin (no Android/SDK dependency) - the Sakar operator UI's hardware-abstraction interfaces (`RobotBatteryRepository`, `RobotChargingRepository`, `CleaningRepository`, ...), domain models, use cases, and the `AppContainer`/`AppContainerHolder` DI seam. Every value/action it models carries a `Capability` (`REAL`/`SIMULATED`/`LOCAL`/`GATED`/`UNAVAILABLE`). |
+| `data` | **New.** Implements every `domain` repository: real bridges over `C40RobotController` (battery, charging, navigation status, sensors, diagnostics, map read), Room-backed local repositories (schedules, consumables, teach-routes, cleaning zones), a DataStore-backed Super User PIN and local-preferences store, and `DefaultAppContainer` (wires all of the above). The only new module allowed to depend on `robot`/`sdk`. |
+| `operator-ui` | **New.** The Sakar-branded Jetpack Compose touchscreen app - home dashboard, cleaning, scheduling, manual drive, teach route, settings, Super User + robot debugging, logs, installation/commissioning, and the map/cleaning-zone editor. Depends only on `domain` (+ `ui`, to launch the legacy diagnostics screen) - never on `data`/`robot`/`sdk` directly. |
+
+## Sakar CleanBot Operator UI (on-robot touchscreen app)
+
+The app's launcher is now **`SakarOperatorActivity`** (`operator-ui`), a Sakar Robotics-branded
+Jetpack Compose touchscreen app for the "Sakar CleanBot 5000 Plus" - built after studying Keenon's
+own on-robot software (their main cleaning app, Super User/Robot Debugging panel, log/service
+utilities, and SLAM/installation tool) purely for its *information architecture*, never its
+branding, logos, or visual assets. No Keenon/C40/Peanut branding appears anywhere in this app's UI.
+
+**Architecture:** `operator-ui` (Compose screens + ViewModels) → `domain` (use cases + repository
+interfaces + models) → `data` (real `C40RobotController` bridges, Room, DataStore) → `robot`/`sdk`.
+`operator-ui` never imports `data`, `robot` or `sdk` - it only sees `domain` interfaces, wired to
+real implementations at runtime via `AppContainerHolder` (implemented by `SakarC40Application`).
+
+**Every screen honestly discloses how real it is** via a `CapabilityBadge` next to the data/control
+it describes:
+
+- **REAL** - a confirmed Peanut SDK call (battery/motor/IMU/LiDAR/depth/sonar reads, runtime
+  snapshot, map info, navigation status).
+- **GATED** - a real SDK call (`returnToDock`, `goToPoint`, charging start/stop) blocked by
+  `OperatingMode.HARDWARE_TEST`, exactly like the original diagnostic screen.
+- **SIMULATED** - cleaning execution (start/pause/resume/stop/progress/cycles): the vendored SDK
+  has **no cleaning-control API at all** (same conclusion the MQTT `START_TASK` command already
+  reached - see `SimulatedRobotCommandExecutor`), so this runs as a local, time-based simulation,
+  never presented as if it moved the robot.
+- **LOCAL** - real local persistence with no robot hardware involved: schedules, consumables
+  (operator-tracked wear, never a fake sensor value), teach-route metadata, cleaning zones drawn on
+  a map, Super User PIN (salted+hashed, DataStore), general/display/sound preferences.
+- **UNAVAILABLE** - no SDK/hardware API exists yet: manual joystick driving (no velocity-command
+  API), the smart workstation (no auto water-refill/drainage/docking-base API), most actuator
+  "tests" in Robot Debugging (no per-component test API - the ones that ARE real just re-run the
+  existing read-only battery/motor/IMU/sensor queries), elevator integration, scheduling-path push,
+  phone remote-control, and map deployment/SLAM write. Every one of these still has a real
+  `domain` interface and a wired-up screen, ready for a real integration later - none of it is
+  faked as working.
+
+Feature map (Keenon reference → Sakar UI → backing layer):
+
+| Keenon reference screen | Sakar UI | Backing |
+| --- | --- | --- |
+| Home (robot face, status band, action tiles) | `HomeScreen` | REAL link/battery status, SIMULATED cleaning session |
+| Start Cleaning (map, modes, progress) | `StartCleaningScreen` | SIMULATED |
+| Scheduled Task / Edit Task | `ScheduleListScreen` / `ScheduleEditScreen` | LOCAL (Room) |
+| Manual Drive | `ManualDriveScreen` | UNAVAILABLE (documented), E-stop wired to the same call |
+| Teach Route | `TeachRouteScreen` | LOCAL metadata only |
+| Settings (12 categories) | `settings/*` | Mix of REAL (Robot/System Info), LOCAL (rest), UNAVAILABLE (Workstation) |
+| Super User → Robot Debugging | `superuser/RobotDebuggingScreens` | REAL reads + UNAVAILABLE actuator tests, confirmation-gated |
+| Keenon Service / krlog | Super User → Logs | REAL (`SdkCallLogger`), real file export to Downloads |
+| Robot Installation (Set up wizard, elevator, scheduling path, remote control, advanced) | `installation/*` | Mostly UNAVAILABLE, real Factory Reset (clears local data) |
+| Map deployment / SLAM canvas | `maps/*` | REAL map read where available; real local zone-drawing Canvas; no SLAM engine invented |
+
+**Super User** is a separate authentication gate (PIN, salted+hashed via `DataStoreAuthRepository`
+- never a default/backdoor PIN) guarding Network, Robot Debugging, Logs, System Settings, Robot
+Installation, and Maps - matching the reference app's Operator-vs-Super-User split.
 
 ## Safety: operating modes
 
@@ -320,7 +377,11 @@ adb install -r app/build/outputs/apk/debug/app-debug.apk
 
 ## Diagnostic test procedure (no robot required)
 
-1. Install and launch the app.
+This exercises the original diagnostic dashboard (`ui/MainActivity`), not the new launcher - open
+it via **Super User → System Settings → "Open Legacy Diagnostics"** (Super User requires setting a
+PIN on first entry; see "Sakar CleanBot Operator UI" above).
+
+1. Install the app, launch it, and navigate to the legacy diagnostics screen as above.
 2. The "Device info", "Serial ports", and app/SDK version fields populate immediately - these need no SDK connection.
 3. Tap **Connect**. This calls `PeanutSDK.init()` then `PeanutRuntime.start()`. Watch the raw SDK log for the result.
 4. Tap **Refresh diagnostics** to query battery, motor status/health, and (unconfirmed) position.

@@ -1,0 +1,73 @@
+{
+  "reference_id": "SET-07",
+  "image_path": "keenonwebpic/keenonwebpic/cleaning app/Screenshot from 2026-08-31 12-56-45.png",
+  "canvas": {
+    "width": 982,
+    "height": 537
+  },
+  "regions": {
+    "header": { "x": 0, "y": 0, "width": 982, "height": 90 },
+    "sidebar": { "x": 0, "y": 90, "width": 313, "height": 447 },
+    "content_pane": { "x": 325, "y": 90, "width": 657, "height": 447 }
+  },
+  "elements": [
+    {
+      "id": "sidebar_item_charging_settings",
+      "type": "sidebar",
+      "x": 20,
+      "y": 288,
+      "width": 283,
+      "height": 55,
+      "notes": "SELECTED (4th sidebar item), matching the y=288 slot SET-05 recorded as \"Charging Settings\" (unselected there)."
+    },
+    {
+      "id": "content_title",
+      "type": "text",
+      "x": 552,
+      "y": 54,
+      "width": 178,
+      "height": 20,
+      "notes": "\"Charging Settings\" title."
+    },
+    {
+      "id": "card_idle_battery_protection",
+      "type": "card",
+      "x": 335,
+      "y": 94,
+      "width": 613,
+      "height": 159,
+      "notes": "Card containing: header row (\"Idle Battery Protection\" + ON toggle), a gray explanatory paragraph, then 2 chevron rows (\"Auto-recharge Level: 50% >\", \"Charging Interval: 15 minutes >\")."
+    },
+    {
+      "id": "card_task_battery_protection",
+      "type": "card",
+      "x": 335,
+      "y": 318,
+      "width": 613,
+      "height": 164,
+      "notes": "Same internal pattern as card_idle_battery_protection: header row (\"Task Battery Protection\" + ON toggle), explanatory paragraph, then chevron rows (\"Minimum Operating Battery Level: 10% >\", \"Charging Interval: 5 minutes >\"). Cut off by the bottom of the screenshot - the last row is only partially visible, so 164px is a PARTIAL height."
+    },
+    {
+      "id": "scroll_indicator",
+      "type": "other",
+      "x": 965,
+      "y": 60,
+      "width": 17,
+      "height": 448,
+      "notes": "A faint vertical scrollbar thumb is visible near the right edge of the content pane, indicating this content scrolls further - its exact bounds could not be measured precisely (see unknowns); the region given is an approximate area where it appears, not a tight bounding box."
+    }
+  ],
+  "relationships": [
+    { "type": "equal_width", "elements": ["card_idle_battery_protection", "card_task_battery_protection"], "value_px": 613 },
+    { "type": "aligned_left", "elements": ["card_idle_battery_protection", "card_task_battery_protection"], "value_px": 335 },
+    { "type": "vertical_gap", "elements": ["card_idle_battery_protection", "card_task_battery_protection"], "value_px": 65, "notes": "matches the larger ~60-65px gap pattern seen between multi-row 'grouped setting' cards in SET-06, as opposed to the ~26-28px gap between simple single-line rows in SET-05" },
+    { "type": "same_internal_layout", "elements": ["card_idle_battery_protection", "card_task_battery_protection"], "notes": "both cards follow: header+toggle row, explanatory paragraph, then 2 chevron sub-rows" },
+    { "type": "matches_pattern", "elements": ["sidebar_item_charging_settings", "SET-05.sidebar_item_charging_settings", "SET-06.sidebar_item_workstation"], "notes": "same 283x55 selected-pill treatment as other selected sidebar items measured so far" }
+  ],
+  "unknowns": [
+    "Exact bounding box of the scroll_indicator thumb - only its approximate location near the right edge was confirmed, not a precise rectangle, since its fill color is very close to the page background.",
+    "Full content of card_task_battery_protection - its last chevron row is cut off by the screenshot's bottom edge.",
+    "Exact corner radius of the cards and toggle switches.",
+    "Whether more cards/settings exist below card_task_battery_protection, reachable only by scrolling."
+  ]
+}

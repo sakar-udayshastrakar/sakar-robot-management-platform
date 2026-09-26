@@ -1,0 +1,70 @@
+{
+  "reference_id": "SET-14",
+  "image_path": "keenonwebpic/keenonwebpic/cleaning app/Screenshot from 2026-08-31 12-59-01.png",
+  "canvas": {
+    "width": 982,
+    "height": 537
+  },
+  "regions": {
+    "header": { "x": 0, "y": 0, "width": 982, "height": 90 },
+    "sidebar": { "x": 0, "y": 90, "width": 313, "height": 447 },
+    "content_pane": { "x": 316, "y": 90, "width": 666, "height": 447 }
+  },
+  "elements": [
+    {
+      "id": "sidebar_item_resource_management",
+      "type": "sidebar",
+      "x": 20,
+      "y": 404,
+      "width": 283,
+      "height": 55,
+      "notes": "SELECTED. Same 283x55 pattern."
+    },
+    {
+      "id": "content_title",
+      "type": "text",
+      "x": 527,
+      "y": 55,
+      "width": 229,
+      "height": 19,
+      "notes": "\"Resource Management\" title."
+    },
+    {
+      "id": "warning_text",
+      "type": "text",
+      "x": 318,
+      "y": 102,
+      "width": 573,
+      "height": 47,
+      "notes": "2-line bold RED warning text: \"Before switching to a resource package with scheduling configurations, ensure the scheduling switch is enabled\" - the only red/warning-colored text observed in this Settings batch so far."
+    },
+    {
+      "id": "radio_list",
+      "type": "other",
+      "x": 316,
+      "y": 175,
+      "width": 620,
+      "height": 335,
+      "notes": "Radio-button selection list (SR Cleaning, SR Buttler, Ckpc, Demo, Carpet - each with a location-pin icon and a radio button), separated by thin divider lines rather than being enclosed in a white card - unlike every other content section measured in this batch, this list sits directly on the plain background (no white card fill was detected here). A vertical scrollbar is visible near the right edge, indicating more items may exist below \"Carpet\"."
+    },
+    {
+      "id": "radio_row_sr_cleaning",
+      "type": "other",
+      "x": 346,
+      "y": 198,
+      "width": 206,
+      "height": 22,
+      "notes": "SELECTED radio row (filled radio button icon): pin icon + \"SR Cleaning\" label. Bounding box covers only the dark icon+text content, not the full row width/height."
+    }
+  ],
+  "relationships": [
+    { "type": "approximate_row_pitch", "elements": ["radio_row_sr_cleaning"], "value_px": 70, "notes": "divider lines detected at y=222 and y=292 suggest a roughly 70px row pitch for this list, though this was not cross-checked against every row's exact top/bottom" },
+    { "type": "no_card_background", "elements": ["radio_list"], "notes": "distinguishes this section from every card measured elsewhere in the batch (toggle rows, chevron rows, item cards all render on a white card background; this radio list does not)" }
+  ],
+  "unknowns": [
+    "Exact bounding box of radio_list - since it has no distinct card background to threshold against, its bounds are an approximation based on the visible row content and title/sidebar alignment, not a hard-edge measurement.",
+    "Exact row-by-row boundaries for SR Buttler, Ckpc, Demo, and Carpet - only the first divider positions were confirmed; the rest are inferred from the ~70px pitch, not individually verified.",
+    "Exact bounding box of the scrollbar thumb.",
+    "Whether additional resource packages exist below \"Carpet\", reachable by scrolling."
+  ]
+}

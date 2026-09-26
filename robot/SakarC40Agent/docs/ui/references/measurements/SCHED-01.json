@@ -1,0 +1,120 @@
+{
+  "reference_id": "SCHED-01",
+  "image_path": "keenonwebpic/keenonwebpic/cleaning app/in side schdule clean.png",
+  "canvas": {
+    "width": 963,
+    "height": 555
+  },
+  "regions": {
+    "header": { "x": 0, "y": 0, "width": 963, "height": 100 },
+    "main_content": { "x": 20, "y": 121, "width": 921, "height": 217 },
+    "bottom_empty_space": { "x": 0, "y": 340, "width": 963, "height": 207 }
+  },
+  "elements": [
+    {
+      "id": "back_button",
+      "type": "button",
+      "x": 20,
+      "y": 46,
+      "width": 56,
+      "height": 44,
+      "notes": "Rounded button with a '<' chevron, top-left, same style as CLEAN-01's back button."
+    },
+    {
+      "id": "title_text",
+      "type": "text",
+      "x": 390,
+      "y": 59,
+      "width": 182,
+      "height": 19,
+      "notes": "Bold black title \"Scheduled Task\", horizontally centered in the header."
+    },
+    {
+      "id": "timer_text",
+      "type": "text",
+      "x": 747,
+      "y": 55,
+      "width": 34,
+      "height": 15,
+      "notes": "Orange text reading \"45s\", left of the New Task button. Same style/role as CLEAN-01's timer_text."
+    },
+    {
+      "id": "button_new_task",
+      "type": "button",
+      "x": 801,
+      "y": 37,
+      "width": 140,
+      "height": 56,
+      "notes": "White rounded rectangle button, \"+ New Task\" label, top-right."
+    },
+    {
+      "id": "task_card_1",
+      "type": "card",
+      "x": 20,
+      "y": 121,
+      "width": 921,
+      "height": 94,
+      "notes": "First task row (\"demo\"): full-width white card containing a thumbnail image, task name, a metadata line (time range, repeat pattern, times), a cleaning-mode line (\"Sweep\"), a toggle switch, and an Edit button."
+    },
+    {
+      "id": "task_card_1_thumbnail",
+      "type": "image",
+      "x": 30,
+      "y": 120,
+      "width": 98,
+      "height": 90,
+      "notes": "Light-blue-tinted rounded-square map/route thumbnail icon, left edge of the card."
+    },
+    {
+      "id": "task_card_1_toggle",
+      "type": "other",
+      "x": 771,
+      "y": 154,
+      "width": 50,
+      "height": 29,
+      "notes": "Gray pill toggle switch, off state, right side of the card."
+    },
+    {
+      "id": "task_card_1_edit_button",
+      "type": "button",
+      "x": 845,
+      "y": 148,
+      "width": 95,
+      "height": 47,
+      "notes": "Light-gray rounded rectangle button, \"Edit\" label, rightmost element in the card row."
+    },
+    {
+      "id": "task_card_2",
+      "type": "card",
+      "x": 20,
+      "y": 246,
+      "width": 921,
+      "height": 92,
+      "notes": "Second task row (\"Task7\"), same internal layout pattern as task_card_1 (thumbnail, name, metadata line, cleaning-mode line \"Sweep & Mop\", toggle, Edit button) - internal sub-elements not re-measured individually since the pattern already matches task_card_1."
+    },
+    {
+      "id": "empty_space_below_list",
+      "type": "empty_space",
+      "x": 0,
+      "y": 340,
+      "width": 963,
+      "height": 207,
+      "notes": "Blank background below the second task card, spanning the rest of the screen down to the bottom system-bar area. No UI content occupies this region when only 2 tasks exist."
+    }
+  ],
+  "relationships": [
+    { "type": "equal_width", "elements": ["task_card_1", "task_card_2"], "value_px": 921 },
+    { "type": "approximately_equal_height", "elements": ["task_card_1", "task_card_2"], "notes": "94px vs 92px, within 2px" },
+    { "type": "aligned_left", "elements": ["task_card_1", "task_card_2", "back_button"], "value_px": 20 },
+    { "type": "vertical_gap", "elements": ["task_card_1", "task_card_2"], "value_px": 31, "notes": "gap from card 1 bottom (215) to card 2 top (246)" },
+    { "type": "same_internal_layout", "elements": ["task_card_1", "task_card_2"], "notes": "both rows use the same thumbnail-left / text-middle / toggle+Edit-right pattern" },
+    { "type": "matches_pattern", "elements": ["back_button", "CLEAN-01.back_button"], "notes": "same button style/role as the back button on the Start Cleaning screen (CLEAN-01)" },
+    { "type": "matches_pattern", "elements": ["timer_text", "CLEAN-01.timer_text"], "notes": "same orange countdown-timer element/position pattern seen on the Start Cleaning screen (CLEAN-01), reused here" }
+  ],
+  "unknowns": [
+    "Layout behavior with more than 2 tasks (whether the list scrolls, or additional cards would fill the empty_space_below_list region) - not observable from a single static screenshot.",
+    "Exact corner radius of the task cards, New Task button, and Edit button.",
+    "Whether task_card_1's and task_card_2's toggle/Edit button x-positions are pixel-identical (only task_card_1's sub-elements were individually measured; task_card_2 was visually confirmed to follow the same pattern but not re-measured to the pixel).",
+    "Precise bounding box of the map-thumbnail icon's artwork versus its rounded-square container (measured the container)."
+  ]
+}

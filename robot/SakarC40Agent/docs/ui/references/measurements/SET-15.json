@@ -1,0 +1,101 @@
+{
+  "reference_id": "SET-15",
+  "image_path": "keenonwebpic/keenonwebpic/cleaning app/Screenshot from 2026-08-31 12-59-12.png",
+  "canvas": {
+    "width": 982,
+    "height": 537
+  },
+  "regions": {
+    "header": { "x": 0, "y": 0, "width": 982, "height": 90 },
+    "sidebar": { "x": 0, "y": 90, "width": 313, "height": 447 },
+    "content_pane": { "x": 325, "y": 90, "width": 657, "height": 447 }
+  },
+  "elements": [
+    {
+      "id": "sidebar_item_about_the_robot",
+      "type": "sidebar",
+      "x": 20,
+      "y": 472,
+      "width": 283,
+      "height": 56,
+      "notes": "SELECTED, the LAST item in the 11-item sidebar list. Same 283x55 pattern as every other selected item. Its position (y=472) plus the fixed 68px pitch places the full list's first item (Consumables Statistics) at y=472-(10*68)=-208 relative to this scroll position, consistent with an 11-item list on a 68px grid."
+    },
+    {
+      "id": "content_title",
+      "type": "text",
+      "x": 561,
+      "y": 54,
+      "width": 160,
+      "height": 15,
+      "notes": "\"About the Robot\" title."
+    },
+    {
+      "id": "card_mac_address",
+      "type": "card",
+      "x": 335,
+      "y": 102,
+      "width": 613,
+      "height": 41,
+      "notes": "\"MAC Address\" label + right-aligned value \"94:BA:06:CA:99:F3\". No chevron - this is a read-only info row."
+    },
+    {
+      "id": "card_pairing_code",
+      "type": "card",
+      "x": 335,
+      "y": 177,
+      "width": 613,
+      "height": 44,
+      "notes": "\"Pairing Code\" label + value \"QC402602X00002\" + a blue \"Refresh\" text-button, no chevron."
+    },
+    {
+      "id": "button_refresh",
+      "type": "button",
+      "x": 858,
+      "y": 198,
+      "width": 60,
+      "height": 14,
+      "notes": "Blue \"Refresh\" text link within card_pairing_code. Bounding box covers the text glyphs only (no visible button background/border)."
+    },
+    {
+      "id": "card_qr_code",
+      "type": "card",
+      "x": 335,
+      "y": 253,
+      "width": 613,
+      "height": 120,
+      "notes": "Card containing a centered QR code image and a caption below it (\"Production Serial Number QR Code\")."
+    },
+    {
+      "id": "qr_code_image",
+      "type": "image",
+      "x": 606,
+      "y": 283,
+      "width": 70,
+      "height": 56,
+      "notes": "QR code graphic, horizontally centered within card_qr_code (image center x=641 vs card center x=641.5 - matches within 1px)."
+    },
+    {
+      "id": "card_open_mapping_app",
+      "type": "card",
+      "x": 335,
+      "y": 430,
+      "width": 613,
+      "height": 41,
+      "notes": "\"Open Mapping App\" label, no value, no chevron visible - likely a tappable action row (opens an external app) rather than a navigation/value row."
+    }
+  ],
+  "relationships": [
+    { "type": "equal_width", "elements": ["card_mac_address", "card_pairing_code", "card_qr_code", "card_open_mapping_app"], "value_px": 613 },
+    { "type": "aligned_left", "elements": ["card_mac_address", "card_pairing_code", "card_qr_code", "card_open_mapping_app"], "value_px": 335 },
+    { "type": "horizontal_center", "elements": ["qr_code_image", "card_qr_code"], "notes": "QR image center (641) matches card center (641.5) almost exactly" },
+    { "type": "vertical_gap", "elements": ["card_mac_address", "card_pairing_code"], "value_px": 34 },
+    { "type": "vertical_gap", "elements": ["card_pairing_code", "card_qr_code"], "value_px": 32 },
+    { "type": "vertical_gap", "elements": ["card_qr_code", "card_open_mapping_app"], "value_px": 57, "notes": "larger than the ~32-34px gaps above it - possibly because card_qr_code visually reads as a distinct 'grouped' block, similar to the larger gaps seen around multi-row cards elsewhere in this batch" },
+    { "type": "confirms_normal_width", "elements": ["card_mac_address", "SET-13.card_music_dnd"], "notes": "this screen's cards return to the standard 613px width, confirming SET-13's 575px width and SET-11's 316px-left-edge were anomalies specific to those two screens rather than a general property of this canvas group" }
+  ],
+  "unknowns": [
+    "Exact corner radius of the cards.",
+    "Whether \"Open Mapping App\" is a button (tap action) or an inert label - no visual affordance (chevron, icon, color) distinguishes it from a plain label in this capture.",
+    "Whether content exists below card_open_mapping_app - it is the last visible element and canvas ends shortly after it, but no scrollbar is visible to confirm whether this is the true end of the list."
+  ]
+}

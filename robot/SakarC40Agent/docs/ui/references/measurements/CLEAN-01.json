@@ -1,0 +1,125 @@
+{
+  "reference_id": "CLEAN-01",
+  "image_path": "keenonwebpic/keenonwebpic/cleaning app/start cleaning.png",
+  "canvas": {
+    "width": 963,
+    "height": 555
+  },
+  "regions": {
+    "header": { "x": 0, "y": 0, "width": 963, "height": 100 },
+    "map_card_container": { "x": 20, "y": 110, "width": 921, "height": 338 },
+    "sidebar": { "x": 20, "y": 110, "width": 90, "height": 338 },
+    "map_content": { "x": 110, "y": 112, "width": 714, "height": 334 },
+    "bottom_bar": { "x": 20, "y": 461, "width": 922, "height": 67 }
+  },
+  "elements": [
+    {
+      "id": "back_button",
+      "type": "button",
+      "x": 20,
+      "y": 33,
+      "width": 62,
+      "height": 64,
+      "notes": "Rounded square/circular button with a '<' chevron glyph, top-left."
+    },
+    {
+      "id": "tab_segment_start_cleaning",
+      "type": "button",
+      "x": 250,
+      "y": 39,
+      "width": 230,
+      "height": 48,
+      "notes": "Selected (white-filled) half of a two-segment tab control, label \"Start Cleaning Now\", bold black text."
+    },
+    {
+      "id": "tab_segment_task_list",
+      "type": "button",
+      "x": 480,
+      "y": 39,
+      "width": 235,
+      "height": 48,
+      "notes": "Unselected (light-gray-filled) half of the same tab control, label \"Task List\", gray text. Shares the same outer pill container as tab_segment_start_cleaning - together they form one 465px-wide control from x=250 to x=715."
+    },
+    {
+      "id": "timer_text",
+      "type": "text",
+      "x": 739,
+      "y": 53,
+      "width": 34,
+      "height": 15,
+      "notes": "Orange text reading \"43s\", right of the tab control."
+    },
+    {
+      "id": "floor_tab_1f",
+      "type": "sidebar",
+      "x": 21,
+      "y": 111,
+      "width": 89,
+      "height": 44,
+      "notes": "Selected floor tab \"1F\" at the top of the sidebar: pale-blue fill, a solid blue accent bar on its left edge, black label text. It is the only tab visible - no other floor tabs are shown in this screenshot."
+    },
+    {
+      "id": "map_gray_box",
+      "type": "image",
+      "x": 110,
+      "y": 112,
+      "width": 714,
+      "height": 334,
+      "notes": "Solid mid-gray background box containing the floor-plan map drawing (colored zones: a purple/lavender selected area, a blue selected area, red/pink restricted or off-limits areas, white/outlined unselected areas). The floor-plan drawing itself is per-building map data, not fixed layout geometry, so its internal zone shapes were not measured as individual elements."
+    },
+    {
+      "id": "map_toolbar_icons",
+      "type": "button",
+      "x": 823,
+      "y": 112,
+      "width": 112,
+      "height": 40,
+      "notes": "Cluster of 3 small icon-only buttons overlaid on the map's top-right corner (a blueprint/upload-style icon, an undo-style icon, and a diagonal-hatch pattern icon). Measured as one cluster bounding box, not per-icon, per instructions."
+    },
+    {
+      "id": "checkbox_select_all",
+      "type": "other",
+      "x": 172,
+      "y": 416,
+      "width": 13,
+      "height": 12,
+      "notes": "Small unchecked checkbox square, bottom-left of the map card, immediately followed by a \"Select All\" text label (label itself not separately measured)."
+    },
+    {
+      "id": "status_pill_select_area",
+      "type": "status",
+      "x": 20,
+      "y": 461,
+      "width": 455,
+      "height": 66,
+      "notes": "White rounded pill in the bottom bar: a small mop/broom icon, red text \"Please select a cleaning area first\", then an orange \"1 Times >\" control with a small cycle icon. Sits directly below the map card, left-aligned."
+    },
+    {
+      "id": "button_start_clean",
+      "type": "button",
+      "x": 487,
+      "y": 461,
+      "width": 455,
+      "height": 67,
+      "notes": "Blue gradient rounded rectangle button, bold white text \"Start Clean\", right-aligned in the bottom bar."
+    }
+  ],
+  "relationships": [
+    { "type": "equal_width", "elements": ["status_pill_select_area", "button_start_clean"], "value_px": 455 },
+    { "type": "approximately_equal_height", "elements": ["status_pill_select_area", "button_start_clean"], "notes": "66px vs 67px, within 1px" },
+    { "type": "aligned_top", "elements": ["status_pill_select_area", "button_start_clean"], "value_px": 461 },
+    { "type": "horizontal_gap", "elements": ["status_pill_select_area", "button_start_clean"], "value_px": 12 },
+    { "type": "aligned_left", "elements": ["status_pill_select_area", "map_card_container", "floor_tab_1f"], "value_px": 20 },
+    { "type": "aligned_right", "elements": ["button_start_clean", "map_card_container"], "notes": "button_start_clean's right edge (942) and the map card container's right edge (941) are within 1px" },
+    { "type": "equal_width", "elements": ["tab_segment_start_cleaning"], "notes": "230px, close to but not exactly half of the combined 465px control (235px would be exact) - the two segments are approximately, not precisely, equal" },
+    { "type": "aligned_top", "elements": ["tab_segment_start_cleaning", "tab_segment_task_list"], "value_px": 39 },
+    { "type": "shared_container", "elements": ["floor_tab_1f", "map_gray_box", "map_toolbar_icons", "checkbox_select_all"], "notes": "all sit inside the single map_card_container region" }
+  ],
+  "unknowns": [
+    "Exact left/top edges of the map_toolbar_icons cluster's individual buttons - only the group's outer bounding box was measured.",
+    "Whether the sidebar (floor tab list) has a fixed width independent of content, or whether its 90px width in this screenshot is specific to having only one floor ('1F') - no second floor tab is visible to confirm.",
+    "Exact corner radius of the back button, tab control, status pill, and Start Clean button.",
+    "The floor-plan map drawing's own internal geometry (zone shapes, wall outlines) - this is per-building map data, not fixed UI layout, and was intentionally not measured as UI geometry.",
+    "Precise vertical center-alignment of the back_button relative to the tab control - both occupy an overlapping but not identical y-range (back_button 33-97 vs tab control 39-87)."
+  ]
+}

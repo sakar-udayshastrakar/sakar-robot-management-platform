@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Sakar Robotics brand tokens, transcribed from docs/architecture/SAKAR_WEB_UI_DESIGN_SYSTEM.md
+         (same values as SakarColors.kt) - used only for the XML window theme below the Compose
+         layer never gets these directly; Compose reads SakarColors.kt instead. -->
+    <color name="sakar_primary">#FF914D</color>
+    <color name="sakar_primary_strong">#FF6100</color>
+    <color name="sakar_background">#F8FAFC</color>
+</resources>

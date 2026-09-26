@@ -1,0 +1,80 @@
+{
+  "reference_id": "SET-11",
+  "image_path": "keenonwebpic/keenonwebpic/cleaning app/Screenshot from 2026-08-31 12-58-08.png",
+  "canvas": {
+    "width": 982,
+    "height": 537
+  },
+  "regions": {
+    "header": { "x": 0, "y": 0, "width": 982, "height": 90 },
+    "sidebar": { "x": 0, "y": 90, "width": 313, "height": 447 },
+    "content_pane": { "x": 316, "y": 90, "width": 632, "height": 447 }
+  },
+  "elements": [
+    {
+      "id": "sidebar_item_screen_emoji",
+      "type": "sidebar",
+      "x": 20,
+      "y": 270,
+      "width": 283,
+      "height": 55,
+      "notes": "SELECTED. Same 283x55 selected-pill treatment as all other selected items in this batch."
+    },
+    {
+      "id": "content_title",
+      "type": "text",
+      "x": 577,
+      "y": 54,
+      "width": 128,
+      "height": 20,
+      "notes": "\"Screen Emoji\" title."
+    },
+    {
+      "id": "card_screen_emoji_toggle",
+      "type": "card",
+      "x": 316,
+      "y": 94,
+      "width": 632,
+      "height": 41,
+      "notes": "\"Screen Emoji\" label + ON/blue toggle. NOTE: this card's left edge (316) is ~18px further left than the 334-335 left edge measured for content cards on every other screen in this canvas group (SET-05 through SET-10) - see relationships/unknowns."
+    },
+    {
+      "id": "emoji_thumbnail_blue_eyes",
+      "type": "image",
+      "x": 338,
+      "y": 162,
+      "width": 181,
+      "height": 97,
+      "notes": "Selected emoji preview: a black rounded-square tile showing a simple blue-eyes face graphic, with a blue selection border and a small blue circular checkmark badge in its top-right corner (same selection-badge pattern as MANUAL-01's tile_water_suction). Sits directly on the content background, not inside a card."
+    },
+    {
+      "id": "label_blue_eyes",
+      "type": "text",
+      "x": 398,
+      "y": 280,
+      "width": 61,
+      "height": 12,
+      "notes": "\"Blue Eyes\" caption below the thumbnail, horizontally centered under it (thumbnail center x=428.5, label center x=428.5 - exact match)."
+    },
+    {
+      "id": "card_promotional_content",
+      "type": "card",
+      "x": 316,
+      "y": 310,
+      "width": 632,
+      "height": 41,
+      "notes": "\"Promotional Content\" label + OFF/gray toggle."
+    }
+  ],
+  "relationships": [
+    { "type": "equal_width", "elements": ["card_screen_emoji_toggle", "card_promotional_content"], "value_px": 632 },
+    { "type": "horizontal_center", "elements": ["emoji_thumbnail_blue_eyes", "label_blue_eyes"], "notes": "both share horizontal center x=428.5 - the thumbnail+caption pair is centered as a unit, not aligned to the card's left edge" },
+    { "type": "matches_pattern", "elements": ["sidebar_item_screen_emoji", "SET-09.sidebar_item_screen_emoji"], "notes": "same slot/position as the unselected Screen Emoji row measured in SET-09" },
+    { "type": "selection_badge_pattern", "elements": ["emoji_thumbnail_blue_eyes", "MANUAL-01.tile_water_suction"], "notes": "reuses the same 'blue border + small circular checkmark badge in the top-right corner' selection indicator seen on MANUAL-01's selected mode tile" }
+  ],
+  "unknowns": [
+    "Why card_screen_emoji_toggle and card_promotional_content start at x=316 while every other measured content card in this canvas group (SET-05 through SET-10) starts at x=334-335 - an 18-19px discrepancy. Could be a genuinely different left-margin for this particular sub-screen, or a measurement/capture inconsistency; not resolvable from a single image.",
+    "Whether only one emoji option (\"Blue Eyes\") exists, or additional unselected emoji choices exist off-screen (e.g. reachable by scrolling horizontally) - only one thumbnail is visible in this capture.",
+    "Exact corner radius of the cards, thumbnail, and toggle switches."
+  ]
+}

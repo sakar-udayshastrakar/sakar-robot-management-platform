@@ -1,0 +1,107 @@
+{
+  "reference_id": "SET-03",
+  "image_path": "keenonwebpic/keenonwebpic/cleaning app/Screenshot from 2026-08-31 12-53-57.png",
+  "canvas": {
+    "width": 663,
+    "height": 516
+  },
+  "regions": {
+    "content_pane": { "x": 0, "y": 0, "width": 663, "height": 516 }
+  },
+  "elements": [
+    {
+      "id": "content_title",
+      "type": "text",
+      "x": 219,
+      "y": 25,
+      "width": 234,
+      "height": 15,
+      "notes": "\"Consumables Statistics\" title. This capture shows ONLY the content pane (no sidebar, no header/back-button, no top status bar) - it is a tighter crop than SET-01/SET-02's full-screen captures, at a different canvas resolution (663x516 vs 963x555). Title width (234px) is identical to SET-01's content_title width, confirming the same text at the same scale, just cropped/positioned differently."
+    },
+    {
+      "id": "item_card_cutoff_top",
+      "type": "card",
+      "x": 30,
+      "y": 0,
+      "width": 613,
+      "height": 100,
+      "notes": "An item card cut off by the TOP of this crop - only its lower portion (progress bar, lifespan text, and 1 action icon) is visible. Name and icon/image are not visible. Corresponds to the card that would precede \"Squeegee Blade\" in the full list."
+    },
+    {
+      "id": "item_card_squeegee_blade",
+      "type": "card",
+      "x": 30,
+      "y": 139,
+      "width": 613,
+      "height": 85,
+      "notes": "Fully visible card: icon (diagonal blue squeegee blade image), name \"Squeegee Blade\", progress bar, lifespan text \"Lifespan: 500 hours / Estimated remaining: 477 hours\", and 2 action icons (refresh + play - NO third \"book/manual\" icon, unlike SET-01's Side Brush card which has 3)."
+    },
+    {
+      "id": "item_card_squeegee_blade_name",
+      "type": "text",
+      "x": 148,
+      "y": 160,
+      "width": 133,
+      "height": 17,
+      "notes": "\"Squeegee Blade\" label."
+    },
+    {
+      "id": "item_card_squeegee_blade_progress_bar",
+      "type": "other",
+      "x": 147,
+      "y": 195,
+      "width": 285,
+      "height": 7,
+      "notes": "Progress bar bounding box (filled blue portion measured; unfilled track extent not separately isolated in this capture)."
+    },
+    {
+      "id": "item_card_squeegee_blade_actions",
+      "type": "button",
+      "x": 523,
+      "y": 160,
+      "width": 102,
+      "height": 45,
+      "notes": "2-icon action cluster (refresh, play) - measured as one group per instructions."
+    },
+    {
+      "id": "item_card_hepa",
+      "type": "card",
+      "x": 30,
+      "y": 263,
+      "width": 613,
+      "height": 85,
+      "notes": "Fully visible card: icon (square HEPA filter image), name \"HEPA\", progress bar, lifespan text, and only 1 action icon (refresh) - fewer than item_card_squeegee_blade's 2."
+    },
+    {
+      "id": "item_card_hepa_actions",
+      "type": "button",
+      "x": 601,
+      "y": 285,
+      "width": 41,
+      "height": 45,
+      "notes": "Single refresh icon, positioned at the rightmost action slot (same right-edge position as the other cards' action clusters). Exact left edge is approximate - see unknowns."
+    },
+    {
+      "id": "item_card_dust_bag",
+      "type": "card",
+      "x": 30,
+      "y": 387,
+      "width": 613,
+      "height": 85,
+      "notes": "Fully visible card: icon (gray dust bag image), name \"Dust Bag\", progress bar, lifespan text, and 2 action icons (refresh + play), same pattern as item_card_squeegee_blade."
+    }
+  ],
+  "relationships": [
+    { "type": "equal_width", "elements": ["item_card_cutoff_top", "item_card_squeegee_blade", "item_card_hepa", "item_card_dust_bag"], "value_px": 613 },
+    { "type": "equal_height", "elements": ["item_card_squeegee_blade", "item_card_hepa", "item_card_dust_bag"], "value_px": 85 },
+    { "type": "consistent_gap", "elements": ["item_card_cutoff_top", "item_card_squeegee_blade", "item_card_hepa", "item_card_dust_bag"], "value_px": 39, "notes": "gap between successive cards is consistently 39px, matching (within 1-2px) the 38-40px gap measured between cards in SET-01" },
+    { "type": "matches_pattern", "elements": ["item_card_squeegee_blade", "SET-01.item_card_side_brush"], "notes": "same 613px card width and internal icon-left/name+progress-middle/actions-right layout pattern as SET-01's cards, confirming this is the same repeating component at a different canvas size" },
+    { "type": "variable_action_icon_count", "elements": ["SET-01.item_card_side_brush", "item_card_squeegee_blade", "item_card_hepa"], "notes": "the number of action icons per card is NOT fixed: Side Brush (SET-01) has 3 (refresh/book/play), Squeegee Blade and Dust Bag have 2 (refresh/play), HEPA has only 1 (refresh) - the icon set appears to depend on the specific consumable type, not a fixed per-row layout" }
+  ],
+  "unknowns": [
+    "Exact left edge of item_card_hepa_actions - HEPA's single icon's bounding box was harder to isolate cleanly from surrounding text than the 2-icon and 3-icon clusters on other cards; the value given is an approximation anchored to the shared right-edge position.",
+    "Full content of item_card_cutoff_top (name, icon, exact action-icon count) - cut off by the top of this crop.",
+    "Why this capture and SET-04 omit the header/sidebar entirely (a tighter crop taken deliberately, vs. a different screen state) - not determinable from the image.",
+    "Exact corner radius of the item cards and action-icon buttons."
+  ]
+}

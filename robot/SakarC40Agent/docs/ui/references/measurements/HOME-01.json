@@ -1,0 +1,186 @@
+{
+  "reference_id": "HOME-01",
+  "image_path": "keenonwebpic/keenonwebpic/cleaning app/home.png",
+  "canvas": {
+    "width": 963,
+    "height": 555
+  },
+  "regions": {
+    "header": { "x": 0, "y": 0, "width": 963, "height": 112 },
+    "status_indicator": { "x": 97, "y": 119, "width": 125, "height": 30 },
+    "main_content": { "x": 0, "y": 155, "width": 963, "height": 278 },
+    "robot_image_region": { "x": 56, "y": 180, "width": 220, "height": 290 },
+    "bottom_empty_space": { "x": 0, "y": 433, "width": 963, "height": 114 },
+    "system_bar": { "x": 0, "y": 547, "width": 963, "height": 8 }
+  },
+  "elements": [
+    {
+      "id": "logo",
+      "type": "logo",
+      "x": 24,
+      "y": 33,
+      "width": 136,
+      "height": 35,
+      "notes": "KEENON icon mark + wordmark, top-left of header. Bounding box measured on the dark/high-contrast pixels only (luminance<150); the lighter blue outer swirl of the icon may extend a few px beyond this box - see unknowns."
+    },
+    {
+      "id": "top_status_icons",
+      "type": "status",
+      "x": 700,
+      "y": 5,
+      "width": 193,
+      "height": 15,
+      "notes": "OS-level status cluster, top-right: a thin progress-bar-like element, cellular signal bars (with a small 'x' overlay glyph), Wi-Fi icon, battery percentage + battery icon, clock reading '17:00'. Not app-drawn content. Measured as one cluster bounding box, not per-icon."
+    },
+    {
+      "id": "warning_bubble",
+      "type": "status",
+      "x": 97,
+      "y": 119,
+      "width": 125,
+      "height": 30,
+      "notes": "White rounded pill containing an orange circular warning icon, the text \"I'm lost!\", and a trailing '>' chevron. Sits directly below the header, left-aligned under the logo."
+    },
+    {
+      "id": "button_manual_push",
+      "type": "button",
+      "x": 414,
+      "y": 64,
+      "width": 165,
+      "height": 48,
+      "notes": "White rounded pill, icon + \"Manual Push\" label. Part of a 5-control row that is right-aligned in the header."
+    },
+    {
+      "id": "button_recharge",
+      "type": "button",
+      "x": 598,
+      "y": 64,
+      "width": 132,
+      "height": 48,
+      "notes": "White rounded pill, blue circular icon + \"Recharge\" label."
+    },
+    {
+      "id": "icon_button_1",
+      "type": "button",
+      "x": 750,
+      "y": 64,
+      "width": 48,
+      "height": 48,
+      "notes": "Circular icon-only button showing a location-pin-with-slash-style glyph; exact semantic meaning not determinable from the image alone."
+    },
+    {
+      "id": "icon_button_2",
+      "type": "button",
+      "x": 818,
+      "y": 64,
+      "width": 48,
+      "height": 48,
+      "notes": "Circular icon-only button showing a light-bulb-style glyph."
+    },
+    {
+      "id": "icon_button_3",
+      "type": "button",
+      "x": 886,
+      "y": 64,
+      "width": 48,
+      "height": 48,
+      "notes": "Circular icon-only button showing a gear/settings-style glyph. Rightmost control in the header row."
+    },
+    {
+      "id": "robot_image",
+      "type": "image",
+      "x": 56,
+      "y": 180,
+      "width": 220,
+      "height": 290,
+      "notes": "Bounding box of the robot product photo's sharp/dark-edged silhouette only (measured via a luminance threshold). A visibly lighter, soft-edged glow/blob sits behind the robot and extends further outward with no sharp boundary - its exact extent is recorded as unknown, not guessed."
+    },
+    {
+      "id": "card_start_cleaning",
+      "type": "card",
+      "x": 350,
+      "y": 209,
+      "width": 186,
+      "height": 223,
+      "notes": "Full-height card. Title \"Start Cleaning\" centered at the top; a small outline-style location-pin icon sits near the bottom-left of the card, well below the title, with a large empty gap between them."
+    },
+    {
+      "id": "card_scheduled_cleaning",
+      "type": "card",
+      "x": 549,
+      "y": 209,
+      "width": 186,
+      "height": 223,
+      "notes": "Full-height card, same layout pattern as card_start_cleaning: centered title \"Scheduled Cleaning\" at top, small outline calendar icon near bottom-left."
+    },
+    {
+      "id": "card_teaching_mode",
+      "type": "card",
+      "x": 748,
+      "y": 209,
+      "width": 186,
+      "height": 105,
+      "notes": "Half-height card, top half of the right-column stacked pair. Title \"Teaching Mode\" is vertically AND horizontally centered in the card - no icon is present anywhere on this card."
+    },
+    {
+      "id": "card_manual_drive",
+      "type": "card",
+      "x": 748,
+      "y": 327,
+      "width": 186,
+      "height": 106,
+      "notes": "Half-height card, bottom half of the right-column stacked pair. Title \"Manual Drive\" is vertically and horizontally centered - no icon is present on this card."
+    },
+    {
+      "id": "empty_space_below_cards",
+      "type": "empty_space",
+      "x": 0,
+      "y": 433,
+      "width": 963,
+      "height": 114,
+      "notes": "Blank background spanning the full width, between the bottom edge of the card row and the top of the system navigation bar. No UI content of any kind occupies this region."
+    },
+    {
+      "id": "empty_space_header_middle",
+      "type": "empty_space",
+      "x": 160,
+      "y": 0,
+      "width": 254,
+      "height": 112,
+      "notes": "Blank background between the right edge of the logo lockup and the left edge of the first header button (\"Manual Push\")."
+    },
+    {
+      "id": "system_nav_bar",
+      "type": "status",
+      "x": 0,
+      "y": 547,
+      "width": 963,
+      "height": 8,
+      "notes": "Dark horizontal strip (y 547-550) consistent with a system gesture-navigation bar, followed by a thin white margin (y 551-554) to the image's bottom edge. Not app content."
+    }
+  ],
+  "relationships": [
+    { "type": "equal_width", "elements": ["card_start_cleaning", "card_scheduled_cleaning", "card_teaching_mode", "card_manual_drive"], "value_px": 186 },
+    { "type": "equal_height", "elements": ["card_start_cleaning", "card_scheduled_cleaning"], "value_px": 223 },
+    { "type": "approximately_equal_height", "elements": ["card_teaching_mode", "card_manual_drive"], "notes": "105px vs 106px - within 1px, likely rounding/antialiasing" },
+    { "type": "aligned_top", "elements": ["card_start_cleaning", "card_scheduled_cleaning", "card_teaching_mode"], "value_px": 209 },
+    { "type": "approximately_aligned_bottom", "elements": ["card_start_cleaning", "card_scheduled_cleaning", "card_manual_drive"], "notes": "432px vs 433px - within 1px" },
+    { "type": "horizontal_gap", "elements": ["card_start_cleaning", "card_scheduled_cleaning"], "value_px": 13 },
+    { "type": "horizontal_gap", "elements": ["card_scheduled_cleaning", "card_teaching_mode"], "value_px": 13 },
+    { "type": "vertical_gap", "elements": ["card_teaching_mode", "card_manual_drive"], "value_px": 13 },
+    { "type": "margin_right", "elements": ["card_teaching_mode", "card_manual_drive"], "value_px": 29, "notes": "distance from their right edge (934) to the canvas right edge (963)" },
+    { "type": "aligned_right", "elements": ["icon_button_3", "card_teaching_mode", "card_manual_drive"], "notes": "header's rightmost button and the card grid's right edge both land at x=933/934 (within 1px) - the toolbar and the card grid share the same right margin" },
+    { "type": "equal_width", "elements": ["icon_button_1", "icon_button_2", "icon_button_3"], "value_px": 48 },
+    { "type": "equal_height", "elements": ["icon_button_1", "icon_button_2", "icon_button_3", "button_manual_push", "button_recharge"], "value_px": 48 },
+    { "type": "aligned_top", "elements": ["button_manual_push", "button_recharge", "icon_button_1", "icon_button_2", "icon_button_3"], "value_px": 64 },
+    { "type": "aligned_bottom", "elements": ["button_manual_push", "button_recharge", "icon_button_1", "icon_button_2", "icon_button_3"], "value_px": 112 },
+    { "type": "left_alignment", "elements": ["logo", "warning_bubble"], "notes": "warning_bubble's left edge (97) sits close to, though not exactly under, the logo's left edge (24) - both are left-aligned within the header column rather than centered" }
+  ],
+  "unknowns": [
+    "Exact outer extent of the soft glow/blob behind the robot image - it has no sharp edge (gradient falloff), so only the robot's own sharp silhouette was measured with confidence.",
+    "Exact corner radius of cards and header buttons - visually rounded but not measured to the pixel in this pass (out of scope per instructions).",
+    "Whether the hero (robot) panel has a deliberate left-side margin/inset or the robot's photo simply has inherent empty space within its own image bounds - no visible divider marks a panel boundary.",
+    "Individual bounding boxes of the OS status-bar icons (signal, Wi-Fi, battery, clock) - only the overall cluster bounding box was measured.",
+    "Exact left edge of the KEENON icon mark's lighter/lower-contrast outer swirl (only the higher-contrast core of the mark was captured by the threshold used)."
+  ]
+}

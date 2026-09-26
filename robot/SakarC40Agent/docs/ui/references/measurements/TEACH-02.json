@@ -1,0 +1,72 @@
+{
+  "reference_id": "TEACH-02",
+  "image_path": "keenonwebpic/keenonwebpic/cleaning app/in side teaching mode.png",
+  "canvas": {
+    "width": 963,
+    "height": 555
+  },
+  "regions": {
+    "header": { "x": 0, "y": 0, "width": 963, "height": 100 },
+    "illustration_area": { "x": 0, "y": 100, "width": 328, "height": 455 },
+    "instructions_card": { "x": 328, "y": 103, "width": 612, "height": 421 }
+  },
+  "elements": [
+    {
+      "id": "back_button",
+      "type": "button",
+      "x": 20,
+      "y": 40,
+      "width": 56,
+      "height": 40,
+      "notes": "Similar size/position to the back buttons on other screens (x=20), though 4px shorter here (40px vs the 44px measured elsewhere) - see unknowns."
+    },
+    {
+      "id": "title_text",
+      "type": "text",
+      "x": 409,
+      "y": 54,
+      "width": 141,
+      "height": 19,
+      "notes": "\"Teach Route\" title, centered, no button on the header's right side in this capture (unlike TEACH-01, which has a +Create Route button at the same header position)."
+    },
+    {
+      "id": "left_illustration",
+      "type": "image",
+      "x": 58,
+      "y": 193,
+      "width": 220,
+      "height": 255,
+      "notes": "Three illustrated scenes of a person pushing the robot, connected by numbered curved path arrows, arranged in an L-shape (two scenes upper area, one scene lower-left). Measured as one overall bounding box - individual scene/arrow positions were not measured separately, per instructions."
+    },
+    {
+      "id": "instructions_card",
+      "type": "card",
+      "x": 328,
+      "y": 103,
+      "width": 612,
+      "height": 421,
+      "notes": "White card on the right ~2/3 of the screen, containing an \"Operation Steps\" numbered list (2 items), a \"Notes\" numbered list (2 items), and a full-width \"Next\" button at the bottom."
+    },
+    {
+      "id": "button_next",
+      "type": "button",
+      "x": 347,
+      "y": 453,
+      "width": 575,
+      "height": 55,
+      "notes": "Blue gradient rounded rectangle button, bold white \"Next\" label, spans nearly the full width of instructions_card with inset margins on both sides (19px left, 18px right within the 612px-wide card)."
+    }
+  ],
+  "relationships": [
+    { "type": "inset_within", "elements": ["button_next", "instructions_card"], "notes": "button_next's left edge (347) is 19px right of instructions_card's left edge (328); button_next's right edge (922) is 18px left of instructions_card's right edge (940) - roughly symmetric left/right insets" },
+    { "type": "aligned_left", "elements": ["back_button"], "value_px": 20, "notes": "matches the x=20 left position of back buttons on other screens" },
+    { "type": "split_layout", "elements": ["left_illustration", "instructions_card"], "notes": "the screen splits into a left illustration area (~34% of width) and a right instructions card (~63.5% of width), with a gap between them" }
+  ],
+  "unknowns": [
+    "Whether back_button's measured height (40px) genuinely differs from the 44px measured on SCHED-01/CLEAN-01/TEACH-01, or this is measurement noise from a slightly different threshold/antialiasing at the button's rounded top edge.",
+    "Exact gap width between left_illustration's right edge (278) and instructions_card's left edge (328) - 50px measured, but left_illustration's own bounding box may not reflect a deliberate 'panel' boundary, since it's a loose illustration graphic, not a container with a hard edge.",
+    "Individual bounding boxes of the 3 illustrated scenes and the numbered path arrows within left_illustration.",
+    "Exact corner radius of instructions_card and button_next.",
+    "Whether this screen (TEACH-02) and TEACH-01 are the same route (TEACH-01 has a +Create Route header button and an empty-list body; TEACH-02 has no header button and an operation-steps body) - the relationship between these two captures is not determinable from the images alone."
+  ]
+}

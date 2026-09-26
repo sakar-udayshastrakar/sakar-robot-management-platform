@@ -1,0 +1,62 @@
+{
+  "reference_id": "SET-13",
+  "image_path": "keenonwebpic/keenonwebpic/cleaning app/Screenshot from 2026-08-31 12-58-35.png",
+  "canvas": {
+    "width": 982,
+    "height": 537
+  },
+  "regions": {
+    "header": { "x": 0, "y": 0, "width": 982, "height": 90 },
+    "sidebar": { "x": 0, "y": 90, "width": 313, "height": 447 },
+    "content_pane": { "x": 345, "y": 90, "width": 604, "height": 447 }
+  },
+  "elements": [
+    {
+      "id": "sidebar_item_dnd_mode",
+      "type": "sidebar",
+      "x": 20,
+      "y": 336,
+      "width": 283,
+      "height": 56,
+      "notes": "SELECTED. Same ~283x55 pattern as every other selected item (56 here, within 1px)."
+    },
+    {
+      "id": "content_title",
+      "type": "text",
+      "x": 506,
+      "y": 53,
+      "width": 271,
+      "height": 21,
+      "notes": "\"Do Not Disturb (DND) Mode\" title."
+    },
+    {
+      "id": "card_music_dnd",
+      "type": "card",
+      "x": 354,
+      "y": 109,
+      "width": 575,
+      "height": 42,
+      "notes": "\"Music Do Not Disturb Mode\" label + OFF/gray toggle, plus a gray description line below the card (\"Voice prompts disabled during scheduled times\") that sits OUTSIDE this card's own white background (unlike SET-12's card_volume_controls, whose description line is inside the card). WIDTH ANOMALY: this card measures 575px wide (x=354-929), narrower than the 613-614px width measured on every other content card in this canvas group (SET-05 through SET-10, SET-12) - see relationships/unknowns."
+    },
+    {
+      "id": "card_task_dnd",
+      "type": "card",
+      "x": 354,
+      "y": 225,
+      "width": 575,
+      "height": 44,
+      "notes": "\"Task Do Not Disturb Mode\" label + OFF/gray toggle, same width anomaly as card_music_dnd, with its own description line below (\"Once enabled, no tasks will be performed during the scheduled period\") sitting outside the card."
+    }
+  ],
+  "relationships": [
+    { "type": "equal_width", "elements": ["card_music_dnd", "card_task_dnd"], "value_px": 575 },
+    { "type": "aligned_left", "elements": ["card_music_dnd", "card_task_dnd"], "value_px": 354 },
+    { "type": "width_anomaly", "elements": ["card_music_dnd", "card_task_dnd"], "notes": "575px wide vs the 613-614px width shared by every other content card measured in this canvas group so far (SET-05, SET-06, SET-07, SET-08, SET-09, SET-10, SET-12) - both left edge (+19px) and right edge (-19px) shift inward, roughly symmetrically. This is the second card-width anomaly found in this batch (see also SET-11's left-edge shift) - flagged as an observed inconsistency, not explained." },
+    { "type": "description_outside_card", "elements": ["card_music_dnd", "card_task_dnd"], "notes": "unlike SET-12's card_volume_controls (which includes its explanatory text inside the same white card as the controls), this screen's description lines sit in the plain background gap below each card" }
+  ],
+  "unknowns": [
+    "Why card_music_dnd and card_task_dnd are narrower (575px) than the 613-614px width used elsewhere in this canvas group - not explained by anything visible in the image.",
+    "Exact bounding box of the two gray description text lines.",
+    "Exact corner radius of the cards and toggle switches."
+  ]
+}

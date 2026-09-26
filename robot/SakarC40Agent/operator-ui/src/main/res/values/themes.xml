@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Minimal window theme (applies before Compose content is drawn, and to the system status/
+         nav bar chrome). No Material Components dependency needed - Compose's own MaterialTheme
+         (Theme.kt) is what actually themes the UI content. -->
+    <style name="Theme.Sakar" parent="android:Theme.DeviceDefault.Light.NoActionBar">
+        <item name="android:statusBarColor">@color/sakar_background</item>
+        <item name="android:navigationBarColor">@color/sakar_background</item>
+        <item name="android:windowBackground">@color/sakar_background</item>
+        <item name="android:colorPrimary">@color/sakar_primary</item>
+        <item name="android:colorPrimaryDark">@color/sakar_primary_strong</item>
+    </style>
+</resources>

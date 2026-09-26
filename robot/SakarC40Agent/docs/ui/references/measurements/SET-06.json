@@ -1,0 +1,81 @@
+{
+  "reference_id": "SET-06",
+  "image_path": "keenonwebpic/keenonwebpic/cleaning app/Screenshot from 2026-08-31 12-56-05.png",
+  "canvas": {
+    "width": 982,
+    "height": 537
+  },
+  "regions": {
+    "header": { "x": 0, "y": 0, "width": 982, "height": 90 },
+    "sidebar": { "x": 0, "y": 90, "width": 313, "height": 447 },
+    "content_pane": { "x": 325, "y": 90, "width": 657, "height": 447 }
+  },
+  "elements": [
+    {
+      "id": "sidebar_item_workstation",
+      "type": "sidebar",
+      "x": 20,
+      "y": 220,
+      "width": 283,
+      "height": 55,
+      "notes": "SELECTED (3rd sidebar item). Same 283x55 selected-pill size as SET-05's selected item, at the row position (y=220) that SET-05 recorded as \"Workstation\" (unselected, 43px tall there) - confirms the sidebar order and the fixed 68px row pitch: selection changes a row's visual height/style but not its slot position."
+    },
+    {
+      "id": "content_title",
+      "type": "text",
+      "x": 551,
+      "y": 55,
+      "width": 180,
+      "height": 17,
+      "notes": "\"Workstation Settings\" title."
+    },
+    {
+      "id": "card_water_refill",
+      "type": "card",
+      "x": 335,
+      "y": 102,
+      "width": 613,
+      "height": 41,
+      "notes": "Single-row card: label \"Water Refill\" + a toggle switch (ON, blue) on the right. No chevron - this row is a direct toggle, not a drill-down."
+    },
+    {
+      "id": "card_drainage_group",
+      "type": "card",
+      "x": 335,
+      "y": 171,
+      "width": 613,
+      "height": 66,
+      "notes": "Two-row card: \"Drainage\" + toggle (ON) on the first row, \"Workstation Self-Clean\" + a \"Trigger Self-Clean\" text-button + toggle (ON) on the second row."
+    },
+    {
+      "id": "card_cleaning_agent_group",
+      "type": "card",
+      "x": 335,
+      "y": 297,
+      "width": 613,
+      "height": 103,
+      "notes": "Two-row card: \"Cleaning Agent\" + toggle (ON) on the first row, \"Water to Cleaning Agent Ratio (xx:1)\" + a '-'/value(\"60\")/'+' stepper + \"(20-200)\" range hint text on the second row."
+    },
+    {
+      "id": "toggle_water_refill",
+      "type": "other",
+      "x": 882,
+      "y": 116,
+      "width": 47,
+      "height": 23,
+      "notes": "Blue pill toggle switch, ON state, right-aligned in card_water_refill. Representative measurement for the toggle-switch component reused across this and other Settings screens."
+    }
+  ],
+  "relationships": [
+    { "type": "equal_width", "elements": ["card_water_refill", "card_drainage_group", "card_cleaning_agent_group"], "value_px": 613 },
+    { "type": "aligned_left", "elements": ["card_water_refill", "card_drainage_group", "card_cleaning_agent_group"], "value_px": 335 },
+    { "type": "vertical_gap", "elements": ["card_water_refill", "card_drainage_group"], "value_px": 28, "notes": "gap from y=143 to y=171" },
+    { "type": "vertical_gap", "elements": ["card_drainage_group", "card_cleaning_agent_group"], "value_px": 60, "notes": "gap from y=237 to y=297 - notably larger than the 28px gap above it; see unknowns" },
+    { "type": "matches_pattern", "elements": ["sidebar_item_workstation", "SET-05.sidebar_item_cleaning_data"], "notes": "same selected-pill size (283x55) as SET-05's selected item" }
+  ],
+  "unknowns": [
+    "Why the gap between card_drainage_group and card_cleaning_agent_group (60px) is noticeably larger than the gap between card_water_refill and card_drainage_group (28px) - could be deliberate visual grouping/separation or measurement variance from the cards' differing internal row counts.",
+    "Exact bounds of the \"Trigger Self-Clean\" text-button within card_drainage_group and the '-'/'+' stepper within card_cleaning_agent_group - not individually measured, per instructions not to measure every small element exhaustively.",
+    "Exact corner radius of the cards and toggle switches."
+  ]
+}

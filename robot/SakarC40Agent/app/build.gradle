@@ -1,4 +1,10 @@
 apply plugin: 'com.android.application'
+// Kotlin-Java interop only: SakarC40Application.java (still plain Java, unmodified in structure)
+// now constructs the Kotlin DefaultAppContainer (:data) and implements the Kotlin
+// AppContainerHolder interface (:domain). Adding this plugin puts kotlin-stdlib on this
+// module's own compile classpath so that interop is a normal, supported cross-language call -
+// no existing Java source in this module needs to change language.
+apply plugin: 'org.jetbrains.kotlin.android'
 
 // Load local, git-ignored credentials. See secrets.properties.example.
 // Falls back to safe empty placeholders so the project still compiles
@@ -51,6 +57,10 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
 }
 
 dependencies {
@@ -63,4 +73,13 @@ dependencies {
     // transitively exposed - C40TelemetrySnapshotProvider needs RuntimeSnapshot/ConnectionStatus directly.
     implementation project(':telemetry')
     implementation 'androidx.appcompat:appcompat:1.6.1'
+
+    // New Sakar Robotics onboard operator UI (Compose) and its supporting domain/data modules -
+    // see domain/build.gradle, data/build.gradle and operator-ui/build.gradle for why each one is
+    // shaped the way it is. :app is the only module that references all three of :robot, :data
+    // and :operator-ui together, to build the one real DefaultAppContainer.
+    implementation project(':domain')
+    implementation project(':data')
+    implementation project(':operator-ui')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }

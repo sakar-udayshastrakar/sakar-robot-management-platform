@@ -10,6 +10,7 @@ import java.util.List;
 import com.google.gson.Gson;
 import com.keenon.common.constant.PeanutConstants;
 import com.keenon.common.external.PeanutConfig;
+import com.keenon.sdk.api.DevicesMoveControlApi;
 import com.keenon.sdk.api.NavigationDestPoseApi;
 import com.keenon.sdk.api.SensorDepthApi;
 import com.keenon.sdk.api.SensorImuApi;
@@ -65,6 +66,19 @@ public final class PeanutSdkBridge {
      */
     public static final int ERROR_MALFORMED_DESTINATIONS = -1003;
 
+    /**
+     * Client-side wrapper failure - the SDK was never fully called. Same
+     * local, non-SDK error-code family as {@link #ERROR_INVALID_MAP_DATA}/
+     * {@link #ERROR_MALFORMED_DESTINATIONS}. Used when {@code
+     * PeanutSDK.getInstance().init(...)} throws synchronously instead of
+     * invoking its own error callback - observed on the Android Studio
+     * emulator (no physical C40 present): {@code PeanutSDK.initPermissionCheck()}
+     * throws a bare {@code RuntimeException} for a missing runtime
+     * permission before the SDK's async callback machinery ever engages,
+     * so that failure cannot be reported any other way.
+     */
+    public static final int ERROR_INIT_THREW = -1005;
+
     private static final String TAG = "PeanutSdkBridge";
     private static final PeanutSdkBridge INSTANCE = new PeanutSdkBridge();
 
@@ -116,17 +130,28 @@ public final class PeanutSdkBridge {
         }
 
         String request = "linkType=" + config.getLinkType() + " host=" + config.getLinkHost();
-        PeanutSDK.getInstance().init(context.getApplicationContext(), errorCode -> {
-            if (errorCode == PeanutSDK.SDK_INIT_SUCCESS) {
-                sdkInitialized = true;
-                SdkCallLogger.getInstance().logSuccess("PeanutSDK.init", request, "errorCode=" + errorCode);
-                callback.onInitSuccess();
-            } else {
-                sdkInitialized = false;
-                SdkCallLogger.getInstance().logError("PeanutSDK.init", request, errorCode, "SDK init failed");
-                callback.onInitError(errorCode);
-            }
-        });
+        try {
+            PeanutSDK.getInstance().init(context.getApplicationContext(), errorCode -> {
+                if (errorCode == PeanutSDK.SDK_INIT_SUCCESS) {
+                    sdkInitialized = true;
+                    SdkCallLogger.getInstance().logSuccess("PeanutSDK.init", request, "errorCode=" + errorCode);
+                    callback.onInitSuccess();
+                } else {
+                    sdkInitialized = false;
+                    SdkCallLogger.getInstance().logError("PeanutSDK.init", request, errorCode, "SDK init failed");
+                    callback.onInitError(errorCode);
+                }
+            });
+        } catch (RuntimeException thrownBeforeCallback) {
+            // See ERROR_INIT_THREW's Javadoc: PeanutSDK.init() can throw
+            // synchronously instead of ever reaching the callback above.
+            // Routed into the same onInitError() path as a real async
+            // failure would use, so callers cannot tell the difference.
+            sdkInitialized = false;
+            String message = "PeanutSDK.init threw before invoking its callback: " + thrownBeforeCallback;
+            SdkCallLogger.getInstance().logError("PeanutSDK.init", request, ERROR_INIT_THREW, message);
+            callback.onInitError(ERROR_INIT_THREW);
+        }
     }
 
     public void startRuntime(SdkRuntimeEventListener listener) {
@@ -170,8 +195,16 @@ public final class PeanutSdkBridge {
     // existing method on the compiled AAR's component classes.
     // ---------------------------------------------------------------
 
+    /**
+     * PeanutRuntime.getRuntimeInfo() returns null until the runtime has actually started (i.e.
+     * before a successful connect()/startRuntime() - always true on the emulator, where
+     * PeanutSDK.init() never succeeds). Returns an honest all-unset snapshot instead of crashing.
+     */
     public RuntimeSnapshot getRuntimeSnapshot() {
         RuntimeInfo info = PeanutRuntime.getInstance().getRuntimeInfo();
+        if (info == null) {
+            return new RuntimeSnapshot(0, 0, 0, null, false, false, 0, null, null, null, null, null);
+        }
         return new RuntimeSnapshot(
                 info.getWorkMode(),
                 info.getSyncStatus(),
@@ -205,6 +238,87 @@ public final class PeanutSdkBridge {
 
     public void queryMotorHealth(SdkCallback callback) {
         PeanutSDK.getInstance().motor().getHealth(wrap("MotorComponent.getHealth", "n/a", callback));
+    }
+
+    /**
+     * VERIFIED via {@code javap -p} against the actual licensed
+     * peanut-sdk-release.aar: {@code MotorComponent.getEncoder(IDataCallback)}
+     * takes only a callback. Read-only, no operating-mode gate needed.
+     */
+    public void queryMotorEncoder(SdkCallback callback) {
+        PeanutSDK.getInstance().motor().getEncoder(wrap("MotorComponent.getEncoder", "n/a", callback));
+    }
+
+    /**
+     * VERIFIED via {@code javap -p}: {@code MotorComponent.getSpeed(IDataCallback)}
+     * takes only a callback. Read-only, no operating-mode gate needed.
+     */
+    public void queryMotorSpeed(SdkCallback callback) {
+        PeanutSDK.getInstance().motor().getSpeed(wrap("MotorComponent.getSpeed", "n/a", callback));
+    }
+
+    /**
+     * VERIFIED via {@code javap -p}: {@code MotorComponent.getState(IDataCallback)}
+     * takes only a callback. Read-only, no operating-mode gate needed.
+     */
+    public void queryMotorState(SdkCallback callback) {
+        PeanutSDK.getInstance().motor().getState(wrap("MotorComponent.getState", "n/a", callback));
+    }
+
+    /**
+     * VERIFIED via {@code javap -p}: {@code MotorComponent.forward(IDataCallback)}
+     * takes only a callback - no speed/duration parameter. This is a real
+     * motion command; callers must gate it behind OperatingMode.HARDWARE_TEST
+     * (see C40RobotController.motorForward).
+     */
+    public void motorForward(String request, SdkCallback callback) {
+        PeanutSDK.getInstance().motor().forward(wrap("MotorComponent.forward", request, callback));
+    }
+
+    /**
+     * VERIFIED via {@code javap -p}: {@code MotorComponent.backward(IDataCallback)}
+     * takes only a callback. Real motion command - see motorForward's note.
+     */
+    public void motorBackward(String request, SdkCallback callback) {
+        PeanutSDK.getInstance().motor().backward(wrap("MotorComponent.backward", request, callback));
+    }
+
+    /**
+     * VERIFIED via {@code javap -p}: {@code MotorComponent.turnLeft(IDataCallback)}
+     * takes only a callback. Real motion command - see motorForward's note.
+     */
+    public void motorTurnLeft(String request, SdkCallback callback) {
+        PeanutSDK.getInstance().motor().turnLeft(wrap("MotorComponent.turnLeft", request, callback));
+    }
+
+    /**
+     * VERIFIED via {@code javap -p}: {@code MotorComponent.turnRight(IDataCallback)}
+     * takes only a callback. Real motion command - see motorForward's note.
+     */
+    public void motorTurnRight(String request, SdkCallback callback) {
+        PeanutSDK.getInstance().motor().turnRight(wrap("MotorComponent.turnRight", request, callback));
+    }
+
+    /**
+     * MotorComponent has no dedicated stop() method in the verified AAR
+     * surface. This uses the verified moveControl(IDataCallback, ParamBean)
+     * entry point with reset=1 and all velocities zeroed, which is the
+     * closest available primitive to a stop command.
+     *
+     * [INFERRED, NOT VERIFIED against hardware or vendor documentation] -
+     * whether reset=1 actually halts the robot's motors has not been
+     * confirmed against a physical C40 or vendor docs; it is only known
+     * that ParamBean's fields are (reset:int, linear:double, angular:double,
+     * direction:double, time:double) and that zero linear/angular velocity
+     * with reset=1 is the most conservative interpretation of "stop" this
+     * API surface offers. Flag this for supervised hardware validation
+     * before relying on it operationally.
+     */
+    public void motorStop(String request, SdkCallback callback) {
+        DevicesMoveControlApi.ParamBean stopParam =
+                new DevicesMoveControlApi.ParamBean(1, 0d, 0d, 0d, 0d);
+        PeanutSDK.getInstance().motor().moveControl(
+                wrap("MotorComponent.moveControl(stop)", request, callback), stopParam);
     }
 
     public void queryNavigationStatus(SdkCallback callback) {

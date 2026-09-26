@@ -1,0 +1,80 @@
+{
+  "reference_id": "TEACH-01",
+  "image_path": "keenonwebpic/keenonwebpic/cleaning app/teaching mode.png",
+  "canvas": {
+    "width": 963,
+    "height": 555
+  },
+  "regions": {
+    "header": { "x": 0, "y": 0, "width": 963, "height": 100 },
+    "main_content": { "x": 20, "y": 113, "width": 920, "height": 402 }
+  },
+  "elements": [
+    {
+      "id": "back_button",
+      "type": "button",
+      "x": 20,
+      "y": 46,
+      "width": 56,
+      "height": 44,
+      "notes": "Same size/position pattern (x=20, y=46, height=44) as the back buttons on SCHED-01 and CLEAN-01."
+    },
+    {
+      "id": "title_text",
+      "type": "text",
+      "x": 407,
+      "y": 59,
+      "width": 143,
+      "height": 19,
+      "notes": "Bold black title \"Teach Route\", centered. Same y-band (59-78) as SCHED-01's title text."
+    },
+    {
+      "id": "button_create_route",
+      "type": "button",
+      "x": 802,
+      "y": 37,
+      "width": 139,
+      "height": 55,
+      "notes": "White rounded rectangle button, \"+Create Route\" label, top-right. Near-identical size/position to SCHED-01's button_new_task (140x56 at x=801,y=37)."
+    },
+    {
+      "id": "content_card",
+      "type": "card",
+      "x": 20,
+      "y": 113,
+      "width": 920,
+      "height": 402,
+      "notes": "Single large white card filling the rest of the screen below the header, containing a centered empty-state illustration and caption. No list items are present in this capture (empty state)."
+    },
+    {
+      "id": "empty_state_illustration",
+      "type": "image",
+      "x": 439,
+      "y": 263,
+      "width": 81,
+      "height": 84,
+      "notes": "Light-blue clipboard/document icon with a soft glow, horizontally centered in the content card (icon center x=479.5 vs card center x=480)."
+    },
+    {
+      "id": "empty_state_text",
+      "type": "text",
+      "x": 433,
+      "y": 409,
+      "width": 95,
+      "height": 12,
+      "notes": "Gray caption \"No routes yet~\", directly below the illustration, also horizontally centered."
+    }
+  ],
+  "relationships": [
+    { "type": "horizontal_center", "elements": ["empty_state_illustration", "empty_state_text", "content_card"], "notes": "illustration center x=479.5 and text center x=480.5 both closely match content_card's horizontal center (480)" },
+    { "type": "vertical_offset_from_center", "elements": ["empty_state_illustration", "empty_state_text", "content_card"], "notes": "the illustration+text block's own vertical center (~342) sits below the content_card's true vertical center (~314) - the empty state is not perfectly vertically centered, it sits slightly lower" },
+    { "type": "matches_pattern", "elements": ["button_create_route", "SCHED-01.button_new_task"], "notes": "same top-right 'primary creation action' button size/position pattern (139-140 wide, 55-56 tall, starting at x~801-802, y=37) as SCHED-01's + New Task button" },
+    { "type": "matches_pattern", "elements": ["title_text", "SCHED-01.title_text"], "notes": "same y-band (59-78) for the centered header title text" },
+    { "type": "matches_pattern", "elements": ["back_button", "SCHED-01.back_button", "CLEAN-01.back_button"], "notes": "same back-button size/position (x=20, y=46, height=44) reused across these 3 screens" }
+  ],
+  "unknowns": [
+    "Layout of the content_card when routes DO exist (this screenshot only shows the empty state) - list-item geometry is not observable from this image.",
+    "Exact corner radius of the content card and buttons.",
+    "Whether the empty-state block's vertical offset from center is a deliberate design choice or an artifact of how much vertical space the caption text reserves below it."
+  ]
+}

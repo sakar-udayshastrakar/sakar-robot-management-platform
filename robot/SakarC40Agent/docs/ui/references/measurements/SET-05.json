@@ -1,0 +1,145 @@
+{
+  "reference_id": "SET-05",
+  "image_path": "keenonwebpic/keenonwebpic/cleaning app/Screenshot from 2026-08-31 12-55-27.png",
+  "canvas": {
+    "width": 982,
+    "height": 537
+  },
+  "regions": {
+    "header": { "x": 0, "y": 0, "width": 982, "height": 90 },
+    "sidebar": { "x": 0, "y": 90, "width": 313, "height": 447 },
+    "content_pane": { "x": 325, "y": 90, "width": 657, "height": 447 }
+  },
+  "elements": [
+    {
+      "id": "back_button",
+      "type": "button",
+      "x": 19,
+      "y": 32,
+      "width": 60,
+      "height": 44,
+      "notes": "Same 44px height as back buttons measured on the 963x555-canvas screens (SET-01/SET-02/HOME-02), despite this being a different canvas resolution (982x537) - the button appears to be rendered at a fixed absolute pixel size rather than scaled to canvas size."
+    },
+    {
+      "id": "sidebar_title",
+      "type": "text",
+      "x": 127,
+      "y": 55,
+      "width": 80,
+      "height": 19,
+      "notes": "\"Settings\" - identical width (80) and height (19) to SET-01's sidebar_title, only its position shifted slightly (this canvas has a wider back_button)."
+    },
+    {
+      "id": "sidebar_item_consumables_statistics",
+      "type": "sidebar",
+      "x": 20,
+      "y": 84,
+      "width": 283,
+      "height": 43,
+      "notes": "Unselected, \"Consumables Statistics\" - top item, cut off at the very top of the sidebar area by 6px (row would start at y=84 but the visible sidebar/header boundary is around y=90)."
+    },
+    {
+      "id": "sidebar_item_cleaning_data",
+      "type": "sidebar",
+      "x": 20,
+      "y": 152,
+      "width": 283,
+      "height": 55,
+      "notes": "SELECTED: solid blue filled pill, white icon + white bold \"Cleaning Data\" label. Same 283px width and 55px height as SET-01's selected pill - the selected-state visual treatment is pixel-identical to the 963x555 canvas group."
+    },
+    {
+      "id": "sidebar_item_workstation",
+      "type": "sidebar",
+      "x": 20,
+      "y": 220,
+      "width": 283,
+      "height": 43,
+      "notes": "Unselected, \"Workstation\"."
+    },
+    {
+      "id": "sidebar_item_charging_settings",
+      "type": "sidebar",
+      "x": 20,
+      "y": 288,
+      "width": 283,
+      "height": 42,
+      "notes": "Unselected, \"Charging Settings\"."
+    },
+    {
+      "id": "sidebar_item_screen_lock_settings",
+      "type": "sidebar",
+      "x": 20,
+      "y": 356,
+      "width": 283,
+      "height": 43,
+      "notes": "Unselected, \"Screen Lock Settings\"."
+    },
+    {
+      "id": "sidebar_item_general_settings",
+      "type": "sidebar",
+      "x": 20,
+      "y": 424,
+      "width": 283,
+      "height": 43,
+      "notes": "Unselected, \"General Settings\"."
+    },
+    {
+      "id": "sidebar_item_screen_emoji",
+      "type": "sidebar",
+      "x": 20,
+      "y": 492,
+      "width": 283,
+      "height": 43,
+      "notes": "Unselected, \"Screen Emoji\" - cut off by the bottom of the screenshot (canvas height 537), only a partial row visible."
+    },
+    {
+      "id": "content_title",
+      "type": "text",
+      "x": 573,
+      "y": 54,
+      "width": 136,
+      "height": 20,
+      "notes": "\"Cleaning Data\" title, left-aligned above the content list."
+    },
+    {
+      "id": "list_row_cleaning_record",
+      "type": "card",
+      "x": 335,
+      "y": 102,
+      "width": 613,
+      "height": 41,
+      "notes": "Simple label-only row: \"Cleaning Record\" + trailing '>' chevron, no value text (unlike SCHED-02's field rows, which show a value). Same 613px width as the item cards on the Consumables Statistics screens."
+    },
+    {
+      "id": "list_row_cleaning_settings",
+      "type": "card",
+      "x": 335,
+      "y": 169,
+      "width": 613,
+      "height": 42,
+      "notes": "Simple label-only row: \"Cleaning Settings\" + trailing '>' chevron."
+    },
+    {
+      "id": "empty_space_below_list",
+      "type": "empty_space",
+      "x": 325,
+      "y": 211,
+      "width": 657,
+      "height": 326,
+      "notes": "Large blank area below the 2 list rows, extending to the bottom of the canvas. No system nav bar strip is visible at the bottom of this canvas (unlike the 963x555-canvas screens, which show a dark nav-bar strip near y=547-550) - this canvas appears to end in plain background color."
+    }
+  ],
+  "relationships": [
+    { "type": "fixed_row_pitch", "elements": ["sidebar_item_consumables_statistics", "sidebar_item_cleaning_data", "sidebar_item_workstation", "sidebar_item_charging_settings", "sidebar_item_screen_lock_settings", "sidebar_item_general_settings", "sidebar_item_screen_emoji"], "value_px": 68, "notes": "row starts at 84(approx)/152/220/288/356/424/492 - the same 68px pitch measured on the 963x555-canvas Settings screens (SET-01/SET-02), again suggesting a fixed absolute pixel grid rather than a canvas-relative one" },
+    { "type": "equal_width", "elements": ["list_row_cleaning_record", "list_row_cleaning_settings"], "value_px": 613 },
+    { "type": "aligned_left", "elements": ["list_row_cleaning_record", "list_row_cleaning_settings"], "value_px": 335 },
+    { "type": "vertical_gap", "elements": ["list_row_cleaning_record", "list_row_cleaning_settings"], "value_px": 26 },
+    { "type": "cross_canvas_match", "elements": ["sidebar_item_cleaning_data", "SET-01.sidebar_item_consumables_statistics"], "notes": "both selected-pill elements measure 283x55 despite appearing on different-resolution canvases (982x537 here vs 963x555 there) - strong evidence the sidebar component is rendered at a fixed pixel size across these captures, not scaled per-canvas" }
+  ],
+  "unknowns": [
+    "Exact top edge of sidebar_item_consumables_statistics - it is partially cut off where the sidebar area begins, so 84 is an approximation.",
+    "Whether the very large empty_space_below_list region is because this settings sub-screen genuinely only has 2 options, or additional content could appear there dynamically.",
+    "Exact corner radius of the sidebar pill and list rows.",
+    "Whether the absence of a visible bottom system-bar strip (compared to the 963x555-canvas screens) reflects a genuinely different device/capture context, or simply that this particular screenshot's capture tool cropped it differently."
+  ]
+}

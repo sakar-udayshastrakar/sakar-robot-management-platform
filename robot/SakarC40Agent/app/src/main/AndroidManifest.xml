@@ -8,8 +8,10 @@
     <application
         android:name=".SakarC40Application"
         android:allowBackup="false"
-        android:label="@string/app_name"
-        android:theme="@style/Theme.AppCompat.DayNight">
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:label="@string/operator_app_name"
+        android:theme="@style/Theme.Sakar">
     </application>
 
 </manifest>

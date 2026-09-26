@@ -1,0 +1,93 @@
+{
+  "reference_id": "HOME-02",
+  "image_path": "keenonwebpic/keenonwebpic/cleaning app/Screenshot from 2026-08-29 17-08-29.png",
+  "canvas": {
+    "width": 963,
+    "height": 555
+  },
+  "regions": {
+    "header": { "x": 0, "y": 0, "width": 963, "height": 100 },
+    "main_content": { "x": 37, "y": 116, "width": 887, "height": 243 },
+    "bottom_status_bar": { "x": 38, "y": 453, "width": 886, "height": 55 }
+  },
+  "elements": [
+    {
+      "id": "back_button",
+      "type": "button",
+      "x": 20,
+      "y": 44,
+      "width": 56,
+      "height": 48,
+      "notes": "Similar position/pattern to back buttons on other full-screen views."
+    },
+    {
+      "id": "title_text",
+      "type": "text",
+      "x": 265,
+      "y": 59,
+      "width": 423,
+      "height": 24,
+      "notes": "\"Recover Positioning Using the Guide\" - long bold black title, centered."
+    },
+    {
+      "id": "card_method_1",
+      "type": "card",
+      "x": 37,
+      "y": 116,
+      "width": 287,
+      "height": 243,
+      "notes": "ENABLED-looking card: \"Method 1\", bold black heading \"Push onto Charging Dock\", a 2-step numbered instruction list in dark/legible text. No action button on this card."
+    },
+    {
+      "id": "card_method_2",
+      "type": "card",
+      "x": 337,
+      "y": 116,
+      "width": 287,
+      "height": 243,
+      "notes": "DISABLED/grayed-out-looking card: \"Method 2\" heading and all body text rendered in light gray rather than the dark/black text used on card_method_1 and card_method_3 - visually reads as unavailable or not-currently-applicable, though nothing in the image states why. No action button."
+    },
+    {
+      "id": "card_method_3",
+      "type": "card",
+      "x": 638,
+      "y": 116,
+      "width": 286,
+      "height": 243,
+      "notes": "ENABLED-looking card: \"Method 3\", bold black heading \"Select Landmark to Recover Positioning\", body text in dark/legible text, and a blue \"Go Immediately\" button near the bottom of the card."
+    },
+    {
+      "id": "button_go_immediately",
+      "type": "button",
+      "x": 683,
+      "y": 377,
+      "width": 187,
+      "height": 42,
+      "notes": "Solid blue rounded rectangle button, white \"Go Immediately\" label, bottom of card_method_3 only - the other two cards have no equivalent button."
+    },
+    {
+      "id": "status_bar_positioning_failed",
+      "type": "status",
+      "x": 38,
+      "y": 453,
+      "width": 886,
+      "height": 55,
+      "notes": "Full-width white rounded bar below the 3 cards, containing a blue location-pin icon with a small badge and the bold black text \"Positioning Failed\"."
+    }
+  ],
+  "relationships": [
+    { "type": "approximately_equal_width", "elements": ["card_method_1", "card_method_2", "card_method_3"], "notes": "286-287px each" },
+    { "type": "equal_height", "elements": ["card_method_1", "card_method_2", "card_method_3"], "value_px": 243 },
+    { "type": "aligned_top", "elements": ["card_method_1", "card_method_2", "card_method_3"], "value_px": 116 },
+    { "type": "horizontal_gap", "elements": ["card_method_1", "card_method_2"], "value_px": 13 },
+    { "type": "horizontal_gap", "elements": ["card_method_2", "card_method_3"], "value_px": 14 },
+    { "type": "aligned_left", "elements": ["card_method_1", "status_bar_positioning_failed"], "notes": "card_method_1 (37) and status_bar_positioning_failed (38) are left-aligned within 1px" },
+    { "type": "aligned_right", "elements": ["card_method_3", "status_bar_positioning_failed"], "notes": "card_method_3 (924) and status_bar_positioning_failed (924) share the same right edge" },
+    { "type": "enabled_disabled_contrast", "elements": ["card_method_1", "card_method_2", "card_method_3"], "notes": "card_method_2's text is rendered in a visually lighter/grayer tone than card_method_1 and card_method_3, and it alone has no action button - a state difference observable directly from the image, though its cause (disabled vs. simply a different method type) is not stated anywhere in the image" }
+  ],
+  "unknowns": [
+    "Why card_method_2 renders with lighter/greyed text and no action button while the other two cards look fully enabled - no in-image label (e.g. \"unavailable\", \"disabled\") explains this; recorded as an observed visual difference only, not a functional determination.",
+    "Exact corner radius of the 3 cards, the button, and the bottom status bar.",
+    "Whether this screen is reached as a full-screen navigation destination or as an overlay/dialog - no scrim or dimmed background is visible behind it (unlike SCHED-02's Edit Task panel), suggesting it is a plain full-screen view, but this is inferred from the image's appearance rather than confirmed by any explicit chrome."
+  ]
+}

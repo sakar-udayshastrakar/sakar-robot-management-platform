@@ -1,0 +1,67 @@
+{
+  "reference_id": "SET-08",
+  "image_path": "keenonwebpic/keenonwebpic/cleaning app/Screenshot from 2026-08-31 12-57-02.png",
+  "canvas": {
+    "width": 982,
+    "height": 537
+  },
+  "regions": {
+    "header": { "x": 0, "y": 0, "width": 982, "height": 90 },
+    "sidebar": { "x": 0, "y": 90, "width": 313, "height": 447 },
+    "content_pane": { "x": 325, "y": 90, "width": 657, "height": 447 }
+  },
+  "elements": [
+    {
+      "id": "sidebar_item_screen_lock_settings",
+      "type": "sidebar",
+      "x": 20,
+      "y": 356,
+      "width": 283,
+      "height": 55,
+      "notes": "SELECTED (5th sidebar item), same slot SET-05/SET-06/SET-07 recorded (unselected) at y=356."
+    },
+    {
+      "id": "content_title",
+      "type": "text",
+      "x": 536,
+      "y": 54,
+      "width": 210,
+      "height": 20,
+      "notes": "\"Screen Lock Settings\" title, same y-position as other content titles in this canvas group."
+    },
+    {
+      "id": "list_row_lock_screen_password",
+      "type": "card",
+      "x": 335,
+      "y": 102,
+      "width": 613,
+      "height": 41,
+      "notes": "Simple label-only row: \"Lock Screen Password\" + trailing chevron. PIXEL-IDENTICAL position/size to SET-05's list_row_cleaning_record (also x=335,y=102,613x41) - this is the same reusable 'simple settings list row' template."
+    },
+    {
+      "id": "list_row_screen_lock_duration",
+      "type": "card",
+      "x": 335,
+      "y": 170,
+      "width": 613,
+      "height": 41,
+      "notes": "Row: \"Screen Lock Duration\" label + right-aligned value \"15 seconds\" + trailing chevron. Near-identical position to SET-05's list_row_cleaning_settings (y=169 there vs y=170 here, within 1px)."
+    },
+    {
+      "id": "empty_space_below_list",
+      "type": "empty_space",
+      "x": 325,
+      "y": 211,
+      "width": 657,
+      "height": 326,
+      "notes": "Same large blank area pattern as SET-05, below only 2 short rows."
+    }
+  ],
+  "relationships": [
+    { "type": "identical_template", "elements": ["list_row_lock_screen_password", "list_row_screen_lock_duration", "SET-05.list_row_cleaning_record", "SET-05.list_row_cleaning_settings"], "notes": "this screen reuses the exact same 613x41 simple-row template, at the same x/y positions (within 1px), as SET-05's Cleaning Data screen - confirms a single shared 'simple 2-option settings list' layout used by multiple sidebar destinations" }
+  ],
+  "unknowns": [
+    "Exact corner radius of the list rows.",
+    "Whether \"Lock Screen Password\" navigates to a sub-screen or opens an inline editor - not determinable from a static image."
+  ]
+}

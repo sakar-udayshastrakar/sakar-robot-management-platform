@@ -1,0 +1,145 @@
+{
+  "reference_id": "MANUAL-01",
+  "image_path": "keenonwebpic/keenonwebpic/cleaning app/manual drive.png",
+  "canvas": {
+    "width": 963,
+    "height": 555
+  },
+  "regions": {
+    "header": { "x": 0, "y": 0, "width": 963, "height": 100 },
+    "main_card": { "x": 20, "y": 121, "width": 920, "height": 324 },
+    "mode_tile_row": { "x": 49, "y": 148, "width": 887, "height": 151 },
+    "intensity_row": { "x": 81, "y": 347, "width": 796, "height": 54 }
+  },
+  "elements": [
+    {
+      "id": "back_button",
+      "type": "button",
+      "x": 20,
+      "y": 48,
+      "width": 56,
+      "height": 42,
+      "notes": "Same position/pattern as back buttons on other screens."
+    },
+    {
+      "id": "title_text",
+      "type": "text",
+      "x": 414,
+      "y": 60,
+      "width": 151,
+      "height": 18,
+      "notes": "\"Manual Drive\" title, centered, same y-band as other screens' titles."
+    },
+    {
+      "id": "main_card",
+      "type": "card",
+      "x": 20,
+      "y": 121,
+      "width": 920,
+      "height": 324,
+      "notes": "Large white card containing the 5 mode tiles and the 3 intensity buttons."
+    },
+    {
+      "id": "tile_sweep_mop",
+      "type": "card",
+      "x": 49,
+      "y": 150,
+      "width": 161,
+      "height": 149,
+      "notes": "Unselected mode tile: bucket/mop icon, gray \"Sweep & Mop\" label."
+    },
+    {
+      "id": "tile_water_suction",
+      "type": "card",
+      "x": 223,
+      "y": 148,
+      "width": 163,
+      "height": 151,
+      "notes": "SELECTED mode tile: solid blue border, a small blue checkmark badge in the top-right corner, water-drop icon, bold black \"Water Suction\" label. Slightly larger footprint than the unselected tiles because the selection border adds to the measured bounding box."
+    },
+    {
+      "id": "tile_sweep_vacuum",
+      "type": "card",
+      "x": 401,
+      "y": 150,
+      "width": 158,
+      "height": 149,
+      "notes": "Unselected mode tile: vacuum icon, gray \"Sweep & Vacuum\" label."
+    },
+    {
+      "id": "tile_sweep_push",
+      "type": "card",
+      "x": 577,
+      "y": 150,
+      "width": 159,
+      "height": 149,
+      "notes": "Unselected mode tile, but with a BLACK (not gray) \"Sweep & Push\" label - the label color does not follow the selected/unselected pattern of the other tiles (see unknowns)."
+    },
+    {
+      "id": "tile_sweep",
+      "type": "card",
+      "x": 757,
+      "y": 150,
+      "width": 158,
+      "height": 149,
+      "notes": "Unselected mode tile, also with a BLACK \"Sweep\" label like tile_sweep_push. Rightmost tile."
+    },
+    {
+      "id": "button_gentle",
+      "type": "button",
+      "x": 81,
+      "y": 351,
+      "width": 231,
+      "height": 48,
+      "notes": "Unselected intensity button: gray fill, bold black \"Gentle\" label."
+    },
+    {
+      "id": "button_standard",
+      "type": "button",
+      "x": 365,
+      "y": 347,
+      "width": 232,
+      "height": 54,
+      "notes": "SELECTED intensity button: blue border, light-blue-tinted fill, bold black \"Standard\" label."
+    },
+    {
+      "id": "button_powerful",
+      "type": "button",
+      "x": 649,
+      "y": 349,
+      "width": 228,
+      "height": 49,
+      "notes": "Unselected intensity button: gray fill, bold black \"Powerful\" label."
+    },
+    {
+      "id": "button_start_cleaning",
+      "type": "button",
+      "x": 15,
+      "y": 473,
+      "width": 931,
+      "height": 59,
+      "notes": "Full-width blue gradient button, bold white \"Start Cleaning\" label, below and outside main_card. Extends a few px wider than main_card on both sides (main_card: x=20-940; this button: x=15-946)."
+    }
+  ],
+  "relationships": [
+    { "type": "approximately_equal_width", "elements": ["tile_sweep_mop", "tile_water_suction", "tile_sweep_vacuum", "tile_sweep_push", "tile_sweep"], "notes": "158-163px each - approximately equal, small variance likely from the selected tile's border adding to its measured box" },
+    { "type": "approximately_equal_height", "elements": ["tile_sweep_mop", "tile_water_suction", "tile_sweep_vacuum", "tile_sweep_push", "tile_sweep"], "notes": "148-151px each" },
+    { "type": "approximately_aligned_top", "elements": ["tile_sweep_mop", "tile_water_suction", "tile_sweep_vacuum", "tile_sweep_push", "tile_sweep"], "notes": "148-150px, within 2px" },
+    { "type": "horizontal_gap", "elements": ["tile_sweep_mop", "tile_water_suction"], "value_px": 13 },
+    { "type": "horizontal_gap", "elements": ["tile_water_suction", "tile_sweep_vacuum"], "value_px": 15 },
+    { "type": "horizontal_gap", "elements": ["tile_sweep_vacuum", "tile_sweep_push"], "value_px": 18 },
+    { "type": "horizontal_gap", "elements": ["tile_sweep_push", "tile_sweep"], "value_px": 21 },
+    { "type": "increasing_gap_pattern", "elements": ["tile_sweep_mop", "tile_water_suction", "tile_sweep_vacuum", "tile_sweep_push", "tile_sweep"], "notes": "the measured gap between successive tiles increases left-to-right (13, 15, 18, 21px) - this may be real or may be measurement variance from the selected tile's border; flagged rather than asserted as intentional" },
+    { "type": "approximately_equal_width", "elements": ["button_gentle", "button_standard", "button_powerful"], "notes": "228-232px each" },
+    { "type": "horizontal_gap", "elements": ["button_gentle", "button_standard"], "value_px": 53 },
+    { "type": "horizontal_gap", "elements": ["button_standard", "button_powerful"], "value_px": 52 },
+    { "type": "aligned_left", "elements": ["button_gentle", "tile_sweep_mop"], "notes": "both start at x=81/49 respectively - not exactly aligned to each other, but button_gentle (81) sits roughly under the gap between tile_sweep_mop and tile_water_suction, not under either tile's left edge" }
+  ],
+  "unknowns": [
+    "Why tile_sweep_push and tile_sweep use BLACK labels while tile_sweep_mop and tile_sweep_vacuum use GRAY labels, despite all four being equally 'unselected' - this may indicate a different disabled/enabled state, a different capability tier, or simply be a rendering inconsistency in the reference; not resolvable from the image alone.",
+    "Whether the increasing horizontal gap between mode tiles (13/15/18/21px) is an intentional layout choice or measurement noise.",
+    "Exact corner radius of the tiles, intensity buttons, main_card, and button_start_cleaning.",
+    "Why button_start_cleaning's bounding box (x=15-946) is a few pixels wider than main_card's (x=20-940) directly above it - whether this is a deliberate design choice or measurement/antialiasing variance.",
+    "The selection-indicator pattern (checkmark badge) - only observed on tile_water_suction; whether other selection states use the same badge could not be confirmed from a single screenshot."
+  ]
+}

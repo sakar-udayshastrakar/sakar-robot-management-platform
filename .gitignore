@@ -106,3 +106,9 @@ tmp/
 # ---- Runtime data ----
 # Map images synced from the vendor into the backend storage root at runtime.
 backend/data/
+
+# ---- sakar-robot-dev-mcp generated artifacts ----
+# Screenshots/logs the local MCP dev server (../sakar-robot-mcp, outside this
+# tree) pulls from a connected device, written inside robot/ so every tool
+# stays sandboxed to the project directory - never meant to be committed.
+robot/.mcp-artifacts/

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Wi-Fi status/scan for Settings > Wi-Fi/Network (the on-robot tablet's own network stack -
+         the Peanut SDK has no separate Wi-Fi API). ACCESS_FINE_LOCATION is required by the Android
+         platform itself to read scan results/SSID (API 23+); requested at runtime, never assumed granted. -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!-- Log export (Super User > Logs) writes to the Downloads collection via MediaStore, which
+         needs this permission only on API < 29 (scoped storage covers 29+ automatically). -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
+
+    <application>
+        <activity
+            android:name=".SakarOperatorActivity"
+            android:exported="true"
+            android:label="@string/operator_app_name"
+            android:theme="@style/Theme.Sakar"
+            android:screenOrientation="landscape">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

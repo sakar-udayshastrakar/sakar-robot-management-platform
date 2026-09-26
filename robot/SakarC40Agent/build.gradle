@@ -1,11 +1,20 @@
 // Top-level build file for SakarC40Agent.
 buildscript {
+    // Kotlin/KSP versions for the new Sakar Robotics onboard UI stack
+    // (:domain, :data, :operator-ui). Every pre-existing module stays
+    // plain Java 8 and is untouched by this - Kotlin and Java sources
+    // coexist per-module, and a Java-only module never needs these
+    // plugins applied to it.
+    ext.kotlin_version = '1.9.24'
+    ext.ksp_version = '1.9.24-1.0.20'
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:8.5.0'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:$ksp_version"
     }
 }
 
