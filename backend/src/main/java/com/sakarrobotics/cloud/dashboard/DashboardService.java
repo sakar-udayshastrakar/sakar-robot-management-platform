@@ -263,6 +263,16 @@ public class DashboardService {
                 .map(e -> new DailyTaskCount(e.getKey(), e.getValue()))
                 .toList();
 
-        return new HotelTaskRecordResponse(filtered.size(), null, cumulativeDurationSeconds, null, dailyBreakdown);
+        Map<String, Long> byType = new HashMap<>();
+        for (RobotTask task : filtered) {
+            byType.merge(task.getTaskType(), 1L, Long::sum);
+        }
+        long totalForShare = filtered.size();
+        List<TaskTypeShare> taskTypeBreakdown = byType.entrySet().stream()
+                .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
+                .map(e -> new TaskTypeShare(e.getKey(), e.getValue(), totalForShare == 0 ? 0.0 : (e.getValue() * 100.0) / totalForShare))
+                .toList();
+
+        return new HotelTaskRecordResponse(filtered.size(), null, cumulativeDurationSeconds, null, dailyBreakdown, taskTypeBreakdown);
     }
 }

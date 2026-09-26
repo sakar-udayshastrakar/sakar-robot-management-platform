@@ -1,160 +1,163 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { listRobots } from '../../api/robots';
-import { listAlerts } from '../../api/alerts';
+import { getHotelTaskRecord } from '../../api/dashboard';
 import { useApi } from '../../hooks/useApi';
-import { useRobotStatusProbe } from '../shared/useRobotStatusProbe';
-import { useSiteNames } from '../shared/useSiteNames';
+import { useRecentlyUsed } from '../../hooks/useRecentlyUsed';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { Card } from '../../components/ui/Card';
-import { MetricCard } from '../../components/ui/MetricCard';
-import { Badge } from '../../components/ui/Badge';
-import { Icon } from '../../components/ui/Icon';
-import { ConnectionStatusBadge } from '../../components/ui/ConnectionStatusBadge';
-import { Heartbeat } from '../../components/ui/Heartbeat';
-import { SeverityBadge } from '../../components/ui/SeverityBadge';
-import { DataTable } from '../../components/ui/DataTable';
-import { LoadingState, ErrorState } from '../../components/ui/States';
-import { SimulatedDataBanner, UnavailableFeature } from '../../components/ui/SimulatedDataBanner';
-import { generateEvents } from '../../mocks/simulated';
-import { SystemHealthCard } from './SystemHealthCard';
+import { Carousel } from '../../components/ui/Carousel';
+import { Tabs } from '../../components/ui/Tabs';
+import { BarList } from '../../components/ui/BarList';
+import { UnavailableFeature } from '../../components/ui/SimulatedDataBanner';
 
-export function DashboardPage() {
+// Sakar's own brand orange (--sakar-primary-600/700/800 in index.css) —
+// deliberately not the reference product's blue banner, to keep this
+// carousel visually consistent with the rest of the app. Same gradient on
+// every slide, so the carousel reads as one consistent brand banner rather
+// than a different color per slide.
+const HERO_GRADIENT = 'linear-gradient(120deg, #ff9d61, #ff6100)';
+
+const HERO_SLIDES = [
+  {
+    key: 'welcome',
+    title: 'SAKAR ROBOT MANAGEMENT PLATFORM',
+    subtitle: 'One console for fleet operations, IoT devices, and the Open Platform API.',
+    path: '/robots',
+  },
+  {
+    key: 'iot',
+    title: 'IoT PLATFORM',
+    subtitle: 'Elevator devices, cloud ladder control, and phone module device management.',
+    path: '/iot/elevator-management',
+  },
+  {
+    key: 'open-platform',
+    title: 'OPEN PLATFORM',
+    subtitle: 'Register your organization and manage API applications for third-party integration.',
+    path: '/open-platform/customer-registration',
+  },
+];
+
+function HeroCarousel() {
   const navigate = useNavigate();
-  const { data: robotsPage, status, error, refetch } = useApi(() => listRobots(0, 100), []);
-  const robots = robotsPage?.content ?? null;
-  const { statuses } = useRobotStatusProbe(robots);
-  const siteNames = useSiteNames(robots);
-
-  // Real, organization-scoped alerts (up to the most recent 200) — used for
-  // both the "Active Alerts" card and the Low Battery fleet metric, which is
-  // genuinely derivable from real LOW_BATTERY alerts (unlike Locked/Faulted/
-  // Cleaning/Charging below, which have no backend-derivable source today).
-  const { data: alertsPage } = useApi(() => listAlerts(0, 200), []);
-  const openAlerts = useMemo(() => (alertsPage?.content ?? []).filter((a) => a.status === 'OPEN'), [alertsPage]);
-  const lowBatteryRobotCount = useMemo(
-    () => new Set(openAlerts.filter((a) => a.alertType === 'LOW_BATTERY').map((a) => a.robotId)).size,
-    [openAlerts],
+  return (
+    <Carousel
+      ariaLabel="Dashboard highlights"
+      autoplayMs={6000}
+      slides={HERO_SLIDES.map((s) => ({
+        key: s.key,
+        content: (
+          <div
+            role="button"
+            tabIndex={0}
+            onClick={() => navigate(s.path)}
+            onKeyDown={(e) => { if (e.key === 'Enter') navigate(s.path); }}
+            style={{
+              background: HERO_GRADIENT, minHeight: 180, display: 'flex', alignItems: 'center',
+              padding: '0 40px', color: '#fff', cursor: 'pointer',
+            }}
+          >
+            <div>
+              <h2 style={{ margin: 0, fontSize: 26, letterSpacing: 0.5 }}>{s.title}</h2>
+              <p style={{ margin: '10px 0 0', fontSize: 14, opacity: 0.9, maxWidth: 480 }}>{s.subtitle}</p>
+            </div>
+          </div>
+        ),
+      }))}
+    />
   );
+}
 
-  const simulatedRobotId = robots?.[0]?.id ?? 'sim-robot-0';
-  const recentEvents = useMemo(() => generateEvents(simulatedRobotId, 5), [simulatedRobotId]);
+function RecentlyUsedCard() {
+  const navigate = useNavigate();
+  const items = useRecentlyUsed();
+  return (
+    <Card title="Recently Used">
+      {items.length === 0 ? (
+        <p className="sakar-page-subtitle">Pages you visit will show up here.</p>
+      ) : (
+        <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
+          {items.map((item) => (
+            <button
+              key={item.path}
+              type="button"
+              onClick={() => item.path && navigate(item.path)}
+              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, background: 'none', border: 'none', cursor: 'pointer', width: 90 }}
+            >
+              <span style={{ width: 44, height: 44, borderRadius: 10, background: 'var(--sakar-primary-soft, var(--sakar-bg))', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--sakar-primary)' }}>
+                <item.icon width={20} height={20} />
+              </span>
+              <span style={{ fontSize: 12, textAlign: 'center' }}>{item.label}</span>
+            </button>
+          ))}
+        </div>
+      )}
+    </Card>
+  );
+}
 
-  if (status === 'loading' || status === 'idle') {
-    return <LoadingState title="Loading dashboard…" />;
-  }
-  if (status === 'error') {
-    return (
-      <ErrorState
-        title="Could not load dashboard data"
-        detail={error ?? undefined}
-        action={<button type="button" className="sakar-btn sakar-btn--secondary" onClick={refetch}>Retry</button>}
-      />
-    );
-  }
-
-  const total = robotsPage?.totalElements ?? 0;
-  // Fleet connectivity comes from the backend's authoritative connectionStatus on each
-  // robot, not from the live vendor probe — a successful probe only proves the vendor
-  // API answered, which is why these counters used to disagree with the Alerts page.
-  const listedRobots = robots ?? [];
-  const onlineCount = listedRobots.filter((r) => r.connectionStatus === 'ONLINE').length;
-  const offlineCount = listedRobots.filter((r) => r.connectionStatus === 'OFFLINE').length;
-  const unknownCount = listedRobots.filter((r) => r.connectionStatus === 'UNKNOWN').length;
-  const anyRobots = listedRobots.length > 0;
+function TaskDataDetailsCard() {
+  const [tab, setTab] = useState<'task' | 'mileage'>('task');
+  const range = useMemo(() => {
+    const to = new Date();
+    const from = new Date(to.getTime() - 6 * 24 * 60 * 60 * 1000);
+    return { from: from.toISOString().slice(0, 10), to: to.toISOString().slice(0, 10) };
+  }, []);
+  const { data, status } = useApi(() => getHotelTaskRecord(range), [range]);
 
   return (
-    <div>
-      <PageHeader title="Dashboard" subtitle="Robot fleet operations control center." />
-
-      <div className="sakar-stat-grid" style={{ marginBottom: 20 }}>
-        <MetricCard label="Total Robots" value={total} icon={<Icon.robot />} tone="default" />
-        <MetricCard
-          label="Online"
-          value={anyRobots ? onlineCount : '—'}
-          icon={<Icon.wifi />}
-          tone="success"
-          trend={anyRobots ? `of ${listedRobots.length} listed` : 'Unavailable'}
-        />
-        <MetricCard
-          label="Offline"
-          value={anyRobots ? offlineCount : '—'}
-          icon={<Icon.xCircle />}
-          tone="danger"
-          trend={anyRobots ? `of ${listedRobots.length} listed` : 'Unavailable'}
-        />
-        <MetricCard
-          label="Unknown"
-          value={anyRobots ? unknownCount : '—'}
-          icon={<Icon.alertTriangle />}
-          tone="neutral"
-          trend={anyRobots ? 'Never reported' : 'Unavailable'}
-        />
-        <MetricCard label="Locked" value="—" icon={<Icon.lock />} tone="neutral" trend="Unavailable" />
-        <MetricCard label="Low Battery" value={lowBatteryRobotCount} icon={<Icon.battery />} tone="warning" trend="Open LOW_BATTERY alerts" />
-        <MetricCard label="Faulted" value="—" icon={<Icon.alertOctagon />} tone="neutral" trend="Unavailable" />
-        <MetricCard label="Cleaning" value="—" icon={<Icon.spray />} tone="neutral" trend="Unavailable" />
-        <MetricCard label="Charging" value="—" icon={<Icon.plug />} tone="neutral" trend="Unavailable" />
-      </div>
-
-      <UnavailableFeature reason="Locked, Faulted, Cleaning, and Charging have no backend-derivable source today: robot lock/unlock is not implemented, there is no fleet-wide fault/error status field, and there is no fleet-wide task-list endpoint to derive an active-cleaning count from (only per-robot task listing exists). These are marked Unavailable rather than fabricated. Low Battery is real — a count of robots with an open LOW_BATTERY alert." />
-      {anyRobots && unknownCount === listedRobots.length && (
-        <UnavailableFeature reason="No robot has ever reported heartbeat or telemetry, so every robot's connection status is Unknown. Connectivity is derived from the robot's own heartbeat/telemetry against the configured offline threshold — a successful Keenon synchronization is not a heartbeat and never marks a robot online." />
-      )}
-
-      <Card title="Robot Fleet Overview" actions={<button type="button" className="sakar-btn sakar-btn--secondary" onClick={() => navigate('/robots')}>View all</button>}>
-        <p className="sakar-page-subtitle" style={{ marginBottom: 12 }}>
-          Status and Last heartbeat come from the backend's authoritative connection status (heartbeat/telemetry
-          against the configured offline threshold). Current state reflects a live vendor status probe where it
-          succeeded. Battery and Agent version are not exposed by any backend endpoint today.
-        </p>
-        <DataTable
-          rows={(robots ?? []).slice(0, 8)}
-          rowKey={(r) => r.id}
-          emptyTitle="No robots registered"
-          columns={[
-            { key: 'name', header: 'Robot', render: (r) => (
-                <button type="button" className="sakar-link-btn" onClick={() => navigate(`/robots/${r.id}`)}>{r.name}</button>
-              ) },
-            { key: 'status', header: 'Status', render: (r) => <ConnectionStatusBadge status={r.connectionStatus} /> },
-            { key: 'battery', header: 'Battery', render: () => <span className="sakar-page-subtitle">Not available</span> },
-            { key: 'state', header: 'Current State', render: (r) => {
-                const s = statuses.get(r.id);
-                return s && s !== 'unavailable' ? s.mainState : <span className="sakar-page-subtitle">—</span>;
-              } },
-            { key: 'site', header: 'Site', render: (r) => (r.siteId ? siteNames.get(r.siteId) ?? r.siteId : '—') },
-            { key: 'heartbeat', header: 'Last Heartbeat', render: (r) => <Heartbeat lastSeenAt={r.lastSeenAt} /> },
-            { key: 'agent', header: 'Agent Version', render: () => <span className="sakar-page-subtitle">Not available</span> },
-          ]}
-        />
+    <>
+      <Card title="Seven-day Overview" actions={<span className="sakar-page-subtitle">{new Date().toLocaleString()} Updated</span>}>
+        {status === 'success' && data ? (
+          <p style={{ fontSize: 28, fontWeight: 700, margin: 0 }}>
+            {data.totalVolumeOfTask} <span style={{ fontSize: 13, fontWeight: 400, color: 'var(--sakar-text-faint)' }}>tasks in the last 7 days</span>
+          </p>
+        ) : (
+          <p className="sakar-page-subtitle">No data available</p>
+        )}
       </Card>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 16, marginTop: 20 }}>
-        <Card title="Recent Robot Events">
-          <SimulatedDataBanner />
-          {recentEvents.map((e) => (
-            <div key={e.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid var(--sakar-border)' }}>
-              <span>{e.message}</span>
-              <Badge tone={e.severity === 'INFO' ? 'info' : e.severity === 'WARNING' ? 'warning' : 'danger'}>{e.severity}</Badge>
-            </div>
-          ))}
-        </Card>
-
-        <Card title="Active Alerts" actions={<button type="button" className="sakar-btn sakar-btn--secondary" onClick={() => navigate('/alerts')}>View all</button>}>
-          {openAlerts.length === 0 ? (
-            <p className="sakar-page-subtitle">No open alerts.</p>
+        <Card title="Task Distribution">
+          {data?.taskTypeBreakdown && data.taskTypeBreakdown.length > 0 ? (
+            <BarList items={data.taskTypeBreakdown.map((s) => ({ key: s.taskType, label: s.taskType, value: s.count }))} />
           ) : (
-            openAlerts.slice(0, 8).map((a) => (
-              <div key={a.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid var(--sakar-border)' }}>
-                <span>{a.message}</span>
-                <SeverityBadge severity={a.severity} />
-              </div>
-            ))
+            <p className="sakar-page-subtitle">No data available</p>
           )}
         </Card>
 
-        <SystemHealthCard />
+        <Card
+          title="Task Statistics"
+          actions={<Tabs ariaLabel="Task statistics metric" tabs={[{ key: 'task', label: 'Task' }, { key: 'mileage', label: 'Mileage' }]} active={tab} onChange={setTab} />}
+        >
+          <p className="sakar-page-subtitle" style={{ marginBottom: 8 }}>Unit: Times</p>
+          {tab === 'task' ? (
+            data?.dailyBreakdown && data.dailyBreakdown.length > 0
+              ? <BarList items={data.dailyBreakdown.map((d) => ({ key: d.date, label: d.date, value: d.count }))} />
+              : <p className="sakar-page-subtitle">No data available</p>
+          ) : (
+            <UnavailableFeature reason="No distance/odometer concept exists anywhere in this platform — never fabricated as zero." />
+          )}
+        </Card>
       </div>
+    </>
+  );
+}
+
+export function DashboardPage() {
+  return (
+    <div>
+      <PageHeader title="Dashboard" />
+
+      <div style={{ marginBottom: 20 }}>
+        <HeroCarousel />
+      </div>
+
+      <div style={{ marginBottom: 20 }}>
+        <RecentlyUsedCard />
+      </div>
+
+      <TaskDataDetailsCard />
     </div>
   );
 }

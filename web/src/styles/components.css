@@ -1255,3 +1255,59 @@
 .sakar-table-skeleton-row > td {
   height: var(--sakar-table-row-h);
 }
+
+/* Carousel — see components/ui/Carousel.tsx */
+.sakar-carousel {
+  position: relative;
+}
+
+.sakar-carousel-viewport {
+  position: relative;
+  border-radius: var(--sakar-radius-lg);
+  overflow: hidden;
+  min-height: 180px;
+}
+
+.sakar-carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(255, 255, 255, 0.35);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.sakar-carousel-arrow:hover {
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.sakar-carousel-arrow--prev { left: 12px; }
+.sakar-carousel-arrow--next { right: 12px; }
+
+.sakar-carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.sakar-carousel-dot {
+  width: 20px;
+  height: 4px;
+  border-radius: 999px;
+  border: none;
+  background: var(--sakar-border-strong);
+  cursor: pointer;
+  padding: 0;
+}
+
+.sakar-carousel-dot--active {
+  background: var(--sakar-primary);
+}
