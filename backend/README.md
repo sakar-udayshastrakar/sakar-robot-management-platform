@@ -55,6 +55,28 @@ updating this section.
 also native PostgreSQL running this same way — that's an infrastructure choice made
 independently, not something to assume from this local dev setup.
 
+## Local development bootstrap admin
+
+Disabled by default in every environment (`SAKAR_BOOTSTRAP_ADMIN` unset/`false`). To get
+a local login without touching the database by hand:
+
+```bash
+export SAKAR_BOOTSTRAP_ADMIN=true
+export SAKAR_BOOTSTRAP_ADMIN_EMAIL=admin@sakarrobotics.com   # optional — this is already the default
+export SAKAR_BOOTSTRAP_ADMIN_PASSWORD=<your-local-only-password>  # optional — see below if unset
+```
+
+`SAKAR_BOOTSTRAP_ADMIN_PASSWORD` is never given a default and must never be set in
+`application.yml`, `docker-compose.yml`, or any other committed file — only in your own
+untracked shell/env file. `DevAdminSeeder` always BCrypt-hashes it before storing it and
+never logs it. If you leave it unset, a one-time random password is generated and printed
+to the startup log instead (the only place it is ever recorded) — this remains the default
+so a freshly-provisioned environment never needs a hardcoded credential in source control.
+If an account with the configured email already exists, an unset password leaves it
+completely untouched; a configured password updates only its password hash (and resets its
+lockout counters, the same as a normal successful login would) — email/role/org/status are
+never changed by this seeder.
+
 ## What's explicitly NOT implemented yet (see the phase-1 final report for the full list, and the root README's "Current Project Status" for what's changed since)
 
 **Status note (documentation sync, 2026-09-22):** command dispatch, task/cleaning orchestration, telemetry ingestion, and alerting — listed below as of Phase 1 — are now implemented (Phases 3/6/7 onward; see root `README.md`). What remains genuinely not implemented: analytics business logic (frontend routes to a stub, no backend API), the Sakar Robot Agent's real on-robot actuation for most command types (`SakarRobotAdapter` is a 100% stub; the Android agent's own SDK-backed executors are gated behind `OperatingMode.HARDWARE_TEST`, never enabled in shipped code), and anything requiring physical C40 access — remote lock/unlock remains software-scaffolding only, per Master Requirements Part 11/38, with no physical validation performed to date.

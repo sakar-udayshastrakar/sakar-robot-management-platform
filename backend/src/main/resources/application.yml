@@ -58,7 +58,11 @@ springdoc:
 sakar:
   bootstrap:
     admin-enabled: ${SAKAR_BOOTSTRAP_ADMIN:false}
-    admin-email: ${SAKAR_BOOTSTRAP_ADMIN_EMAIL:admin@sakarrobotics.local}
+    admin-email: ${SAKAR_BOOTSTRAP_ADMIN_EMAIL:admin@sakarrobotics.com}
+    # Never given a literal default here — unset means "generate + log a random
+    # password" (see DevAdminSeeder). Set SAKAR_BOOTSTRAP_ADMIN_PASSWORD in your
+    # own local shell/untracked env file to use a known password instead.
+    admin-password: ${SAKAR_BOOTSTRAP_ADMIN_PASSWORD:}
 
   security:
     jwt:
