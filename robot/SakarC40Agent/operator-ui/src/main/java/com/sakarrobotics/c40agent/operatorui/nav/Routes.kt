@@ -28,6 +28,7 @@ object Routes {
     const val SETTINGS_ROBOT_INFO = "settings_robot_info"
     const val SETTINGS_RESOURCE_MGMT = "settings_resource_mgmt"
     const val SETTINGS_SYSTEM_INFO = "settings_system_info"
+    const val DIAGNOSTICS_OVERVIEW = "diagnostics_overview"
 
     const val SUPER_USER_LOGIN = "super_user_login"
     const val SUPER_USER_HOME = "super_user_home"

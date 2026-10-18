@@ -90,8 +90,12 @@ fun RobotDebuggingGroupsScreen(onBack: () -> Unit, onOpenGroup: (String) -> Unit
 @Composable
 private fun DiagnosticsSummaryCard(snapshot: DiagnosticsSnapshot) {
     SectionCard(title = "Live Diagnostics Snapshot") {
-        CapabilityBadge(com.sakarrobotics.c40agent.domain.model.Capability.REAL)
+        CapabilityBadge(snapshot.capability)
         Spacer(Modifier.height(8.dp))
+        if (snapshot.capability == com.sakarrobotics.c40agent.domain.model.Capability.UNAVAILABLE) {
+            Text("Not available - the SDK link is not connected, so no values were read.", color = SakarColors.TextFaint)
+            return@SectionCard
+        }
         Text("Work mode: ${snapshot.workMode} · Power: ${snapshot.power} · Odometer: ${snapshot.totalOdometer ?: "-"}")
         Text("Emergency stop engaged: ${snapshot.emergencyStopEngaged} · Emergency enabled: ${snapshot.emergencyEnabled}")
         Text("Motor status code: ${snapshot.motorStatusCode}")

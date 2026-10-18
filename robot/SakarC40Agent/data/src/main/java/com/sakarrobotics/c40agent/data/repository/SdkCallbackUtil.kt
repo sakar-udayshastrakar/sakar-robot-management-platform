@@ -13,18 +13,34 @@ import kotlinx.coroutines.suspendCancellableCoroutine
  */
 suspend fun awaitSdkCall(block: (SdkCallback) -> Unit): Result<String> =
     suspendCancellableCoroutine { cont ->
-        block(object : SdkCallback {
-            override fun onSuccess(rawResponse: String?) {
-                if (cont.isActive) cont.resume(Result.success(rawResponse.orEmpty()))
-            }
-
-            override fun onError(errorCode: Int, errorMessage: String?) {
-                if (cont.isActive) {
-                    cont.resume(Result.failure(SdkCallException(errorCode, errorMessage.orEmpty())))
+        try {
+            block(object : SdkCallback {
+                override fun onSuccess(rawResponse: String?) {
+                    if (cont.isActive) cont.resume(Result.success(rawResponse.orEmpty()))
                 }
+
+                override fun onError(errorCode: Int, errorMessage: String?) {
+                    if (cont.isActive) {
+                        cont.resume(Result.failure(SdkCallException(errorCode, errorMessage.orEmpty())))
+                    }
+                }
+            })
+        } catch (e: RuntimeException) {
+            // Safety net: an SDK/controller call that throws synchronously (typically an unguarded
+            // call made before the SDK is initialised) must surface as a failed reading, never as
+            // a process crash.
+            if (cont.isActive) {
+                cont.resume(
+                    Result.failure(
+                        SdkCallException(SYNCHRONOUS_FAILURE_CODE, "call threw ${e.javaClass.simpleName} (is the SDK connected?)")
+                    )
+                )
             }
-        })
+        }
     }
+
+/** Error code used when an SDK call threw instead of calling back. */
+const val SYNCHRONOUS_FAILURE_CODE = -1002
 
 class SdkCallException(val errorCode: Int, val errorText: String) : Exception("SDK error $errorCode: $errorText")
 

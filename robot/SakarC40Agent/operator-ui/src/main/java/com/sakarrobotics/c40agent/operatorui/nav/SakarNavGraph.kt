@@ -13,6 +13,7 @@ import com.sakarrobotics.c40agent.domain.di.AppContainer
 import com.sakarrobotics.c40agent.domain.model.ScheduleTask
 import com.sakarrobotics.c40agent.operatorui.cleaning.StartCleaningScreen
 import com.sakarrobotics.c40agent.operatorui.common.LocalAppContainer
+import com.sakarrobotics.c40agent.operatorui.diagnostics.DiagnosticsOverviewScreen
 import com.sakarrobotics.c40agent.operatorui.home.HomeScreen
 import com.sakarrobotics.c40agent.operatorui.installation.InstallationAdvancedScreen
 import com.sakarrobotics.c40agent.operatorui.installation.InstallationElevatorScreen
@@ -110,6 +111,7 @@ private fun SakarNavGraph(navController: NavHostController) {
         composable(Routes.SETTINGS_ROBOT_INFO) { RobotInfoScreen(onBack = navController::popBackStack) }
         composable(Routes.SETTINGS_RESOURCE_MGMT) { ResourceManagementScreen(onBack = navController::popBackStack) }
         composable(Routes.SETTINGS_SYSTEM_INFO) { SystemInfoScreen(onBack = navController::popBackStack) }
+        composable(Routes.DIAGNOSTICS_OVERVIEW) { DiagnosticsOverviewScreen(onBack = navController::popBackStack) }
 
         // Super User
         composable(Routes.SUPER_USER_LOGIN) {

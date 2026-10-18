@@ -41,14 +41,20 @@ class ManualDriveViewModel(private val container: AppContainer) : ViewModel() {
         viewModelScope.launch {
             useCases.jog(direction, speedLevel = 2)
                 .onSuccess { _statusMessage.value = null }
-                .onFailure { _statusMessage.value = it.message ?: "Command failed" }
+                .onFailure {
+                    _statusMessage.value = it.message ?: "Command failed"
+                    container.eventLogger.warn("ManualDrive", "$direction command rejected (backend=${backendMode.name}): ${it.message}")
+                }
             _isSending.value = false
         }
     }
 
     fun onRelease() {
         viewModelScope.launch {
-            useCases.emergencyStop().onFailure { _statusMessage.value = it.message ?: "Stop failed" }
+            useCases.emergencyStop().onFailure {
+                _statusMessage.value = it.message ?: "Stop failed"
+                container.eventLogger.warn("ManualDrive", "STOP did not succeed (backend=${backendMode.name}): ${it.message}")
+            }
         }
     }
 

@@ -11,7 +11,9 @@ These are genuinely shared (public, imported across many screens). Always check 
 
 | Component | Purpose | Used by (examples) |
 |---|---|---|
-| `CapabilityBadge(capability)` | Renders REAL/SIMULATED/LOCAL/GATED/UNAVAILABLE as a colored pill. **Every screen showing robot data must use this**, not a bespoke label. | Diagnostics, Manual Drive, Debug screen, Super User panes |
+| `CapabilityBadge(capability)` | Renders REAL ("LIVE") / SIMULATED / LOCAL / GATED / UNAVAILABLE ("NOT AVAILABLE") / UNKNOWN as a colored pill (UNKNOWN added 2026-10-10: grey, for unverified or not-yet-read values). **Every screen showing robot data must use this**, not a bespoke label. | Diagnostics, Manual Drive, Debug screen, Super User panes, Maps |
+| `CapabilityRow(label, value, capability?)` | One read-only data line: label + value on the left, provenance badge on the right (added 2026-10-10). `capability = null` renders no badge - used for connection *state* values, which must never wear a LIVE badge. | `DiagnosticsOverviewScreen`, `MapsListScreen` |
+| `ConnectionStateChip(state)` / `ConnectionStateRow(label, value, state)` | The robot connection STATE (`STATE: ONLINE/OFFLINE/CONNECTING/UNKNOWN`), outlined with a status dot - deliberately a different shape from `CapabilityBadge`: a badge says how real a *data source* is, a chip says what state the *robot link* is in. Never pair OFFLINE/UNKNOWN with a LIVE badge (added 2026-10-10). | `DiagnosticsOverviewScreen` |
 | `SakarTopBar(title, onBack, trailing)` | Standard back-arrow + title app bar. | Almost every full-screen destination |
 | `BigActionCard(title, subtitle, icon, ...)` | Large touch-friendly dashboard tile. | HomeScreen quick actions |
 | `SectionCard(title?, content)` | White rounded card with optional title, the base unit of most settings/diagnostic screens. | Settings screens, Super User panes, Debug screen |
@@ -44,6 +46,17 @@ These are genuinely shared (public, imported across many screens). Always check 
 |---|---|---|---|
 | Label-left/value-right row | `SuperUserPanes.kt: ValueRow`, `RobotHardwareDebugScreen.kt: DebugValueRow` | Both are `private fun`s added in the same work session, in different files, before this registry existed. | Promote one to `common/CommonComponents.kt` (e.g. `LabelValueRow`) and have both files import it. Not done automatically by this audit per the "no functionality removed automatically" rule - flagged for a future, explicitly-scoped cleanup pass. |
 | Circular PIN keypad button | `IdleLock.kt: PinKey`, `SuperUserAuth.kt: SuperUserPinKey` | Intentionally kept separate - see the row above. | Do NOT merge. Document the reason (already done, in both files' doc comments) so a future pass doesn't "helpfully" merge real auth with the fake idle-lock pad. |
+
+## Stateless content composables + UI tests (added 2026-10-10)
+
+`DiagnosticsOverviewScreen`, `MapsListScreen` and `StartCleaningScreen` are thin wrappers (ViewModel / container,
+state collection) around public stateless composables - `DiagnosticsOverviewContent(state, ...)`,
+`MapsListContent(...)`, `StartCleaningContent(...)` - so they can be rendered with fixed state and no
+`AppContainer`, SDK or robot. Put new rendering logic in the `*Content` function, not the wrapper.
+
+Compose UI tests live in `operator-ui/src/androidTest/` and run on the emulator only:
+`.\gradlew.bat :operator-ui:connectedDebugAndroidTest` (needs a running emulator; the library's test APK excludes the
+vendored SDK's ARM-only `.so` files via `packagingOptions` so it installs on x86 emulators).
 
 ## Rule for new components
 

@@ -26,8 +26,14 @@ class RobotTelemetryRepositoryImpl(
     override val snapshot: Flow<RobotCapabilityResult<RobotTelemetrySnapshot>> =
         combine(connectionRepository.linkState, batteryRepository.battery) { linkState, battery ->
             if (battery.capability != Capability.REAL) {
+                // UNKNOWN (unverified payload / no reading yet) is an open question; anything else
+                // (UNAVAILABLE etc.) is a confirmed absence of a usable reading.
                 return@combine RobotCapabilityResult.Unavailable(
-                    status = RobotCapabilityStatus.NOT_AVAILABLE,
+                    status = if (battery.capability == Capability.UNKNOWN) {
+                        RobotCapabilityStatus.NOT_VERIFIED
+                    } else {
+                        RobotCapabilityStatus.NOT_AVAILABLE
+                    },
                     reason = "Underlying battery reading is not REAL (capability=${battery.capability})."
                 )
             }

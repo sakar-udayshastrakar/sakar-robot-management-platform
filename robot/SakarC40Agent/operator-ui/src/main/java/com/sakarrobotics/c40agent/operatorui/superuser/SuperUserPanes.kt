@@ -257,7 +257,11 @@ fun SuperUserGeneralSettingsPane() {
  * unavailable rather than faked.
  */
 @Composable
-fun SuperUserRobotDebuggingPane(onOpenFullDebugging: () -> Unit) {
+fun SuperUserRobotDebuggingPane(
+    onOpenFullDebugging: () -> Unit,
+    onOpenDiagnostics: () -> Unit = {},
+    onOpenMaps: () -> Unit = {}
+) {
     val container = LocalAppContainer.current
     val context = LocalContext.current
     val viewModel: DiagnosticsViewModel = viewModel(factory = viewModelFactory { initializer { DiagnosticsViewModel(container) } })
@@ -267,6 +271,8 @@ fun SuperUserRobotDebuggingPane(onOpenFullDebugging: () -> Unit) {
 
     Column(Modifier.fillMaxWidth()) {
         DebugRow("Robot Debugging", onClick = onOpenFullDebugging)
+        DebugRow("Diagnostics Overview (read-only)", onClick = onOpenDiagnostics)
+        DebugRow("Maps (read-only)", onClick = onOpenMaps)
         DebugRow("Return to charge stress test") {
             val test = returnToDockTest
             when {

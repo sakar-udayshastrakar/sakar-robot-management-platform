@@ -19,7 +19,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -30,18 +29,32 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.sakarrobotics.c40agent.domain.di.AppContainer
 import com.sakarrobotics.c40agent.domain.model.LogExportRequest
+import com.sakarrobotics.c40agent.domain.model.LogLevel
 import com.sakarrobotics.c40agent.domain.model.LogRecord
+import com.sakarrobotics.c40agent.domain.model.LogSource
 import com.sakarrobotics.c40agent.operatorui.common.EmptyState
 import com.sakarrobotics.c40agent.operatorui.common.LocalAppContainer
 import com.sakarrobotics.c40agent.operatorui.common.SakarTopBar
 import com.sakarrobotics.c40agent.operatorui.common.ScreenPadding
 import com.sakarrobotics.c40agent.operatorui.theme.SakarColors
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import kotlinx.coroutines.launch
 
+enum class LogFilter(val label: String) {
+    ALL("All"),
+    PROBLEMS("Warnings & errors"),
+    APP("App events"),
+    SDK("SDK calls")
+}
+
 class LogsViewModel(private val container: AppContainer) : ViewModel() {
-    var entries by androidx.compose.runtime.mutableStateOf<List<LogRecord>>(emptyList())
+    var entries by mutableStateOf<List<LogRecord>>(emptyList())
         private set
-    var exportMessage by androidx.compose.runtime.mutableStateOf<String?>(null)
+    var exportMessage by mutableStateOf<String?>(null)
+        private set
+    var filter by mutableStateOf(LogFilter.ALL)
         private set
 
     fun refresh() {
@@ -55,10 +68,25 @@ class LogsViewModel(private val container: AppContainer) : ViewModel() {
         }
     }
 
+    fun select(newFilter: LogFilter) {
+        filter = newFilter
+    }
+
+    /** Newest first, narrowed by the selected filter. */
+    fun visible(): List<LogRecord> = entries.asReversed().filter {
+        when (filter) {
+            LogFilter.ALL -> true
+            LogFilter.PROBLEMS -> it.level != LogLevel.INFO
+            LogFilter.APP -> it.source == LogSource.APPLICATION
+            LogFilter.SDK -> it.source == LogSource.SDK_CALL
+        }
+    }
+
     fun exportAll() {
         viewModelScope.launch {
             val result = container.logsRepository.export(LogExportRequest(null, null))
             exportMessage = if (result.success) "Exported ${result.entryCount} entries to ${result.destinationDescription}" else "Export failed: ${result.destinationDescription}"
+            if (!result.success) container.eventLogger.warn("Logs", "Log export failed: ${result.destinationDescription}")
         }
     }
 
@@ -72,6 +100,7 @@ class LogsViewModel(private val container: AppContainer) : ViewModel() {
 fun LogsScreen(onBack: () -> Unit) {
     val container = LocalAppContainer.current
     val viewModel: LogsViewModel = viewModel(factory = viewModelFactory { initializer { LogsViewModel(container) } })
+    val visible = viewModel.visible()
 
     Scaffold(topBar = { SakarTopBar("Logs", onBack) }, containerColor = SakarColors.Background) { padding ->
         Column(Modifier.fillMaxSize().padding(padding).padding(ScreenPadding)) {
@@ -84,18 +113,38 @@ fun LogsScreen(onBack: () -> Unit) {
                 Text(it, color = SakarColors.TextFaint, style = MaterialTheme.typography.bodyMedium)
             }
             Spacer(Modifier.height(12.dp))
-            if (viewModel.entries.isEmpty()) {
-                EmptyState("No log entries yet")
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                LogFilter.values().forEach { option ->
+                    if (option == viewModel.filter) {
+                        Button(onClick = { viewModel.select(option) }) { Text(option.label) }
+                    } else {
+                        OutlinedButton(onClick = { viewModel.select(option) }) { Text(option.label) }
+                    }
+                }
+            }
+            Spacer(Modifier.height(12.dp))
+            if (visible.isEmpty()) {
+                EmptyState(if (viewModel.entries.isEmpty()) "No log entries yet" else "No entries match this filter")
             } else {
                 LazyColumn(
                     modifier = Modifier.fillMaxWidth().weight(1f, fill = true).background(SakarColors.ConsoleBackground).padding(8.dp),
                     verticalArrangement = Arrangement.spacedBy(2.dp)
                 ) {
-                    items(viewModel.entries.reversed()) { entry ->
-                        Text(entry.message, color = SakarColors.ConsoleText, style = MaterialTheme.typography.bodyMedium)
+                    items(visible) { entry ->
+                        Text(
+                            "${formatClock(entry.timestampMillis)} ${entry.level} [${entry.tag}] ${entry.message}",
+                            color = when (entry.level) {
+                                LogLevel.ERROR -> SakarColors.Danger
+                                LogLevel.WARN -> SakarColors.Warning
+                                LogLevel.INFO -> SakarColors.ConsoleText
+                            },
+                            style = MaterialTheme.typography.bodyMedium
+                        )
                     }
                 }
             }
         }
     }
 }
+
+private fun formatClock(millis: Long): String = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date(millis))

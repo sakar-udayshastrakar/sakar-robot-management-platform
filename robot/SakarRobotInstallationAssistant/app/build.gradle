@@ -1,0 +1,68 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    namespace 'com.sakarrobotics.installationassistant'
+    compileSdk 34
+
+    defaultConfig {
+        // Independent application id: never shares an identity with SakarC40Agent.
+        applicationId "com.sakarrobotics.installationassistant"
+        minSdk 21
+        targetSdk 34
+        versionCode 2
+        versionName "0.2.0-sim"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    buildFeatures {
+        compose true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.5.14'
+    }
+}
+
+dependencies {
+    implementation project(':core')
+
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
+    implementation 'androidx.core:core-ktx:1.13.1'
+
+    implementation platform('androidx.compose:compose-bom:2024.06.00')
+    implementation 'androidx.compose.ui:ui'
+    implementation 'androidx.compose.ui:ui-graphics'
+    implementation 'androidx.compose.material3:material3'
+    implementation 'androidx.compose.material:material-icons-extended'
+    implementation 'androidx.activity:activity-compose:1.9.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime-compose:2.8.2'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.8.2'
+    implementation 'androidx.navigation:navigation-compose:2.7.7'
+
+    androidTestImplementation platform('androidx.compose:compose-bom:2024.06.00')
+    androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
+    androidTestImplementation 'androidx.test:runner:1.5.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'com.google.code.gson:gson:2.10.1' // parses exported backups in tests only
+    debugImplementation 'androidx.compose.ui:ui-test-manifest'
+
+    testImplementation 'junit:junit:4.13.2'
+}

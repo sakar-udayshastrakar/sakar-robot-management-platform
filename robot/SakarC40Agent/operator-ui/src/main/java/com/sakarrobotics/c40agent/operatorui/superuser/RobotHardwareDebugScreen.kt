@@ -78,7 +78,7 @@ fun RobotHardwareDebugScreen(onBack: () -> Unit) {
         container.batteryRepository.refresh()
     }
     val battery by container.batteryRepository.battery.collectAsState(
-        initial = BatteryState(null, false, null, null, Capability.REAL)
+        initial = BatteryState(null, null, null, null, Capability.UNKNOWN)
     )
 
     Scaffold(topBar = { SakarTopBar("Debug", onBack) }, containerColor = SakarColors.Background) { padding ->
@@ -101,7 +101,16 @@ fun RobotHardwareDebugScreen(onBack: () -> Unit) {
                 Column(Modifier.weight(1f)) {
                     SectionCard {
                         val snapshot = diagViewModel.snapshot
-                        DebugValueRow("Emergency Stop Status", if (snapshot?.emergencyStopEngaged == true) "On" else "Off")
+                        // "Off" is a claim about the robot: only made when a runtime snapshot was actually
+                        // read over a connected link - otherwise the honest answer is "Unknown".
+                        DebugValueRow(
+                            "Emergency Stop Status",
+                            when {
+                                snapshot == null || snapshot.capability == Capability.UNAVAILABLE -> "Unknown"
+                                snapshot.emergencyStopEngaged -> "On (unverified)"
+                                else -> "Off (unverified)"
+                            }
+                        )
                         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                             Text("Hub Motor Status", style = MaterialTheme.typography.bodyLarge, color = SakarColors.TextPrimary)
                             Switch(checked = false, onCheckedChange = {}, enabled = false)
@@ -111,13 +120,13 @@ fun RobotHardwareDebugScreen(onBack: () -> Unit) {
                     }
                     Spacer(Modifier.height(12.dp))
                     SectionCard(title = "IMU") {
-                        CapabilityBadge(Capability.REAL)
+                        CapabilityBadge(diagViewModel.sensors?.imu?.capability ?: Capability.UNKNOWN)
                         Spacer(Modifier.height(6.dp))
                         Text(diagViewModel.sensors?.imu?.value ?: "Reading...", color = SakarColors.TextMuted, style = MaterialTheme.typography.bodyMedium)
                     }
                     Spacer(Modifier.height(12.dp))
                     SectionCard(title = "Battery") {
-                        CapabilityBadge(Capability.REAL)
+                        CapabilityBadge(battery.capability)
                         Spacer(Modifier.height(6.dp))
                         Text(battery.raw ?: "Reading...", color = SakarColors.TextMuted, style = MaterialTheme.typography.bodyMedium)
                     }
@@ -169,23 +178,23 @@ fun RobotHardwareDebugScreen(onBack: () -> Unit) {
             DebugActuatorSection(
                 title = "Front Roller Brush (Sweeping Brush) + Side Brush",
                 rows = listOf(
-                    "Front Roller Brush: Forward/Reverse Rotation (0/1)" to "0",
-                    "Front Roller Brush: Speed (0-900) r/min" to "0 r/m",
-                    "Front Roller Brush: Lowering Distance (Ground Pressure) (0-30)" to "0 mm",
+                    "Front Roller Brush: Forward/Reverse Rotation (0/1)" to "--",
+                    "Front Roller Brush: Speed (0-900) r/min" to "-- r/min",
+                    "Front Roller Brush: Lowering Distance (Ground Pressure) (0-30)" to "-- mm",
                     "Side Brush: Speed (0-100)" to "-- r/min",
-                    "Fan (Vacuum) (0-100)%" to "0 r/m"
+                    "Fan (Vacuum) (0-100)%" to "-- r/min"
                 )
             )
             Spacer(Modifier.height(12.dp))
             DebugActuatorSection(
                 title = "Rear Roller Brush (Washing / Dust Mop / Wet Mopping Brush) + Squeegee",
                 rows = listOf(
-                    "Rear Roller Brush: Forward/Reverse Rotation (0/1)" to "0",
-                    "Rear Roller Brush: Speed (0-900) r/min" to "0 r/m",
-                    "Rear Roller Brush + Squeegee: Lowering Distance (0-30)" to "0 mm",
-                    "Clean Water Pump: Washing Nozzle Flow Rate (0-200) ml/min" to "0 ml/min",
+                    "Rear Roller Brush: Forward/Reverse Rotation (0/1)" to "--",
+                    "Rear Roller Brush: Speed (0-900) r/min" to "-- r/min",
+                    "Rear Roller Brush + Squeegee: Lowering Distance (0-30)" to "-- mm",
+                    "Clean Water Pump: Washing Nozzle Flow Rate (0-200) ml/min" to "-- ml/min",
                     "Side Brush: Speed (0-100)" to "-- r/min",
-                    "Fan - Water Suction (0-100)%" to "0 r/m"
+                    "Fan - Water Suction (0-100)%" to "-- r/min"
                 )
             )
             Spacer(Modifier.height(12.dp))
@@ -284,7 +293,7 @@ private fun DebugStepperCard(title: String, fieldLabel: String) {
         Spacer(Modifier.height(6.dp))
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
             Surface(shape = RoundedCornerShape(8.dp), color = SakarColors.Background) {
-                Text("60", Modifier.padding(horizontal = 20.dp, vertical = 8.dp), color = SakarColors.TextSubtle)
+                Text("--", Modifier.padding(horizontal = 20.dp, vertical = 8.dp), color = SakarColors.TextSubtle)
             }
             Switch(checked = false, onCheckedChange = {}, enabled = false)
         }

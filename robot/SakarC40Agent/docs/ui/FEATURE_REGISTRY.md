@@ -23,7 +23,7 @@ human-readable index of the same data plus the rules for maintaining it.
 | `viewmodel` | The ViewModel class, or "none" for local-state-only screens. |
 | `repository_or_usecase` | The domain repository/use case backing it, or "NONE" if it's UI-only. |
 | `hardware_backend` | What actually executes: a named SDK component, `SIMULATED`, `LOCAL`, or `UNAVAILABLE` with the reason. |
-| `capability_state` | One of the app's own `Capability` enum values (`REAL`/`SIMULATED`/`LOCAL`/`GATED`/`UNAVAILABLE`), or a mix when a screen has per-row capability. |
+| `capability_state` | One of the app's own `Capability` enum values (`REAL`/`SIMULATED`/`LOCAL`/`GATED`/`UNAVAILABLE`/`UNKNOWN`), or a mix when a screen has per-row capability. `UNKNOWN` = a source may exist but is unverified on hardware or has not been read yet. |
 | `reference_source` | Which vendor reference screenshot (if any) this was built against. "NOT present in vendor reference" is itself meaningful - it flags an engineering-only addition. |
 | `duplicate_of` | `NONE`, or the `feature_id` this duplicates/supersedes/is superseded by. |
 | `status` | `LIVE`, `ORPHANED` (still compiles, unreachable - not auto-deleted), or a note. |
@@ -49,10 +49,11 @@ human-readable index of the same data plus the rules for maintaining it.
 | `robot_actuator_test_groups_legacy` | ADMINISTRATION | RobotDebuggingGroupsScreen | (was SUPER_USER_DEBUG_GROUPS) | **ORPHANED** |
 | `super_user_system_settings` | ADMINISTRATION | SuperUserSystemSettingsPane | SUPER_USER_HOME (inline) | LIVE |
 | `super_user_system_settings_legacy` | ADMINISTRATION | SuperUserSystemSettingsScreen | SUPER_USER_SYSTEM_SETTINGS | **ORPHANED** |
-| `logs_viewer` | ADMINISTRATION | LogsScreen | SUPER_USER_LOGS | **ORPHANED** (visible Super User sidebar entry removed 2026-09-25) |
+| `logs_viewer` | ADMINISTRATION | LogsScreen | SUPER_USER_LOGS | **ORPHANED** (visible Super User sidebar entry removed 2026-09-25; deliberately not re-added 2026-10-10, needs explicit authorization; currently unreachable through the UI - see ROUTE_REGISTRY.md for the access analysis and the reachable alternatives - screen itself gained a level filter and merges the redacted application event log) |
 | `robot_information` | SHARED | RobotInfoScreen | SETTINGS_ROBOT_INFO | LIVE (Super User entry point removed 2026-09-25; reachable only via Home -> Settings) |
 | `robot_installation_commissioning` | ADMINISTRATION | InstallationHomeScreen | INSTALLATION_HOME | **ORPHANED** (visible Super User sidebar entry removed 2026-09-25; confirmed not reference-present) |
-| `maps_management` | ADMINISTRATION | MapsListScreen | MAPS_LIST | **ORPHANED** (visible Super User sidebar entry removed 2026-09-25; confirmed not reference-present) |
+| `maps_management` | SHARED | MapsListScreen | MAPS_LIST | LIVE - revived 2026-10-10 as a read-only view; entry points: Settings -> Maps and Super User -> Robot Debugging pane row (not the sidebar) |
+| `diagnostics_overview` | SHARED | DiagnosticsOverviewScreen | DIAGNOSTICS_OVERVIEW | LIVE (new 2026-10-10; entry points: Settings -> Diagnostics, Super User -> Robot Debugging pane row) |
 | `legacy_diagnostics_dashboard` | ENGINEERING | ui.MainActivity | n/a (Intent) | LIVE |
 
 ## Maintenance rule

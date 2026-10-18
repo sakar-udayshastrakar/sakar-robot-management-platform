@@ -24,7 +24,26 @@ enum class Capability {
     GATED,
 
     /** No SDK or hardware API exists for this yet. The UI still exposes the screen/interface, disabled, for future wiring. */
-    UNAVAILABLE
+    UNAVAILABLE,
+
+    /**
+     * A source may exist, but the value/payload has not been verified on hardware (or no reading
+     * has been taken yet). Used instead of showing a guessed value - e.g. battery percentage and
+     * charging state, whose SDK payload shape is unconfirmed.
+     */
+    UNKNOWN
+}
+
+/**
+ * Maps the ROS/mapping seam's [RobotCapabilityStatus] onto the UI-facing [Capability] vocabulary so
+ * screens render both through the same badge. NOT_AVAILABLE is a confirmed absence (UNAVAILABLE);
+ * NOT_VERIFIED is an open question (UNKNOWN).
+ */
+fun RobotCapabilityStatus.toCapability(): Capability = when (this) {
+    RobotCapabilityStatus.REAL -> Capability.REAL
+    RobotCapabilityStatus.SIMULATED -> Capability.SIMULATED
+    RobotCapabilityStatus.NOT_AVAILABLE -> Capability.UNAVAILABLE
+    RobotCapabilityStatus.NOT_VERIFIED -> Capability.UNKNOWN
 }
 
 /** A value paired with how real it is, so the UI never has to guess. */

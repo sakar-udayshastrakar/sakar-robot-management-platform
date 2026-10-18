@@ -13,6 +13,6 @@ package com.sakarrobotics.c40agent.domain.model
 data class RobotTelemetrySnapshot(
     val linkState: RobotLinkState,
     val batteryPercentage: Int?,
-    val isCharging: Boolean,
+    val isCharging: Boolean?,
     val lastUpdatedAtMillis: Long
 )

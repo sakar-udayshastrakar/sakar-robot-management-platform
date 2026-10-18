@@ -67,5 +67,8 @@ dependencies {
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
     testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3'
+    // Test-only: lets the connection repository be tested against a mocked C40RobotController
+    // (the real one needs the Peanut SDK, which must never be initialised in a unit test).
+    testImplementation 'org.mockito:mockito-core:5.11.0'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.10.2'
 }

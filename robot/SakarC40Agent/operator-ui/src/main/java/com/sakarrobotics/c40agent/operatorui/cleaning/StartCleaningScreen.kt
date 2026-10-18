@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.FilterChip
@@ -32,6 +34,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.sakarrobotics.c40agent.domain.di.AppContainer
+import com.sakarrobotics.c40agent.domain.model.Capability
 import com.sakarrobotics.c40agent.domain.model.CleaningIntensity
 import com.sakarrobotics.c40agent.domain.model.CleaningMode
 import com.sakarrobotics.c40agent.domain.model.CleaningRunState
@@ -53,12 +56,38 @@ class StartCleaningViewModel(private val container: AppContainer) : ViewModel() 
         container.cleaningRepository.session.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
     fun start(mode: CleaningMode, intensity: CleaningIntensity, cycles: Int) {
+        container.eventLogger.info("Cleaning", "Simulated clean started: mode=$mode intensity=$intensity cycles=$cycles")
         viewModelScope.launch { container.cleaningRepository.startCleaning(zoneIds = emptyList(), mode = mode, intensity = intensity, cycles = cycles) }
     }
 
-    fun pause() = viewModelScope.launch { container.cleaningRepository.pause() }
-    fun resume() = viewModelScope.launch { container.cleaningRepository.resume() }
-    fun stop() = viewModelScope.launch { container.cleaningRepository.stop() }
+    fun pause() = viewModelScope.launch {
+        container.eventLogger.info("Cleaning", "Simulated clean paused")
+        container.cleaningRepository.pause()
+    }
+
+    fun resume() = viewModelScope.launch {
+        container.eventLogger.info("Cleaning", "Simulated clean resumed")
+        container.cleaningRepository.resume()
+    }
+
+    fun stop() = viewModelScope.launch {
+        container.eventLogger.info("Cleaning", "Simulated clean stopped")
+        container.cleaningRepository.stop()
+    }
+}
+
+private fun CleaningRunState.label(): String = when (this) {
+    CleaningRunState.IDLE -> "Idle"
+    CleaningRunState.CLEANING -> "Cleaning"
+    CleaningRunState.PAUSED -> "Paused"
+    CleaningRunState.RETURNING_TO_DOCK -> "Returning to dock"
+    CleaningRunState.COMPLETED -> "Completed"
+    CleaningRunState.ERROR -> "Error"
+}
+
+private fun formatDuration(totalSeconds: Long): String {
+    val seconds = totalSeconds.coerceAtLeast(0L)
+    return "%d:%02d".format(seconds / 60, seconds % 60)
 }
 
 @Composable
@@ -67,14 +96,42 @@ fun StartCleaningScreen(onBack: () -> Unit) {
     val viewModel: StartCleaningViewModel = viewModel(factory = viewModelFactory { initializer { StartCleaningViewModel(container) } })
     val session by viewModel.session.collectAsState()
 
+    StartCleaningContent(
+        session = session,
+        onBack = onBack,
+        onStart = viewModel::start,
+        onPause = { viewModel.pause() },
+        onResume = { viewModel.resume() },
+        onStop = { viewModel.stop() }
+    )
+}
+
+/** Stateless Start Cleaning content, so it can be rendered (and UI-tested) without an AppContainer. */
+@Composable
+fun StartCleaningContent(
+    session: CleaningSession?,
+    onBack: () -> Unit,
+    onStart: (CleaningMode, CleaningIntensity, Int) -> Unit,
+    onPause: () -> Unit,
+    onResume: () -> Unit,
+    onStop: () -> Unit
+) {
     var selectedMode by remember { mutableStateOf(CleaningMode.WATER_SUCTION) }
     var selectedIntensity by remember { mutableStateOf(CleaningIntensity.STANDARD) }
     var cycles by remember { mutableStateOf(1) }
 
     Scaffold(topBar = { SakarTopBar("Start Cleaning", onBack) }, containerColor = SakarColors.Background) { padding ->
-        Column(Modifier.fillMaxSize().padding(padding).padding(ScreenPadding)) {
-            InlineBanner("Whole-floor map selection is not yet available on this build - cleaning starts across the currently active area.", isWarning = true)
-            Spacer(Modifier.height(16.dp))
+        Column(
+            Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .verticalScroll(rememberScrollState())
+                .padding(ScreenPadding)
+        ) {
+            InlineBanner("DEMO / SIMULATED: this cleaning run is a local simulation - no cleaning command is sent to the robot. Whole-floor map selection is not available on this build.", isWarning = true)
+            Spacer(Modifier.height(8.dp))
+            CapabilityBadge(Capability.SIMULATED)
+            Spacer(Modifier.height(12.dp))
 
             SectionCard(title = "Cleaning Mode") {
                 LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -112,7 +169,16 @@ fun StartCleaningScreen(onBack: () -> Unit) {
             val currentSession = session
             if (currentSession != null && currentSession.state != CleaningRunState.IDLE) {
                 SectionCard(title = "Progress") {
+                    Text(
+                        "${currentSession.state.label()} · ${currentSession.mode.name.replace('_', ' ')} · ${currentSession.intensity.name}",
+                        style = MaterialTheme.typography.titleMedium
+                    )
                     Text("${currentSession.progressPercent}% — cycle ${currentSession.cyclesCompleted + 1} of ${currentSession.cyclesRequested}")
+                    Text(
+                        "Elapsed ${formatDuration(currentSession.elapsedSeconds)} · Remaining ~${formatDuration(currentSession.estimatedRemainingSeconds)} (simulated estimate)",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = SakarColors.TextFaint
+                    )
                     Spacer(Modifier.height(8.dp))
                     LinearProgressIndicator(progress = { currentSession.progressPercent / 100f }, modifier = Modifier.fillMaxWidth())
                     Spacer(Modifier.height(8.dp))
@@ -120,18 +186,18 @@ fun StartCleaningScreen(onBack: () -> Unit) {
                     Spacer(Modifier.height(12.dp))
                     Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                         when (currentSession.state) {
-                            CleaningRunState.CLEANING -> Button(onClick = viewModel::pause) { Text("Pause") }
-                            CleaningRunState.PAUSED -> Button(onClick = viewModel::resume) { Text("Resume") }
+                            CleaningRunState.CLEANING -> Button(onClick = onPause) { Text("Pause") }
+                            CleaningRunState.PAUSED -> Button(onClick = onResume) { Text("Resume") }
                             else -> {}
                         }
-                        OutlinedButton(onClick = viewModel::stop) { Text("Stop") }
+                        OutlinedButton(onClick = onStop) { Text("Stop") }
                     }
                 }
             } else {
                 Button(
-                    onClick = { viewModel.start(selectedMode, selectedIntensity, cycles) },
+                    onClick = { onStart(selectedMode, selectedIntensity, cycles) },
                     modifier = Modifier.fillMaxWidth().height(56.dp)
-                ) { Text("Start Clean", style = MaterialTheme.typography.titleMedium) }
+                ) { Text("Start Simulated Clean", style = MaterialTheme.typography.titleMedium) }
             }
         }
     }

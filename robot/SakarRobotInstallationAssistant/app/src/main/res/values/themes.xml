@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Platform theme only: Compose draws the whole UI. -->
+    <style name="Theme.SakarInstallationAssistant" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">#F8FAFC</item>
+        <item name="android:statusBarColor">#FFFFFF</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+</resources>

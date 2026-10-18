@@ -8,6 +8,7 @@ import com.sakarrobotics.c40agent.domain.model.ChargingSettings
 import com.sakarrobotics.c40agent.domain.model.CloudSyncState
 import com.sakarrobotics.c40agent.domain.model.DiagnosticsSnapshot
 import com.sakarrobotics.c40agent.domain.model.DockingState
+import com.sakarrobotics.c40agent.domain.model.MapListResult
 import com.sakarrobotics.c40agent.domain.model.MapSummary
 import com.sakarrobotics.c40agent.domain.model.Rated
 import com.sakarrobotics.c40agent.domain.model.RobotIdentity
@@ -18,6 +19,12 @@ import kotlinx.coroutines.flow.Flow
 
 interface RobotConnectionRepository {
     val linkState: Flow<RobotLinkState>
+    /**
+     * Wall-clock millis of the most recent *successful* SDK exchange (connect, or any later read that
+     * succeeded), or null if none has happened this process. Evidence of communication, not a heartbeat:
+     * nothing polls the robot in the background.
+     */
+    val lastCommunicationMillis: Flow<Long?>
     val cloudSyncState: Flow<CloudSyncState>
     suspend fun connect(): Result<Unit>
     fun disconnect()
@@ -64,6 +71,8 @@ interface RobotIdentityRepository {
 
 interface RobotMapRepository {
     suspend fun listMaps(): List<MapSummary>
+    /** Like [listMaps] but surfaces the failure reason instead of collapsing it into an empty list. */
+    suspend fun listMapsDetailed(): MapListResult
     suspend fun mapImageBytes(mapId: String): Rated<ByteArray?>
     /** Pushing a new/edited map to the robot. GATED and, on current hardware, UNAVAILABLE - see impl. */
     suspend fun deployMap(mapId: String): Result<Unit>

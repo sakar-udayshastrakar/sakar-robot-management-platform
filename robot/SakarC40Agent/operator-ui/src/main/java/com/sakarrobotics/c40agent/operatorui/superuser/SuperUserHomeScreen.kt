@@ -79,7 +79,11 @@ fun SuperUserHomeScreen(onBack: () -> Unit, onOpen: (String) -> Unit, onExitSupe
                 SuperUserSection.NETWORK -> SuperUserNetworkPane()
                 SuperUserSection.RESOURCE_MANAGEMENT -> SuperUserResourceManagementPane()
                 SuperUserSection.GENERAL_SETTINGS -> SuperUserGeneralSettingsPane()
-                SuperUserSection.ROBOT_DEBUGGING -> SuperUserRobotDebuggingPane(onOpenFullDebugging = { onOpen(Routes.SUPER_USER_DEBUG_GROUPS) })
+                SuperUserSection.ROBOT_DEBUGGING -> SuperUserRobotDebuggingPane(
+                    onOpenFullDebugging = { onOpen(Routes.SUPER_USER_DEBUG_GROUPS) },
+                    onOpenDiagnostics = { onOpen(Routes.DIAGNOSTICS_OVERVIEW) },
+                    onOpenMaps = { onOpen(Routes.MAPS_LIST) }
+                )
                 SuperUserSection.SYSTEM_SETTINGS -> SuperUserSystemSettingsPane()
             }
         }

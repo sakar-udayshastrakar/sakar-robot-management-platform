@@ -37,6 +37,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.sakarrobotics.c40agent.domain.model.Capability
+import com.sakarrobotics.c40agent.domain.model.ConnectionDisplayState
 import com.sakarrobotics.c40agent.operatorui.theme.SakarColors
 
 /** Renders how real a value/action is - every screen that shows robot data must use this. */
@@ -48,6 +49,7 @@ fun CapabilityBadge(capability: Capability, modifier: Modifier = Modifier) {
         Capability.SIMULATED -> Triple("SIMULATED", SakarColors.Warning.copy(alpha = 0.14f), SakarColors.WarningText)
         Capability.GATED -> Triple("LOCKED (SERVICE MODE)", SakarColors.Warning.copy(alpha = 0.14f), SakarColors.WarningText)
         Capability.UNAVAILABLE -> Triple("NOT AVAILABLE", SakarColors.Danger.copy(alpha = 0.10f), SakarColors.Danger)
+        Capability.UNKNOWN -> Triple("UNKNOWN", SakarColors.TextFaint.copy(alpha = 0.14f), SakarColors.TextMuted)
     }
     Surface(color = bg, shape = RoundedCornerShape(8.dp), modifier = modifier) {
         Text(
@@ -56,6 +58,74 @@ fun CapabilityBadge(capability: Capability, modifier: Modifier = Modifier) {
             style = MaterialTheme.typography.labelLarge,
             modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
         )
+    }
+}
+
+/**
+ * One read-only data line: [label] and [value] on the left, how real the value is on the right.
+ * Used by the Diagnostics and Maps screens so every shown value carries its own provenance badge.
+ * Pass a null [capability] for a plain line with no badge - used for connection *state* values,
+ * which must not wear a "LIVE" badge (see [ConnectionStateChip] for the state indicator).
+ */
+@Composable
+fun CapabilityRow(label: String, value: String, capability: Capability?, modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier.fillMaxWidth().padding(vertical = 6.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Column(Modifier.weight(1f)) {
+            Text(label, style = MaterialTheme.typography.bodyMedium, color = SakarColors.TextFaint)
+            Text(value, style = MaterialTheme.typography.titleMedium, color = SakarColors.TextPrimary)
+        }
+        if (capability != null) CapabilityBadge(capability)
+    }
+}
+
+/**
+ * The robot connection STATE (online / offline / connecting / unknown). Deliberately a different
+ * shape from [CapabilityBadge] (outlined, with a status dot, "STATE" wording) because the two answer
+ * different questions: a badge says how real a *data source* is, this says what state the *robot
+ * link* is in. An "OFFLINE" or "UNKNOWN" state must never be paired with a "LIVE" data badge.
+ */
+@Composable
+fun ConnectionStateChip(state: ConnectionDisplayState, modifier: Modifier = Modifier) {
+    val (label, color) = when (state) {
+        ConnectionDisplayState.ONLINE -> "STATE: ONLINE" to SakarColors.Success
+        ConnectionDisplayState.OFFLINE -> "STATE: OFFLINE" to SakarColors.TextFaint
+        ConnectionDisplayState.CONNECTING -> "STATE: CONNECTING" to SakarColors.Info
+        ConnectionDisplayState.UNKNOWN -> "STATE: UNKNOWN" to SakarColors.WarningText
+    }
+    Surface(
+        color = Color.Transparent,
+        shape = RoundedCornerShape(8.dp),
+        border = BorderStroke(1.dp, color),
+        modifier = modifier
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            Box(Modifier.size(8.dp).background(color, CircleShape))
+            Text(label, color = color, style = MaterialTheme.typography.labelLarge)
+        }
+    }
+}
+
+/** A [CapabilityRow]-shaped line whose right-hand indicator is a [ConnectionStateChip] instead of a data badge. */
+@Composable
+fun ConnectionStateRow(label: String, value: String, state: ConnectionDisplayState, modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier.fillMaxWidth().padding(vertical = 6.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Column(Modifier.weight(1f)) {
+            Text(label, style = MaterialTheme.typography.bodyMedium, color = SakarColors.TextFaint)
+            Text(value, style = MaterialTheme.typography.titleMedium, color = SakarColors.TextPrimary)
+        }
+        ConnectionStateChip(state)
     }
 }
 

@@ -4,6 +4,8 @@ import android.content.Context
 import android.util.Log
 import com.sakarrobotics.c40agent.data.db.AppDatabase
 import com.sakarrobotics.c40agent.data.gateway.SakarRobotGatewayImpl
+import com.sakarrobotics.c40agent.data.repository.AppEventLog
+import com.sakarrobotics.c40agent.data.repository.CommunicationTracker
 import com.sakarrobotics.c40agent.data.repository.DataStoreAuthRepository
 import com.sakarrobotics.c40agent.data.repository.DataStoreLocalPreferencesRepository
 import com.sakarrobotics.c40agent.data.repository.LogsRepositoryImpl
@@ -29,6 +31,7 @@ import com.sakarrobotics.c40agent.data.repository.SimulatedCleaningRepository
 import com.sakarrobotics.c40agent.data.repository.SystemMaintenanceRepositoryImpl
 import com.sakarrobotics.c40agent.domain.di.AppContainer
 import com.sakarrobotics.c40agent.domain.gateway.SakarRobotGateway
+import com.sakarrobotics.c40agent.domain.logging.AppEventLogger
 import com.sakarrobotics.c40agent.domain.model.ManualDriveBackendMode
 import com.sakarrobotics.c40agent.domain.model.SimulatedRobotState
 import com.sakarrobotics.c40agent.domain.repository.AuthRepository
@@ -96,15 +99,25 @@ class DefaultAppContainer @JvmOverloads constructor(
         }
     }
 
-    override val connectionRepository: RobotConnectionRepository = RobotConnectionRepositoryImpl(controller)
-    override val batteryRepository: RobotBatteryRepository = RobotBatteryRepositoryImpl(controller)
+    // One shared tracker: every successful SDK read feeds the same "last communication" evidence.
+    private val communicationTracker = CommunicationTracker()
+    private val appEventLog = AppEventLog()
+    override val eventLogger: AppEventLogger = appEventLog
+
+    override val connectionRepository: RobotConnectionRepository =
+        RobotConnectionRepositoryImpl(controller, communicationTracker, appEventLog)
+    override val batteryRepository: RobotBatteryRepository =
+        RobotBatteryRepositoryImpl(controller, communicationTracker, appEventLog)
     override val chargingRepository: RobotChargingRepository = RobotChargingRepositoryImpl(controller)
     override val navigationRepository: RobotNavigationRepository =
         RobotNavigationRepositoryImpl(controller, motionController, manualDriveBackendMode)
-    override val sensorsRepository: RobotSensorsRepository = RobotSensorsRepositoryImpl(controller)
-    override val diagnosticsRepository: RobotDiagnosticsRepository = RobotDiagnosticsRepositoryImpl(controller)
+    override val sensorsRepository: RobotSensorsRepository =
+        RobotSensorsRepositoryImpl(controller, communicationTracker, appEventLog)
+    override val diagnosticsRepository: RobotDiagnosticsRepository =
+        RobotDiagnosticsRepositoryImpl(controller, communicationTracker, appEventLog)
     override val identityRepository: RobotIdentityRepository = RobotIdentityRepositoryImpl(controller, appVersionName)
-    override val mapRepository: RobotMapRepository = RobotMapRepositoryImpl(controller)
+    override val mapRepository: RobotMapRepository =
+        RobotMapRepositoryImpl(controller, communicationTracker, appEventLog)
     override val workstationRepository: RobotWorkstationRepository = RobotWorkstationRepositoryImpl()
 
     override val cleaningRepository: CleaningRepository = SimulatedCleaningRepository(appScope, db.cleaningZoneDao())
@@ -113,7 +126,7 @@ class DefaultAppContainer @JvmOverloads constructor(
         appScope.launch { repo.seedIfEmpty() }
     }
     override val routeRepository: RouteRepository = RoomRouteRepository(db.routeDao())
-    override val logsRepository: LogsRepository = LogsRepositoryImpl(appContext)
+    override val logsRepository: LogsRepository = LogsRepositoryImpl(appContext, appEventLog)
     override val authRepository: AuthRepository = DataStoreAuthRepository(appContext)
     override val localPreferencesRepository: LocalPreferencesRepository = DataStoreLocalPreferencesRepository(appContext)
     override val systemMaintenanceRepository: SystemMaintenanceRepository =

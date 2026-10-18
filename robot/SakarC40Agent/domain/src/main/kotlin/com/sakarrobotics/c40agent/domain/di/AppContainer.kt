@@ -1,6 +1,7 @@
 package com.sakarrobotics.c40agent.domain.di
 
 import com.sakarrobotics.c40agent.domain.gateway.SakarRobotGateway
+import com.sakarrobotics.c40agent.domain.logging.AppEventLogger
 import com.sakarrobotics.c40agent.domain.model.ManualDriveBackendMode
 import com.sakarrobotics.c40agent.domain.model.SimulatedRobotState
 import com.sakarrobotics.c40agent.domain.repository.AuthRepository
@@ -57,6 +58,9 @@ interface AppContainer {
     val authRepository: AuthRepository
     val localPreferencesRepository: LocalPreferencesRepository
     val systemMaintenanceRepository: SystemMaintenanceRepository
+
+    /** Redacting application-event sink; its entries appear in Logs/Diagnostics alongside the SDK call log. */
+    val eventLogger: AppEventLogger
 
     /**
      * Architecture-preparation seam (see docs/architecture/SAKAR_ROBOT_SOFTWARE_ARCHITECTURE.md) -

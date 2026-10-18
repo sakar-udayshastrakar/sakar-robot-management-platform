@@ -1,0 +1,29 @@
+// :core - pure Kotlin/JVM. Domain models, repository abstractions, the SIMULATED data providers,
+// wizard/validation logic and report generation. No Android, no network, no robot code: it cannot
+// reach hardware because nothing in this module has a transport of any kind.
+plugins {
+    id 'org.jetbrains.kotlin.jvm'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+    kotlinOptions.jvmTarget = '1.8'
+}
+
+dependencies {
+    api 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3'
+    // JSON for the local demo-data files. Gson works unchanged on the JVM (tests) and on Android.
+    implementation 'com.google.code.gson:gson:2.10.1'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.10.2'
+}
+
+test {
+    useJUnitPlatform()
+}

@@ -1069,26 +1069,31 @@
 /* own aspect ratio, rather than letting the raw image dictate layout.  */
 /* No geometry is drawn inside this container — see RobotMapPanel.      */
 /*                                                                        */
-/* Sizing note: `width: auto` + `height: auto` alongside `max-width`     */
-/* and `max-height` (both constraints, at once) is what makes the box's  */
-/* own `aspect-ratio` actually take effect. An earlier version used      */
-/* `width: 100%`, which pins the width to the container regardless of    */
-/* ratio and leaves only the height free to be clamped by `max-height`   */
-/* — for a portrait image that silently produced a landscape-shaped box  */
-/* (verified: 898x520 for a 570x763 image at a 900px container, instead  */
-/* of the correct 388x520), with the image then letterboxed inside its   */
-/* own oversized, mostly-empty-looking background box. `box-sizing:      */
-/* border-box` keeps the 1px border from pushing the box 2px past        */
-/* `max-height`.                                                         */
+/* Sizing note, width-first: the box always fills the card's width       */
+/* (`width: 100%`); with no competing `height`/`max-height` declared,     */
+/* height is the CSS-initial `auto`, so the browser derives it purely     */
+/* from the inline `aspect-ratio` each image sets (from `computeCropStyle`*/
+/* or the raw metadata ratio) — height = width / aspectRatio, with no     */
+/* clamp fighting it. This replaced two earlier, narrower attempts that   */
+/* both capped the box by HEIGHT first (`max-height: 520px`, then         */
+/* `min(70vh, 760px)`): both correctly preserved the ratio, but for a     */
+/* portrait map (Demo Piece's cropped ratio is ~0.645) capping height     */
+/* first caps width to `capHeight * 0.645`, leaving most of a wide card   */
+/* unused regardless of the cap's size (verified live: a 1257px-wide card */
+/* still produced only a ~314px-wide map under the `70vh` version). A     */
+/* portrait map at full card width is proportionally TALL (e.g. ~1900px   */
+/* for a 1257px-wide card at this ratio) — that is accepted here as       */
+/* correct, not clamped away, and simply scrolls with the rest of the     */
+/* page (`RobotDetailPage`'s content area already scrolls; no extra       */
+/* scroll container was added, since one already exists). A landscape     */
+/* map is unaffected either way, since it was already width-bound.        */
+/* `box-sizing: border-box` keeps the 1px border from pushing the box     */
+/* past its own declared width.                                          */
 /* ------------------------------------------------------------------ */
 
 .sakar-map-viewport {
   box-sizing: border-box;
-  max-width: 100%;
-  max-height: 520px;
-  width: auto;
-  height: auto;
-  margin: 0 auto;
+  width: 100%;
   background: var(--sakar-bg);
   border: 1px solid var(--sakar-border);
   border-radius: var(--sakar-radius-md);

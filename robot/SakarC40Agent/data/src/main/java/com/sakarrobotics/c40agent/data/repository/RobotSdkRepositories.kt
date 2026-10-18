@@ -4,6 +4,8 @@ import android.util.Log
 import com.sakarrobotics.c40agent.diagnostics.DeviceEnvironmentInspector
 import com.sakarrobotics.c40agent.domain.model.ActuatorGroup
 import com.sakarrobotics.c40agent.domain.model.ActuatorTest
+import com.sakarrobotics.c40agent.domain.logging.AppEventLogger
+import com.sakarrobotics.c40agent.domain.logging.NoOpAppEventLogger
 import com.sakarrobotics.c40agent.domain.model.ActuatorTestResult
 import com.sakarrobotics.c40agent.domain.model.BatteryState
 import com.sakarrobotics.c40agent.domain.model.Capability
@@ -12,6 +14,7 @@ import com.sakarrobotics.c40agent.domain.model.CloudSyncState
 import com.sakarrobotics.c40agent.domain.model.DiagnosticsSnapshot
 import com.sakarrobotics.c40agent.domain.model.DockingState
 import com.sakarrobotics.c40agent.domain.model.ManualDriveBackendMode
+import com.sakarrobotics.c40agent.domain.model.MapListResult
 import com.sakarrobotics.c40agent.domain.model.MapSummary
 import com.sakarrobotics.c40agent.domain.model.Rated
 import com.sakarrobotics.c40agent.domain.model.RobotIdentity
@@ -33,8 +36,11 @@ import com.sakarrobotics.c40agent.sdk.PeanutSdkBridge
 import com.sakarrobotics.c40agent.telemetry.ConnectionStatus
 import kotlin.coroutines.resume
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.suspendCancellableCoroutine
 
 private fun ConnectionStatus.toDomain(): RobotLinkState = when (this) {
@@ -44,13 +50,25 @@ private fun ConnectionStatus.toDomain(): RobotLinkState = when (this) {
     ConnectionStatus.INIT_FAILED -> RobotLinkState.INIT_FAILED
 }
 
-class RobotConnectionRepositoryImpl(private val controller: C40RobotController) : RobotConnectionRepository {
+class RobotConnectionRepositoryImpl(
+    private val controller: C40RobotController,
+    private val tracker: CommunicationTracker = CommunicationTracker(),
+    private val events: AppEventLogger = NoOpAppEventLogger,
+    private val pollIntervalMillis: Long = LINK_POLL_INTERVAL_MILLIS
+) : RobotConnectionRepository {
 
-    // C40RobotController has no listener API for connection-status changes (it is polled via
-    // getStatus()) - this flow polls on subscription start/after connect() rather than inventing
-    // a push mechanism the SDK does not provide.
-    private val _linkState = MutableStateFlow(controller.status.toDomain())
-    override val linkState: Flow<RobotLinkState> = _linkState.asStateFlow()
+    // C40RobotController has no listener API for connection-status changes, but exposes its state
+    // through getStatus() - a plain in-memory field read, nothing is sent to the robot. While anyone
+    // is collecting, this flow re-reads it periodically so the UI cannot keep showing a stale value
+    // after the controller's status changes outside connect()/disconnect().
+    override val linkState: Flow<RobotLinkState> = flow {
+        while (true) {
+            emit(controller.status.toDomain())
+            delay(pollIntervalMillis)
+        }
+    }.distinctUntilChanged()
+
+    override val lastCommunicationMillis: Flow<Long?> = tracker.lastSuccessMillis
 
     // No Sakar Cloud MQTT client is wired into :operator-ui (Phase 3/6/7 MQTT lives in :app /
     // :api and is not exposed through this container) - reported honestly as OFFLINE rather than
@@ -59,15 +77,16 @@ class RobotConnectionRepositoryImpl(private val controller: C40RobotController) 
     override val cloudSyncState: Flow<CloudSyncState> = _cloudSyncState.asStateFlow()
 
     override suspend fun connect(): Result<Unit> = suspendCancellableCoroutine { cont ->
-        _linkState.value = RobotLinkState.CONNECTING
+        events.info("Connection", "Connect requested")
         controller.connect(object : ConnectionCallback {
             override fun onConnected() {
-                _linkState.value = controller.status.toDomain()
+                tracker.markSuccess()
+                events.info("Connection", "SDK initialised; link CONNECTED")
                 if (cont.isActive) cont.resume(Result.success(Unit))
             }
 
             override fun onConnectionFailed(errorCode: Int) {
-                _linkState.value = controller.status.toDomain()
+                events.error("Connection", "SDK initialisation failed (error $errorCode)")
                 if (cont.isActive) cont.resume(Result.failure(SdkCallException(errorCode, "SDK init failed")))
             }
         })
@@ -75,32 +94,34 @@ class RobotConnectionRepositoryImpl(private val controller: C40RobotController) 
 
     override fun disconnect() {
         controller.disconnect()
-        _linkState.value = controller.status.toDomain()
+        events.info("Connection", "Disconnected by operator")
+    }
+
+    private companion object {
+        const val LINK_POLL_INTERVAL_MILLIS = 1_000L
     }
 }
 
-class RobotBatteryRepositoryImpl(private val controller: C40RobotController) : RobotBatteryRepository {
+class RobotBatteryRepositoryImpl(
+    private val controller: C40RobotController,
+    private val tracker: CommunicationTracker = CommunicationTracker(),
+    private val events: AppEventLogger = NoOpAppEventLogger
+) : RobotBatteryRepository {
 
-    private val _battery = MutableStateFlow(unknownBattery())
+    private val _battery = MutableStateFlow(initialBatteryState())
     override val battery: Flow<BatteryState> = _battery.asStateFlow()
 
     override suspend fun refresh(): BatteryState {
-        val result = awaitSdkCall { controller.getBattery(it) }
-        val state = result.fold(
-            onSuccess = { raw ->
-                // The vendored AAR's BatteryComponent.getStatus() response shape is not confirmed
-                // (COMPATIBILITY_REPORT.md) - percentage/charging/temperature are deliberately left
-                // null rather than guess-parsed from an unconfirmed JSON shape. The raw response is
-                // still shown in full, verbatim, in the UI.
-                BatteryState(percentage = null, isCharging = false, temperatureCelsius = null, raw = raw, capability = Capability.REAL)
-            },
-            onFailure = { unknownBattery().copy(raw = it.message) }
-        )
+        val result = tracker.call { controller.getBattery(it) }
+        // The vendored AAR's BatteryComponent.getStatus() response shape is not confirmed
+        // (COMPATIBILITY_REPORT.md) - percentage/charging/temperature are deliberately left null
+        // (capability UNKNOWN) rather than guess-parsed; a failed query is UNAVAILABLE. The raw
+        // response is still shown in full, verbatim, in the UI.
+        result.exceptionOrNull()?.let { events.warn("Battery", "Battery query failed: ${it.message}") }
+        val state = result.toBatteryState()
         _battery.value = state
         return state
     }
-
-    private fun unknownBattery() = BatteryState(null, false, null, null, Capability.REAL)
 }
 
 class RobotChargingRepositoryImpl(private val controller: C40RobotController) : RobotChargingRepository {
@@ -176,38 +197,43 @@ class RobotNavigationRepositoryImpl(
     }
 }
 
-class RobotSensorsRepositoryImpl(private val controller: C40RobotController) : RobotSensorsRepository {
+class RobotSensorsRepositoryImpl(
+    private val controller: C40RobotController,
+    private val tracker: CommunicationTracker = CommunicationTracker(),
+    private val events: AppEventLogger = NoOpAppEventLogger
+) : RobotSensorsRepository {
 
-    override suspend fun readSensors(): SensorReadings {
-        val lidar = awaitSdkCall { controller.getLidar(it) }
-        val depth = awaitSdkCall { controller.getDepth(it) }
-        val sonar = awaitSdkCall { controller.getSonar(it) }
-        val imu = awaitSdkCall { controller.getImu(it) }
-        return SensorReadings(
-            lidar = lidar.toRated(),
-            depth = depth.toRated(),
-            sonar = sonar.toRated(),
-            imu = imu.toRated()
-        )
-    }
+    override suspend fun readSensors(): SensorReadings = SensorReadings(
+        lidar = tracker.call { controller.getLidar(it) }.rated("LiDAR"),
+        depth = tracker.call { controller.getDepth(it) }.rated("Depth camera"),
+        sonar = tracker.call { controller.getSonar(it) }.rated("Sonar"),
+        imu = tracker.call { controller.getImu(it) }.rated("IMU")
+    )
 
     override suspend fun readPosition(): Rated<String> =
         // UNCONFIRMED on the physical C40 - see C40RobotController.getPosition's Javadoc.
-        awaitSdkCall { controller.getPosition(it) }.toRated()
+        tracker.call { controller.getPosition(it) }.rated("Position")
 
-    private fun Result<String>.toRated(): Rated<String> = fold(
-        onSuccess = { Rated(it, Capability.REAL) },
-        onFailure = { Rated("error: ${it.message}", Capability.REAL) }
-    )
+    private fun Result<String>.rated(label: String): Rated<String> {
+        exceptionOrNull()?.let { events.warn("Sensors", "$label read failed: ${it.message}") }
+        return toRatedReading()
+    }
 }
 
-class RobotDiagnosticsRepositoryImpl(private val controller: C40RobotController) : RobotDiagnosticsRepository {
+class RobotDiagnosticsRepositoryImpl(
+    private val controller: C40RobotController,
+    private val tracker: CommunicationTracker = CommunicationTracker(),
+    private val events: AppEventLogger = NoOpAppEventLogger
+) : RobotDiagnosticsRepository {
 
     override suspend fun snapshot(): DiagnosticsSnapshot {
         val info = controller.runtimeInfo
         val health = controller.health
         val heartbeat = controller.heartbeat
+        // RuntimeInfo yields zero defaults when the SDK link is not up - those are not readings.
+        val linked = controller.status == ConnectionStatus.CONNECTED
         return DiagnosticsSnapshot(
+            capability = if (linked) Capability.UNKNOWN else Capability.UNAVAILABLE,
             workMode = info.workMode,
             syncStatus = info.syncStatus,
             power = info.power,
@@ -257,7 +283,8 @@ class RobotDiagnosticsRepositoryImpl(private val controller: C40RobotController)
             ActuatorTest("led_test", groupId, "Light strip test", true, Capability.UNAVAILABLE)
         )
         "docking_comms" -> listOf(
-            ActuatorTest("nav_status_read", groupId, "Read navigation status", false, Capability.REAL),
+            // NavigationComponent.getStatus lives on NavigationBridge and is not exposed through the controller.
+            ActuatorTest("nav_status_read", groupId, "Read navigation status", false, Capability.UNAVAILABLE),
             ActuatorTest("map_info_read", groupId, "Read map info", false, Capability.REAL),
             ActuatorTest("return_to_dock_test", groupId, "Return-to-dock (gated)", true, Capability.GATED)
         )
@@ -267,25 +294,24 @@ class RobotDiagnosticsRepositoryImpl(private val controller: C40RobotController)
     override suspend fun runActuatorTest(testId: String): ActuatorTestResult {
         val now = System.currentTimeMillis()
         val result: Result<String> = when (testId) {
-            "battery_read" -> awaitSdkCall { controller.getBattery(it) }
-            "motor_status_read" -> awaitSdkCall { controller.getMotorStatus(it) }
-            "motor_encoder_read" -> awaitSdkCall { controller.getMotorEncoder(it) }
-            "motor_speed_read" -> awaitSdkCall { controller.getMotorSpeed(it) }
-            "motor_state_read" -> awaitSdkCall { controller.getMotorState(it) }
-            "imu_read" -> awaitSdkCall { controller.getImu(it) }
-            "lidar_read" -> awaitSdkCall { controller.getLidar(it) }
-            "depth_read" -> awaitSdkCall { controller.getDepth(it) }
-            "sonar_read" -> awaitSdkCall { controller.getSonar(it) }
-            "nav_status_read" -> Result.success("n/a") // NavigationComponent.getStatus is on NavigationBridge, not exposed via controller directly
-            "map_info_read" -> awaitSdkCall { controller.getMapInfo(it) }
+            "battery_read" -> tracker.call { controller.getBattery(it) }
+            "motor_status_read" -> tracker.call { controller.getMotorStatus(it) }
+            "motor_encoder_read" -> tracker.call { controller.getMotorEncoder(it) }
+            "motor_speed_read" -> tracker.call { controller.getMotorSpeed(it) }
+            "motor_state_read" -> tracker.call { controller.getMotorState(it) }
+            "imu_read" -> tracker.call { controller.getImu(it) }
+            "lidar_read" -> tracker.call { controller.getLidar(it) }
+            "depth_read" -> tracker.call { controller.getDepth(it) }
+            "sonar_read" -> tracker.call { controller.getSonar(it) }
+            "nav_status_read" -> Result.failure(UnsupportedOperationException(
+                "Navigation status is not exposed by the controller - no reading was taken."))
+            "map_info_read" -> tracker.call { controller.getMapInfo(it) }
             "return_to_dock_test" -> awaitSdkCall { controller.returnToDock(it) }
             else -> Result.failure(UnsupportedOperationException(
                 "No actuator API exists in the vendored Peanut SDK for this test."))
         }
-        return result.fold(
-            onSuccess = { ActuatorTestResult(testId, success = true, message = it, timestampMillis = now) },
-            onFailure = { ActuatorTestResult(testId, success = false, message = it.message ?: "failed", timestampMillis = now) }
-        )
+        result.exceptionOrNull()?.let { events.warn("Diagnostics", "Test '$testId' did not succeed: ${it.message}") }
+        return result.toActuatorTestResult(testId, now)
     }
 }
 
@@ -314,14 +340,23 @@ class RobotIdentityRepositoryImpl(
     }
 }
 
-class RobotMapRepositoryImpl(private val controller: C40RobotController) : RobotMapRepository {
+class RobotMapRepositoryImpl(
+    private val controller: C40RobotController,
+    private val tracker: CommunicationTracker = CommunicationTracker(),
+    private val events: AppEventLogger = NoOpAppEventLogger
+) : RobotMapRepository {
 
-    override suspend fun listMaps(): List<MapSummary> {
-        val info = awaitSdkCall { controller.getMapInfo(it) }
-        return info.fold(
-            onSuccess = { raw -> listOf(MapSummary(id = "current", name = "Current robot map", inUse = true, sizeBytes = raw.length.toLong(), capability = Capability.REAL)) },
-            onFailure = { emptyList() }
-        )
+    override suspend fun listMaps(): List<MapSummary> = listMapsDetailed().maps
+
+    override suspend fun listMapsDetailed(): MapListResult {
+        // C40RobotController.getMapInfo has no "SDK ready" guard of its own, so check the link here
+        // instead of calling into an uninitialised SDK.
+        if (controller.status != ConnectionStatus.CONNECTED) {
+            return MapListResult(emptyList(), "Not connected - the robot SDK is not initialised.")
+        }
+        val result = tracker.call { controller.getMapInfo(it) }.toMapListResult()
+        result.error?.let { events.warn("Maps", "Map info read failed: $it") }
+        return result
     }
 
     override suspend fun mapImageBytes(mapId: String): Rated<ByteArray?> {

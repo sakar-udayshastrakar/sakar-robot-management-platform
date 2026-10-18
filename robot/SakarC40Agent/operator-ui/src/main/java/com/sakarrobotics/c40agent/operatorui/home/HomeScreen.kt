@@ -58,7 +58,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.sakarrobotics.c40agent.domain.model.CleaningRunState
+import com.sakarrobotics.c40agent.domain.model.ConnectionDisplayState
 import com.sakarrobotics.c40agent.domain.model.RobotLinkState
+import com.sakarrobotics.c40agent.domain.model.batteryReadout
 import com.sakarrobotics.c40agent.operatorui.common.BigActionCard
 import com.sakarrobotics.c40agent.operatorui.common.LocalAppContainer
 import com.sakarrobotics.c40agent.operatorui.common.ScreenPadding
@@ -118,7 +120,9 @@ fun HomeScreen(
             val cardRowHeight = maxHeight * 0.462f
             Column(modifier = Modifier.fillMaxSize()) {
                 HomeTopBar(
-                    linkState = state.linkState,
+                    connection = state.connection,
+                    batteryText = batteryReadout(state.battery),
+                    appVersion = state.appVersion,
                     onManualPush = { showPlaceholder("Manual Push") },
                     onRecharge = { showPlaceholder("Recharge") },
                     onMute = { showPlaceholder("Mute") },
@@ -180,7 +184,9 @@ private fun connectionBannerMessage(linkState: RobotLinkState): String = when (l
  */
 @Composable
 private fun HomeTopBar(
-    linkState: RobotLinkState,
+    connection: ConnectionDisplayState,
+    batteryText: String,
+    appVersion: String?,
     onManualPush: () -> Unit,
     onRecharge: () -> Unit,
     onMute: () -> Unit,
@@ -208,7 +214,14 @@ private fun HomeTopBar(
             // runtime values that correspond to the reference's own top status indicators
             // (connectivity, clock) are kept here.
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                ConnectionIndicator(linkState)
+                ConnectionIndicator(connection)
+                // Compact readout inside the existing status row (no new Home controls). Battery
+                // stays UNKNOWN until the SDK payload is verified on hardware - never a guessed value.
+                Text(
+                    "Battery $batteryText" + if (appVersion != null) "  ·  v$appVersion" else "",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = SakarColors.TextMuted
+                )
                 LiveClock()
             }
             Spacer(Modifier.height(10.dp))
@@ -223,14 +236,17 @@ private fun HomeTopBar(
     }
 }
 
-/** Real robot connection state, at a glance - never a fabricated "connected". */
+/**
+ * Real robot connection state, at a glance - never a fabricated "connected". "Online" needs both an
+ * initialised SDK link and at least one successful SDK exchange; otherwise it reads "Unknown".
+ */
 @Composable
-private fun ConnectionIndicator(linkState: RobotLinkState) {
-    val (dotColor, label) = when (linkState) {
-        RobotLinkState.CONNECTED -> SakarColors.Success to "Connected"
-        RobotLinkState.CONNECTING -> SakarColors.Info to "Connecting…"
-        RobotLinkState.INIT_FAILED -> SakarColors.Danger to "Offline"
-        RobotLinkState.DISCONNECTED -> SakarColors.TextSubtle to "Offline"
+private fun ConnectionIndicator(connection: ConnectionDisplayState) {
+    val (dotColor, label) = when (connection) {
+        ConnectionDisplayState.ONLINE -> SakarColors.Success to "Online"
+        ConnectionDisplayState.CONNECTING -> SakarColors.Info to "Connecting…"
+        ConnectionDisplayState.OFFLINE -> SakarColors.TextSubtle to "Offline"
+        ConnectionDisplayState.UNKNOWN -> SakarColors.Warning to "Unknown"
     }
     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
         Box(Modifier.size(8.dp).background(dotColor, CircleShape))

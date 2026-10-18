@@ -36,6 +36,8 @@ fun settingsCategories(): List<SettingsCategory> = listOf(
     SettingsCategory("Screen Lock", "Lock screen password and timeout", com.sakarrobotics.c40agent.operatorui.nav.Routes.SETTINGS_SCREEN_LOCK),
     SettingsCategory("General", "Language, positioning, breakpoints", com.sakarrobotics.c40agent.operatorui.nav.Routes.SETTINGS_GENERAL),
     SettingsCategory("Robot Information", "Model, serial, versions, network", com.sakarrobotics.c40agent.operatorui.nav.Routes.SETTINGS_ROBOT_INFO),
+    SettingsCategory("Diagnostics", "Connection, battery, sensors (read-only)", com.sakarrobotics.c40agent.operatorui.nav.Routes.DIAGNOSTICS_OVERVIEW),
+    SettingsCategory("Maps", "Robot map information (read-only)", com.sakarrobotics.c40agent.operatorui.nav.Routes.MAPS_LIST),
     SettingsCategory("Resource Management", "Business profile selection", com.sakarrobotics.c40agent.operatorui.nav.Routes.SETTINGS_RESOURCE_MGMT),
     SettingsCategory("System Information", "App, SDK and Android versions", com.sakarrobotics.c40agent.operatorui.nav.Routes.SETTINGS_SYSTEM_INFO)
 )
