@@ -1,0 +1,1023 @@
+{
+ "generated": "2026-10-24T18:16:12",
+ "target": "D:\\Sakar Robotics Projects\\C40 S-LS-M014C00-RW-F00-V246",
+ "count": 127,
+ "artifacts": [
+  {
+   "relative_path": "RemoteControl-v3.3.1-0-gfe68b6d-prod-release-p-rk3288-signed.apk",
+   "file_name": "RemoteControl-v3.3.1-0-gfe68b6d-prod-release-p-rk3288-signed.apk",
+   "file_type": "ZIP/APK/JAR",
+   "size_bytes": 24560747,
+   "sha256": "884f635cae0bb6f498ccfefe307fd27ba6b096dc8a3e0b5ac8d5e09fe54fe746",
+   "md5": "1db56175dda653f8fa95d5fc4cc6209e"
+  },
+  {
+   "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk",
+   "file_name": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk",
+   "file_type": "ZIP/APK/JAR",
+   "size_bytes": 58089610,
+   "sha256": "fdf780260b9487165ba81eecd9908b4aef5358c6284fc5db9d36979d1b60da84",
+   "md5": "a53fe0ea4c79f20c733da48c44ca777e"
+  },
+  {
+   "relative_path": "base_station-app-v1.1.0-0-gf0ff236/base_station-app-v1.1.0-0-gf0ff236.bin",
+   "file_name": "base_station-app-v1.1.0-0-gf0ff236.bin",
+   "file_type": "unknown(.bin)",
+   "size_bytes": 780080,
+   "sha256": "d194c799c5f88e0852a554bc939f29a909d1680c2754499076e58d81e3d55398",
+   "md5": "59f89b654e534e22aac48be34cf8499a"
+  },
+  {
+   "relative_path": "base_station-app-v1.1.0-0-gf0ff236/iap_main",
+   "file_name": "iap_main",
+   "file_type": "ELF",
+   "size_bytes": 37296,
+   "sha256": "153c58e47e0f1e5cc7c06f5d77315bf95a274c699b8df12e2002f88c00fdc3bd",
+   "md5": "03b85589e574f4a6a214664298e6212f"
+  },
+  {
+   "relative_path": "base_station-app-v1.1.0-0-gf0ff236/script/upgrade.sh",
+   "file_name": "upgrade.sh",
+   "file_type": "unknown(.sh)",
+   "size_bytes": 85,
+   "sha256": "15e926f67b5b8cd6824fa1d3e256ba7e96d91dd62782b1fa4a0091f27fc690dc",
+   "md5": "949f4920e16f814bb27454d234f8110e"
+  },
+  {
+   "relative_path": "base_station-app-v1.1.0-0-gf0ff236/update_Stm32.sh",
+   "file_name": "update_Stm32.sh",
+   "file_type": "script",
+   "size_bytes": 1403,
+   "sha256": "bda54f114cd10b509ce33f20317bee5713536d27aaebe9e2d1868de2623b80ff",
+   "md5": "da403059f46dbaefddd12a673c616d24"
+  },
+  {
+   "relative_path": "gd32f3-c40-chassis-app-v1.1.5-0-g5bec8c6.bin",
+   "file_name": "gd32f3-c40-chassis-app-v1.1.5-0-g5bec8c6.bin",
+   "file_type": "unknown(.bin)",
+   "size_bytes": 77540,
+   "sha256": "5abbe15bcf8e3c9b66771c63f1405b6998e1f62a3ecaef2e5109c038d498c820",
+   "md5": "06aced7e320c2cd66d3aa1ab6113ac06"
+  },
+  {
+   "relative_path": "gd32f3-c40-periph-app-v1.1.4-0-g3df9e74.bin",
+   "file_name": "gd32f3-c40-periph-app-v1.1.4-0-g3df9e74.bin",
+   "file_type": "unknown(.bin)",
+   "size_bytes": 46084,
+   "sha256": "9b2105266afd8adba6e19404aa3897eafc13ad4969adf300fc9ce061dfcb343a",
+   "md5": "f2bd47fc3a4eee70d2ee30e3a651af45"
+  },
+  {
+   "relative_path": "krlog-v1.2.6-0-g18a40d0-prod-release-p-rk3288-signed.apk",
+   "file_name": "krlog-v1.2.6-0-g18a40d0-prod-release-p-rk3288-signed.apk",
+   "file_type": "ZIP/APK/JAR",
+   "size_bytes": 3670196,
+   "sha256": "0a52325fe4d0e177948d1b2aa07b84dd406ed8f533dc2baae98e2abe3ec61251",
+   "md5": "700a72029cfaec1bcb7c6bfebd6ee757"
+  },
+  {
+   "relative_path": "peanut-clean-v3.7.8-0-g153214a-prod-release-p.apk",
+   "file_name": "peanut-clean-v3.7.8-0-g153214a-prod-release-p.apk",
+   "file_type": "ZIP/APK/JAR",
+   "size_bytes": 121990249,
+   "sha256": "9b5eb4f20e3696d1bd467a270b0db0798246ac5dbf9a59d6b968b56cb3b7fdd5",
+   "md5": "8af6aca243c90ece45de1f87104abc80"
+  },
+  {
+   "relative_path": "robot-installation-assistant-v4.11.0-0-gb7c7c7b-prod-release-p.apk",
+   "file_name": "robot-installation-assistant-v4.11.0-0-gb7c7c7b-prod-release-p.apk",
+   "file_type": "ZIP/APK/JAR",
+   "size_bytes": 114327216,
+   "sha256": "b8449eda1fc18bf1bfc1640760f11687bcbe5fb5e3b5824125ed71a9970c3fb0",
+   "md5": "a1f24f508a1cc0559683a09442a69537"
+  },
+  {
+   "relative_path": "schedule-v3.1.1-0-g11c2ad2/bin/Schedule-v3.1.1-0-g11c2ad2.bin",
+   "file_name": "Schedule-v3.1.1-0-g11c2ad2.bin",
+   "file_type": "unknown(.bin)",
+   "size_bytes": 701952,
+   "sha256": "928a1f7080953bec08bfb39907fb483c5fb735b74e670c641472f35754a8bc7f",
+   "md5": "5742bf4eb0a1e629e0a0c9baa883b4d0"
+  },
+  {
+   "relative_path": "schedule-v3.1.1-0-g11c2ad2/script/ota_set_arm",
+   "file_name": "ota_set_arm",
+   "file_type": "ELF",
+   "size_bytes": 131424,
+   "sha256": "633c6a3bb6eada4a0c4d0b972b1b815b09e5f896a556982957d58f29eb44ca0a",
+   "md5": "f2356f6e5d0fe1a8fb5b6ce3521d05d2"
+  },
+  {
+   "relative_path": "schedule-v3.1.1-0-g11c2ad2/script/ota_set_x86",
+   "file_name": "ota_set_x86",
+   "file_type": "ELF",
+   "size_bytes": 140761,
+   "sha256": "359b0074c16e4b2ec30d6eec8773aef251adc403e8671ba103b1bd39e9a01ede",
+   "md5": "a3043e1f84ac38b6d52a2cdd2d0557b4"
+  },
+  {
+   "relative_path": "schedule-v3.1.1-0-g11c2ad2/script/serial_cmd_arm",
+   "file_name": "serial_cmd_arm",
+   "file_type": "ELF",
+   "size_bytes": 102287,
+   "sha256": "886b6fb8ab15d7f2f6589f36ccdd526878737d3610f0dc975fb0f891176f0013",
+   "md5": "964fbd0c5cb942f54a05ed263c8ed77a"
+  },
+  {
+   "relative_path": "schedule-v3.1.1-0-g11c2ad2/script/serial_cmd_x86",
+   "file_name": "serial_cmd_x86",
+   "file_type": "ELF",
+   "size_bytes": 113023,
+   "sha256": "9458f0153699d0df7582ef0fcaf9ec525d07d000adbbb6caa3eb0c32adf896d9",
+   "md5": "39dfa420bea072abedb62b6cca03194e"
+  },
+  {
+   "relative_path": "schedule-v3.1.1-0-g11c2ad2/script/upgrade.sh",
+   "file_name": "upgrade.sh",
+   "file_type": "script",
+   "size_bytes": 1012,
+   "sha256": "688740605abf1255994e55d40426585e0b57464ae26674cffdfce927ef64f8ea",
+   "md5": "b0fcfdffdf2872532440858372fe922b"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/bin/keenon",
+   "file_name": "keenon",
+   "file_type": "script",
+   "size_bytes": 83,
+   "sha256": "a29372303673158c505f3f1e31572eba93e4e296d8d960b01dc2d4f8388e8376",
+   "md5": "4e03a3c4ddd28d37ee4182ada8932eb4"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/manifest.json",
+   "file_name": "manifest.json",
+   "file_type": "JSON?",
+   "size_bytes": 20577,
+   "sha256": "94e3cbac1117ab288b2ca2863e232c1e5fc2de4546ebc2760d66c380b04ffd55",
+   "md5": "5d22a3bbd0146a0afd360c44c1558f7e"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/script/app",
+   "file_name": "app",
+   "file_type": "script",
+   "size_bytes": 83,
+   "sha256": "a29372303673158c505f3f1e31572eba93e4e296d8d960b01dc2d4f8388e8376",
+   "md5": "4e03a3c4ddd28d37ee4182ada8932eb4"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/3rdparty/ros-indigo-filters_1.1.1_armhf.deb",
+   "file_name": "ros-indigo-filters_1.1.1_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 59712,
+   "sha256": "231521cc11198f351417bda5fa159ad28bd997ee898123136001de876d86be59",
+   "md5": "82472a62b4f37036336ef2c4176a5418"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/3rdparty/ros-indigo-remote-tools_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-remote-tools_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 2680944,
+   "sha256": "f79c1d315b54640109a3cf6333040511a35589487c713c44bed4210a32cb72e2",
+   "md5": "a1ac814618e9effb8f80a7a4fe90f2b8"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/3rdparty/ros-indigo-robotviz_2.6.1c1v4-4-g8006fd8-trusty_armhf.deb",
+   "file_name": "ros-indigo-robotviz_2.6.1c1v4-4-g8006fd8-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 640606,
+   "sha256": "ff33530cc609f9477a84b8a87a314fc9bd9d32a751aa61eeec90c6cdb408c916",
+   "md5": "3569515b94c4ed9aeebf2e75dcc3d057"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-anomalies-detection_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-anomalies-detection_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 875524,
+   "sha256": "fc28e0f7b1d34cbd1c55a5da18ccc73308753083ebd279d8846487a7cfa8152e",
+   "md5": "9305f7fb586ab2cde783f4618c9637d8"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-astra-camera_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-astra-camera_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 148236,
+   "sha256": "6f617c4747d836400a0bbc02f8c2213fe00b4142776dc84c661c78127beacdb8",
+   "md5": "473d0376acfe2e8fed0473a1e244f1e6"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-astra-launch_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-astra-launch_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 7764,
+   "sha256": "486998998a90e77facdf9a00de94476a3bcc1dad0cf0a5007323e912d8d79adc",
+   "md5": "9d4184a39e63e950739a0e4ffc3cc9f4"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-base-local-planner_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-base-local-planner_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 202796,
+   "sha256": "2b1fa69a50e63813cf7201e2a42efe96ddae3201044036011274ccafca9bc420",
+   "md5": "bff3aa3ec51c78410f2b33bd0d321ba7"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-berxel-camera_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-berxel-camera_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 5879010,
+   "sha256": "784b0fa853e9877c7f997d257bd8f454637dd62ebabd3cdab2b3587bbd6ae63d",
+   "md5": "86f8d5ca05e054ed5f0dc2a35554da0d"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-busy-map_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-busy-map_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 181312,
+   "sha256": "1a7d7768526d6c1470480c926c809be3c83cd6f1bf129f51bc424e5c526df8c4",
+   "md5": "0f67131bb70214a686f4d2f7295513dd"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-calibration_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-calibration_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 326330,
+   "sha256": "b0cd96ae7c2c3849055d5180f1c3948aca94e0fc2acd1e968126bb74aab72325",
+   "md5": "58d5d06419106f0003099be067c560db"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-cartographer_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-cartographer_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 2269744,
+   "sha256": "4aada69ea373c299877e9a63a77765e1fb835dea9dc51c2e32333f4d318f90ab",
+   "md5": "17732ea1212b06b969f9f1866d500a0c"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-chassis_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-chassis_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 263252,
+   "sha256": "4dec8ecec7490fe7ec7989255ba61acab00913fb56e6ca4bfcfb4ef2b0b49c40",
+   "md5": "9c69eaac573bfb506ee8966dfa9e1497"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-cleanning-planner_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-cleanning-planner_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 82360,
+   "sha256": "da1e319d890045c0e389960f14ec7c45e923ecaa7ee5b2cba38727cd734f916b",
+   "md5": "70fde4dd309848ff20e41848bc993aac"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-clear-static-recovery_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-clear-static-recovery_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 66628,
+   "sha256": "8135e7939751134e09941f7472da212761581487a13dd39cb76cbde265a070b1",
+   "md5": "1e9d835723085169a5d8dab6e2a93e25"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-compressed-image-transport_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-compressed-image-transport_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 74962,
+   "sha256": "926bc28b13da1f87905e81c3234313c702d11b88e1366b0d5ea303821e74523a",
+   "md5": "12b304793b8b7caf2a46f9f1a048314c"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-costmap-2d_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-costmap-2d_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 404072,
+   "sha256": "a106de3f980ba247076cb1ea5cd8889ca4c6df41d3bf62048be4afa4ffca8edb",
+   "md5": "dc417379521eff9d5aba144b169c3bc8"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-costmap-converter_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-costmap-converter_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 298860,
+   "sha256": "c65d69d2845895d3a9ad12a2b4916db5a9554f5e420925418f52c06824c2de5d",
+   "md5": "2da2417a7f09f666e4574ac77603a7c9"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-cover-planner_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-cover-planner_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 572164,
+   "sha256": "76ddfbbd5dd918ac8c29c21bf0c56b04e99c9ea706dad0a435882bea32605796",
+   "md5": "589407393964d26713fa15a2d24fa183"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-database_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-database_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 310678,
+   "sha256": "e7deb177a5121c31e0aa6675aa90f7c650809e041576b796c8ee9dd6be61e0c6",
+   "md5": "cce70cfe2f5da7736c586cfb2486a7fe"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-demonstration-route-optimizer_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-demonstration-route-optimizer_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 70004,
+   "sha256": "79979f6b3933a7e6d53fa862bbc7454907aa162ad3b4d51226fb3fdfbca2a2bb",
+   "md5": "81fd07d25a9614e692004b70102a33a3"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-elevator-position-detector_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-elevator-position-detector_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 54528,
+   "sha256": "255567bd448bc3974c64d56075a7f512f0dc984a2092789a7202171ae05d56bd",
+   "md5": "54977e406f74cf2311ed09f7edc3b1f8"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-elevator-task_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-elevator-task_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 247982,
+   "sha256": "f19c49be1907fb486069bba74ba326de15bee67e5a05368f0cea543a90f3054e",
+   "md5": "f2cfee70e6aa0f9890ca16d6e18be774"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-fdl-ros_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-fdl-ros_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 7328250,
+   "sha256": "7e81a01327e951d917b8dcb314f9c936ba20dd02def167e320a8ab7b9e3df704",
+   "md5": "ece138dbe41b740f2ba53ddbeef89819"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-free-lidar-driver_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-free-lidar-driver_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 27674,
+   "sha256": "ab69c4d7d29c57f784a5c2fee8e5db0ad309efe0b47a3cf645d0a8e78266b29c",
+   "md5": "2316b99e9451fc6661ad64f1b0c56193"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-global-planner-user_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-global-planner-user_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 73552,
+   "sha256": "e665461c7d9f37d3dc029e86a7faeb408ca532c64f2113b8f0821cf7eeea2f0d",
+   "md5": "3db6469cedec5176c0d5bdc646d9453d"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-gmapping_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-gmapping_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 174044,
+   "sha256": "87aef3b3357f5edc4472300a948bab6862574d749f2c197885a79c907c9bec21",
+   "md5": "fb4ed0c0f43f2377a7803dbc3554b200"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-image-transport_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-image-transport_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 182060,
+   "sha256": "cc1db684c2884426c295ab9443e49d1ae1c0319b941178e6e86f9edc3a521972",
+   "md5": "0ee960dca0aed373390dea3cc49b2d4e"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-interactive_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-interactive_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 467570,
+   "sha256": "dd896cd9bfa00c796777fe09129651252bf73c2234fb820b0e41c6fdb5d5f08b",
+   "md5": "89fbd7038299d0665f2c19a424404a22"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-keenon-charge-msgs_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-keenon-charge-msgs_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 26846,
+   "sha256": "03d0030ee511dbe30f3f447a9ece6e40f1aa0001505df8af38cdd9c0898cc614",
+   "md5": "0f1031bf7fff22a09b79cb8c7e577903"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-keenon-chassis-msgs_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-keenon-chassis-msgs_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 10094,
+   "sha256": "97a1f0fc57227bd99ca992e87a6ae2f075f64d7ce35de3196bd50fe8afb22146",
+   "md5": "31c4a3da7e19f2bfa54c27965e2383ac"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-keenon-clean-msgs_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-keenon-clean-msgs_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 227070,
+   "sha256": "d9d175ee1f140ad11b6444f23be33a2f621f5268f47486f2ab7df624b9721418",
+   "md5": "59e20bc0188033846b909024f1c70e46"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-keenon-common-cmake_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-keenon-common-cmake_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 10292,
+   "sha256": "8b9aecada727e9b1e63cd8c616634f1774e246b7649a7d644be1bb5d5b094092",
+   "md5": "6767e19ceb6f97034cbf3b48b51b317d"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-keenon-database-msgs_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-keenon-database-msgs_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 175530,
+   "sha256": "10ce9fcca4c6f7de6771e277562a0727c79177886c756e75f1521e3d27261fe4",
+   "md5": "4f7587ef248499046c7297251cf30005"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-keenon-deps_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-keenon-deps_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 165714,
+   "sha256": "651d798f8789b333b11e736b5a15845230f8560e312acfec535a0b7a55fb3e3f",
+   "md5": "12e0147d1f390fa727a2465c3fdc1b47"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-keenon-diagnosis-msgs_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-keenon-diagnosis-msgs_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 10400,
+   "sha256": "5cf9add3c91ab60d98f59934a8ddbaf21b8e1c9ca23eb621db77d4047ea3a682",
+   "md5": "69d9e2490678f5affc67433b8f5a6050"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-keenon-elevator-msgs_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-keenon-elevator-msgs_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 40442,
+   "sha256": "27dfc373c5446dc924b9d46482df018f81df19e5cad6a79f75eb3623b98ae1fa",
+   "md5": "4b804ed37f809d4836b9e28f251c599d"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-keenon-event-tracking_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-keenon-event-tracking_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 29010,
+   "sha256": "e2fe985dedfbfe02a9e0612afe2fbe69fef075e94107c36fe2a14b020359fbd1",
+   "md5": "589d38618f793510947df1b4f3f50131"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-keenon-gate-msgs_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-keenon-gate-msgs_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 22832,
+   "sha256": "716705b36138d6c4b0abdd0e5714c04c3dbb75ece40b832b3444ea951e343117",
+   "md5": "8fa6e874e835172d8ab7b4d58757b4dc"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-keenon-label-msgs_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-keenon-label-msgs_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 35606,
+   "sha256": "d1f26ef175fed096ec76cac4bbe5caeade7626699611c5ead90d4e1a1b39f6a5",
+   "md5": "0efb86317ba1a7561421f9c75b7d8407"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-keenon-location-msgs_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-keenon-location-msgs_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 40044,
+   "sha256": "9a21590d20145e66cfa2cabecd28d1d6400f29e762904d0e241683d2f64df2fe",
+   "md5": "4d7671486f041fd43a56dc6ad15f0e25"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-keenon-motor-msgs_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-keenon-motor-msgs_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 16816,
+   "sha256": "becbb8b8ab8790e5c7e969e1bb1b31e9d9fcc879219c857290b280ae3bb8e3e3",
+   "md5": "67e53980d2f92d655ab36c171a5e4789"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-keenon-move-base-msgs_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-keenon-move-base-msgs_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 28374,
+   "sha256": "e382ef8cb864fe91a3cedf9fbbfe85eb022751db165ce37f66ad8120d5a32a5f",
+   "md5": "a88e905d6c1385a87ce727171c02626c"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-keenon-msgs_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-keenon-msgs_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 1538,
+   "sha256": "77eb1abe7f0608acefa05c0f1277cdbf053f29f86aa4e2ccd365906f1d9aae38",
+   "md5": "38176c1c047016948ac2f3d4c2343a99"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-keenon-nav-msgs_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-keenon-nav-msgs_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 58744,
+   "sha256": "28250d5541a3d00a16e62b706f72f50425f28a6c0eb0885f372377e3a7bfb5f6",
+   "md5": "7f01dae5abc28fb1b6e8bdd999a1e6cb"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-keenon-recorder-msgs_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-keenon-recorder-msgs_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 21168,
+   "sha256": "f7543b2b581706bfed41e5fbf31f2427fbef092e221153f3f172357ade4050d7",
+   "md5": "d4f9609301c28b882a603335a914ca09"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-keenon-schedule-msgs_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-keenon-schedule-msgs_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 76222,
+   "sha256": "8d7a146f55e611109fab46b7e1d5c4710d1ea141087dd143be42dab9fc043b89",
+   "md5": "76f69799498fdbc966b21a29fab9b756"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-keenon-seller-msgs_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-keenon-seller-msgs_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 21736,
+   "sha256": "1a1bbeb930557ac0a73ec624d137d40bd57a004f52db273e5151c26917f204b4",
+   "md5": "f58f030e70540c4a9f1e8ba1aa7555b5"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-keenon-sensor-msgs_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-keenon-sensor-msgs_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 34892,
+   "sha256": "01483dd4ad4c357a25ab2fc96a66d194b4a03bd65c4a7c60c076297dc05c27a1",
+   "md5": "1784640154c7c81e0878dedb404e32a5"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-keenon-task-msgs_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-keenon-task-msgs_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 39600,
+   "sha256": "194957e9c30f7a185bcc0fbfed6371d5780444c2025f108213a214d5212a0a25",
+   "md5": "222ea2a6b6e49e7e390d509a5b7a082b"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-keenon-ui-msgs_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-keenon-ui-msgs_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 79992,
+   "sha256": "520ea7c2542483bd1b98957343962fd5604820f2ef3efb100763e1dd944498f1",
+   "md5": "006016b3f464575ea5f867c678fa85af"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-keenon-vslam-msgs_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-keenon-vslam-msgs_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 51728,
+   "sha256": "73c678bb25f369b39591f90f4c405d82a7d21fe39d6e2f9146e8594f4c32ff07",
+   "md5": "44eb69213302be9592127c928b35beef"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-keenon-vslam_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-keenon-vslam_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 346554,
+   "sha256": "b8505e3a67c4e6c00e2a262f7d477b7a30da9c1efefc2f8f8134299e76c8190a",
+   "md5": "f3cc71fc7afd51b5fcb3f7f0626bec04"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-keenonrecorder_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-keenonrecorder_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 261974,
+   "sha256": "6dccea2ca8de544b5eb423a943a5300acdab3143905ca3ff36bf6a989cb8a996",
+   "md5": "897c8bfed62f7f71960d98a1b450ff11"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-kplanner_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-kplanner_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 310306,
+   "sha256": "7f22dad04bc7ff6c78d6c3bfd41a18f714e3842eb7472a5a083aba7ad89957f1",
+   "md5": "3b121a0ddd67233544e9c7ac8db1e83a"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-label-fusion_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-label-fusion_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 256294,
+   "sha256": "9a41c9923f5b9bb11e071b18899196081d7d28c0fb99dcd9b0a339efd399a2b4",
+   "md5": "7ff550dcd3f39f7e759b1e95b62ea057"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-ldlidar_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-ldlidar_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 26214,
+   "sha256": "c661546d223ff339971789a8352981adba2ad41b3a7de7336da1ae4541670301",
+   "md5": "bf8260fdf5abb2a48cf9ce9542b86914"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-libcoap_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-libcoap_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 616340,
+   "sha256": "db8446b54956f74d2de7aceaae9232c34bf6c52180afeb33ba39ce833775aae7",
+   "md5": "abfaf069e296e1fa34aec76c0ddce8f7"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-libcpprest_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-libcpprest_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 642262,
+   "sha256": "29d858db8179d937d14465ab6d7d9a1a4f3b42ddfb49c35090fa2735ec539917",
+   "md5": "64df74209110b369ee219bb40db3c780"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-lidar-filter_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-lidar-filter_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 248438,
+   "sha256": "5e1d1e813b34a0f813359fbc8ee61357f753b276bc69f0e3f8ac9fcbea969072",
+   "md5": "075b5190aa2f60dd75c817a1f0bfae74"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-location-fusion_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-location-fusion_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 757122,
+   "sha256": "4fcf6d487e0f31992171c1ed8254ac320f8db3d00fdc455a461c745fb6dcf90a",
+   "md5": "0d6bab9a806b581546d3e5a17e79bd8f"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-lora-driver_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-lora-driver_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 69834,
+   "sha256": "e58d9e89f5c4e24a8493d10153c004741155fac03c5daf5e1a45f2ed149db80f",
+   "md5": "43fb02b83b7a203cddfa76b845bb23b9"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-map-server_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-map-server_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 55326,
+   "sha256": "a4146358b71f57d4c91f940bee5b4dc5132aa4053f9956a15536157c81366c35",
+   "md5": "d14874bc442f803adaf65051bc36a0b2"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-map-tools_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-map-tools_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 1430,
+   "sha256": "7703fcbd02f426225f667907e0aed745e909918eebe16bc259af6ed8e1c248df",
+   "md5": "8509a439d9601b7ee1b0179af18c7b6a"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-matching-task_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-matching-task_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 389856,
+   "sha256": "962a559e185cc3b3e101f56af9e9238992002404738ed13536134eacc6b3c7a0",
+   "md5": "10c8b8ee802d2f399742f6dcd9bac7f1"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-micro-laser_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-micro-laser_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 466454,
+   "sha256": "eed126df68bf91a5c9e6d066aac9a2e8a841b7a3a30ab456b92ce5f1293a6e3f",
+   "md5": "5d7a14e18f368570ae3bb0b58d9ac6de"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-move-base_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-move-base_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 564776,
+   "sha256": "68b9f0fbcb5f90a6ff9eff32a9d6ae09600e9b3a424146802fb72853590faf78",
+   "md5": "79a8124df01382c7651a908644d91875"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-multi-goals-planner_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-multi-goals-planner_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 145270,
+   "sha256": "9e1b658ec13cc17bbc487e07869344b956375195a9f7674f8bb7fe0c05df1c25",
+   "md5": "f53df971fa809a94e125b745decc7bfe"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-nav-core_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-nav-core_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 8564,
+   "sha256": "3f205d3a6e33fd3c9110aacce48adfe85790831fc28409c984170db0b4bcda2b",
+   "md5": "70cd326809a214a5baf123953e6e64f8"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-nav2-rotation-shim-controller_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-nav2-rotation-shim-controller_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 112028,
+   "sha256": "90a1bb6a07b44a5eeef6095d64502caee0b5ad26959712ec6bbd7b999d5f252c",
+   "md5": "42f5960e1efe5b6c25d0f1077f8c9821"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-navfn_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-navfn_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 87166,
+   "sha256": "909e92c299368e0b42c9876d6046443cd29549550dd5d20a033d6769ac1757a8",
+   "md5": "43f85dca93d757393a9c6c17d42de087"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-navigation_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-navigation_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 2266,
+   "sha256": "793c67b2f5957d1230b50e74fac1f05ac23a9befe25580c5396b6a8c155ac52c",
+   "md5": "7294836b201d9691af71dbb5781543d7"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-openslam-gmapping_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-openslam-gmapping_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 80900,
+   "sha256": "64f344752be0150ab088fcea700367471ce5b7653f4fcb91a1e9349635bb953f",
+   "md5": "924579c14fdd5efac682bb005e0d9177"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-path-check_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-path-check_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 95676,
+   "sha256": "0fb366e62d9b7502470696448434726f816aa8b121a6ca2edf940d56443fa95b",
+   "md5": "0a16afbbb80a3971b7c6a0e4636407e8"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-peanut-localization_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-peanut-localization_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 12600902,
+   "sha256": "f7ab58e327d168cbaa7ea64e4c2a5efd137b68e76b58e60c1a76f5f3620bf34a",
+   "md5": "d345ce1191e77eabd94a831f3964b27c"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-pnc-core_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-pnc-core_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 7058,
+   "sha256": "4345a3e1e84e7a4a05d28ebd4ac2b7ace7dd748498e7f54a329916e59955ae72",
+   "md5": "ec75f532f02c6ace205b4f16ba301b38"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-robot-location_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-robot-location_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 107378,
+   "sha256": "a76318b80f6bb113d2346c53aaf1739abefaec16b37bc6d5f109b3c7df90b380",
+   "md5": "b315a825715a2913918f9b6eef638de0"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-robot-monitor_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-robot-monitor_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 75854,
+   "sha256": "e53400f0b543d7f9f78380bab47cd7a7037e14704cfd1b6d832c8186ca64587f",
+   "md5": "ceb4267ef4cc49ef34593733146134c6"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-robot-settings_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-robot-settings_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 2342962,
+   "sha256": "21ee9d80ac1ef7da7be856077edc87ca8a34467d74cab75044bc333acad7da83",
+   "md5": "33273d7db54934f7272b3c0e48d80a59"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-ros2cmd_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-ros2cmd_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 2108,
+   "sha256": "efd82ffb5ae035458c7a31805b9a9d18cf9d207e503b98c33fc0abd752ff1be9",
+   "md5": "9579de8b602b91b4b9b1f3f1b7d4c196"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-roslaunch_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-roslaunch_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 124854,
+   "sha256": "57bc1d87519d3d75f28e13293014fe74af6f89b313f7ba4070f9bcbf88622826",
+   "md5": "cd55d2bd06dea96012cac9b974786e65"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-rotation-escape-recovery_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-rotation-escape-recovery_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 168966,
+   "sha256": "beb762f0397008bdad1add979092759b5c4a72a8b070112db36a4ebf403482e8",
+   "md5": "3b2f072d51e9f95acff16a247bc30132"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-safe-decision_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-safe-decision_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 86468,
+   "sha256": "f5e3d854f8ed5d15cfa05a4bb77980c65a36ee8fa55bc520448639bf23345d30",
+   "md5": "e01e13a0f1b3cea9bde38878be6444b3"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-schedule-map-builder_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-schedule-map-builder_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 195100,
+   "sha256": "a8878594e76a9d2efd1529302d08fcef4fd483bfbf8d8e94d98f7e10ed50f958",
+   "md5": "930a34501940b21125f793594988188d"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-schedule-ros_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-schedule-ros_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 854034,
+   "sha256": "f408b4ca8cab07151a2c603e980910b6593974d13fd36c98fcaf257a9a0920b1",
+   "md5": "f806ac779ed106071036b25e6625bd50"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-sdkeli-ls-udp_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-sdkeli-ls-udp_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 163360,
+   "sha256": "d7438ae1553491f977a74d9de97061bf46751f6edff479e524bb3273b43b22f5",
+   "md5": "fe6fc4603251889c1370c4bb45d8356c"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-segmentation_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-segmentation_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 478656,
+   "sha256": "cd3c760bb34ae23f39326ad3a97d09b5f5369cf3309312810f2e4360b5b07b89",
+   "md5": "d29b30f208650014da91b46d9cb3470b"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-show-points_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-show-points_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 371216,
+   "sha256": "ab97d0b0b779ab9ff0b75c330b26833dd37928fe6012190a9a115f7d66a9896b",
+   "md5": "f535a346ed58a9e60df85a27f35b8f67"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-slam-comm-lib_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-slam-comm-lib_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 302956,
+   "sha256": "065925ba733f1920efce94d49af4148c6f33659b90c8a72052af5dec65b49a6c",
+   "md5": "5e9414b0d5ec5e7e014189d7de3a9fd4"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-slam-gmapping_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-slam-gmapping_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 1766,
+   "sha256": "b65024b671b6fd8fec2f3be3f33544122a797ebadd1533cc7c1971536ea8d79c",
+   "md5": "aba60ba7caf7431fde13548966d3fe30"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-suspend-obs_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-suspend-obs_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 77396,
+   "sha256": "e7bc9cc64bd5ddd45af849ccbf5abbca2d030988e756fbdd09a78e76e8bd6f37",
+   "md5": "be178ae82181ebfca0de3d2e7ddeeaaa"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-switch-map_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-switch-map_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 214764,
+   "sha256": "4473f02a7f9a41836a610bff68334b4f92e1ad5b5b1f66ccff7a4b877f03c018",
+   "md5": "676cb9abba7f8666240ffa9bbf4e2a12"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-sy-sdk_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-sy-sdk_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 879026,
+   "sha256": "168b12c5009060928473262d8a28aaf9d83ebe7cfd0f5bf0be8be84103485104",
+   "md5": "87c468bc19c26b09cdc95577bab156f6"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-sy-tof-dev_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-sy-tof-dev_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 4620,
+   "sha256": "ae9891239473c9b10863400637b2ca3eaff3f84499e281b154bed8b288df884b",
+   "md5": "401558e3966e0ca7614799a2268e6140"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-tangent-planner_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-tangent-planner_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 61652,
+   "sha256": "638557606ae2d88dd3774adf763058e8c61247bb49fddcecf6b8fd0f99bdde57",
+   "md5": "12bdca04800d3155086f8e2ceb1104f0"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-target-point-task_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-target-point-task_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 108764,
+   "sha256": "d2498ab7847dc6fa643216c7fc82e4a62da6e7b5679626fec292e2a9e4ff449e",
+   "md5": "a5e87bef7bd683611fc3a6f6787ef5af"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-task-dispatcher_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-task-dispatcher_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 101742,
+   "sha256": "e9d26b87e60f039927b892fb84ce87612aa65c823aeb56d98b5400c91732a7ea",
+   "md5": "4f5d2ec1e27c95861e17b3e6d7d51e34"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-task-manager_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-task-manager_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 954992,
+   "sha256": "4f70de9e40c43d77acf19f9676825913c36445f3fc274de0f72e1e0b8403615d",
+   "md5": "244b0c4c44ca4d06044e19b5b7437058"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-teb-clean-local-planner_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-teb-clean-local-planner_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 492290,
+   "sha256": "a6b8eebde78ff4962095dbda4877f61081446ec6a532c6b342e99dd56fa12f19",
+   "md5": "d7a894cc3f97e4ada5592c4bacbe0d49"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-teb-local-planner-noetic_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-teb-local-planner-noetic_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 492086,
+   "sha256": "baf15ba2a516d87a96d1b5e469193565ca1f805e4b08a886ceaa58140c65d6b1",
+   "md5": "dfffc4aabf624bf064aa97dfc4cd5fd5"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-teb-local-planner_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-teb-local-planner_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 508090,
+   "sha256": "425adcdb233181b4915dbc1728c44c3c629111723a8870a722087240d330a825",
+   "md5": "9792737039169dcbc56edcc5bab8c64f"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-topo-map-generator_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-topo-map-generator_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 249990,
+   "sha256": "40282b28b0cf9b4b872a8e9520ed4ec437c0103599f3b19edd5b47564daaac8e",
+   "md5": "077c616984d5efe8424e52a331ebfb58"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-virtual-wall-generator_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-virtual-wall-generator_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 90278,
+   "sha256": "41ee3ceccb14e212be99e00212d8ef173d1fcdd70bb2abc8d007aee1ebd791b2",
+   "md5": "476dfc484f9f9c90b3c67dd67dd3deca"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-voxel-grid_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-voxel-grid_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 13608,
+   "sha256": "499a4d30d4387f3770257932227d2b95137d58ed66dce7b1c9312819174b0d34",
+   "md5": "f0683900b877187a3805e4e2947dc468"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-web-backend_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-web-backend_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 87054,
+   "sha256": "5889f27b42094293cf290a5c7e13223ec2fed9e8c93973cdfd8edcb681a9f717",
+   "md5": "72bc0f0fa96ca3665355bc5078378824"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-ydlidar-ros-driver-v2_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-ydlidar-ros-driver-v2_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 169018,
+   "sha256": "062eb8a22416eed506cbe3f462dbc04212543a4d5d6e74b7de2487bf10c40147",
+   "md5": "e7bf9b81ce99c5d46367134e6344bdcd"
+  },
+  {
+   "relative_path": "slam-ros-v2.10.9-c2-0-g58a75a7-app-update-package/slam-ros-v2.10.9-c2-0-g58a75a7/bin/ros-indigo-ydlidar-ros-driver_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_name": "ros-indigo-ydlidar-ros-driver_2.3.1c1-4573-g1406f3b-trusty_armhf.deb",
+   "file_type": "ar archive (deb)",
+   "size_bytes": 133020,
+   "sha256": "4499f22ec3e3f63f1f0f76f891655093d926edadb31875184e022a9def1a2167",
+   "md5": "56735a58f35073a743e5a1cc5290e03c"
+  },
+  {
+   "relative_path": "upgradeConfig.json",
+   "file_name": "upgradeConfig.json",
+   "file_type": "JSON?",
+   "size_bytes": 4682,
+   "sha256": "b4ea1dd0a31dd4dbf7aa01f78f08547411764afab8579430e1d23eb9eb8f04a1",
+   "md5": "867a43ec10f71c4a612e87d1dfda0992"
+  }
+ ]
+}

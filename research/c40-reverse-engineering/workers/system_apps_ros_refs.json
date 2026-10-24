@@ -1,0 +1,65 @@
+[
+ {
+  "kind": "host",
+  "value": "192.168.64.20 (SMB share presumed to be the ROS/robot compute side; WebSocket port 9013 also here)",
+  "source": "RemoteControl SMBManager / WebClientManager strings",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM"
+ },
+ {
+  "kind": "mqtt_topic",
+  "value": "robot/%s/dev_config/ros/remote-ssh/v1/{cloud_msg,dev_msg}",
+  "source": "RemoteControl strings table",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "filesystem_path",
+  "value": "/oem/etc/ros/runtime/remotemap (nginx map config deploy target)",
+  "source": "RemoteControl FrpClientHelper.handleNginxFile",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "filesystem_path",
+  "value": "/oem/etc/nginx/conf.d, /system/bin/ubuntu1604 (nginx reload inside an Ubuntu 16.04 userland)",
+  "source": "RemoteControl FrpClientHelper.handleNginxFile",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "filesystem_path",
+  "value": "robot/work/robot/Bin/Arm-Release/, robot/var, ros/home, ros/config (algorithm/ROS log roots)",
+  "source": "RemoteControl AlgorithmLogPath.<clinit>",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "filesystem_path",
+  "value": "/keenon/{bag,idlebag,log,console,schedule,fdl_data}/, krlog, krlog/android, krlog/robot, krlog/database (log-collection roots, some ROS-produced)",
+  "source": "RemoteControl AlgorithmLogPath.<clinit>",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "property",
+  "value": "getprop robot.keenbot.ver (== \"2\" selects \"fusion board\" log/path behavior)",
+  "source": "krlog SystemInitHelper.initFusionBoard; ServiceSystem init path",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "data_file",
+  "value": "peanut.db (referenced log/data artifact name, likely the robot-side business data store)",
+  "source": "RemoteControl AlgorithmLogManager strings",
+  "status": "STATIC_REFERENCE",
+  "confidence": "LOW"
+ },
+ {
+  "kind": "note",
+  "value": "No ROS topic names, serial device nodes, or motion/navigation command strings were found in ServiceSystem, RemoteControl or krlog. The link to the robot is via file/SMB/MQTT bridging to a separate ROS/Ubuntu compute unit, not a direct ROS client library in these APKs.",
+  "source": "absence of rclcpp/rclpy/roscpp/ros::NodeHandle style strings or classes in all three dex sets",
+  "status": "NOT_ANALYZED",
+  "confidence": "LOW"
+ }
+]

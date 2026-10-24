@@ -1,0 +1,1918 @@
+[
+ {
+  "kind": "http",
+  "value": "GET /api/app/v1/robot_iso_domain_name_link",
+  "source": "com.keenon.component.core.config.domain.IDomainApi#getDomainNameList",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "GET /api/app/v2/healthz",
+  "source": "com.keenon.component.core.config.domain.IDomainApi#getPingState",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "POST /api/app/token/getSingleToken",
+  "source": "com.keenon.component.core.http.token.ITokenApi#getSingleToken",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "GET /api/app/mqtt/secret/v2",
+  "source": "com.keenon.component.core.mqtt.api.IMqttPwdApi#getMqttPwd",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "GET /api/app/robot/v1/net/sec",
+  "source": "com.keenon.component.cybersecurity.api.IHttpCybersecurityApi#getCybersecurityRCodeInfo",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "GET /api/devops/v1/alertcode/robot/config/list",
+  "source": "com.keenon.component.fault.api.IFaultApi#getFaultConfig",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "GET /api/devops/v1/alertcode/robot/config/list",
+  "source": "com.keenon.component.fault.api.IFaultApi#getFaultConfig",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "POST /api/devops/v1/kb/config/all",
+  "source": "com.keenon.component.fault.api.IFaultApi#getFaultRemoteStyleList",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "POST /api/devops/v1/kb/config",
+  "source": "com.keenon.component.fault.api.IFaultApi#getSingleFaultRemoteList",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "POST geolocation/v1/geolocate",
+  "source": "com.keenon.component.location.http.Request#getGoogleMapLocation",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "GET /api/app/language/package/{businessType}/v2/info/list",
+  "source": "com.keenon.component.multiLanguage.http.IDownloadLanguageApi#getLanguagePackageInfo",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "DELETE /api/app/resource/robot/v1_9_1/scene",
+  "source": "com.keenon.component.resource.api.IResourceApi#deleteScene",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "GET /api/app/resource/robot/{version}/{businessType}/scene",
+  "source": "com.keenon.component.resource.api.IResourceApi#getMixSceneInfo",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "GET /api/app/robot/scene/{businessType}/v2/info",
+  "source": "com.keenon.component.resource.api.IResourceApi#getResourceInfo",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "GET /api/app/robot/scene/{businessType}/v1/list",
+  "source": "com.keenon.component.resource.api.IResourceApi#getSceneInfo",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "POST /api/app/resource/robot/v1_9_1/scene",
+  "source": "com.keenon.component.resource.api.IResourceApi#reportSceneChange",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "POST /api/app/robot/package/upgrade",
+  "source": "com.keenon.component.upgrade.http.IUpgradeApi#checkPackageUpgrade",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "GET /api/hotel/robot/search/iot/device/{deviceName}",
+  "source": "com.keenon.module.datasync.http.HttpElevatorApi#getCheckInfo",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "POST /api/elevator/v2/elevator/search/lift/configInfo",
+  "source": "com.keenon.module.datasync.http.HttpElevatorApi#getElevatorConfig",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "POST /api/cleanapp/iot/v1/email",
+  "source": "com.keenon.module.datasync.http.PeanutApi#addEmailInfo",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "POST /api/cleanapp/iot/v3/clean/new/batchSaveForAndroidPad",
+  "source": "com.keenon.module.datasync.http.PeanutApi#batchSaveForAndroidPad",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "POST /api/cleanapp/iot/v2/robot/change/map",
+  "source": "com.keenon.module.datasync.http.PeanutApi#changeMap",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "DELETE /api/cleanapp/iot/v1/email",
+  "source": "com.keenon.module.datasync.http.PeanutApi#deleteEmailInfo",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "GET /api/app/marketing/material",
+  "source": "com.keenon.module.datasync.http.PeanutApi#getAdMaterialInfo",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "GET /api/cleanapp/iot/v2/file/getAttachmentByMd5",
+  "source": "com.keenon.module.datasync.http.PeanutApi#getAttachmentByMd5",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "GET /api/cleanapp/iot/v1/email",
+  "source": "com.keenon.module.datasync.http.PeanutApi#getEmailInfo",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "POST /api/app/robot/file/upload",
+  "source": "com.keenon.module.datasync.http.PeanutApi#getFileUploadUrl",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "GET /api/cleanapp/iot/v1/email/language",
+  "source": "com.keenon.module.datasync.http.PeanutApi#getLanguageTypeInfo",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "GET /api/app/robot/getSoftware",
+  "source": "com.keenon.module.datasync.http.PeanutApi#getSoftware",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "GET /api/cleanapp/iot/v2/clean/getUnSyncTimeCleanStrategy",
+  "source": "com.keenon.module.datasync.http.PeanutApi#getUnSyncTimeCleanStrategy",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "PUT /api/cleanapp/iot/v1/email",
+  "source": "com.keenon.module.datasync.http.PeanutApi#modifyEmailInfo",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "POST /api/app/v1/device/keypair/request",
+  "source": "com.keenon.module.datasync.http.PeanutApi#queryEncryptKeyPair",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "POST /api/app/robot/info",
+  "source": "com.keenon.module.datasync.http.PeanutApi#queryRobotInfo",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "POST /api/app/robot/v2/restriction",
+  "source": "com.keenon.module.datasync.http.PeanutApi#queryStateLimitInfo",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "POST /api/app/v1/device/register/keypair",
+  "source": "com.keenon.module.datasync.http.PeanutApi#registerDevice",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "POST /api/app/robot/register",
+  "source": "com.keenon.module.datasync.http.PeanutApi#registerSn",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "POST /api/cleanapp/iot/v2/clean/remove",
+  "source": "com.keenon.module.datasync.http.PeanutApi#removeClean",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "POST /api/cleanapp/iot/v2/clean/removeBySyncTime",
+  "source": "com.keenon.module.datasync.http.PeanutApi#removeCleanStrategyBySyncTime",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "POST /api/cleanapp/iot/v2/robot/removeMapByRobotAndSyncTime",
+  "source": "com.keenon.module.datasync.http.PeanutApi#removeMapBySyncTime",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "PUT /api/cleanapp/api/v1/robot/faultInfo",
+  "source": "com.keenon.module.datasync.http.PeanutApi#resetPhoneNotice",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "POST /api/cleanapp/api/v1/robot/batch/faultInfo",
+  "source": "com.keenon.module.datasync.http.PeanutApi#resetPhoneNoticeBatch",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "POST /api/cleanapp/iot/v2/robot/robotActionNotice",
+  "source": "com.keenon.module.datasync.http.PeanutApi#robotActionNotice",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "POST /api/app/robot/info/update",
+  "source": "com.keenon.module.datasync.http.PeanutApi#robotInUpdate",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "POST /api/cleanapp/iot/v2/robot/robotReply",
+  "source": "com.keenon.module.datasync.http.PeanutApi#robotReply",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "POST /api/cleanapp/iot/v2/file/saveAttachment",
+  "source": "com.keenon.module.datasync.http.PeanutApi#saveAttachment",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "PUT /api/cleanapp/iot/v3/clean/save_event",
+  "source": "com.keenon.module.datasync.http.PeanutApi#saveEvent",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "PUT /api/cleanapp/iot/v3/clean/save_task",
+  "source": "com.keenon.module.datasync.http.PeanutApi#saveTask",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "POST /api/cleanapp/iot/v3/clean/save_task_detail",
+  "source": "com.keenon.module.datasync.http.PeanutApi#saveTaskDetail",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "POST /api/cleanapp/iot/v3/clean/save_task_pic",
+  "source": "com.keenon.module.datasync.http.PeanutApi#saveTaskPic",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "PUT /api/cleanapp/iot/v2/station/task",
+  "source": "com.keenon.module.datasync.http.PeanutApi#saveWorkStationTask",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "POST /api/cleanapp/iot/v2/robot/updateMapByAndroidPad",
+  "source": "com.keenon.module.datasync.http.PeanutApi#updateMap",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "POST /api/cleanapp/iot/v2/clean/updateSyncState",
+  "source": "com.keenon.module.datasync.http.PeanutApi#updateSyncState",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "POST /api/cleanapp/iot/v1/back/point",
+  "source": "com.keenon.module.datasync.http.PeanutApi#uploadBackPoint",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "POST /api/cleanapp/iot/v1/clean/model",
+  "source": "com.keenon.module.datasync.http.PeanutApi#uploadCleanModel",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "POST /api/cleanapp/iot/v2/upload/uploadFileByPeanut",
+  "source": "com.keenon.module.datasync.http.PeanutApi#uploadFileByPeanut",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "POST /api/app/robot/bindIccid",
+  "source": "com.keenon.module.datasync.http.PeanutApi#uploadSimCardInfo",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "POST /api/cleanapp/iot/v2/clean/save_support_function",
+  "source": "com.keenon.module.datasync.http.PeanutApi#uploadSupportFunction",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "POST /api/app/robot/version/status",
+  "source": "com.keenon.module.datasync.http.PeanutApi#uploadUpgradeResult",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Retrofit relative path; scheme/host chosen at runtime from DomainManager region (PROD https, DEV/TEST/PRE http) - STATIC_REFERENCE, not observed live"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/soft/getByVersion",
+  "source": "com.keenon.module.datasync.apiImpl.SoftVersionApiImpl#getByVersion",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code default"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/usb/getAntiDrop",
+  "source": "com.keenon.module.main.usb.apiImpl.UsbApiImpl#getAntiDrop",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code default"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/usb/getEmotion",
+  "source": "com.keenon.module.main.usb.apiImpl.UsbApiImpl#getEmotion",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code default"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/usb/getEmotionC40",
+  "source": "com.keenon.module.main.usb.apiImpl.UsbApiImpl#getEmotionC40",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code default"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/usb/getLightStrip",
+  "source": "com.keenon.module.main.usb.apiImpl.UsbApiImpl#getLightStrip",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code default"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/usb/getLockTime",
+  "source": "com.keenon.module.main.usb.apiImpl.UsbApiImpl#getLockTime",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code default"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/usb/getScreenExpression",
+  "source": "com.keenon.module.main.usb.apiImpl.UsbApiImpl#getScreenExpression",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code default"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/usb/getVolume",
+  "source": "com.keenon.module.main.usb.apiImpl.UsbApiImpl#getVolume",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code default"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/usb/getWorkStationConfig",
+  "source": "com.keenon.module.main.usb.apiImpl.UsbApiImpl#getWorkStation",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code default"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/usb/setAntiDrop",
+  "source": "com.keenon.module.main.usb.apiImpl.UsbApiImpl#setAntiDrop",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code default"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/usb/setDustPush",
+  "source": "com.keenon.module.main.usb.apiImpl.UsbApiImpl#setDustPush",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code default"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/usb/setEmotion",
+  "source": "com.keenon.module.main.usb.apiImpl.UsbApiImpl#setEmotion",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code default"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/usb/setEmotionC40",
+  "source": "com.keenon.module.main.usb.apiImpl.UsbApiImpl#setEmotionC40",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code default"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/usb/setLamp",
+  "source": "com.keenon.module.main.usb.apiImpl.UsbApiImpl#setLamp",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code default"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/usb/setLightStrip",
+  "source": "com.keenon.module.main.usb.apiImpl.UsbApiImpl#setLightStrip",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code default"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/usb/setLockTime",
+  "source": "com.keenon.module.main.usb.apiImpl.UsbApiImpl#setLockTime",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code default"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/usb/setManual",
+  "source": "com.keenon.module.main.usb.apiImpl.UsbApiImpl#setManual",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code default"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/usb/setPassword",
+  "source": "com.keenon.module.main.usb.apiImpl.UsbApiImpl#setPassword",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code default"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/usb/setScreenExpression",
+  "source": "com.keenon.module.main.usb.apiImpl.UsbApiImpl#setScreenExpression",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code default"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/usb/setVolume",
+  "source": "com.keenon.module.main.usb.apiImpl.UsbApiImpl#setVolume",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code default"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/usb/setWorkStationConfig",
+  "source": "com.keenon.module.main.usb.apiImpl.UsbApiImpl#setWorkStationConfig",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code default"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/clean/cleanStrategyEnabled",
+  "source": "com.keenon.module.slam.apiImpl.CleanApiImpl#cleanStrategyEnabled",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code 205"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/clean/cleanStrategyTemplateList",
+  "source": "com.keenon.module.slam.apiImpl.CleanApiImpl#cleanStrategyTemplateList",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code default"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/clean/delCleanStrategy",
+  "source": "com.keenon.module.slam.apiImpl.CleanApiImpl#delCleanStrategy",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code 205"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/clean/getLogDetail",
+  "source": "com.keenon.module.slam.apiImpl.CleanApiImpl#getLogDetail",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code default"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/clean/getTimerCleanStrategyList",
+  "source": "com.keenon.module.slam.apiImpl.CleanApiImpl#getTimerCleanStrategyList",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code default"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/clean/saveCleanStrategy",
+  "source": "com.keenon.module.slam.apiImpl.CleanApiImpl#saveCleanStrategy",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code 205"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/clean/taskImageReport",
+  "source": "com.keenon.module.slam.apiImpl.CleanApiImpl#taskImageReport",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code 205"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/clean/updateCleanStrategy",
+  "source": "com.keenon.module.slam.apiImpl.CleanApiImpl#updateCleanStrategy",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code 205"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/cleanConfig/addCleanConfigMode",
+  "source": "com.keenon.module.slam.apiImpl.CleanConfigApiImpl#addCleanConfigMode",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code 205"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/cleanConfig/cleanConfigParamsReset",
+  "source": "com.keenon.module.slam.apiImpl.CleanConfigApiImpl#cleanConfigParamsReset",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code 205"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/cleanConfig/cleanConfigParamsResetByModeId",
+  "source": "com.keenon.module.slam.apiImpl.CleanConfigApiImpl#cleanConfigParamsResetByModeId",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code 205"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/cleanConfig/cleanConfigParamsUpdate",
+  "source": "com.keenon.module.slam.apiImpl.CleanConfigApiImpl#cleanConfigParamsUpdate",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code 205"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/cleanConfig/cleanModeReset",
+  "source": "com.keenon.module.slam.apiImpl.CleanConfigApiImpl#cleanModeReset",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code 205"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/cleanConfig/getCleanConfigMode",
+  "source": "com.keenon.module.slam.apiImpl.CleanConfigApiImpl#getCleanConfigMode",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code default"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/cleanConfig/getCleanConfigParams",
+  "source": "com.keenon.module.slam.apiImpl.CleanConfigApiImpl#getCleanConfigParams",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code default"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/cleanConfig/listCleanConfigMode",
+  "source": "com.keenon.module.slam.apiImpl.CleanConfigApiImpl#listCleanConfigMode",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code default"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/cleanConfig/removeCleanConfigMode",
+  "source": "com.keenon.module.slam.apiImpl.CleanConfigApiImpl#removeCleanConfigMode",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code 205"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/cleanConfig/saveCleanConfigModes",
+  "source": "com.keenon.module.slam.apiImpl.CleanConfigApiImpl#saveCleanConfigMode",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code 205"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/cleanConfig/saveCleanConfigModes",
+  "source": "com.keenon.module.slam.apiImpl.CleanConfigApiImpl#saveCleanConfigModeByCloud",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code 205"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/cleanConfig/updateCleanConfigMode",
+  "source": "com.keenon.module.slam.apiImpl.CleanConfigApiImpl#updateCleanConfigMode",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code 205"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/map/getCurrentLoadMapInfo",
+  "source": "com.keenon.module.slam.apiImpl.MapApiImpl#getCurrentLoadMapInfo",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code default"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/map/getMapInfo",
+  "source": "com.keenon.module.slam.apiImpl.MapApiImpl#getMapInfo",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code default"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/map/getMapInfoFilterElevator",
+  "source": "com.keenon.module.slam.apiImpl.MapApiImpl#getMapInfoFilterElevator",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code default"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/map/listCurrentMapNavigationPoints",
+  "source": "com.keenon.module.slam.apiImpl.MapApiImpl#listCurrentMapNavigationPoints",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code default"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/map/robotLoadMapOpenPosition",
+  "source": "com.keenon.module.slam.apiImpl.MapApiImpl#loadMap",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code 205"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/map/mapFloorList",
+  "source": "com.keenon.module.slam.apiImpl.MapApiImpl#mapFloorList",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code default"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/map/updateAreaName",
+  "source": "com.keenon.module.slam.apiImpl.MapApiImpl#updateAreaName",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code 205"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/robot/androidSystemConfigUpdate",
+  "source": "com.keenon.module.slam.apiImpl.RobotApiImpl#androidSystemConfigUpdate",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code default"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/robot/eventBatchSave",
+  "source": "com.keenon.module.slam.apiImpl.RobotApiImpl#eventBatchSave",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code 205"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/robot/eventSave",
+  "source": "com.keenon.module.slam.apiImpl.RobotApiImpl#eventSave",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code 205"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/robot/getAndroidSystemConfig",
+  "source": "com.keenon.module.slam.apiImpl.RobotApiImpl#getAndroidSystemConfig",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code default"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/robot/getPowerProtectConfig",
+  "source": "com.keenon.module.slam.apiImpl.RobotApiImpl#getPowerProtect",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code default"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/robot/getRobotInfo",
+  "source": "com.keenon.module.slam.apiImpl.RobotApiImpl#getRobotInfo",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code default"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/robot/powerProtectConfigUpdate",
+  "source": "com.keenon.module.slam.apiImpl.RobotApiImpl#powerProtectUpdate",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code default"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/robot/reboot",
+  "source": "com.keenon.module.slam.apiImpl.RobotApiImpl#reboot",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code 205"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/robot/restartRosNode",
+  "source": "com.keenon.module.slam.apiImpl.RobotApiImpl#restartRosNode",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code 205"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/robot/robotCleanAdjustConfigUpdate",
+  "source": "com.keenon.module.slam.apiImpl.RobotApiImpl#robotCleanAdjustConfigUpdate",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code 205"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/robot/robotDisturbModeConfigUpdate",
+  "source": "com.keenon.module.slam.apiImpl.RobotApiImpl#robotDisturbModeConfigUpdate",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code 205"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/robotStatistic/resetConsumptive",
+  "source": "com.keenon.module.slam.apiImpl.RobotStatisticApiImpl#consumptiveReset",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code default"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/robotStatistic/getConsumptiveStatistic",
+  "source": "com.keenon.module.slam.apiImpl.RobotStatisticApiImpl#getConsumptiveStatistic",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code default"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8089/api/v1/sysDict/test",
+  "source": "com.keenon.module.slam.apiImpl.SysDictApiImpl#getPeanutDomainConfigTest",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "HIGH",
+  "note": "In-app AsyncHttpServer API (listen(8089), wildcard bind); POST-style method code default"
+ },
+ {
+  "kind": "http",
+  "value": "http://<tablet-ip>:8090/ (assets/index.html SPA + static files)",
+  "source": "com.keenon.module.android.sync.FileServerManager#start",
+  "status": "CONFIRMED",
+  "confidence": "HIGH",
+  "note": "AsyncHttpServer.listen(8090), serves APK assets"
+ },
+ {
+  "kind": "http",
+  "value": "http://localhost:8090/#/{checkArea,nav,record/report?cleanLogId=%s&robotWidth=%s}",
+  "source": "MainActivity#initWebView; SelectAreaActivity$5#run; NaviDebugContainerActivity#initBridgeWebView",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http",
+  "value": "http://localhost:8089/test/post",
+  "source": "assets/js/app.5eca38b4.js handleHttp",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "https",
+  "value": "https://console.peanut.keenonrobot.com",
+  "source": "assets/slamConfig/domainConfig_PROD.json (PROD iso2=LOCAL)",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "https",
+  "value": "https://clean-api.keenonrobot.com",
+  "source": "assets/slamConfig/domainConfig_PROD.json cleanBaseApiUrl",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "https",
+  "value": "https://clean-upload.keenonrobot.com",
+  "source": "assets/slamConfig/domainConfig_PROD.json cleanUploadApiUrl",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "mqtt",
+  "value": "tcp://console.peanut.keenonrobot.com:1883",
+  "source": "assets/slamConfig/domainConfig_PROD.json mqttUrl isMqttTSL=False",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "https",
+  "value": "https://cloud.robotkeenon.com",
+  "source": "assets/slamConfig/domainConfig_PROD.json (PROD iso2=JP)",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "https",
+  "value": "https://overseas-clean-api.keenonai.com",
+  "source": "assets/slamConfig/domainConfig_PROD.json cleanBaseApiUrl",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "https",
+  "value": "https://overseas-upload.keenonai.com",
+  "source": "assets/slamConfig/domainConfig_PROD.json cleanUploadApiUrl",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "mqtt",
+  "value": "tcp://cloud.robotkeenon.com:11883",
+  "source": "assets/slamConfig/domainConfig_PROD.json mqttUrl isMqttTSL=False",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "https",
+  "value": "https://cloud.robotkeenon.com",
+  "source": "assets/slamConfig/domainConfig_PROD.json (PROD iso2=ES)",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "https",
+  "value": "https://overseas2-clean-api.keenonai.com",
+  "source": "assets/slamConfig/domainConfig_PROD.json cleanBaseApiUrl",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "https",
+  "value": "https://overseas2-upload.keenonai.com",
+  "source": "assets/slamConfig/domainConfig_PROD.json cleanUploadApiUrl",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "mqtt",
+  "value": "tcp://172.16.13.135:1883",
+  "source": "assets/slamConfig/domainConfig_PROD.json mqttUrl isMqttTSL=False",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http",
+  "value": "http://p-cloud.ikeenon.com",
+  "source": "assets/slamConfig/domainConfig_PRE.json (PRE iso2=LOCAL)",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http",
+  "value": "http://p-clean-api.keenonai.com",
+  "source": "assets/slamConfig/domainConfig_PRE.json cleanBaseApiUrl",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http",
+  "value": "http://p-upload.keenonai.com",
+  "source": "assets/slamConfig/domainConfig_PRE.json cleanUploadApiUrl",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "mqtt",
+  "value": "tcp://p-cloud.ikeenon.com:1883",
+  "source": "assets/slamConfig/domainConfig_PRE.json mqttUrl isMqttTSL=False",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http",
+  "value": "http://p-overseas-cloud.ikeenon.com",
+  "source": "assets/slamConfig/domainConfig_PRE.json (PRE iso2=JP)",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http",
+  "value": "http://p-overseas-clean-api.keenonai.com",
+  "source": "assets/slamConfig/domainConfig_PRE.json cleanBaseApiUrl",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http",
+  "value": "http://p-overseas-upload.keenonai.com",
+  "source": "assets/slamConfig/domainConfig_PRE.json cleanUploadApiUrl",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "mqtt",
+  "value": "tcp://p-overseas-cloud.ikeenon.com:11883",
+  "source": "assets/slamConfig/domainConfig_PRE.json mqttUrl isMqttTSL=False",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http",
+  "value": "http://p-overseas2-cloud.ikeenon.com",
+  "source": "assets/slamConfig/domainConfig_PRE.json (PRE iso2=ES)",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http",
+  "value": "http://p-overseas2-clean-api.keenonai.com",
+  "source": "assets/slamConfig/domainConfig_PRE.json cleanBaseApiUrl",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http",
+  "value": "http://p-overseas2-upload.keenonai.com",
+  "source": "assets/slamConfig/domainConfig_PRE.json cleanUploadApiUrl",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "mqtt",
+  "value": "tcp://p-overseas2-cloud.ikeenon.com:1883",
+  "source": "assets/slamConfig/domainConfig_PRE.json mqttUrl isMqttTSL=False",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http",
+  "value": "http://t-cloud.ikeenon.com",
+  "source": "assets/slamConfig/domainConfig_TEST.json (TEST iso2=LOCAL)",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http",
+  "value": "http://t-clean-api.keenonai.com",
+  "source": "assets/slamConfig/domainConfig_TEST.json cleanBaseApiUrl",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http",
+  "value": "http://t-upload.keenonai.com",
+  "source": "assets/slamConfig/domainConfig_TEST.json cleanUploadApiUrl",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "mqtt",
+  "value": "tcp://t-cloud.ikeenon.com:1883",
+  "source": "assets/slamConfig/domainConfig_TEST.json mqttUrl isMqttTSL=False",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "https",
+  "value": "https://t-overseas-cloud.ikeenon.com",
+  "source": "assets/slamConfig/domainConfig_TEST.json (TEST iso2=JP)",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http",
+  "value": "http://t-overseas-clean-api.keenonai.com",
+  "source": "assets/slamConfig/domainConfig_TEST.json cleanBaseApiUrl",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http",
+  "value": "http://t-overseas-upload.keenonai.com",
+  "source": "assets/slamConfig/domainConfig_TEST.json cleanUploadApiUrl",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "mqtt",
+  "value": "tcp://t-overseas-cloud.ikeenon.com:11883",
+  "source": "assets/slamConfig/domainConfig_TEST.json mqttUrl isMqttTSL=False",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "https",
+  "value": "https://t-overseas2-cloud.ikeenon.com",
+  "source": "assets/slamConfig/domainConfig_TEST.json (TEST iso2=ES)",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http",
+  "value": "http://t-overseas2-clean-api.keenonai.com",
+  "source": "assets/slamConfig/domainConfig_TEST.json cleanBaseApiUrl",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http",
+  "value": "http://t-overseas2-upload.keenonai.com",
+  "source": "assets/slamConfig/domainConfig_TEST.json cleanUploadApiUrl",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "mqtt",
+  "value": "tcp://172.16.13.135:1883",
+  "source": "assets/slamConfig/domainConfig_TEST.json mqttUrl isMqttTSL=False",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http",
+  "value": "http://d-cloud.ikeenon.com",
+  "source": "assets/slamConfig/domainConfig_DEVELOP.json (DEVELOP iso2=LOCAL)",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http",
+  "value": "http://d-clean-api.keenonai.com",
+  "source": "assets/slamConfig/domainConfig_DEVELOP.json cleanBaseApiUrl",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http",
+  "value": "http://d-upload.keenonai.com",
+  "source": "assets/slamConfig/domainConfig_DEVELOP.json cleanUploadApiUrl",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "mqtt",
+  "value": "tcp://d-cloud.ikeenon.com:1883",
+  "source": "assets/slamConfig/domainConfig_DEVELOP.json mqttUrl isMqttTSL=False",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http",
+  "value": "http://d-overseas-cloud.ikeenon.com",
+  "source": "assets/slamConfig/domainConfig_DEVELOP.json (DEVELOP iso2=JP)",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http",
+  "value": "http://d-overseas-clean-api.keenonai.com",
+  "source": "assets/slamConfig/domainConfig_DEVELOP.json cleanBaseApiUrl",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http",
+  "value": "http://d-overseas-upload.keenonai.com",
+  "source": "assets/slamConfig/domainConfig_DEVELOP.json cleanUploadApiUrl",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "mqtt",
+  "value": "tcp://d-overseas-cloud.ikeenon.com:1883",
+  "source": "assets/slamConfig/domainConfig_DEVELOP.json mqttUrl isMqttTSL=False",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http",
+  "value": "http://d-overseas2-cloud.ikeenon.com",
+  "source": "assets/slamConfig/domainConfig_DEVELOP.json (DEVELOP iso2=ES)",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http",
+  "value": "http://d-overseas2-clean-api.keenonai.com",
+  "source": "assets/slamConfig/domainConfig_DEVELOP.json cleanBaseApiUrl",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http",
+  "value": "http://d-overseas2-upload.keenonai.com",
+  "source": "assets/slamConfig/domainConfig_DEVELOP.json cleanUploadApiUrl",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "mqtt",
+  "value": "tcp://d-overseas2-cloud.ikeenon.com:1883",
+  "source": "assets/slamConfig/domainConfig_DEVELOP.json mqttUrl isMqttTSL=False",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http",
+  "value": "http://172.16.8.102:8089/",
+  "source": "assets/json/dev.config.json key baseIp",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http",
+  "value": "http://upload-test.keenonai.com/",
+  "source": "assets/json/dev.config.json key uploadIp",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http",
+  "value": "192.168.64.20:5555",
+  "source": "assets/json/dev.config.json key baseIpC",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "ws",
+  "value": "ws://192.168.2.5:8083",
+  "source": "assets/json/dev.config.json key websocket",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http",
+  "value": "http://localhost:8089/",
+  "source": "assets/json/prod.config.json key baseIp",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http",
+  "value": "https://upload.keenonai.com/",
+  "source": "assets/json/prod.config.json key uploadIp",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http",
+  "value": "192.168.64.20:5555",
+  "source": "assets/json/prod.config.json key baseIpC",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "ws",
+  "value": "wss://iot.keenonai.com",
+  "source": "assets/json/prod.config.json key websocket",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http",
+  "value": "http://localhost:8089/",
+  "source": "assets/json/test.config.json key baseIp",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http",
+  "value": "http://upload-test.keenonai.com/",
+  "source": "assets/json/test.config.json key uploadIp",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http",
+  "value": "192.168.64.20:5555",
+  "source": "assets/json/test.config.json key baseIpC",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "ws",
+  "value": "ws://192.168.2.5:8083",
+  "source": "assets/json/test.config.json key websocket",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "https",
+  "value": "console.peanut.keenonrobot.com",
+  "source": "assets/domain/domain.json (Data Center Zone(China Region), iso2=CN)",
+  "status": "CONFIRMED",
+  "confidence": "HIGH",
+  "note": "region selector domain list"
+ },
+ {
+  "kind": "https",
+  "value": "es-cloud.robotkeenon.com",
+  "source": "assets/domain/domain.json (Data Center Zone1(Europe Region), iso2=ES)",
+  "status": "CONFIRMED",
+  "confidence": "HIGH",
+  "note": "region selector domain list"
+ },
+ {
+  "kind": "https",
+  "value": "cloud.robotkeenon.com",
+  "source": "assets/domain/domain.json (Data Center Zone2(Other Region), iso2=JP)",
+  "status": "CONFIRMED",
+  "confidence": "HIGH",
+  "note": "region selector domain list"
+ },
+ {
+  "kind": "https",
+  "value": "us-cloud.robotkeenon.com",
+  "source": "assets/domain/domain.json (Data Center Zone3(America Region), iso2=US)",
+  "status": "CONFIRMED",
+  "confidence": "HIGH",
+  "note": "region selector domain list"
+ },
+ {
+  "kind": "https",
+  "value": "p-cloud.ikeenon.com",
+  "source": "assets/domain/domain-pre.json (Data Center Zone(China Region), iso2=CN)",
+  "status": "CONFIRMED",
+  "confidence": "HIGH",
+  "note": "region selector domain list"
+ },
+ {
+  "kind": "https",
+  "value": "p-cloud.ikeenon.com",
+  "source": "assets/domain/domain-pre.json (Data Center Zone1(Europe Region), iso2=ES)",
+  "status": "CONFIRMED",
+  "confidence": "HIGH",
+  "note": "region selector domain list"
+ },
+ {
+  "kind": "https",
+  "value": "p-cloud.ikeenon.com",
+  "source": "assets/domain/domain-pre.json (Data Center Zone2(Other Region), iso2=JP)",
+  "status": "CONFIRMED",
+  "confidence": "HIGH",
+  "note": "region selector domain list"
+ },
+ {
+  "kind": "https",
+  "value": "t-cloud.ikeenon.com",
+  "source": "assets/domain/domain-eng.json (Data Center Zone(China Region), iso2=CN)",
+  "status": "CONFIRMED",
+  "confidence": "HIGH",
+  "note": "region selector domain list"
+ },
+ {
+  "kind": "https",
+  "value": "t-overseas2-cloud.ikeenon.com",
+  "source": "assets/domain/domain-eng.json (Data Center Zone1(Europe Region), iso2=ES)",
+  "status": "CONFIRMED",
+  "confidence": "HIGH",
+  "note": "region selector domain list"
+ },
+ {
+  "kind": "https",
+  "value": "t-overseas-cloud.ikeenon.com",
+  "source": "assets/domain/domain-eng.json (Data Center Zone2(Other Region), iso2=JP)",
+  "status": "CONFIRMED",
+  "confidence": "HIGH",
+  "note": "region selector domain list"
+ },
+ {
+  "kind": "https",
+  "value": "d-cloud.ikeenon.com",
+  "source": "assets/domain/domain-dev.json (Data Center Zone(China Region), iso2=CN)",
+  "status": "CONFIRMED",
+  "confidence": "HIGH",
+  "note": "region selector domain list"
+ },
+ {
+  "kind": "https",
+  "value": "d-overseas2-cloud.ikeenon.com",
+  "source": "assets/domain/domain-dev.json (Data Center Zone1(Europe Region), iso2=ES)",
+  "status": "CONFIRMED",
+  "confidence": "HIGH",
+  "note": "region selector domain list"
+ },
+ {
+  "kind": "https",
+  "value": "d-overseas-cloud.ikeenon.com",
+  "source": "assets/domain/domain-dev.json (Data Center Zone2(Other Region), iso2=JP)",
+  "status": "CONFIRMED",
+  "confidence": "HIGH",
+  "note": "region selector domain list"
+ },
+ {
+  "kind": "mqtt",
+  "value": "tcp://<host>:1883 (MQTT_TCP_DEF_PORT)",
+  "source": "CoreConfig static; DynamicMqttServer.getBaseUrl",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "mqtt",
+  "value": "ssl://<host>:8883 (prod), :18883 (test), :20001 (test CN)",
+  "source": "CoreConfig.MQTT_SSL_PROD_PORT/MQTT_SSL_TEST_PORT/MQTT_SSL_TEST_PORT_CN; DynamicMqttServer.getBaseUrl (JADX)",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "mqtt",
+  "value": "mqtt.keenonrobot.com (CN_MQTT_HOST)",
+  "source": "DynamicMqttServer static field",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "coap",
+  "value": "coap://192.168.64.20:5683",
+  "source": "LinkTypeAutoDetectHelper.coapUrl; PeanutConstants.COAP_PORT",
+  "status": "CONFIRMED",
+  "confidence": "HIGH",
+  "note": "IPC CoAP server (UDP)"
+ },
+ {
+  "kind": "http",
+  "value": "http://192.168.64.20:54322",
+  "source": "LinkTypeAutoDetectHelper.httpUrl; PeanutConstants.HTTP_PORT",
+  "status": "CONFIRMED",
+  "confidence": "HIGH",
+  "note": "IPC HTTP protocol path (/upgrade/action,/upgrade/status, /system/protocolVersion)"
+ },
+ {
+  "kind": "http",
+  "value": "http://192.168.64.20:34569 (HTTP_PORT_UPGRADE)",
+  "source": "PeanutConstants",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "MEDIUM"
+ },
+ {
+  "kind": "ws",
+  "value": "ws://192.168.64.20:22345 (WS_PORT) / :12386 (WS_PORT_UPGRADE)",
+  "source": "PeanutConstants WS_PORT/WS_PORT_UPGRADE (usage in com.keenon.sdk.http.ws not traced)",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "LOW"
+ },
+ {
+  "kind": "ws",
+  "value": "ws://192.168.64.20:9090 (rosbridge)",
+  "source": "RosManager.getRosManager",
+  "status": "CONFIRMED",
+  "confidence": "HIGH",
+  "note": "client present, topic registration stubbed (dormant)"
+ },
+ {
+  "kind": "http",
+  "value": "http://192.168.64.20:5555",
+  "source": "assets/json/*.config.json baseIpC; DEX string http://192.168.64.20:5555 (classes3)",
+  "status": "CONFIRMED",
+  "confidence": "MEDIUM",
+  "note": "legacy IPC console API (ConsoleApiEnums)"
+ },
+ {
+  "kind": "udp",
+  "value": "tftp://192.168.64.10:9527 (tablet TFTP server, root /peanut/server/tftp/)",
+  "source": "TFTPServerManager.init / TFTPService.createServer",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "other",
+  "value": "/dev/ttyS1 (KC01), /dev/ttyS2 (emotion), /dev/ttyS3 (921600), /dev/ttyS4, /dev/ttyUSB0/2/3, /dev/ttyUSBDoorCtl, baud 115200",
+  "source": "PeanutConstants / BusinessInitializer.initSDK",
+  "status": "CONFIRMED",
+  "confidence": "HIGH",
+  "note": "serial endpoints"
+ },
+ {
+  "kind": "adb",
+  "value": "none found (no adb command string or 5555 adb usage; 5555 appears only as IPC console base)",
+  "source": "DEX string search",
+  "status": "UNKNOWN",
+  "confidence": "LOW",
+  "note": "Do not read as negative proof"
+ },
+ {
+  "kind": "other",
+  "value": "keenonrobot://mobile.com/page_fail_list?code=%s&robotName=%s",
+  "source": "DEX string (classes3)",
+  "status": "CONFIRMED",
+  "confidence": "MEDIUM",
+  "note": "custom URI scheme used for fault-help page link"
+ },
+ {
+  "kind": "other",
+  "value": "supsetkeenon://supsetandroid.com (VIEW/BROWSABLE deep link to SetupActivity)",
+  "source": "AndroidManifest SetupActivity intent-filter",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http",
+  "value": "http://<key>@sentry.keenonrobot.com/7 (Sentry DSN, credential REDACTED)",
+  "source": "AndroidManifest meta-data io.sentry.dsn",
+  "status": "CONFIRMED",
+  "confidence": "HIGH",
+  "note": "cleartext"
+ },
+ {
+  "kind": "https",
+  "value": "https://aaid.umeng.com, ulogs.umeng.com, alogus.umeng.com, ouplog.umeng.com, pslog.umeng.com, plbslog.umeng.com",
+  "source": "Umeng SDK DEX strings",
+  "status": "CONFIRMED",
+  "confidence": "HIGH",
+  "note": "logging disabled by app config but code present"
+ },
+ {
+  "kind": "http",
+  "value": "http://apilocate.amap.com/mobile/binary, restsdk.amap.com/v3/*, cgicol.amap.com/collection/collectData, https://adiu.amap.com/ws/device/adius",
+  "source": "AMap SDK DEX strings",
+  "status": "CONFIRMED",
+  "confidence": "HIGH",
+  "note": "AMap API key REDACTED (manifest)"
+ },
+ {
+  "kind": "https",
+  "value": "geolocation/v1/geolocate (Google Geolocation API; key REDACTED)",
+  "source": "com.keenon.component.location.http.Request#getGoogleMapLocation; PeanutLocationManager",
+  "status": "CONFIRMED",
+  "confidence": "MEDIUM",
+  "note": "base URL not found as a string (UNKNOWN)"
+ },
+ {
+  "kind": "https",
+  "value": "https://www.baidu.com ; ping -c 3 www.baidu.com ; 8.8.8.8 ; 223.5.5.5",
+  "source": "NetworkEventManager / network checks",
+  "status": "CONFIRMED",
+  "confidence": "HIGH",
+  "note": "connectivity probes"
+ },
+ {
+  "kind": "http",
+  "value": "http://upload-test.keenonai.com ; http://clean-test.keeonai.com",
+  "source": "DEX strings classes3/classes4",
+  "status": "CONFIRMED",
+  "confidence": "HIGH",
+  "note": "test hosts embedded in prod build (second host spelled keeonai)"
+ },
+ {
+  "kind": "ws",
+  "value": "ws://162.243.238.80:9090",
+  "source": "com.jilk.ros.Example#main (library sample)",
+  "status": "CONFIRMED",
+  "confidence": "HIGH",
+  "note": "third-party sample, not app logic"
+ },
+ {
+  "kind": "http",
+  "value": "http://172.16.8.102:8089/ ; ws://192.168.2.5:8083 ; tcp://172.16.13.135:1883",
+  "source": "assets/json/dev.config.json; test.config.json; domainConfig_PROD/TEST ES mqttUrl",
+  "status": "CONFIRMED",
+  "confidence": "HIGH",
+  "note": "private/dev addresses embedded"
+ },
+ {
+  "kind": "http",
+  "value": "http://upload.keenonai.com/uploads/<id>/<id>.png",
+  "source": "assets/js/chunk-38c9b0c6/f077fb7a/fba32598 (H5 default image src)",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http",
+  "value": "http://weixin.qq.com/r/ejrO1u7E_bOGraq1929o ; http://weixin.qq.com/r/uSk-J6fEKfpWreNE93yr",
+  "source": "DEX strings classes4 (QR/help links)",
+  "status": "CONFIRMED",
+  "confidence": "MEDIUM"
+ },
+ {
+  "kind": "mqtt",
+  "value": "topic /client/push/",
+  "source": "MqttPeanutStatsConfig.CLIENT_PUSH_TOPIC",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "topic template; %s = robot SN, many suffixed with SN at runtime"
+ },
+ {
+  "kind": "mqtt",
+  "value": "topic /server/push/",
+  "source": "MqttPeanutStatsConfig.CLOUD_SERVER_OTA_TOPIC",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "topic template; %s = robot SN, many suffixed with SN at runtime"
+ },
+ {
+  "kind": "mqtt",
+  "value": "topic ROBOT_",
+  "source": "MqttPeanutStatsConfig.CLOUD_SERVER_ROBOT_TOPIC_PREFIX",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "topic template; %s = robot SN, many suffixed with SN at runtime"
+ },
+ {
+  "kind": "mqtt",
+  "value": "topic /eventRecord/client/",
+  "source": "MqttPeanutStatsConfig.EXCEPTION_EVENT_UPLOAD_TOPIC",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "topic template; %s = robot SN, many suffixed with SN at runtime"
+ },
+ {
+  "kind": "mqtt",
+  "value": "topic /odometer/client/",
+  "source": "MqttPeanutStatsConfig.ODOMETER_UPLOAD_TOPIC",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "topic template; %s = robot SN, many suffixed with SN at runtime"
+ },
+ {
+  "kind": "mqtt",
+  "value": "topic /softwareRecord/client/",
+  "source": "MqttPeanutStatsConfig.OTA_UPLOAD_TOPIC",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "topic template; %s = robot SN, many suffixed with SN at runtime"
+ },
+ {
+  "kind": "mqtt",
+  "value": "topic /server/push/msg/",
+  "source": "MqttPeanutStatsConfig.PEANUT_SERVER_COMMON_PUSH",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "topic template; %s = robot SN, many suffixed with SN at runtime"
+ },
+ {
+  "kind": "mqtt",
+  "value": "topic robot/%s/base/power/upload/v1/dev_msg",
+  "source": "MqttPeanutStatsConfig.POWER_UPLOAD_TOPIC",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "topic template; %s = robot SN, many suffixed with SN at runtime"
+ },
+ {
+  "kind": "mqtt",
+  "value": "topic ROBOT_INFO/",
+  "source": "MqttPeanutStatsConfig.ROBOT_INFO_UPLOAD_TOPIC",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "topic template; %s = robot SN, many suffixed with SN at runtime"
+ },
+ {
+  "kind": "mqtt",
+  "value": "topic /ad_config/v2/dev_msg",
+  "source": "MqttPeanutStatsConfig.TOPIC_AD_REPORT_DATA_PUBLISH",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "topic template; %s = robot SN, many suffixed with SN at runtime"
+ },
+ {
+  "kind": "mqtt",
+  "value": "topic ROBOT_CLEAN_ROUTE/",
+  "source": "MqttPeanutStatsConfig.TOPIC_CLEAN_ROUTE_PUB",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "topic template; %s = robot SN, many suffixed with SN at runtime"
+ },
+ {
+  "kind": "mqtt",
+  "value": "topic /keenon/peanut/robot/data/pub",
+  "source": "MqttPeanutStatsConfig.TOPIC_CLIENT_DATA_PUBLISH",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "topic template; %s = robot SN, many suffixed with SN at runtime"
+ },
+ {
+  "kind": "mqtt",
+  "value": "topic /robot/%s/base/common_handler/v1/dev_msg",
+  "source": "MqttPeanutStatsConfig.TOPIC_COMMON_HANDLER_DEV_MSG",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "topic template; %s = robot SN, many suffixed with SN at runtime"
+ },
+ {
+  "kind": "mqtt",
+  "value": "topic /robot/%s/lift/v1/dev_msg",
+  "source": "MqttPeanutStatsConfig.TOPIC_ELEVATOR_PUB",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "topic template; %s = robot SN, many suffixed with SN at runtime"
+ },
+ {
+  "kind": "mqtt",
+  "value": "topic /robot/%s/lift/v2/dev_msg",
+  "source": "MqttPeanutStatsConfig.TOPIC_ELEVATOR_PUB_V2",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "topic template; %s = robot SN, many suffixed with SN at runtime"
+ },
+ {
+  "kind": "mqtt",
+  "value": "topic /robot/%s/lift/v1/cloud_msg",
+  "source": "MqttPeanutStatsConfig.TOPIC_ELEVATOR_SUB",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "topic template; %s = robot SN, many suffixed with SN at runtime"
+ },
+ {
+  "kind": "mqtt",
+  "value": "topic /robot/%s/lift/v2/cloud_msg",
+  "source": "MqttPeanutStatsConfig.TOPIC_ELEVATOR_SUB_V2",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "topic template; %s = robot SN, many suffixed with SN at runtime"
+ },
+ {
+  "kind": "mqtt",
+  "value": "topic /marketing/material/server/",
+  "source": "MqttPeanutStatsConfig.TOPIC_MARKET_RESOURCE_REFRESH",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "topic template; %s = robot SN, many suffixed with SN at runtime"
+ },
+ {
+  "kind": "mqtt",
+  "value": "topic /marketing/material/client/",
+  "source": "MqttPeanutStatsConfig.TOPIC_MARKET_RESOURCE_REPORT_STATUS",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "topic template; %s = robot SN, many suffixed with SN at runtime"
+ },
+ {
+  "kind": "mqtt",
+  "value": "topic /mockFault/server/sub/",
+  "source": "MqttPeanutStatsConfig.TOPIC_MOCK_FAULT_SUBSCRIBE",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "topic template; %s = robot SN, many suffixed with SN at runtime"
+ },
+ {
+  "kind": "mqtt",
+  "value": "topic clean/%s/robot_push_message/v1/dev_msg",
+  "source": "MqttPeanutStatsConfig.TOPIC_PUSH_MSG",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "topic template; %s = robot SN, many suffixed with SN at runtime"
+ },
+ {
+  "kind": "mqtt",
+  "value": "topic /resourcePush/server/",
+  "source": "MqttPeanutStatsConfig.TOPIC_RESOURCE_PUSH_SERVER_UUID",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "topic template; %s = robot SN, many suffixed with SN at runtime"
+ },
+ {
+  "kind": "mqtt",
+  "value": "topic clean/%s/robot_open/v1/dev_msg",
+  "source": "MqttPeanutStatsConfig.TOPIC_ROBOT_OPEN",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "topic template; %s = robot SN, many suffixed with SN at runtime"
+ },
+ {
+  "kind": "mqtt",
+  "value": "topic clean/%s/robot_status/v1/dev_msg",
+  "source": "MqttPeanutStatsConfig.TOPIC_ROBOT_STATUS",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "topic template; %s = robot SN, many suffixed with SN at runtime"
+ },
+ {
+  "kind": "mqtt",
+  "value": "topic /%s/%s/user/elevator/sub",
+  "source": "AliMqttTopicEnums / MqttServerHelper / MqttUtil",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "mqtt",
+  "value": "topic /%s/%s/user/elevator/pub",
+  "source": "AliMqttTopicEnums / MqttServerHelper / MqttUtil",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "mqtt",
+  "value": "topic /%s/%s/user/ping/sub",
+  "source": "AliMqttTopicEnums / MqttServerHelper / MqttUtil",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "mqtt",
+  "value": "topic /device/%s/ioe_mqtt_conn/v1/cloud_client",
+  "source": "AliMqttTopicEnums / MqttServerHelper / MqttUtil",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "mqtt",
+  "value": "topic clean/%s/robot_open/v1/dev_msg",
+  "source": "AliMqttTopicEnums / MqttServerHelper / MqttUtil",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ }
+]

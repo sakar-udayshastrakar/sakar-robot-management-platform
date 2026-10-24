@@ -1,0 +1,303 @@
+[
+ {
+  "kind": "mqtt_broker",
+  "value": "ssl://console.peanut.keenonrobot.com:8883 (prod, non-CN region)",
+  "source": "ServiceSystem DynamicMqttServer.getBaseUrl + assets/domain/domain.json",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "MEDIUM"
+ },
+ {
+  "kind": "mqtt_broker",
+  "value": "tcp://console.peanut.keenonrobot.com (prod, CN region, default TLS-off path)",
+  "source": "ServiceSystem DynamicMqttServer / PeanutMqttServer.getBaseUrl",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "MEDIUM"
+ },
+ {
+  "kind": "mqtt_broker",
+  "value": "ssl://<region>-cloud.ikeenon.com:18883 or :21884 (eng/pre/dev, non-CN)",
+  "source": "DynamicMqttServer.getBaseUrl disassembly",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "mqtt_broker",
+  "value": "tcp://console.peanut.keenonrobot.com (RemoteControl SshMqttServer default, prod)",
+  "source": "RemoteControl SshConstants.getMqttUrl",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "mqtt_broker",
+  "value": "tcp://t-cloud.ikeenon.com (RemoteControl SshMqttServer, eng)",
+  "source": "RemoteControl SshConstants.getMqttUrl",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "mqtt_broker",
+  "value": "ssl:// mqtt-frp stats broker via ClientSSLSocketFactory (host from RemotePeanutServer.getStatsMqtt)",
+  "source": "RemoteControl RemotePeanutServer.getStatsMqtt",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "MEDIUM"
+ },
+ {
+  "kind": "mqtt_credentials",
+  "value": "username/password resolved via CipherUtil.get(peanut_mqtt_u/peanut_mqtt_p[_prod]) [REDACTED]",
+  "source": "ServiceSystem/RemoteControl shared peanut.core.mqtt code",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "mqtt_topic",
+  "value": "/android/remote/cmd/frp_<robotSN>",
+  "source": "RemoteControl SshConstants.getCmdTopic (remote shell command channel, see SYS-005)",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "mqtt_topic",
+  "value": "/android/remote/cmd_resp/frp_<robotSN>",
+  "source": "RemoteControl SshConstants.getCmdRespTopic",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "mqtt_topic",
+  "value": "robot/%s/dev_config/ros/remote-ssh/v1/cloud_msg and /dev_msg",
+  "source": "RemoteControl strings table",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "mqtt_topic",
+  "value": "/dev_config/cloud_config/hotel/v1/cloud_msg",
+  "source": "RemoteControl strings table",
+  "status": "CONFIRMED",
+  "confidence": "MEDIUM"
+ },
+ {
+  "kind": "mqtt_topic",
+  "value": "/remote-maintenance/network_tunnel/cloud_msg and /dev_msg",
+  "source": "RemoteControl strings table",
+  "status": "CONFIRMED",
+  "confidence": "MEDIUM"
+ },
+ {
+  "kind": "mqtt_topic",
+  "value": "/dev_data/sys_log/notify/v1/server",
+  "source": "RemoteControl RemoteMsgManager.handlerMqttMsg (log notify trigger)",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "mqtt_topic",
+  "value": "/dev_data/sys_log/notify_upload/v1/server",
+  "source": "RemoteControl RemoteMsgManager.handlerMqttMsg (log upload trigger)",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "mqtt_topic",
+  "value": "/devops_common/v1/cloud_client and /dev_client",
+  "source": "RemoteControl strings table",
+  "status": "CONFIRMED",
+  "confidence": "MEDIUM"
+ },
+ {
+  "kind": "mqtt_topic",
+  "value": "/device/%s/ioe_mqtt_conn/v1/cloud_client",
+  "source": "ServiceSystem MqttServerHelper.subscribeEmqChangeMsg / RemoteControl AppStateManager",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "mqtt_topic",
+  "value": "/robot/ , /common/server/ , /server/push/ , /client/push/",
+  "source": "RemoteControl common.mqtt.manager strings",
+  "status": "CONFIRMED",
+  "confidence": "MEDIUM"
+ },
+ {
+  "kind": "http_api_base",
+  "value": "console.peanut.keenonrobot.com (prod) / p-cloud.ikeenon.com (pre) / t-cloud.ikeenon.com (eng) / d-cloud.ikeenon.com (dev)",
+  "source": "ServiceSystem+RemoteControl assets/domain/domain*.json",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http_api_path",
+  "value": "/api/app/token/getSingleToken",
+  "source": "RemoteControl strings",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http_api_path",
+  "value": "/api/app/encrypt/v1, /api/app/encrypt/random/v1, /api/app/encrypt/aes/safe/v1",
+  "source": "RemoteControl strings",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http_api_path",
+  "value": "/api/app/mqtt/secret/v1",
+  "source": "RemoteControl strings (MQTTConnectManager)",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http_api_path",
+  "value": "/api/app/robot/info/v2, /checkNewSoftware/v2, /software/package/info[/v2], /version/status/v2, /log/types/v2",
+  "source": "RemoteControl strings",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http_api_path",
+  "value": "/api/app/robot/remote_log/v1/file_list, /upload, /upload_status",
+  "source": "RemoteControl strings (log upload)",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http_api_path",
+  "value": "/api/remote/sunlogin/device/session/v2, /status/v2, /service/secret/v2, /device/speed/test_url",
+  "source": "RemoteControl strings (Oray session mgmt)",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http_api_path",
+  "value": "/api/hotel_app/cloud/config/v1",
+  "source": "RemoteControl strings",
+  "status": "CONFIRMED",
+  "confidence": "MEDIUM"
+ },
+ {
+  "kind": "http_endpoint",
+  "value": "https://iflybot.com.cn/service/sit/manager/v1/device/getLocation",
+  "source": "ServiceSystem strings",
+  "status": "CONFIRMED",
+  "confidence": "MEDIUM"
+ },
+ {
+  "kind": "http_endpoint",
+  "value": "http://service.iflybot.com.cn (gatewayUrl), ws://robot.iflybot.com.cn/robot/engine/v2_2",
+  "source": "ServiceSystem assets/robot.json, robot_test.json",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http_endpoint",
+  "value": "http://robotnlp.keenonrobot.com:80, http://corrector.keenonrobot.com:80 (and t- test variants)",
+  "source": "ServiceSystem strings",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http_endpoint",
+  "value": "http://iss.openspeech.cn/v, http://openapi.openspeech.cn/webapi/wfr.do, http://wke.openspeech.cn/wakeup/, https://open.xf-yun.com/msp.do, https://log.iflytek.com/log, https://logconf.iflytek.com/hotupdate",
+  "source": "ServiceSystem strings (iFlytek cloud SDK)",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http_endpoint",
+  "value": "https://api.moonshot.cn/v1/chat/completions (Kimi LLM)",
+  "source": "ServiceSystem KimiChatApi",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http_endpoint",
+  "value": "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions (DeepSeek via DashScope)",
+  "source": "ServiceSystem DeepseekChatApi",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http_endpoint",
+  "value": "https://<resource>.openai.azure.com/openai/deployments/%s/chat/completions, https://<region>.api.cognitive.microsoft.com (8 regions)",
+  "source": "ServiceSystem assets/voiceConfig/micro_resource.json",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "http_endpoint",
+  "value": "https://applog.iotcloud.tencentiotcloud.com/api/xp2p_ops/applog ; room://cloud.tencent.com/rtc ; room://rtc.tencent.com",
+  "source": "ServiceSystem Tencent LiteAV/GVoice strings",
+  "status": "CONFIRMED",
+  "confidence": "MEDIUM"
+ },
+ {
+  "kind": "telemetry_endpoint",
+  "value": "http://<REDACTED_KEY>@sentry.keenonrobot.com/12 (Sentry DSN, cleartext)",
+  "source": "ServiceSystem AndroidManifest.xml meta-data io.sentry.dsn",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "ftp_frp_endpoint",
+  "value": "frp.keenonrobots.com (latency ping target; actual FRP server/port/token delivered via MQTT frpConfig)",
+  "source": "RemoteControl AppStateManager.getFrpDelayTime",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "local_socket_or_host",
+  "value": "192.168.64.20 (SMB share root + rosbridge-style ws://192.168.64.20:9013)",
+  "source": "RemoteControl SMBManager, WebClientManager",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "smb_credentials",
+  "value": "user root, password from SMBInterface.PASS_LIST[0..1] [REDACTED: 2 hard-coded strings]",
+  "source": "RemoteControl SMBManager.lambda$init$0",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "adb_tcp_port",
+  "value": "5678 (service.adb.tcp.port, set at ServiceSystem init; also frpc local_port)",
+  "source": "ServiceSystem SystemInitializer.init; RemoteControl FrpClientHelper.buildFrpClientConfig",
+  "status": "STRONGLY_SUPPORTED",
+  "confidence": "MEDIUM"
+ },
+ {
+  "kind": "websocket",
+  "value": "ws://10.40.53.203/robot/engine (string constant, likely stale/dev default)",
+  "source": "ServiceSystem strings",
+  "status": "HISTORICAL",
+  "confidence": "LOW"
+ },
+ {
+  "kind": "api_key_location",
+  "value": "ServiceSystem assets/voiceConfig/micro_resource.json: 8x openaiKey + 8x speechKey [REDACTED]",
+  "source": "asset file",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "api_key_location",
+  "value": "ServiceSystem KimiChatApi/DeepseekChatApi: hard-coded Bearer sk-... keys [REDACTED]",
+  "source": "DEX string table",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "api_key_location",
+  "value": "ServiceSystem assets/robot.json / robot_test.json: appId+secret for iFlytek robot gateway [REDACTED]",
+  "source": "asset file",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "private_key_location",
+  "value": "ServiceSystem assets/vtn/privateKey.pem (RSA private key, 1700 bytes) [REDACTED]",
+  "source": "asset file",
+  "status": "CONFIRMED",
+  "confidence": "HIGH"
+ }
+]

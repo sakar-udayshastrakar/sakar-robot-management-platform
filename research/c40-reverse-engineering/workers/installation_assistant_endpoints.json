@@ -1,0 +1,716 @@
+[
+ {
+  "kind": "HOST",
+  "value": "192.168.64.20",
+  "source": "HubConstant.LINUX_IP; PeanutConstants.REMOTE_LINK_PROXY; RosSocketClientManager.ADDRESS; PeanutSDK.initAuth ping target (robot Linux/ROS board)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "HOST",
+  "value": "192.168.64.10",
+  "source": "PeanutConstants.LOCAL_ETHER_IP; SimpleChromeActivity.showWebView default SERVER_IP (Android side of internal Ethernet)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "HOST",
+  "value": "127.0.0.1",
+  "source": "PeanutConstants.LOCAL_LINK_PROXY",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "URL",
+  "value": "ws://192.168.64.20:9090",
+  "source": "RosSocketClientManager.init (rosbridge #1 \"PC9090\"); Home chunk rosIp",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "URL",
+  "value": "ws://192.168.64.20:9091",
+  "source": "RosSocketClientManager.init (rosbridge #2 \"PC9091\"); Home chunk rosCtrlIp",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "URL",
+  "value": "ws://<hostname>:8888 (?port=PC9090|PC9091|PC8888|APP8888|ALL8888)",
+  "source": "WebServerSocket.PORT=8888 (java-websocket server, wildcard bind); SPA useRosConnect/ws client; WebServerSocket.onOpen resource-descriptor tags",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "URL",
+  "value": "ws://<hostname>:8899",
+  "source": "SocketServerManager.LOG_PORT; WebLogServerManager; SPA remote logger (title \"mapping-app\")",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "URL",
+  "value": "http://<serverIp>:8080/ (AndServer; routes /, /login POST, /file/upload POST, /file/download GET, /map/pic GET, /video/play GET, /v3/test GET)",
+  "source": "AndService.PORT=8080; ApiControllerAdapter; PageControllerAdapter; AppConfig AssetsWebsite(/ros/dist)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "URL",
+  "value": "http://192.168.64.20:8080/install",
+  "source": "SimpleChromeActivity1$InternalIntentDelegate.processUrlViewIntent (dev/test activity)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "URL",
+  "value": "http://172.16.25.170:8080/#/install",
+  "source": "SimpleChromeActivity2$InternalIntentDelegate (hard-coded developer LAN IP)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "URL",
+  "value": "http://localhost:8080/video/play?fileName=<name>",
+  "source": "SPA index chunk (tutorial video playback)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "URL",
+  "value": "http://192.168.64.20:54322",
+  "source": "PeanutConstants.HTTP_PORT; SDK OkHttp transport to robot (HTTP link type); upgrade port 34569",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "URL",
+  "value": "coap://192.168.64.20:5683",
+  "source": "PeanutConstants.COAP_PORT/COAP_PROTOCOL; SDK PeanutCoapClient",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "URL",
+  "value": "ws://192.168.64.20:22345 (upgrade 12386)",
+  "source": "PeanutConstants.WS_PORT / WS_PORT_UPGRADE (SDK http.ws push channel)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM"
+ },
+ {
+  "kind": "URL",
+  "value": "tftp://192.168.64.20:9527",
+  "source": "PeanutConstants.TFTP_PORT/TFTP_PROTOCOL (SDK TFTP map/firmware transfer)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM"
+ },
+ {
+  "kind": "URL",
+  "value": "smb://192.168.64.20/home",
+  "source": "UDriveHelp.copyToRos -> SMBManager.onSmbPut (jcifs smb1); creds from native cipher pack (ros_name/ros_pass1/ros_pass2) [REDACTED]",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "SERIAL",
+  "value": "/dev/ttyS1,/dev/ttyS2,/dev/ttyS3(921600 baud),/dev/ttyS4,/dev/ttyUSB0,/dev/ttyUSB2,/dev/ttyUSB3,/dev/ttyUSBDoorCtl (default 115200)",
+  "source": "PeanutConstants COM*, COM3RATE, DEFAULT_RATE; libkeenon_serial.so",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "HOST",
+  "value": "console.peanut.keenonrobot.com",
+  "source": "PsvConstants / ServerManager / assets/domain/*.json / SPA Home chunk: PROD CN",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "HOST",
+  "value": "es-cloud.robotkeenon.com",
+  "source": "PsvConstants / ServerManager / assets/domain/*.json / SPA Home chunk: PROD ES/EU",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "HOST",
+  "value": "cloud.robotkeenon.com",
+  "source": "PsvConstants / ServerManager / assets/domain/*.json / SPA Home chunk: PROD JP/other",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "HOST",
+  "value": "p-cloud.ikeenon.com",
+  "source": "PsvConstants / ServerManager / assets/domain/*.json / SPA Home chunk: PRE",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "HOST",
+  "value": "t-cloud.ikeenon.com",
+  "source": "PsvConstants / ServerManager / assets/domain/*.json / SPA Home chunk: ENG CN",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "HOST",
+  "value": "t-overseas-cloud.ikeenon.com",
+  "source": "PsvConstants / ServerManager / assets/domain/*.json / SPA Home chunk: ENG JP",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "HOST",
+  "value": "t-overseas2-cloud.ikeenon.com",
+  "source": "PsvConstants / ServerManager / assets/domain/*.json / SPA Home chunk: ENG ES",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "HOST",
+  "value": "d-cloud.ikeenon.com",
+  "source": "PsvConstants / ServerManager / assets/domain/*.json / SPA Home chunk: DEV CN (also d-overseas-cloud / d-overseas2-cloud in assets)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "HOST",
+  "value": "t-us-cloud.ikeenon.com",
+  "source": "PsvConstants / ServerManager / assets/domain/*.json / SPA Home chunk: ENG US (SPA)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "HOST",
+  "value": "us-cloud.robotkeenon.com",
+  "source": "PsvConstants / ServerManager / assets/domain/*.json / SPA Home chunk: PROD US (SPA)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "HOST",
+  "value": "cloud.keenonrobot.com",
+  "source": "PsvConstants / ServerManager / assets/domain/*.json / SPA Home chunk: SPA domain list",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "HOST",
+  "value": "t-portal.ikeenon.com",
+  "source": "SPA Home chunk (web portal URLs, e.g. for QR/help links)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM"
+ },
+ {
+  "kind": "HOST",
+  "value": "t-overseas-portal.ikeenon.com",
+  "source": "SPA Home chunk (web portal URLs, e.g. for QR/help links)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM"
+ },
+ {
+  "kind": "HOST",
+  "value": "t-overseas2-portal.ikeenon.com",
+  "source": "SPA Home chunk (web portal URLs, e.g. for QR/help links)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM"
+ },
+ {
+  "kind": "HOST",
+  "value": "d-portal.ikeenon.com",
+  "source": "SPA Home chunk (web portal URLs, e.g. for QR/help links)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM"
+ },
+ {
+  "kind": "HOST",
+  "value": "p-portal.ikeenon.com",
+  "source": "SPA Home chunk (web portal URLs, e.g. for QR/help links)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM"
+ },
+ {
+  "kind": "HOST",
+  "value": "t-us-portal.ikeenon.com",
+  "source": "SPA Home chunk (web portal URLs, e.g. for QR/help links)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM"
+ },
+ {
+  "kind": "HOST",
+  "value": "www.robotkeenon.com",
+  "source": "SPA Home chunk (web portal URLs, e.g. for QR/help links)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM"
+ },
+ {
+  "kind": "HOST",
+  "value": "es.robotkeenon.com",
+  "source": "SPA Home chunk (web portal URLs, e.g. for QR/help links)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM"
+ },
+ {
+  "kind": "HOST",
+  "value": "us.robotkeenon.com",
+  "source": "SPA Home chunk (web portal URLs, e.g. for QR/help links)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM"
+ },
+ {
+  "kind": "HOST",
+  "value": "mqtt.keenonrobot.com",
+  "source": "DynamicMqttServer (default MQTT host; ssl://%s:%d TLSv1.2 with BKS; fallback tcp://%s:%d)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "URL_TEMPLATE",
+  "value": "https://<domain>:443 or :80 via ServerManager \"%s%s:%d\"",
+  "source": "ServerManager.changeUrl/setServerUrl (HTTP_PORT=80, HTTP_PORT_SSL=443)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "HOST",
+  "value": "sentry.keenonrobot.com",
+  "source": "AndroidManifest meta-data io.sentry.dsn = https://<public-key REDACTED>@sentry.keenonrobot.com/14; traces-sample-rate 1.0",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "KEY",
+  "value": "AMap (Gaode) API key present in manifest meta-data com.amap.api.v2.apikey = [REDACTED 32 hex]",
+  "source": "AndroidManifest.xml",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "HOST",
+  "value": "223.5.5.5",
+  "source": "com.blankj.utilcode NetworkUtils (connectivity ping target; third-party library)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM"
+ },
+ {
+  "kind": "HOST",
+  "value": "dns.quad9.net, cloudflare-dns.com, 1dot1dot1dot1.cloudflare-dns.com",
+  "source": "Chromium M73 built-in DNS-over-HTTPS provider list",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM"
+ },
+ {
+  "kind": "REST_PATH",
+  "value": "/api/app/robot/file/v3/upload (SPA, host = selected cloud domain)",
+  "source": "assets/ros/dist/assets/index-32d09e94.js",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "REST_PATH",
+  "value": "/api/appservice/web/qly/event/tracking/v1/record (SPA, host = selected cloud domain)",
+  "source": "assets/ros/dist/assets/index-32d09e94.js",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "REST_PATH",
+  "value": "/api/tool_support/dispatch/v1/store_robot/list (SPA, host = selected cloud domain)",
+  "source": "assets/ros/dist/assets/index-32d09e94.js",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "REST_PATH",
+  "value": "/api/tool_support/dispatch/v2/store_robot/list (SPA, host = selected cloud domain)",
+  "source": "assets/ros/dist/assets/index-32d09e94.js",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "REST_PATH",
+  "value": "/api/tool_support/mapping/trial/v1/common/${e}/${r} (SPA, host = selected cloud domain)",
+  "source": "assets/ros/dist/assets/index-32d09e94.js",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "REST_PATH",
+  "value": "/api/tool_support/mapping/trial/v1/common/${t}/${e} (SPA, host = selected cloud domain)",
+  "source": "assets/ros/dist/assets/index-32d09e94.js",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "REST_PATH",
+  "value": "/api/tool_support/mapping/trial/v1/phone/${e} (SPA, host = selected cloud domain)",
+  "source": "assets/ros/dist/assets/index-32d09e94.js",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "REST_PATH",
+  "value": "/api/tool_support/mapping/trial/v1/route/${e} (SPA, host = selected cloud domain)",
+  "source": "assets/ros/dist/assets/index-32d09e94.js",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "REST_PATH",
+  "value": "/api/tool_support/mapping/trial/v1/route/${t} (SPA, host = selected cloud domain)",
+  "source": "assets/ros/dist/assets/index-32d09e94.js",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "REST_PATH",
+  "value": "/api/tool_support/mapping/trial/v1/scheduling/${e} (SPA, host = selected cloud domain)",
+  "source": "assets/ros/dist/assets/index-32d09e94.js",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "REST_PATH",
+  "value": "/api/tool_support/mapping/trial/v1/target/${e} (SPA, host = selected cloud domain)",
+  "source": "assets/ros/dist/assets/index-32d09e94.js",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "REST_PATH",
+  "value": "/api/tool_support/mapping/v1/file (SPA, host = selected cloud domain)",
+  "source": "assets/ros/dist/assets/index-32d09e94.js",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "REST_PATH",
+  "value": "/api/tool_support/mapping/v1/image/batch_process (SPA, host = selected cloud domain)",
+  "source": "assets/ros/dist/assets/index-32d09e94.js",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "REST_PATH",
+  "value": "/api/tool_support/mapping/v1/trans/api/tileProcessor (SPA, host = selected cloud domain)",
+  "source": "assets/ros/dist/assets/index-32d09e94.js",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "REST_PATH",
+  "value": "/api/tool_support/mapping/v2/scene/info (SPA, host = selected cloud domain)",
+  "source": "assets/ros/dist/assets/index-32d09e94.js",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "REST_PATH",
+  "value": "/api/tool_support/mapping/v3/robot/sync (SPA, host = selected cloud domain)",
+  "source": "assets/ros/dist/assets/index-32d09e94.js",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "REST_PATH",
+  "value": "/api/tool_support/mapping/v4/robot/dup/sync (SPA, host = selected cloud domain)",
+  "source": "assets/ros/dist/assets/index-32d09e94.js",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "REST_PATH",
+  "value": "/api/tool_support/mapping/v4/robot/sync (SPA, host = selected cloud domain)",
+  "source": "assets/ros/dist/assets/index-32d09e94.js",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "REST_PATH",
+  "value": "/api/tool_support/mapping/v4/scene/charge (SPA, host = selected cloud domain)",
+  "source": "assets/ros/dist/assets/index-32d09e94.js",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "REST_PATH",
+  "value": "/api/tool_support/mapping/v4/scene/config/sync (SPA, host = selected cloud domain)",
+  "source": "assets/ros/dist/assets/index-32d09e94.js",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "REST_PATH",
+  "value": "/api/tool_support/mapping/v4/scene/info (SPA, host = selected cloud domain)",
+  "source": "assets/ros/dist/assets/index-32d09e94.js",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "REST_PATH",
+  "value": "/api/tool_support/robot/v1/online/list (SPA, host = selected cloud domain)",
+  "source": "assets/ros/dist/assets/index-32d09e94.js",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "REST_PATH",
+  "value": "/api/tool_support/robot/v2/info/list (SPA, host = selected cloud domain)",
+  "source": "assets/ros/dist/assets/index-32d09e94.js",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "REST_PATH",
+  "value": "/api/tool_support/robot/v3/info/list (SPA, host = selected cloud domain)",
+  "source": "assets/ros/dist/assets/index-32d09e94.js",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "REST_PATH",
+  "value": "/api/tool_support/token/getHotP (SPA, host = selected cloud domain)",
+  "source": "assets/ros/dist/assets/index-32d09e94.js",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "REST_PATH",
+  "value": "/api/tool_support/token/getSingleToken (SPA, host = selected cloud domain)",
+  "source": "assets/ros/dist/assets/index-32d09e94.js",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "REST_PATH",
+  "value": "/api/tool_support/v1/mapping/scene/custom/area/${e} (SPA, host = selected cloud domain)",
+  "source": "assets/ros/dist/assets/index-32d09e94.js",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "REST_PATH",
+  "value": "/api/tool_support/v1/trial_run_task (SPA, host = selected cloud domain)",
+  "source": "assets/ros/dist/assets/index-32d09e94.js",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "REST_PATH",
+  "value": "/api/userservice/secret/getkey (SPA, host = selected cloud domain)",
+  "source": "assets/ros/dist/assets/index-32d09e94.js",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "REST_PATH",
+  "value": "/api/userservice/secret/publickey (SPA, host = selected cloud domain)",
+  "source": "assets/ros/dist/assets/index-32d09e94.js",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "REST_PATH",
+  "value": "/api/app/robot/checkNewSoftware (GET)",
+  "source": "Retrofit annotation in ClientUpdateApi",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "REST_PATH",
+  "value": "/api/app/robot/getSoftware (GET)",
+  "source": "Retrofit annotation in ClientUpdateApi",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "REST_PATH",
+  "value": "/api/app/token/getSingleToken (POST)",
+  "source": "Retrofit annotation in GetTokenApi / ITokenApi",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "REST_PATH",
+  "value": "/api/app/mqtt/secret/v1 (GET)",
+  "source": "Retrofit annotation in MqttGetPasswordApi",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "REST_PATH",
+  "value": "/api/app/mqtt/secret/v2 (GET)",
+  "source": "Retrofit annotation in IMqttPwdApi (component.core)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "REST_PATH",
+  "value": "/api/app/robot/appResource/status (POST)",
+  "source": "Retrofit annotation in UploadDeviceInfoApi",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "REST_PATH",
+  "value": "/api/app/robot/info/update (POST)",
+  "source": "Retrofit annotation in UploadDeviceInfoApi",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "REST_PATH",
+  "value": "/api/app/robot/version/status (POST)",
+  "source": "Retrofit annotation in UploadDeviceInfoApi",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "REST_PATH",
+  "value": "/api/app/v1/robot_iso_domain_name_link (GET)",
+  "source": "Retrofit annotation in IDomainApi",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "REST_PATH",
+  "value": "/api/app/v2/healthz (GET)",
+  "source": "Retrofit annotation in IDomainApi ping",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "REST_PATH",
+  "value": "/api/app/robot/v1/net/sec (GET)",
+  "source": "Retrofit annotation in IHttpCybersecurityApi",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "REST_PATH",
+  "value": "/api/app/robot/v1/geolocation (POST)",
+  "source": "Retrofit annotation in LocationApi",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "REST_PATH",
+  "value": "/api/app/robot/v2/restriction (POST)",
+  "source": "Retrofit annotation in LocationApi",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "REST_PATH",
+  "value": "geolocation/v1/geolocate (POST, Google geolocation API via proxy host)",
+  "source": "Retrofit annotation in Request",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "REST_PATH",
+  "value": "/api/app/device/report/identity (POST)",
+  "source": "Retrofit annotation in IRobotBaseApi (machineAuth)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "REST_PATH",
+  "value": "/api/app/device/report/identity/check (GET)",
+  "source": "Retrofit annotation in IRobotBaseApi",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "REST_PATH",
+  "value": "/api/app/v1/device/ssh/login-secret (GET)",
+  "source": "Retrofit annotation in IPlatformHttpApi (sshPwd) - cloud-provided robot SSH login secret",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "MQTT_TOPIC",
+  "value": "/mapping/v1/cloud_msg (sub, prefixed /tool_support/mapping_<id>?)",
+  "source": "HubConstant.TOPIC_MAP_AND_DISPATCH_ID; MapMqttManager",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "MQTT_TOPIC",
+  "value": "/mapping/v1/dev_msg (pub ack)",
+  "source": "HubConstant.TOPIC_MAP_AND_DISPATCH_ID_ACK",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "MQTT_TOPIC",
+  "value": "/tool_support/mapping_ (topic prefix)",
+  "source": "MapMqttManager",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "MQTT_TOPIC",
+  "value": "/tool_support/",
+  "source": "HubConstant.TOPIC_SUPPORT",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "MQTT_TOPIC",
+  "value": "/device/%s/ioe_mqtt_conn/v1/cloud_client",
+  "source": "HubConstant.TOPIC_SUB_IOE_MQTT_CONN_CLOUD_MSG; MqttServerHelper (broker host change notices)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "MQTT_TOPIC",
+  "value": "/robot... ssh pwd credential publish/subscribe topics (MqttNetHelper.TOPIC_SSH_PWD_CREDENTIAL_PUBLISH/SUBSCRIBE; actions RobotSshCredential / ...Reply)",
+  "source": "component.sshPwd.net.MqttNetHelper",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM"
+ },
+ {
+  "kind": "MQTT_TOPIC",
+  "value": "/keenon... client data publish (MqttHelper.TOPIC_CLIENT_DATA_PUBLISH), /identity firmware-change observer",
+  "source": "component.machineAuth.net.MqttHelper",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM"
+ },
+ {
+  "kind": "MQTT_CLIENT_ID_PREFIX",
+  "value": "mapping_",
+  "source": "SlamApplication.initMqtt -> MqttManager.setMqttClientIdPrefix",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "BROADCAST_ACTION",
+  "value": "com.keenon.action.MAPPING_START / MAPPING_STOP / MAPPING_HEART_BRAT / RESTORE_FACTORY_SETTINGS / DISCONNECT_ROBOT / IMPORT_U_DRIVE_DATA / com.keenon.IMPORT_U_DRIVE.STATE / EXECUTE_CMD / EXECUTE_CMD_RESULT / SILENT_INSTALL_APP / DOMAIN_ISO_CHANGED / android.peanut.action.MAPPING_RESTART_ROS(_SUC) / MAP_DOWNLOAD_START / keenon.intent.action.REFRESH_PROPERTIES",
+  "source": "HubConstant, APPReceiver, KeenonServiceUtil, CommUtils, DomainManager, PropertiesStorage",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "INTENT_URI",
+  "value": "mapkeenon://mapandroid.com?Language=<lang>&cloud3d=<bool>&modifyPoint=<bool>",
+  "source": "AndroidManifest SimpleChromeActivity intent-filter; handlerIntentData",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "AIDL_SERVICE",
+  "value": "com.keenon.systemservice/{bi.BiService, mqtt.MqttApiService, tts.TtsApiService, voice.VoiceApiService}",
+  "source": "com.keenon.serviceSdk.common.BaseAidlClient.getServicePackage; per-client getServiceClass",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ },
+ {
+  "kind": "APP_PACKAGE",
+  "value": "com.keenon.launcher; com.keenon.peanut.solutionfooddelivery / solutionhotel / solutiondisinfect / com.keenon.solutionindustry / com.keenon.peanut.clean; com.keenon.remote_control_oray (+ .daemon.HeadService)",
+  "source": "HubConstant/CommUtils.packageNameArray/checkRemoteAPP/InformationSupport.onHandleFactoryReset",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH"
+ }
+]

@@ -1,0 +1,423 @@
+[
+ {
+  "relative_path": "peanut-clean-v3.7.8-0-g153214a-prod-release-p.apk",
+  "analyzed": true,
+  "method": "ZIP inventory, manifest decode (axml), DEX bytecode scan + mini-disassembly, REA/JADX 0.7.1 decompilation of ~60 selected methods, ELF header/string parsing, openssl cert parse, asset/JSON/SQL reading",
+  "findings": "Prod release of Keenon clean app v3.7.8 (versionCode 24); 3,484 members, 7 DEX, 10 armeabi-v7a .so, 122 MB; v1+v2/v3 signed with generic \"CN=Android\" certificate; embedded REST API on 8089/8090; CoAP/serial Peanut SDK; Room DB; MQTT/HTTP cloud sync. 68 findings.",
+  "status": "CONFIRMED",
+  "limitations": "Not executed; no runtime observation; JADX decompiled only selected classes (CoAP/MQTT/UI hops partly INFERRED); native code not disassembled; 33.6k-class DEX only partially reviewed.",
+  "size_bytes": 121990249,
+  "sha256": "9b5eb4f20e3696d1bd467a270b0db0798246ac5dbf9a59d6b968b56cb3b7fdd5"
+ },
+ {
+  "relative_path": "peanut-clean-v3.7.8-0-g153214a-prod-release-p.apk!/classes.dex",
+  "analyzed": true,
+  "method": "DEX parse (header/strings/types/classes/code items) + bytecode scan (const-string, invoke, field, annotation, static values) into SQLite",
+  "findings": "7356 class definitions, 52294 methods; content: com.keenon.component.*, peanut.core, ARouter/TheRouter, Paho, okhttp, okgo, androidx; MQTT/DynamicMqttServer, DomainManager, upgrade, fault, resource managers",
+  "status": "CONFIRMED",
+  "limitations": "Class descriptions are heuristic; only selected classes decompiled with JADX.",
+  "size_bytes": 9146844,
+  "sha256": "539e40722181e0dc223d1823cfd9e12da65b812ddf752904ceb64ffa06d4a281"
+ },
+ {
+  "relative_path": "peanut-clean-v3.7.8-0-g153214a-prod-release-p.apk!/classes2.dex",
+  "analyzed": true,
+  "method": "DEX parse (header/strings/types/classes/code items) + bytecode scan (const-string, invoke, field, annotation, static values) into SQLite",
+  "findings": "5065 class definitions, 59281 methods; content: sdk robot models/beans, component classes, Retrofit/RxJava, jilk rosbridge",
+  "status": "CONFIRMED",
+  "limitations": "Class descriptions are heuristic; only selected classes decompiled with JADX.",
+  "size_bytes": 7544528,
+  "sha256": "440b77342bdc0b340d34545737a4a9873a3bbaf7ae436c7d8baae85e18f67a2f"
+ },
+ {
+  "relative_path": "peanut-clean-v3.7.8-0-g153214a-prod-release-p.apk!/classes3.dex",
+  "analyzed": true,
+  "method": "DEX parse (header/strings/types/classes/code items) + bytecode scan (const-string, invoke, field, annotation, static values) into SQLite",
+  "findings": "2331 class definitions, 16312 methods; content: AMap/Umeng SDK, datasync, Keenon module.common/android (embedded servers), upgrade installers",
+  "status": "CONFIRMED",
+  "limitations": "Class descriptions are heuristic; only selected classes decompiled with JADX.",
+  "size_bytes": 3757852,
+  "sha256": "f57f496e0bda8a06ee5936a62058738824c6cad37fa1856382ff583a6c5a2bfc"
+ },
+ {
+  "relative_path": "peanut-clean-v3.7.8-0-g153214a-prod-release-p.apk!/classes4.dex",
+  "analyzed": true,
+  "method": "DEX parse (header/strings/types/classes/code items) + bytecode scan (const-string, invoke, field, annotation, static values) into SQLite",
+  "findings": "4141 class definitions, 22705 methods; content: com.keenon.module.* app code (main UI, slam services, datebase Room, task controllers), 2.5k UI classes",
+  "status": "CONFIRMED",
+  "limitations": "Class descriptions are heuristic; only selected classes decompiled with JADX.",
+  "size_bytes": 5066468,
+  "sha256": "446b4b6564a417bd6da0ed01bd123102797ff26d864e651cdcad8cd407e64826"
+ },
+ {
+  "relative_path": "peanut-clean-v3.7.8-0-g153214a-prod-release-p.apk!/classes5.dex",
+  "analyzed": true,
+  "method": "DEX parse (header/strings/types/classes/code items) + bytecode scan (const-string, invoke, field, annotation, static values) into SQLite",
+  "findings": "3699 class definitions, 19557 methods; content: Peanut SDK (coapapi, embedded, sensor, tftp, http), Californium, AndroidAsync, commons-net",
+  "status": "CONFIRMED",
+  "limitations": "Class descriptions are heuristic; only selected classes decompiled with JADX.",
+  "size_bytes": 3859332,
+  "sha256": "4a8d283557e1e5db2c7f2aa346ec801bf14411e0689702e8f05059c76769c152"
+ },
+ {
+  "relative_path": "peanut-clean-v3.7.8-0-g153214a-prod-release-p.apk!/classes6.dex",
+  "analyzed": true,
+  "method": "DEX parse (header/strings/types/classes/code items) + bytecode scan (const-string, invoke, field, annotation, static values) into SQLite",
+  "findings": "8210 class definitions, 57282 methods; content: Sentry, ACRA, Glide, google libs, kotlin, logback, org.* libs",
+  "status": "CONFIRMED",
+  "limitations": "Class descriptions are heuristic; only selected classes decompiled with JADX.",
+  "size_bytes": 9040528,
+  "sha256": "c79c384565eb01ad811284a1e81666cadcec757509487873c12db96f53dd2f97"
+ },
+ {
+  "relative_path": "peanut-clean-v3.7.8-0-g153214a-prod-release-p.apk!/classes7.dex",
+  "analyzed": true,
+  "method": "DEX parse (header/strings/types/classes/code items) + bytecode scan (const-string, invoke, field, annotation, static values) into SQLite",
+  "findings": "2810 class definitions, 20840 methods; content: JTS, bouncy/crypto providers, snakeyaml, freemarker, remaining third-party",
+  "status": "CONFIRMED",
+  "limitations": "Class descriptions are heuristic; only selected classes decompiled with JADX.",
+  "size_bytes": 3065732,
+  "sha256": "357177efa111b7bc0148386e9098d996e7244a802a0142af206d56ea169ea8ec"
+ },
+ {
+  "relative_path": "peanut-clean-v3.7.8-0-g153214a-prod-release-p.apk!/lib/armeabi-v7a/libcipher_pack.so",
+  "analyzed": true,
+  "method": "ELF32 ARM header/dynsym/dynstr parse (scripts/elfinfo.py + elfall.py), JNI export names, import list, readable strings",
+  "findings": "Secret store; JNI CipherUtil.get; holds fleet-wide AES/MQTT/keystore/PIN/MMKV/Umeng/Bugly secrets (values not extracted)",
+  "status": "CONFIRMED",
+  "limitations": "Stripped; no disassembly/decompilation (no Ghidra/objdump installed); internal logic UNKNOWN.",
+  "size_bytes": 136848,
+  "sha256": "41296e7c7f3868f0d61101781cf65ef46f62bf5cd19ad46c89d701cf33134c02"
+ },
+ {
+  "relative_path": "peanut-clean-v3.7.8-0-g153214a-prod-release-p.apk!/lib/armeabi-v7a/libkeenon_serial.so",
+  "analyzed": true,
+  "method": "ELF32 ARM header/dynsym/dynstr parse (scripts/elfinfo.py + elfall.py), JNI export names, import list, readable strings",
+  "findings": "JNI SerialPort open/close (termios) for com.keenon.sdk.serial",
+  "status": "CONFIRMED",
+  "limitations": "Stripped; no disassembly/decompilation (no Ghidra/objdump installed); internal logic UNKNOWN.",
+  "size_bytes": 18000,
+  "sha256": "add215d6edb4bfa88f0838de60b6503d4e72cf69ce2f8fda98fd6ae5d1862527"
+ },
+ {
+  "relative_path": "peanut-clean-v3.7.8-0-g153214a-prod-release-p.apk!/lib/armeabi-v7a/libandroid_serial_port.so",
+  "analyzed": true,
+  "method": "ELF32 ARM header/dynsym/dynstr parse (scripts/elfinfo.py + elfall.py), JNI export names, import list, readable strings",
+  "findings": "JNI com.aill.androidserialport.SerialPort open/close",
+  "status": "CONFIRMED",
+  "limitations": "Stripped; no disassembly/decompilation (no Ghidra/objdump installed); internal logic UNKNOWN.",
+  "size_bytes": 13796,
+  "sha256": "f3e3ab027f7f921d6d229e60874a0a6dca9d1fc2639fe082154d12bcad269792"
+ },
+ {
+  "relative_path": "peanut-clean-v3.7.8-0-g153214a-prod-release-p.apk!/lib/armeabi-v7a/libmmkv.so",
+  "analyzed": true,
+  "method": "ELF32 ARM header/dynsym/dynstr parse (scripts/elfinfo.py + elfall.py), JNI export names, import list, readable strings",
+  "findings": "Tencent MMKV (AES crypt key support)",
+  "status": "CONFIRMED",
+  "limitations": "Stripped; no disassembly/decompilation (no Ghidra/objdump installed); internal logic UNKNOWN.",
+  "size_bytes": 381828,
+  "sha256": "affaef8f88f7dcff35de25588ca98f3f0aeed8757a296da029b74709c058301d"
+ },
+ {
+  "relative_path": "peanut-clean-v3.7.8-0-g153214a-prod-release-p.apk!/lib/armeabi-v7a/libpatchutils.so",
+  "analyzed": true,
+  "method": "ELF32 ARM header/dynsym/dynstr parse (scripts/elfinfo.py + elfall.py), JNI export names, import list, readable strings",
+  "findings": "bsdiff/bspatch (PatchUtil.bspatch) with bundled bzip2",
+  "status": "CONFIRMED",
+  "limitations": "Stripped; no disassembly/decompilation (no Ghidra/objdump installed); internal logic UNKNOWN.",
+  "size_bytes": 53848,
+  "sha256": "072443fc59513345f223497b54eeff156b57ef3b5e504ccbe4972aa54880bfaf"
+ },
+ {
+  "relative_path": "peanut-clean-v3.7.8-0-g153214a-prod-release-p.apk!/lib/armeabi-v7a/libpl_droidsonroids_gif.so",
+  "analyzed": true,
+  "method": "ELF32 ARM header/dynsym/dynstr parse (scripts/elfinfo.py + elfall.py), JNI export names, import list, readable strings",
+  "findings": "android-gif-drawable decoder",
+  "status": "CONFIRMED",
+  "limitations": "Stripped; no disassembly/decompilation (no Ghidra/objdump installed); internal logic UNKNOWN.",
+  "size_bytes": 42460,
+  "sha256": "55e66fb501ee5484617a0c6d302305e22fb92b719982175cf7d00ee2fee62b52"
+ },
+ {
+  "relative_path": "peanut-clean-v3.7.8-0-g153214a-prod-release-p.apk!/lib/armeabi-v7a/libsentry-android.so",
+  "analyzed": true,
+  "method": "ELF32 ARM header/dynsym/dynstr parse (scripts/elfinfo.py + elfall.py), JNI export names, import list, readable strings",
+  "findings": "Sentry NDK JNI bridge",
+  "status": "CONFIRMED",
+  "limitations": "Stripped; no disassembly/decompilation (no Ghidra/objdump installed); internal logic UNKNOWN.",
+  "size_bytes": 22104,
+  "sha256": "1100f1a5740b34537dbb254b32f14255f9b57d1a8dca6ebb27c9c0fe65aac226"
+ },
+ {
+  "relative_path": "peanut-clean-v3.7.8-0-g153214a-prod-release-p.apk!/lib/armeabi-v7a/libsentry.so",
+  "analyzed": true,
+  "method": "ELF32 ARM header/dynsym/dynstr parse (scripts/elfinfo.py + elfall.py), JNI export names, import list, readable strings",
+  "findings": "Sentry native SDK (sentry_init, transport)",
+  "status": "CONFIRMED",
+  "limitations": "Stripped; no disassembly/decompilation (no Ghidra/objdump installed); internal logic UNKNOWN.",
+  "size_bytes": 911088,
+  "sha256": "b72025d2f8f2aaa1cc2851833399c42ae1504ac123535c3c0a520830b6626790"
+ },
+ {
+  "relative_path": "peanut-clean-v3.7.8-0-g153214a-prod-release-p.apk!/lib/armeabi-v7a/libsqlcipher.so",
+  "analyzed": true,
+  "method": "ELF32 ARM header/dynsym/dynstr parse (scripts/elfinfo.py + elfall.py), JNI export names, import list, readable strings",
+  "findings": "SQLCipher (OpenSSL EVP); not wired to Room DB (greenDAO lib refs only)",
+  "status": "CONFIRMED",
+  "limitations": "Stripped; no disassembly/decompilation (no Ghidra/objdump installed); internal logic UNKNOWN.",
+  "size_bytes": 2185932,
+  "sha256": "6b3765206d697ef99adb46da07a6f72df3a1cf7166c481fae824b93bb2b7c0e9"
+ },
+ {
+  "relative_path": "peanut-clean-v3.7.8-0-g153214a-prod-release-p.apk!/lib/armeabi-v7a/libumeng-spy.so",
+  "analyzed": true,
+  "method": "ELF32 ARM header/dynsym/dynstr parse (scripts/elfinfo.py + elfall.py), JNI export names, import list, readable strings",
+  "findings": "Umeng device-id/anti-tamper helper (fork/pipe/syscall imports)",
+  "status": "CONFIRMED",
+  "limitations": "Stripped; no disassembly/decompilation (no Ghidra/objdump installed); internal logic UNKNOWN.",
+  "size_bytes": 145120,
+  "sha256": "db3fbab39ac411f43daa5adfc4902583264ab39fb014704ba01d37908653ca57"
+ },
+ {
+  "relative_path": "peanut-clean-v3.7.8-0-g153214a-prod-release-p.apk!/resources.arsc",
+  "analyzed": true,
+  "method": "Custom arsc string-pool parser (scripts/pcl/arsc.py)",
+  "findings": "Resolved app_name (brand name), xml resource ids (network_security_config=0x7f140002, provider_paths=0x7f140004, device_filter, file_paths, provider_path); theme/style ids not resolved",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "Only selected resource ids resolved; styles/themes not decoded.",
+  "size_bytes": 1881432,
+  "sha256": "1ccd2b75cd7dfc4573706a90ff36e7f597805426499ae2cb9b3625f21441004f"
+ },
+ {
+  "relative_path": "peanut-clean-v3.7.8-0-g153214a-prod-release-p.apk!/AndroidManifest.xml",
+  "analyzed": true,
+  "method": "Binary XML decode (scripts/axml.py), default-export evaluation",
+  "findings": "48 activities, 7 services, 4 receivers, 8 providers; effective exported: SetupActivity, ApkInstallReceiver, 3 androidx.test activities; 40+ permissions; usesCleartextTraffic=true; allowBackup=true; Sentry/AMap meta-data",
+  "status": "CONFIRMED",
+  "limitations": "Some @0x7f.. resource refs unresolved.",
+  "size_bytes": 31492,
+  "sha256": "e142be6152325dae8743d472820f880c6bc29b3006f3df2d9b1518e3e4588975"
+ },
+ {
+  "relative_path": "peanut-clean-v3.7.8-0-g153214a-prod-release-p.apk!/META-INF/CERT.RSA",
+  "analyzed": true,
+  "method": "openssl pkcs7/x509, text read",
+  "findings": "PKCS#7 signature block: generic CN=Android RSA-2048 sha256 certificate, valid 2014-12-23..2042-05-10",
+  "status": "CONFIRMED",
+  "limitations": "Signature verification (cryptographic validity) not re-computed; APK Sig Block 42 present at offset 121686153 (v2/v3 contents not parsed).",
+  "size_bytes": 1549,
+  "sha256": "2ad5df9829d98f297933f55c6113d00b25dba10a02b74bde58bfbc98df010bb1"
+ },
+ {
+  "relative_path": "peanut-clean-v3.7.8-0-g153214a-prod-release-p.apk!/META-INF/CERT.SF",
+  "analyzed": true,
+  "method": "openssl pkcs7/x509, text read",
+  "findings": "v1 signature file (SHA-256 digest manifest; X-Android-APK-Signed: 2)",
+  "status": "CONFIRMED",
+  "limitations": "Signature verification (cryptographic validity) not re-computed; APK Sig Block 42 present at offset 121686153 (v2/v3 contents not parsed).",
+  "size_bytes": 394772,
+  "sha256": "dab29bf59cbf42f6eb87aede22848d68014f5668aed93f4f67ffbb999657bb14"
+ },
+ {
+  "relative_path": "peanut-clean-v3.7.8-0-g153214a-prod-release-p.apk!/META-INF/MANIFEST.MF",
+  "analyzed": true,
+  "method": "openssl pkcs7/x509, text read",
+  "findings": "v1 manifest, Built-By Signflinger, Created-By Android Gradle 4.2.0, 3,481 entries",
+  "status": "CONFIRMED",
+  "limitations": "Signature verification (cryptographic validity) not re-computed; APK Sig Block 42 present at offset 121686153 (v2/v3 contents not parsed).",
+  "size_bytes": 394698,
+  "sha256": "c11728a57928ca710ba6ed85aea306dff03c050b31bf4044267fd80b19ee4ae8"
+ },
+ {
+  "relative_path": "peanut-clean-v3.7.8-0-g153214a-prod-release-p.apk!/res/raw/*.bks (13 files)",
+  "analyzed": true,
+  "method": "BKS v2 container parser (scripts/pcl/bks.py) + openssl x509 for public certs",
+  "findings": "ca/client/prod_*/dev_*/eng_* keystores: sealed client key entries + CA certs for MQTT/HTTPS mTLS (CN=127.0.0.1 client issued by *.robotkeenon.com/*.ikeenon.com/Mqtt_Root); robot.bks expired 2019; private keys NOT decrypted",
+  "status": "CONFIRMED",
+  "limitations": "Key passwords come from libcipher_pack and were not obtained; certificate fingerprints available in pcl_out/certs.",
+  "size_bytes": 33736
+ },
+ {
+  "relative_path": "peanut-clean-v3.7.8-0-g153214a-prod-release-p.apk!/res/raw/event.json",
+  "analyzed": true,
+  "method": "JSON read",
+  "findings": "11 app event codes (61001 ... )",
+  "status": "CONFIRMED",
+  "limitations": "Chinese text not translated in full.",
+  "size_bytes": 917,
+  "sha256": "1ebf7959f96d229df839ee6b592e3463cfe606fd0294637b1494b9bfc572ada9"
+ },
+ {
+  "relative_path": "peanut-clean-v3.7.8-0-g153214a-prod-release-p.apk!/res/raw/fault.json",
+  "analyzed": true,
+  "method": "JSON read",
+  "findings": "144 fault codes with level 3/5 and Chinese resolution hints",
+  "status": "CONFIRMED",
+  "limitations": "Chinese text not translated in full.",
+  "size_bytes": 14663,
+  "sha256": "8cbde559724189a846dafc6463213faa001ae0a6a4073967477a4183c2e430fb"
+ },
+ {
+  "relative_path": "peanut-clean-v3.7.8-0-g153214a-prod-release-p.apk!/res/raw/level.json",
+  "analyzed": true,
+  "method": "JSON read",
+  "findings": "6 fault levels with save/show/upload flags",
+  "status": "CONFIRMED",
+  "limitations": "Chinese text not translated in full.",
+  "size_bytes": 925,
+  "sha256": "e784be5e7e14c470b7693d82d37e72d9b27275a2c5f5d8bff8b593ad6a56d8bd"
+ },
+ {
+  "relative_path": "peanut-clean-v3.7.8-0-g153214a-prod-release-p.apk!/res/raw-en/fault.json",
+  "analyzed": true,
+  "method": "size/listing only",
+  "findings": "English fault-description variant",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "Not parsed in detail."
+ },
+ {
+  "relative_path": "peanut-clean-v3.7.8-0-g153214a-prod-release-p.apk!/assets/domain/*.json (4)",
+  "analyzed": true,
+  "method": "JSON read",
+  "findings": "Region/domain lists for PROD/PRE/ENG/DEV (CN/ES/JP/US), keenonrobot/robotkeenon/ikeenon domains",
+  "status": "CONFIRMED",
+  "limitations": "None significant."
+ },
+ {
+  "relative_path": "peanut-clean-v3.7.8-0-g153214a-prod-release-p.apk!/assets/json/{dev,prod,test,test-dev}.config.json + readme.txt",
+  "analyzed": true,
+  "method": "JSON read",
+  "findings": "baseIp/uploadIp/baseIpC(192.168.64.20:5555)/websocket for H5 SPA per environment",
+  "status": "CONFIRMED",
+  "limitations": "None significant."
+ },
+ {
+  "relative_path": "peanut-clean-v3.7.8-0-g153214a-prod-release-p.apk!/assets/slamConfig/* (11 files)",
+  "analyzed": true,
+  "method": "JSON read",
+  "findings": "cleanConfigMode/Params/Setting, consumptive statistics, power-save config, domainConfig_{DEVELOP,PRE,PROD,TEST}.json (cleanBaseApiUrl, upload, mqttUrl, isMqttTSL), softTypeConfig (ROS software codes: chassis, cover_planner, robot_location, keenon_clean_msgs ...)",
+  "status": "CONFIRMED",
+  "limitations": "Readme text file name is mojibake in the archive."
+ },
+ {
+  "relative_path": "peanut-clean-v3.7.8-0-g153214a-prod-release-p.apk!/assets/sql/24.sql..41.sql + demo.sql (19)",
+  "analyzed": true,
+  "method": "SQL read",
+  "findings": "Room migration scripts (tables, columns; v29/30 purges data)",
+  "status": "CONFIRMED",
+  "limitations": "None significant."
+ },
+ {
+  "relative_path": "peanut-clean-v3.7.8-0-g153214a-prod-release-p.apk!/assets/therouter/routeMap.json",
+  "analyzed": true,
+  "method": "JSON read",
+  "findings": "38 TheRouter routes /solution_clean/*",
+  "status": "CONFIRMED",
+  "limitations": "None significant."
+ },
+ {
+  "relative_path": "peanut-clean-v3.7.8-0-g153214a-prod-release-p.apk!/assets/index.html, assets/js/* (59), assets/css/* (46), assets/img/* (96), assets/image/*, assets/error/*",
+  "analyzed": true,
+  "method": "file listing, grep of JS for URLs/bridge handlers",
+  "findings": "Vue SPA map/record UI (OpenLayers/Konva/proj4); calls localhost:8089, JS bridge handlers",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "Minified JS not deobfuscated; business logic of SPA not analysed."
+ },
+ {
+  "relative_path": "peanut-clean-v3.7.8-0-g153214a-prod-release-p.apk!/assets/fault/*.html (23) + assets/jsbridge + WebViewJavascriptBridge.js",
+  "analyzed": true,
+  "method": "listing/read",
+  "findings": "Localised fault help pages (500/503/601/1102/dustBox/model) and JS bridge shim",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "HTML not audited for XSS."
+ },
+ {
+  "relative_path": "peanut-clean-v3.7.8-0-g153214a-prod-release-p.apk!/assets/video/* (25 mp4, 66 MB), assets/voice/{en,zh} (79 mp3), assets/bg (4 mp3), assets/expression (3 mp4), assets/character/2_UNICODE.bin (4 MB)",
+  "analyzed": true,
+  "method": "listing only",
+  "findings": "Maintenance videos, voice prompts, background music, robot-face expression videos, character bitmap font for the emotion screen",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "Media not inspected."
+ },
+ {
+  "relative_path": "peanut-clean-v3.7.8-0-g153214a-prod-release-p.apk!/assets/LightConfig.json, assets/sensors.json, assets/viewSize/layout_rule.yaml, assets/font/digital.TTF, assets/favicon.ico",
+  "analyzed": true,
+  "method": "read",
+  "findings": "Light-strip config per model (T8 etc.; delivery models), empty sensor list, UI font-size rules",
+  "status": "CONFIRMED",
+  "limitations": "LightConfig references other Keenon models (T8) - shared with other products."
+ },
+ {
+  "relative_path": "peanut-clean-v3.7.8-0-g153214a-prod-release-p.apk!/res/layout (446), res/xml (5), res/drawable*, res/mipmap*, res/anim*",
+  "analyzed": true,
+  "method": "listing, axml decode of res/xml",
+  "findings": "UI resources; xml: device_filter (CH340), file_paths, provider_path(s), network_security_config",
+  "status": "CONFIRMED",
+  "limitations": "Layouts not individually decoded."
+ },
+ {
+  "relative_path": "peanut-clean-v3.7.8-0-g153214a-prod-release-p.apk!/EventRecord.proto, ResourceDownload.proto (APK root)",
+  "analyzed": true,
+  "method": "read",
+  "findings": "Protobuf schemas for fault/event upload and resource download status",
+  "status": "CONFIRMED",
+  "limitations": "None significant."
+ },
+ {
+  "relative_path": "peanut-clean-v3.7.8-0-g153214a-prod-release-p.apk!/com/keenon/{aidl,bi,tts,voice}/**/*.aidl (15)",
+  "analyzed": true,
+  "method": "read",
+  "findings": "AIDL interfaces to system-service app (MQTT, TTS, voice, BI)",
+  "status": "CONFIRMED",
+  "limitations": "None significant."
+ },
+ {
+  "relative_path": "peanut-clean-v3.7.8-0-g153214a-prod-release-p.apk!/google/api/*.proto, google/protobuf/*.proto, google/rpc, google/logging, google/longrunning, google/cloud, google/geo (58)",
+  "analyzed": true,
+  "method": "listing",
+  "findings": "Bundled googleapis/protobuf proto sources (library resources)",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "None significant."
+ },
+ {
+  "relative_path": "peanut-clean-v3.7.8-0-g153214a-prod-release-p.apk!/*.ftl (7), freemarker/*, org/apache/tools/ant/* (7), org/sqlite/native/* (6), org/eclipse/paho/*.properties, okhttp3/internal/*",
+  "analyzed": true,
+  "method": "listing",
+  "findings": "greenDAO-generator templates, FreeMarker and Ant resources, desktop sqlite-jdbc natives, Paho NLS bundles, okhttp public-suffix data (build/test leftovers)",
+  "status": "CONFIRMED",
+  "limitations": "None significant."
+ },
+ {
+  "relative_path": "peanut-clean-v3.7.8-0-g153214a-prod-release-p.apk!/libs/xpp3-1.1.3_8.jar",
+  "analyzed": true,
+  "method": "listing only",
+  "findings": "XmlPull parser jar embedded as a resource (not loaded as code by Android)",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "Not opened."
+ },
+ {
+  "relative_path": "peanut-clean-v3.7.8-0-g153214a-prod-release-p.apk!/bundle.properties, sqlite-jdbc.properties, androidsupportmultidexversion.txt, LICENSE-junit.txt, META-INF/*.version, META-INF/services/*, META-INF/*.kotlin_module, META-INF/native-image/*",
+  "analyzed": true,
+  "method": "read",
+  "findings": "Library metadata: sqlite-jdbc 3.44.1.0, Paho bundle, androidx versions, service-loader registrations (IApplicationLifecycle: Slam/Ros/Android/Datasync/SoundPlayer lifecycle; OtaCommand implementors), module names peanut-sdk/peanut-core/protocol-*",
+  "status": "CONFIRMED",
+  "limitations": "None significant."
+ },
+ {
+  "relative_path": "peanut-clean-v3.7.8-0-g153214a-prod-release-p.apk!/Databases embedded as files",
+  "analyzed": true,
+  "method": "search of ZIP members for *.db/*.sqlite",
+  "findings": "No .db/.sqlite/.keystore/.jks/.pem/.p12 member present in the APK (only .bks keystores and SQL migration scripts)",
+  "status": "CONFIRMED",
+  "limitations": "Files created at runtime (e.g. /keenon/db/*.db) not available offline."
+ },
+ {
+  "relative_path": "peanut-clean-v3.7.8-0-g153214a-prod-release-p.apk!/Maps / ML models / jar / properties assets",
+  "analyzed": true,
+  "method": "ZIP member search",
+  "findings": "No map images or ML model files (.tflite/.pb/.onnx) found; only UI assets; one .jar (xpp3) and properties files listed above",
+  "status": "CONFIRMED",
+  "limitations": "Absence from ZIP listing only."
+ }
+]

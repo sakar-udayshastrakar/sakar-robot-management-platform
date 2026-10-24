@@ -1,0 +1,395 @@
+kind,value,source,status,confidence,source_file
+HOST,192.168.64.20,HubConstant.LINUX_IP; PeanutConstants.REMOTE_LINK_PROXY; RosSocketClientManager.ADDRESS; PeanutSDK.initAuth ping target (robot Linux/ROS board),STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+HOST,192.168.64.10,PeanutConstants.LOCAL_ETHER_IP; SimpleChromeActivity.showWebView default SERVER_IP (Android side of internal Ethernet),STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+HOST,127.0.0.1,PeanutConstants.LOCAL_LINK_PROXY,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+URL,ws://192.168.64.20:9090,"RosSocketClientManager.init (rosbridge #1 ""PC9090""); Home chunk rosIp",STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+URL,ws://192.168.64.20:9091,"RosSocketClientManager.init (rosbridge #2 ""PC9091""); Home chunk rosCtrlIp",STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+URL,ws://<hostname>:8888 (?port=PC9090|PC9091|PC8888|APP8888|ALL8888),"WebServerSocket.PORT=8888 (java-websocket server, wildcard bind); SPA useRosConnect/ws client; WebServerSocket.onOpen resource-descriptor tags",STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+URL,ws://<hostname>:8899,"SocketServerManager.LOG_PORT; WebLogServerManager; SPA remote logger (title ""mapping-app"")",STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+URL,"http://<serverIp>:8080/ (AndServer; routes /, /login POST, /file/upload POST, /file/download GET, /map/pic GET, /video/play GET, /v3/test GET)",AndService.PORT=8080; ApiControllerAdapter; PageControllerAdapter; AppConfig AssetsWebsite(/ros/dist),STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+URL,http://192.168.64.20:8080/install,SimpleChromeActivity1$InternalIntentDelegate.processUrlViewIntent (dev/test activity),STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+URL,http://172.16.25.170:8080/#/install,SimpleChromeActivity2$InternalIntentDelegate (hard-coded developer LAN IP),STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+URL,http://localhost:8080/video/play?fileName=<name>,SPA index chunk (tutorial video playback),STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+URL,http://192.168.64.20:54322,PeanutConstants.HTTP_PORT; SDK OkHttp transport to robot (HTTP link type); upgrade port 34569,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+URL,coap://192.168.64.20:5683,PeanutConstants.COAP_PORT/COAP_PROTOCOL; SDK PeanutCoapClient,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+URL,ws://192.168.64.20:22345 (upgrade 12386),PeanutConstants.WS_PORT / WS_PORT_UPGRADE (SDK http.ws push channel),STATIC_REFERENCE,MEDIUM,installation_assistant_endpoints.json
+URL,tftp://192.168.64.20:9527,PeanutConstants.TFTP_PORT/TFTP_PROTOCOL (SDK TFTP map/firmware transfer),STATIC_REFERENCE,MEDIUM,installation_assistant_endpoints.json
+URL,smb://192.168.64.20/home,UDriveHelp.copyToRos -> SMBManager.onSmbPut (jcifs smb1); creds from native cipher pack (ros_name/ros_pass1/ros_pass2) [REDACTED],STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+SERIAL,"/dev/ttyS1,/dev/ttyS2,/dev/ttyS3(921600 baud),/dev/ttyS4,/dev/ttyUSB0,/dev/ttyUSB2,/dev/ttyUSB3,/dev/ttyUSBDoorCtl (default 115200)","PeanutConstants COM*, COM3RATE, DEFAULT_RATE; libkeenon_serial.so",STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+HOST,console.peanut.keenonrobot.com,PsvConstants / ServerManager / assets/domain/*.json / SPA Home chunk: PROD CN,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+HOST,es-cloud.robotkeenon.com,PsvConstants / ServerManager / assets/domain/*.json / SPA Home chunk: PROD ES/EU,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+HOST,cloud.robotkeenon.com,PsvConstants / ServerManager / assets/domain/*.json / SPA Home chunk: PROD JP/other,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+HOST,p-cloud.ikeenon.com,PsvConstants / ServerManager / assets/domain/*.json / SPA Home chunk: PRE,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+HOST,t-cloud.ikeenon.com,PsvConstants / ServerManager / assets/domain/*.json / SPA Home chunk: ENG CN,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+HOST,t-overseas-cloud.ikeenon.com,PsvConstants / ServerManager / assets/domain/*.json / SPA Home chunk: ENG JP,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+HOST,t-overseas2-cloud.ikeenon.com,PsvConstants / ServerManager / assets/domain/*.json / SPA Home chunk: ENG ES,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+HOST,d-cloud.ikeenon.com,PsvConstants / ServerManager / assets/domain/*.json / SPA Home chunk: DEV CN (also d-overseas-cloud / d-overseas2-cloud in assets),STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+HOST,t-us-cloud.ikeenon.com,PsvConstants / ServerManager / assets/domain/*.json / SPA Home chunk: ENG US (SPA),STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+HOST,us-cloud.robotkeenon.com,PsvConstants / ServerManager / assets/domain/*.json / SPA Home chunk: PROD US (SPA),STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+HOST,cloud.keenonrobot.com,PsvConstants / ServerManager / assets/domain/*.json / SPA Home chunk: SPA domain list,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+HOST,t-portal.ikeenon.com,"SPA Home chunk (web portal URLs, e.g. for QR/help links)",STATIC_REFERENCE,MEDIUM,installation_assistant_endpoints.json
+HOST,t-overseas-portal.ikeenon.com,"SPA Home chunk (web portal URLs, e.g. for QR/help links)",STATIC_REFERENCE,MEDIUM,installation_assistant_endpoints.json
+HOST,t-overseas2-portal.ikeenon.com,"SPA Home chunk (web portal URLs, e.g. for QR/help links)",STATIC_REFERENCE,MEDIUM,installation_assistant_endpoints.json
+HOST,d-portal.ikeenon.com,"SPA Home chunk (web portal URLs, e.g. for QR/help links)",STATIC_REFERENCE,MEDIUM,installation_assistant_endpoints.json
+HOST,p-portal.ikeenon.com,"SPA Home chunk (web portal URLs, e.g. for QR/help links)",STATIC_REFERENCE,MEDIUM,installation_assistant_endpoints.json
+HOST,t-us-portal.ikeenon.com,"SPA Home chunk (web portal URLs, e.g. for QR/help links)",STATIC_REFERENCE,MEDIUM,installation_assistant_endpoints.json
+HOST,www.robotkeenon.com,"SPA Home chunk (web portal URLs, e.g. for QR/help links)",STATIC_REFERENCE,MEDIUM,installation_assistant_endpoints.json
+HOST,es.robotkeenon.com,"SPA Home chunk (web portal URLs, e.g. for QR/help links)",STATIC_REFERENCE,MEDIUM,installation_assistant_endpoints.json
+HOST,us.robotkeenon.com,"SPA Home chunk (web portal URLs, e.g. for QR/help links)",STATIC_REFERENCE,MEDIUM,installation_assistant_endpoints.json
+HOST,mqtt.keenonrobot.com,DynamicMqttServer (default MQTT host; ssl://%s:%d TLSv1.2 with BKS; fallback tcp://%s:%d),STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+URL_TEMPLATE,"https://<domain>:443 or :80 via ServerManager ""%s%s:%d""","ServerManager.changeUrl/setServerUrl (HTTP_PORT=80, HTTP_PORT_SSL=443)",STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+HOST,sentry.keenonrobot.com,AndroidManifest meta-data io.sentry.dsn = https://<public-key REDACTED>@sentry.keenonrobot.com/14; traces-sample-rate 1.0,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+KEY,AMap (Gaode) API key present in manifest meta-data com.amap.api.v2.apikey = [REDACTED 32 hex],AndroidManifest.xml,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+HOST,223.5.5.5,com.blankj.utilcode NetworkUtils (connectivity ping target; third-party library),STATIC_REFERENCE,MEDIUM,installation_assistant_endpoints.json
+HOST,"dns.quad9.net, cloudflare-dns.com, 1dot1dot1dot1.cloudflare-dns.com",Chromium M73 built-in DNS-over-HTTPS provider list,STATIC_REFERENCE,MEDIUM,installation_assistant_endpoints.json
+REST_PATH,"/api/app/robot/file/v3/upload (SPA, host = selected cloud domain)",assets/ros/dist/assets/index-32d09e94.js,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+REST_PATH,"/api/appservice/web/qly/event/tracking/v1/record (SPA, host = selected cloud domain)",assets/ros/dist/assets/index-32d09e94.js,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+REST_PATH,"/api/tool_support/dispatch/v1/store_robot/list (SPA, host = selected cloud domain)",assets/ros/dist/assets/index-32d09e94.js,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+REST_PATH,"/api/tool_support/dispatch/v2/store_robot/list (SPA, host = selected cloud domain)",assets/ros/dist/assets/index-32d09e94.js,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+REST_PATH,"/api/tool_support/mapping/trial/v1/common/${e}/${r} (SPA, host = selected cloud domain)",assets/ros/dist/assets/index-32d09e94.js,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+REST_PATH,"/api/tool_support/mapping/trial/v1/common/${t}/${e} (SPA, host = selected cloud domain)",assets/ros/dist/assets/index-32d09e94.js,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+REST_PATH,"/api/tool_support/mapping/trial/v1/phone/${e} (SPA, host = selected cloud domain)",assets/ros/dist/assets/index-32d09e94.js,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+REST_PATH,"/api/tool_support/mapping/trial/v1/route/${e} (SPA, host = selected cloud domain)",assets/ros/dist/assets/index-32d09e94.js,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+REST_PATH,"/api/tool_support/mapping/trial/v1/route/${t} (SPA, host = selected cloud domain)",assets/ros/dist/assets/index-32d09e94.js,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+REST_PATH,"/api/tool_support/mapping/trial/v1/scheduling/${e} (SPA, host = selected cloud domain)",assets/ros/dist/assets/index-32d09e94.js,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+REST_PATH,"/api/tool_support/mapping/trial/v1/target/${e} (SPA, host = selected cloud domain)",assets/ros/dist/assets/index-32d09e94.js,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+REST_PATH,"/api/tool_support/mapping/v1/file (SPA, host = selected cloud domain)",assets/ros/dist/assets/index-32d09e94.js,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+REST_PATH,"/api/tool_support/mapping/v1/image/batch_process (SPA, host = selected cloud domain)",assets/ros/dist/assets/index-32d09e94.js,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+REST_PATH,"/api/tool_support/mapping/v1/trans/api/tileProcessor (SPA, host = selected cloud domain)",assets/ros/dist/assets/index-32d09e94.js,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+REST_PATH,"/api/tool_support/mapping/v2/scene/info (SPA, host = selected cloud domain)",assets/ros/dist/assets/index-32d09e94.js,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+REST_PATH,"/api/tool_support/mapping/v3/robot/sync (SPA, host = selected cloud domain)",assets/ros/dist/assets/index-32d09e94.js,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+REST_PATH,"/api/tool_support/mapping/v4/robot/dup/sync (SPA, host = selected cloud domain)",assets/ros/dist/assets/index-32d09e94.js,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+REST_PATH,"/api/tool_support/mapping/v4/robot/sync (SPA, host = selected cloud domain)",assets/ros/dist/assets/index-32d09e94.js,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+REST_PATH,"/api/tool_support/mapping/v4/scene/charge (SPA, host = selected cloud domain)",assets/ros/dist/assets/index-32d09e94.js,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+REST_PATH,"/api/tool_support/mapping/v4/scene/config/sync (SPA, host = selected cloud domain)",assets/ros/dist/assets/index-32d09e94.js,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+REST_PATH,"/api/tool_support/mapping/v4/scene/info (SPA, host = selected cloud domain)",assets/ros/dist/assets/index-32d09e94.js,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+REST_PATH,"/api/tool_support/robot/v1/online/list (SPA, host = selected cloud domain)",assets/ros/dist/assets/index-32d09e94.js,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+REST_PATH,"/api/tool_support/robot/v2/info/list (SPA, host = selected cloud domain)",assets/ros/dist/assets/index-32d09e94.js,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+REST_PATH,"/api/tool_support/robot/v3/info/list (SPA, host = selected cloud domain)",assets/ros/dist/assets/index-32d09e94.js,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+REST_PATH,"/api/tool_support/token/getHotP (SPA, host = selected cloud domain)",assets/ros/dist/assets/index-32d09e94.js,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+REST_PATH,"/api/tool_support/token/getSingleToken (SPA, host = selected cloud domain)",assets/ros/dist/assets/index-32d09e94.js,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+REST_PATH,"/api/tool_support/v1/mapping/scene/custom/area/${e} (SPA, host = selected cloud domain)",assets/ros/dist/assets/index-32d09e94.js,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+REST_PATH,"/api/tool_support/v1/trial_run_task (SPA, host = selected cloud domain)",assets/ros/dist/assets/index-32d09e94.js,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+REST_PATH,"/api/userservice/secret/getkey (SPA, host = selected cloud domain)",assets/ros/dist/assets/index-32d09e94.js,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+REST_PATH,"/api/userservice/secret/publickey (SPA, host = selected cloud domain)",assets/ros/dist/assets/index-32d09e94.js,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+REST_PATH,/api/app/robot/checkNewSoftware (GET),Retrofit annotation in ClientUpdateApi,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+REST_PATH,/api/app/robot/getSoftware (GET),Retrofit annotation in ClientUpdateApi,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+REST_PATH,/api/app/token/getSingleToken (POST),Retrofit annotation in GetTokenApi / ITokenApi,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+REST_PATH,/api/app/mqtt/secret/v1 (GET),Retrofit annotation in MqttGetPasswordApi,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+REST_PATH,/api/app/mqtt/secret/v2 (GET),Retrofit annotation in IMqttPwdApi (component.core),STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+REST_PATH,/api/app/robot/appResource/status (POST),Retrofit annotation in UploadDeviceInfoApi,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+REST_PATH,/api/app/robot/info/update (POST),Retrofit annotation in UploadDeviceInfoApi,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+REST_PATH,/api/app/robot/version/status (POST),Retrofit annotation in UploadDeviceInfoApi,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+REST_PATH,/api/app/v1/robot_iso_domain_name_link (GET),Retrofit annotation in IDomainApi,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+REST_PATH,/api/app/v2/healthz (GET),Retrofit annotation in IDomainApi ping,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+REST_PATH,/api/app/robot/v1/net/sec (GET),Retrofit annotation in IHttpCybersecurityApi,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+REST_PATH,/api/app/robot/v1/geolocation (POST),Retrofit annotation in LocationApi,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+REST_PATH,/api/app/robot/v2/restriction (POST),Retrofit annotation in LocationApi,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+REST_PATH,"geolocation/v1/geolocate (POST, Google geolocation API via proxy host)",Retrofit annotation in Request,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+REST_PATH,/api/app/device/report/identity (POST),Retrofit annotation in IRobotBaseApi (machineAuth),STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+REST_PATH,/api/app/device/report/identity/check (GET),Retrofit annotation in IRobotBaseApi,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+REST_PATH,/api/app/v1/device/ssh/login-secret (GET),Retrofit annotation in IPlatformHttpApi (sshPwd) - cloud-provided robot SSH login secret,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+MQTT_TOPIC,"/mapping/v1/cloud_msg (sub, prefixed /tool_support/mapping_<id>?)",HubConstant.TOPIC_MAP_AND_DISPATCH_ID; MapMqttManager,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+MQTT_TOPIC,/mapping/v1/dev_msg (pub ack),HubConstant.TOPIC_MAP_AND_DISPATCH_ID_ACK,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+MQTT_TOPIC,/tool_support/mapping_ (topic prefix),MapMqttManager,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+MQTT_TOPIC,/tool_support/,HubConstant.TOPIC_SUPPORT,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+MQTT_TOPIC,/device/%s/ioe_mqtt_conn/v1/cloud_client,HubConstant.TOPIC_SUB_IOE_MQTT_CONN_CLOUD_MSG; MqttServerHelper (broker host change notices),STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+MQTT_TOPIC,/robot... ssh pwd credential publish/subscribe topics (MqttNetHelper.TOPIC_SSH_PWD_CREDENTIAL_PUBLISH/SUBSCRIBE; actions RobotSshCredential / ...Reply),component.sshPwd.net.MqttNetHelper,STATIC_REFERENCE,MEDIUM,installation_assistant_endpoints.json
+MQTT_TOPIC,"/keenon... client data publish (MqttHelper.TOPIC_CLIENT_DATA_PUBLISH), /identity firmware-change observer",component.machineAuth.net.MqttHelper,STATIC_REFERENCE,MEDIUM,installation_assistant_endpoints.json
+MQTT_CLIENT_ID_PREFIX,mapping_,SlamApplication.initMqtt -> MqttManager.setMqttClientIdPrefix,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+BROADCAST_ACTION,com.keenon.action.MAPPING_START / MAPPING_STOP / MAPPING_HEART_BRAT / RESTORE_FACTORY_SETTINGS / DISCONNECT_ROBOT / IMPORT_U_DRIVE_DATA / com.keenon.IMPORT_U_DRIVE.STATE / EXECUTE_CMD / EXECUTE_CMD_RESULT / SILENT_INSTALL_APP / DOMAIN_ISO_CHANGED / android.peanut.action.MAPPING_RESTART_ROS(_SUC) / MAP_DOWNLOAD_START / keenon.intent.action.REFRESH_PROPERTIES,"HubConstant, APPReceiver, KeenonServiceUtil, CommUtils, DomainManager, PropertiesStorage",STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+INTENT_URI,mapkeenon://mapandroid.com?Language=<lang>&cloud3d=<bool>&modifyPoint=<bool>,AndroidManifest SimpleChromeActivity intent-filter; handlerIntentData,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+AIDL_SERVICE,"com.keenon.systemservice/{bi.BiService, mqtt.MqttApiService, tts.TtsApiService, voice.VoiceApiService}",com.keenon.serviceSdk.common.BaseAidlClient.getServicePackage; per-client getServiceClass,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+APP_PACKAGE,com.keenon.launcher; com.keenon.peanut.solutionfooddelivery / solutionhotel / solutiondisinfect / com.keenon.solutionindustry / com.keenon.peanut.clean; com.keenon.remote_control_oray (+ .daemon.HeadService),HubConstant/CommUtils.packageNameArray/checkRemoteAPP/InformationSupport.onHandleFactoryReset,STATIC_REFERENCE,HIGH,installation_assistant_endpoints.json
+http,GET /api/app/v1/robot_iso_domain_name_link,com.keenon.component.core.config.domain.IDomainApi#getDomainNameList,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,GET /api/app/v2/healthz,com.keenon.component.core.config.domain.IDomainApi#getPingState,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,POST /api/app/token/getSingleToken,com.keenon.component.core.http.token.ITokenApi#getSingleToken,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,GET /api/app/mqtt/secret/v2,com.keenon.component.core.mqtt.api.IMqttPwdApi#getMqttPwd,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,GET /api/app/robot/v1/net/sec,com.keenon.component.cybersecurity.api.IHttpCybersecurityApi#getCybersecurityRCodeInfo,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,GET /api/devops/v1/alertcode/robot/config/list,com.keenon.component.fault.api.IFaultApi#getFaultConfig,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,GET /api/devops/v1/alertcode/robot/config/list,com.keenon.component.fault.api.IFaultApi#getFaultConfig,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,POST /api/devops/v1/kb/config/all,com.keenon.component.fault.api.IFaultApi#getFaultRemoteStyleList,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,POST /api/devops/v1/kb/config,com.keenon.component.fault.api.IFaultApi#getSingleFaultRemoteList,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,POST geolocation/v1/geolocate,com.keenon.component.location.http.Request#getGoogleMapLocation,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,GET /api/app/language/package/{businessType}/v2/info/list,com.keenon.component.multiLanguage.http.IDownloadLanguageApi#getLanguagePackageInfo,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,DELETE /api/app/resource/robot/v1_9_1/scene,com.keenon.component.resource.api.IResourceApi#deleteScene,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,GET /api/app/resource/robot/{version}/{businessType}/scene,com.keenon.component.resource.api.IResourceApi#getMixSceneInfo,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,GET /api/app/robot/scene/{businessType}/v2/info,com.keenon.component.resource.api.IResourceApi#getResourceInfo,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,GET /api/app/robot/scene/{businessType}/v1/list,com.keenon.component.resource.api.IResourceApi#getSceneInfo,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,POST /api/app/resource/robot/v1_9_1/scene,com.keenon.component.resource.api.IResourceApi#reportSceneChange,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,POST /api/app/robot/package/upgrade,com.keenon.component.upgrade.http.IUpgradeApi#checkPackageUpgrade,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,GET /api/hotel/robot/search/iot/device/{deviceName},com.keenon.module.datasync.http.HttpElevatorApi#getCheckInfo,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,POST /api/elevator/v2/elevator/search/lift/configInfo,com.keenon.module.datasync.http.HttpElevatorApi#getElevatorConfig,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,POST /api/cleanapp/iot/v1/email,com.keenon.module.datasync.http.PeanutApi#addEmailInfo,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,POST /api/cleanapp/iot/v3/clean/new/batchSaveForAndroidPad,com.keenon.module.datasync.http.PeanutApi#batchSaveForAndroidPad,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,POST /api/cleanapp/iot/v2/robot/change/map,com.keenon.module.datasync.http.PeanutApi#changeMap,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,DELETE /api/cleanapp/iot/v1/email,com.keenon.module.datasync.http.PeanutApi#deleteEmailInfo,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,GET /api/app/marketing/material,com.keenon.module.datasync.http.PeanutApi#getAdMaterialInfo,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,GET /api/cleanapp/iot/v2/file/getAttachmentByMd5,com.keenon.module.datasync.http.PeanutApi#getAttachmentByMd5,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,GET /api/cleanapp/iot/v1/email,com.keenon.module.datasync.http.PeanutApi#getEmailInfo,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,POST /api/app/robot/file/upload,com.keenon.module.datasync.http.PeanutApi#getFileUploadUrl,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,GET /api/cleanapp/iot/v1/email/language,com.keenon.module.datasync.http.PeanutApi#getLanguageTypeInfo,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,GET /api/app/robot/getSoftware,com.keenon.module.datasync.http.PeanutApi#getSoftware,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,GET /api/cleanapp/iot/v2/clean/getUnSyncTimeCleanStrategy,com.keenon.module.datasync.http.PeanutApi#getUnSyncTimeCleanStrategy,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,PUT /api/cleanapp/iot/v1/email,com.keenon.module.datasync.http.PeanutApi#modifyEmailInfo,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,POST /api/app/v1/device/keypair/request,com.keenon.module.datasync.http.PeanutApi#queryEncryptKeyPair,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,POST /api/app/robot/info,com.keenon.module.datasync.http.PeanutApi#queryRobotInfo,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,POST /api/app/robot/v2/restriction,com.keenon.module.datasync.http.PeanutApi#queryStateLimitInfo,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,POST /api/app/v1/device/register/keypair,com.keenon.module.datasync.http.PeanutApi#registerDevice,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,POST /api/app/robot/register,com.keenon.module.datasync.http.PeanutApi#registerSn,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,POST /api/cleanapp/iot/v2/clean/remove,com.keenon.module.datasync.http.PeanutApi#removeClean,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,POST /api/cleanapp/iot/v2/clean/removeBySyncTime,com.keenon.module.datasync.http.PeanutApi#removeCleanStrategyBySyncTime,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,POST /api/cleanapp/iot/v2/robot/removeMapByRobotAndSyncTime,com.keenon.module.datasync.http.PeanutApi#removeMapBySyncTime,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,PUT /api/cleanapp/api/v1/robot/faultInfo,com.keenon.module.datasync.http.PeanutApi#resetPhoneNotice,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,POST /api/cleanapp/api/v1/robot/batch/faultInfo,com.keenon.module.datasync.http.PeanutApi#resetPhoneNoticeBatch,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,POST /api/cleanapp/iot/v2/robot/robotActionNotice,com.keenon.module.datasync.http.PeanutApi#robotActionNotice,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,POST /api/app/robot/info/update,com.keenon.module.datasync.http.PeanutApi#robotInUpdate,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,POST /api/cleanapp/iot/v2/robot/robotReply,com.keenon.module.datasync.http.PeanutApi#robotReply,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,POST /api/cleanapp/iot/v2/file/saveAttachment,com.keenon.module.datasync.http.PeanutApi#saveAttachment,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,PUT /api/cleanapp/iot/v3/clean/save_event,com.keenon.module.datasync.http.PeanutApi#saveEvent,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,PUT /api/cleanapp/iot/v3/clean/save_task,com.keenon.module.datasync.http.PeanutApi#saveTask,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,POST /api/cleanapp/iot/v3/clean/save_task_detail,com.keenon.module.datasync.http.PeanutApi#saveTaskDetail,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,POST /api/cleanapp/iot/v3/clean/save_task_pic,com.keenon.module.datasync.http.PeanutApi#saveTaskPic,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,PUT /api/cleanapp/iot/v2/station/task,com.keenon.module.datasync.http.PeanutApi#saveWorkStationTask,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,POST /api/cleanapp/iot/v2/robot/updateMapByAndroidPad,com.keenon.module.datasync.http.PeanutApi#updateMap,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,POST /api/cleanapp/iot/v2/clean/updateSyncState,com.keenon.module.datasync.http.PeanutApi#updateSyncState,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,POST /api/cleanapp/iot/v1/back/point,com.keenon.module.datasync.http.PeanutApi#uploadBackPoint,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,POST /api/cleanapp/iot/v1/clean/model,com.keenon.module.datasync.http.PeanutApi#uploadCleanModel,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,POST /api/cleanapp/iot/v2/upload/uploadFileByPeanut,com.keenon.module.datasync.http.PeanutApi#uploadFileByPeanut,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,POST /api/app/robot/bindIccid,com.keenon.module.datasync.http.PeanutApi#uploadSimCardInfo,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,POST /api/cleanapp/iot/v2/clean/save_support_function,com.keenon.module.datasync.http.PeanutApi#uploadSupportFunction,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,POST /api/app/robot/version/status,com.keenon.module.datasync.http.PeanutApi#uploadUpgradeResult,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/soft/getByVersion,com.keenon.module.datasync.apiImpl.SoftVersionApiImpl#getByVersion,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/usb/getAntiDrop,com.keenon.module.main.usb.apiImpl.UsbApiImpl#getAntiDrop,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/usb/getEmotion,com.keenon.module.main.usb.apiImpl.UsbApiImpl#getEmotion,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/usb/getEmotionC40,com.keenon.module.main.usb.apiImpl.UsbApiImpl#getEmotionC40,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/usb/getLightStrip,com.keenon.module.main.usb.apiImpl.UsbApiImpl#getLightStrip,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/usb/getLockTime,com.keenon.module.main.usb.apiImpl.UsbApiImpl#getLockTime,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/usb/getScreenExpression,com.keenon.module.main.usb.apiImpl.UsbApiImpl#getScreenExpression,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/usb/getVolume,com.keenon.module.main.usb.apiImpl.UsbApiImpl#getVolume,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/usb/getWorkStationConfig,com.keenon.module.main.usb.apiImpl.UsbApiImpl#getWorkStation,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/usb/setAntiDrop,com.keenon.module.main.usb.apiImpl.UsbApiImpl#setAntiDrop,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/usb/setDustPush,com.keenon.module.main.usb.apiImpl.UsbApiImpl#setDustPush,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/usb/setEmotion,com.keenon.module.main.usb.apiImpl.UsbApiImpl#setEmotion,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/usb/setEmotionC40,com.keenon.module.main.usb.apiImpl.UsbApiImpl#setEmotionC40,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/usb/setLamp,com.keenon.module.main.usb.apiImpl.UsbApiImpl#setLamp,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/usb/setLightStrip,com.keenon.module.main.usb.apiImpl.UsbApiImpl#setLightStrip,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/usb/setLockTime,com.keenon.module.main.usb.apiImpl.UsbApiImpl#setLockTime,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/usb/setManual,com.keenon.module.main.usb.apiImpl.UsbApiImpl#setManual,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/usb/setPassword,com.keenon.module.main.usb.apiImpl.UsbApiImpl#setPassword,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/usb/setScreenExpression,com.keenon.module.main.usb.apiImpl.UsbApiImpl#setScreenExpression,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/usb/setVolume,com.keenon.module.main.usb.apiImpl.UsbApiImpl#setVolume,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/usb/setWorkStationConfig,com.keenon.module.main.usb.apiImpl.UsbApiImpl#setWorkStationConfig,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/clean/cleanStrategyEnabled,com.keenon.module.slam.apiImpl.CleanApiImpl#cleanStrategyEnabled,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/clean/cleanStrategyTemplateList,com.keenon.module.slam.apiImpl.CleanApiImpl#cleanStrategyTemplateList,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/clean/delCleanStrategy,com.keenon.module.slam.apiImpl.CleanApiImpl#delCleanStrategy,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/clean/getLogDetail,com.keenon.module.slam.apiImpl.CleanApiImpl#getLogDetail,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/clean/getTimerCleanStrategyList,com.keenon.module.slam.apiImpl.CleanApiImpl#getTimerCleanStrategyList,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/clean/saveCleanStrategy,com.keenon.module.slam.apiImpl.CleanApiImpl#saveCleanStrategy,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/clean/taskImageReport,com.keenon.module.slam.apiImpl.CleanApiImpl#taskImageReport,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/clean/updateCleanStrategy,com.keenon.module.slam.apiImpl.CleanApiImpl#updateCleanStrategy,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/cleanConfig/addCleanConfigMode,com.keenon.module.slam.apiImpl.CleanConfigApiImpl#addCleanConfigMode,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/cleanConfig/cleanConfigParamsReset,com.keenon.module.slam.apiImpl.CleanConfigApiImpl#cleanConfigParamsReset,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/cleanConfig/cleanConfigParamsResetByModeId,com.keenon.module.slam.apiImpl.CleanConfigApiImpl#cleanConfigParamsResetByModeId,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/cleanConfig/cleanConfigParamsUpdate,com.keenon.module.slam.apiImpl.CleanConfigApiImpl#cleanConfigParamsUpdate,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/cleanConfig/cleanModeReset,com.keenon.module.slam.apiImpl.CleanConfigApiImpl#cleanModeReset,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/cleanConfig/getCleanConfigMode,com.keenon.module.slam.apiImpl.CleanConfigApiImpl#getCleanConfigMode,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/cleanConfig/getCleanConfigParams,com.keenon.module.slam.apiImpl.CleanConfigApiImpl#getCleanConfigParams,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/cleanConfig/listCleanConfigMode,com.keenon.module.slam.apiImpl.CleanConfigApiImpl#listCleanConfigMode,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/cleanConfig/removeCleanConfigMode,com.keenon.module.slam.apiImpl.CleanConfigApiImpl#removeCleanConfigMode,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/cleanConfig/saveCleanConfigModes,com.keenon.module.slam.apiImpl.CleanConfigApiImpl#saveCleanConfigMode,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/cleanConfig/saveCleanConfigModes,com.keenon.module.slam.apiImpl.CleanConfigApiImpl#saveCleanConfigModeByCloud,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/cleanConfig/updateCleanConfigMode,com.keenon.module.slam.apiImpl.CleanConfigApiImpl#updateCleanConfigMode,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/map/getCurrentLoadMapInfo,com.keenon.module.slam.apiImpl.MapApiImpl#getCurrentLoadMapInfo,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/map/getMapInfo,com.keenon.module.slam.apiImpl.MapApiImpl#getMapInfo,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/map/getMapInfoFilterElevator,com.keenon.module.slam.apiImpl.MapApiImpl#getMapInfoFilterElevator,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/map/listCurrentMapNavigationPoints,com.keenon.module.slam.apiImpl.MapApiImpl#listCurrentMapNavigationPoints,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/map/robotLoadMapOpenPosition,com.keenon.module.slam.apiImpl.MapApiImpl#loadMap,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/map/mapFloorList,com.keenon.module.slam.apiImpl.MapApiImpl#mapFloorList,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/map/updateAreaName,com.keenon.module.slam.apiImpl.MapApiImpl#updateAreaName,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/robot/androidSystemConfigUpdate,com.keenon.module.slam.apiImpl.RobotApiImpl#androidSystemConfigUpdate,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/robot/eventBatchSave,com.keenon.module.slam.apiImpl.RobotApiImpl#eventBatchSave,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/robot/eventSave,com.keenon.module.slam.apiImpl.RobotApiImpl#eventSave,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/robot/getAndroidSystemConfig,com.keenon.module.slam.apiImpl.RobotApiImpl#getAndroidSystemConfig,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/robot/getPowerProtectConfig,com.keenon.module.slam.apiImpl.RobotApiImpl#getPowerProtect,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/robot/getRobotInfo,com.keenon.module.slam.apiImpl.RobotApiImpl#getRobotInfo,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/robot/powerProtectConfigUpdate,com.keenon.module.slam.apiImpl.RobotApiImpl#powerProtectUpdate,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/robot/reboot,com.keenon.module.slam.apiImpl.RobotApiImpl#reboot,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/robot/restartRosNode,com.keenon.module.slam.apiImpl.RobotApiImpl#restartRosNode,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/robot/robotCleanAdjustConfigUpdate,com.keenon.module.slam.apiImpl.RobotApiImpl#robotCleanAdjustConfigUpdate,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/robot/robotDisturbModeConfigUpdate,com.keenon.module.slam.apiImpl.RobotApiImpl#robotDisturbModeConfigUpdate,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/robotStatistic/resetConsumptive,com.keenon.module.slam.apiImpl.RobotStatisticApiImpl#consumptiveReset,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/robotStatistic/getConsumptiveStatistic,com.keenon.module.slam.apiImpl.RobotStatisticApiImpl#getConsumptiveStatistic,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8089/api/v1/sysDict/test,com.keenon.module.slam.apiImpl.SysDictApiImpl#getPeanutDomainConfigTest,STRONGLY_SUPPORTED,HIGH,peanut_clean_app_endpoints.json
+http,http://<tablet-ip>:8090/ (assets/index.html SPA + static files),com.keenon.module.android.sync.FileServerManager#start,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+http,"http://localhost:8090/#/{checkArea,nav,record/report?cleanLogId=%s&robotWidth=%s}",MainActivity#initWebView; SelectAreaActivity$5#run; NaviDebugContainerActivity#initBridgeWebView,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+http,http://localhost:8089/test/post,assets/js/app.5eca38b4.js handleHttp,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+https,https://console.peanut.keenonrobot.com,assets/slamConfig/domainConfig_PROD.json (PROD iso2=LOCAL),CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+https,https://clean-api.keenonrobot.com,assets/slamConfig/domainConfig_PROD.json cleanBaseApiUrl,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+https,https://clean-upload.keenonrobot.com,assets/slamConfig/domainConfig_PROD.json cleanUploadApiUrl,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+mqtt,tcp://console.peanut.keenonrobot.com:1883,assets/slamConfig/domainConfig_PROD.json mqttUrl isMqttTSL=False,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+https,https://cloud.robotkeenon.com,assets/slamConfig/domainConfig_PROD.json (PROD iso2=JP),CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+https,https://overseas-clean-api.keenonai.com,assets/slamConfig/domainConfig_PROD.json cleanBaseApiUrl,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+https,https://overseas-upload.keenonai.com,assets/slamConfig/domainConfig_PROD.json cleanUploadApiUrl,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+mqtt,tcp://cloud.robotkeenon.com:11883,assets/slamConfig/domainConfig_PROD.json mqttUrl isMqttTSL=False,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+https,https://cloud.robotkeenon.com,assets/slamConfig/domainConfig_PROD.json (PROD iso2=ES),CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+https,https://overseas2-clean-api.keenonai.com,assets/slamConfig/domainConfig_PROD.json cleanBaseApiUrl,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+https,https://overseas2-upload.keenonai.com,assets/slamConfig/domainConfig_PROD.json cleanUploadApiUrl,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+mqtt,tcp://172.16.13.135:1883,assets/slamConfig/domainConfig_PROD.json mqttUrl isMqttTSL=False,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+http,http://p-cloud.ikeenon.com,assets/slamConfig/domainConfig_PRE.json (PRE iso2=LOCAL),CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+http,http://p-clean-api.keenonai.com,assets/slamConfig/domainConfig_PRE.json cleanBaseApiUrl,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+http,http://p-upload.keenonai.com,assets/slamConfig/domainConfig_PRE.json cleanUploadApiUrl,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+mqtt,tcp://p-cloud.ikeenon.com:1883,assets/slamConfig/domainConfig_PRE.json mqttUrl isMqttTSL=False,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+http,http://p-overseas-cloud.ikeenon.com,assets/slamConfig/domainConfig_PRE.json (PRE iso2=JP),CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+http,http://p-overseas-clean-api.keenonai.com,assets/slamConfig/domainConfig_PRE.json cleanBaseApiUrl,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+http,http://p-overseas-upload.keenonai.com,assets/slamConfig/domainConfig_PRE.json cleanUploadApiUrl,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+mqtt,tcp://p-overseas-cloud.ikeenon.com:11883,assets/slamConfig/domainConfig_PRE.json mqttUrl isMqttTSL=False,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+http,http://p-overseas2-cloud.ikeenon.com,assets/slamConfig/domainConfig_PRE.json (PRE iso2=ES),CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+http,http://p-overseas2-clean-api.keenonai.com,assets/slamConfig/domainConfig_PRE.json cleanBaseApiUrl,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+http,http://p-overseas2-upload.keenonai.com,assets/slamConfig/domainConfig_PRE.json cleanUploadApiUrl,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+mqtt,tcp://p-overseas2-cloud.ikeenon.com:1883,assets/slamConfig/domainConfig_PRE.json mqttUrl isMqttTSL=False,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+http,http://t-cloud.ikeenon.com,assets/slamConfig/domainConfig_TEST.json (TEST iso2=LOCAL),CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+http,http://t-clean-api.keenonai.com,assets/slamConfig/domainConfig_TEST.json cleanBaseApiUrl,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+http,http://t-upload.keenonai.com,assets/slamConfig/domainConfig_TEST.json cleanUploadApiUrl,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+mqtt,tcp://t-cloud.ikeenon.com:1883,assets/slamConfig/domainConfig_TEST.json mqttUrl isMqttTSL=False,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+https,https://t-overseas-cloud.ikeenon.com,assets/slamConfig/domainConfig_TEST.json (TEST iso2=JP),CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+http,http://t-overseas-clean-api.keenonai.com,assets/slamConfig/domainConfig_TEST.json cleanBaseApiUrl,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+http,http://t-overseas-upload.keenonai.com,assets/slamConfig/domainConfig_TEST.json cleanUploadApiUrl,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+mqtt,tcp://t-overseas-cloud.ikeenon.com:11883,assets/slamConfig/domainConfig_TEST.json mqttUrl isMqttTSL=False,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+https,https://t-overseas2-cloud.ikeenon.com,assets/slamConfig/domainConfig_TEST.json (TEST iso2=ES),CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+http,http://t-overseas2-clean-api.keenonai.com,assets/slamConfig/domainConfig_TEST.json cleanBaseApiUrl,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+http,http://t-overseas2-upload.keenonai.com,assets/slamConfig/domainConfig_TEST.json cleanUploadApiUrl,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+mqtt,tcp://172.16.13.135:1883,assets/slamConfig/domainConfig_TEST.json mqttUrl isMqttTSL=False,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+http,http://d-cloud.ikeenon.com,assets/slamConfig/domainConfig_DEVELOP.json (DEVELOP iso2=LOCAL),CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+http,http://d-clean-api.keenonai.com,assets/slamConfig/domainConfig_DEVELOP.json cleanBaseApiUrl,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+http,http://d-upload.keenonai.com,assets/slamConfig/domainConfig_DEVELOP.json cleanUploadApiUrl,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+mqtt,tcp://d-cloud.ikeenon.com:1883,assets/slamConfig/domainConfig_DEVELOP.json mqttUrl isMqttTSL=False,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+http,http://d-overseas-cloud.ikeenon.com,assets/slamConfig/domainConfig_DEVELOP.json (DEVELOP iso2=JP),CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+http,http://d-overseas-clean-api.keenonai.com,assets/slamConfig/domainConfig_DEVELOP.json cleanBaseApiUrl,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+http,http://d-overseas-upload.keenonai.com,assets/slamConfig/domainConfig_DEVELOP.json cleanUploadApiUrl,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+mqtt,tcp://d-overseas-cloud.ikeenon.com:1883,assets/slamConfig/domainConfig_DEVELOP.json mqttUrl isMqttTSL=False,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+http,http://d-overseas2-cloud.ikeenon.com,assets/slamConfig/domainConfig_DEVELOP.json (DEVELOP iso2=ES),CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+http,http://d-overseas2-clean-api.keenonai.com,assets/slamConfig/domainConfig_DEVELOP.json cleanBaseApiUrl,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+http,http://d-overseas2-upload.keenonai.com,assets/slamConfig/domainConfig_DEVELOP.json cleanUploadApiUrl,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+mqtt,tcp://d-overseas2-cloud.ikeenon.com:1883,assets/slamConfig/domainConfig_DEVELOP.json mqttUrl isMqttTSL=False,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+http,http://172.16.8.102:8089/,assets/json/dev.config.json key baseIp,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+http,http://upload-test.keenonai.com/,assets/json/dev.config.json key uploadIp,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+http,192.168.64.20:5555,assets/json/dev.config.json key baseIpC,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+ws,ws://192.168.2.5:8083,assets/json/dev.config.json key websocket,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+http,http://localhost:8089/,assets/json/prod.config.json key baseIp,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+http,https://upload.keenonai.com/,assets/json/prod.config.json key uploadIp,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+http,192.168.64.20:5555,assets/json/prod.config.json key baseIpC,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+ws,wss://iot.keenonai.com,assets/json/prod.config.json key websocket,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+http,http://localhost:8089/,assets/json/test.config.json key baseIp,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+http,http://upload-test.keenonai.com/,assets/json/test.config.json key uploadIp,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+http,192.168.64.20:5555,assets/json/test.config.json key baseIpC,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+ws,ws://192.168.2.5:8083,assets/json/test.config.json key websocket,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+https,console.peanut.keenonrobot.com,"assets/domain/domain.json (Data Center Zone(China Region), iso2=CN)",CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+https,es-cloud.robotkeenon.com,"assets/domain/domain.json (Data Center Zone1(Europe Region), iso2=ES)",CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+https,cloud.robotkeenon.com,"assets/domain/domain.json (Data Center Zone2(Other Region), iso2=JP)",CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+https,us-cloud.robotkeenon.com,"assets/domain/domain.json (Data Center Zone3(America Region), iso2=US)",CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+https,p-cloud.ikeenon.com,"assets/domain/domain-pre.json (Data Center Zone(China Region), iso2=CN)",CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+https,p-cloud.ikeenon.com,"assets/domain/domain-pre.json (Data Center Zone1(Europe Region), iso2=ES)",CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+https,p-cloud.ikeenon.com,"assets/domain/domain-pre.json (Data Center Zone2(Other Region), iso2=JP)",CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+https,t-cloud.ikeenon.com,"assets/domain/domain-eng.json (Data Center Zone(China Region), iso2=CN)",CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+https,t-overseas2-cloud.ikeenon.com,"assets/domain/domain-eng.json (Data Center Zone1(Europe Region), iso2=ES)",CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+https,t-overseas-cloud.ikeenon.com,"assets/domain/domain-eng.json (Data Center Zone2(Other Region), iso2=JP)",CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+https,d-cloud.ikeenon.com,"assets/domain/domain-dev.json (Data Center Zone(China Region), iso2=CN)",CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+https,d-overseas2-cloud.ikeenon.com,"assets/domain/domain-dev.json (Data Center Zone1(Europe Region), iso2=ES)",CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+https,d-overseas-cloud.ikeenon.com,"assets/domain/domain-dev.json (Data Center Zone2(Other Region), iso2=JP)",CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+mqtt,tcp://<host>:1883 (MQTT_TCP_DEF_PORT),CoreConfig static; DynamicMqttServer.getBaseUrl,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+mqtt,"ssl://<host>:8883 (prod), :18883 (test), :20001 (test CN)",CoreConfig.MQTT_SSL_PROD_PORT/MQTT_SSL_TEST_PORT/MQTT_SSL_TEST_PORT_CN; DynamicMqttServer.getBaseUrl (JADX),CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+mqtt,mqtt.keenonrobot.com (CN_MQTT_HOST),DynamicMqttServer static field,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+coap,coap://192.168.64.20:5683,LinkTypeAutoDetectHelper.coapUrl; PeanutConstants.COAP_PORT,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+http,http://192.168.64.20:54322,LinkTypeAutoDetectHelper.httpUrl; PeanutConstants.HTTP_PORT,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+http,http://192.168.64.20:34569 (HTTP_PORT_UPGRADE),PeanutConstants,STRONGLY_SUPPORTED,MEDIUM,peanut_clean_app_endpoints.json
+ws,ws://192.168.64.20:22345 (WS_PORT) / :12386 (WS_PORT_UPGRADE),PeanutConstants WS_PORT/WS_PORT_UPGRADE (usage in com.keenon.sdk.http.ws not traced),STRONGLY_SUPPORTED,LOW,peanut_clean_app_endpoints.json
+ws,ws://192.168.64.20:9090 (rosbridge),RosManager.getRosManager,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+http,http://192.168.64.20:5555,assets/json/*.config.json baseIpC; DEX string http://192.168.64.20:5555 (classes3),CONFIRMED,MEDIUM,peanut_clean_app_endpoints.json
+udp,"tftp://192.168.64.10:9527 (tablet TFTP server, root /peanut/server/tftp/)",TFTPServerManager.init / TFTPService.createServer,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+other,"/dev/ttyS1 (KC01), /dev/ttyS2 (emotion), /dev/ttyS3 (921600), /dev/ttyS4, /dev/ttyUSB0/2/3, /dev/ttyUSBDoorCtl, baud 115200",PeanutConstants / BusinessInitializer.initSDK,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+adb,none found (no adb command string or 5555 adb usage; 5555 appears only as IPC console base),DEX string search,UNKNOWN,LOW,peanut_clean_app_endpoints.json
+other,keenonrobot://mobile.com/page_fail_list?code=%s&robotName=%s,DEX string (classes3),CONFIRMED,MEDIUM,peanut_clean_app_endpoints.json
+other,supsetkeenon://supsetandroid.com (VIEW/BROWSABLE deep link to SetupActivity),AndroidManifest SetupActivity intent-filter,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+http,"http://<key>@sentry.keenonrobot.com/7 (Sentry DSN, credential REDACTED)",AndroidManifest meta-data io.sentry.dsn,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+https,"https://aaid.umeng.com, ulogs.umeng.com, alogus.umeng.com, ouplog.umeng.com, pslog.umeng.com, plbslog.umeng.com",Umeng SDK DEX strings,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+http,"http://apilocate.amap.com/mobile/binary, restsdk.amap.com/v3/*, cgicol.amap.com/collection/collectData, https://adiu.amap.com/ws/device/adius",AMap SDK DEX strings,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+https,geolocation/v1/geolocate (Google Geolocation API; key REDACTED),com.keenon.component.location.http.Request#getGoogleMapLocation; PeanutLocationManager,CONFIRMED,MEDIUM,peanut_clean_app_endpoints.json
+https,https://www.baidu.com ; ping -c 3 www.baidu.com ; 8.8.8.8 ; 223.5.5.5,NetworkEventManager / network checks,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+http,http://upload-test.keenonai.com ; http://clean-test.keeonai.com,DEX strings classes3/classes4,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+ws,ws://162.243.238.80:9090,com.jilk.ros.Example#main (library sample),CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+http,http://172.16.8.102:8089/ ; ws://192.168.2.5:8083 ; tcp://172.16.13.135:1883,assets/json/dev.config.json; test.config.json; domainConfig_PROD/TEST ES mqttUrl,CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+http,http://upload.keenonai.com/uploads/<id>/<id>.png,assets/js/chunk-38c9b0c6/f077fb7a/fba32598 (H5 default image src),CONFIRMED,HIGH,peanut_clean_app_endpoints.json
+http,http://weixin.qq.com/r/ejrO1u7E_bOGraq1929o ; http://weixin.qq.com/r/uSk-J6fEKfpWreNE93yr,DEX strings classes4 (QR/help links),CONFIRMED,MEDIUM,peanut_clean_app_endpoints.json
+mqtt,topic /client/push/,MqttPeanutStatsConfig.CLIENT_PUSH_TOPIC,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+mqtt,topic /server/push/,MqttPeanutStatsConfig.CLOUD_SERVER_OTA_TOPIC,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+mqtt,topic ROBOT_,MqttPeanutStatsConfig.CLOUD_SERVER_ROBOT_TOPIC_PREFIX,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+mqtt,topic /eventRecord/client/,MqttPeanutStatsConfig.EXCEPTION_EVENT_UPLOAD_TOPIC,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+mqtt,topic /odometer/client/,MqttPeanutStatsConfig.ODOMETER_UPLOAD_TOPIC,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+mqtt,topic /softwareRecord/client/,MqttPeanutStatsConfig.OTA_UPLOAD_TOPIC,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+mqtt,topic /server/push/msg/,MqttPeanutStatsConfig.PEANUT_SERVER_COMMON_PUSH,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+mqtt,topic robot/%s/base/power/upload/v1/dev_msg,MqttPeanutStatsConfig.POWER_UPLOAD_TOPIC,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+mqtt,topic ROBOT_INFO/,MqttPeanutStatsConfig.ROBOT_INFO_UPLOAD_TOPIC,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+mqtt,topic /ad_config/v2/dev_msg,MqttPeanutStatsConfig.TOPIC_AD_REPORT_DATA_PUBLISH,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+mqtt,topic ROBOT_CLEAN_ROUTE/,MqttPeanutStatsConfig.TOPIC_CLEAN_ROUTE_PUB,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+mqtt,topic /keenon/peanut/robot/data/pub,MqttPeanutStatsConfig.TOPIC_CLIENT_DATA_PUBLISH,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+mqtt,topic /robot/%s/base/common_handler/v1/dev_msg,MqttPeanutStatsConfig.TOPIC_COMMON_HANDLER_DEV_MSG,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+mqtt,topic /robot/%s/lift/v1/dev_msg,MqttPeanutStatsConfig.TOPIC_ELEVATOR_PUB,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+mqtt,topic /robot/%s/lift/v2/dev_msg,MqttPeanutStatsConfig.TOPIC_ELEVATOR_PUB_V2,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+mqtt,topic /robot/%s/lift/v1/cloud_msg,MqttPeanutStatsConfig.TOPIC_ELEVATOR_SUB,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+mqtt,topic /robot/%s/lift/v2/cloud_msg,MqttPeanutStatsConfig.TOPIC_ELEVATOR_SUB_V2,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+mqtt,topic /marketing/material/server/,MqttPeanutStatsConfig.TOPIC_MARKET_RESOURCE_REFRESH,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+mqtt,topic /marketing/material/client/,MqttPeanutStatsConfig.TOPIC_MARKET_RESOURCE_REPORT_STATUS,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+mqtt,topic /mockFault/server/sub/,MqttPeanutStatsConfig.TOPIC_MOCK_FAULT_SUBSCRIBE,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+mqtt,topic clean/%s/robot_push_message/v1/dev_msg,MqttPeanutStatsConfig.TOPIC_PUSH_MSG,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+mqtt,topic /resourcePush/server/,MqttPeanutStatsConfig.TOPIC_RESOURCE_PUSH_SERVER_UUID,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+mqtt,topic clean/%s/robot_open/v1/dev_msg,MqttPeanutStatsConfig.TOPIC_ROBOT_OPEN,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+mqtt,topic clean/%s/robot_status/v1/dev_msg,MqttPeanutStatsConfig.TOPIC_ROBOT_STATUS,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+mqtt,topic /%s/%s/user/elevator/sub,AliMqttTopicEnums / MqttServerHelper / MqttUtil,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+mqtt,topic /%s/%s/user/elevator/pub,AliMqttTopicEnums / MqttServerHelper / MqttUtil,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+mqtt,topic /%s/%s/user/ping/sub,AliMqttTopicEnums / MqttServerHelper / MqttUtil,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+mqtt,topic /device/%s/ioe_mqtt_conn/v1/cloud_client,AliMqttTopicEnums / MqttServerHelper / MqttUtil,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+mqtt,topic clean/%s/robot_open/v1/dev_msg,AliMqttTopicEnums / MqttServerHelper / MqttUtil,STATIC_REFERENCE,HIGH,peanut_clean_app_endpoints.json
+mqtt_broker,"ssl://console.peanut.keenonrobot.com:8883 (prod, non-CN region)",ServiceSystem DynamicMqttServer.getBaseUrl + assets/domain/domain.json,STRONGLY_SUPPORTED,MEDIUM,system_apps_endpoints.json
+mqtt_broker,"tcp://console.peanut.keenonrobot.com (prod, CN region, default TLS-off path)",ServiceSystem DynamicMqttServer / PeanutMqttServer.getBaseUrl,STRONGLY_SUPPORTED,MEDIUM,system_apps_endpoints.json
+mqtt_broker,"ssl://<region>-cloud.ikeenon.com:18883 or :21884 (eng/pre/dev, non-CN)",DynamicMqttServer.getBaseUrl disassembly,CONFIRMED,HIGH,system_apps_endpoints.json
+mqtt_broker,"tcp://console.peanut.keenonrobot.com (RemoteControl SshMqttServer default, prod)",RemoteControl SshConstants.getMqttUrl,CONFIRMED,HIGH,system_apps_endpoints.json
+mqtt_broker,"tcp://t-cloud.ikeenon.com (RemoteControl SshMqttServer, eng)",RemoteControl SshConstants.getMqttUrl,CONFIRMED,HIGH,system_apps_endpoints.json
+mqtt_broker,ssl:// mqtt-frp stats broker via ClientSSLSocketFactory (host from RemotePeanutServer.getStatsMqtt),RemoteControl RemotePeanutServer.getStatsMqtt,STRONGLY_SUPPORTED,MEDIUM,system_apps_endpoints.json
+mqtt_credentials,username/password resolved via CipherUtil.get(peanut_mqtt_u/peanut_mqtt_p[_prod]) [REDACTED],ServiceSystem/RemoteControl shared peanut.core.mqtt code,CONFIRMED,HIGH,system_apps_endpoints.json
+mqtt_topic,/android/remote/cmd/frp_<robotSN>,"RemoteControl SshConstants.getCmdTopic (remote shell command channel, see SYS-005)",CONFIRMED,HIGH,system_apps_endpoints.json
+mqtt_topic,/android/remote/cmd_resp/frp_<robotSN>,RemoteControl SshConstants.getCmdRespTopic,CONFIRMED,HIGH,system_apps_endpoints.json
+mqtt_topic,robot/%s/dev_config/ros/remote-ssh/v1/cloud_msg and /dev_msg,RemoteControl strings table,CONFIRMED,HIGH,system_apps_endpoints.json
+mqtt_topic,/dev_config/cloud_config/hotel/v1/cloud_msg,RemoteControl strings table,CONFIRMED,MEDIUM,system_apps_endpoints.json
+mqtt_topic,/remote-maintenance/network_tunnel/cloud_msg and /dev_msg,RemoteControl strings table,CONFIRMED,MEDIUM,system_apps_endpoints.json
+mqtt_topic,/dev_data/sys_log/notify/v1/server,RemoteControl RemoteMsgManager.handlerMqttMsg (log notify trigger),CONFIRMED,HIGH,system_apps_endpoints.json
+mqtt_topic,/dev_data/sys_log/notify_upload/v1/server,RemoteControl RemoteMsgManager.handlerMqttMsg (log upload trigger),CONFIRMED,HIGH,system_apps_endpoints.json
+mqtt_topic,/devops_common/v1/cloud_client and /dev_client,RemoteControl strings table,CONFIRMED,MEDIUM,system_apps_endpoints.json
+mqtt_topic,/device/%s/ioe_mqtt_conn/v1/cloud_client,ServiceSystem MqttServerHelper.subscribeEmqChangeMsg / RemoteControl AppStateManager,CONFIRMED,HIGH,system_apps_endpoints.json
+mqtt_topic,"/robot/ , /common/server/ , /server/push/ , /client/push/",RemoteControl common.mqtt.manager strings,CONFIRMED,MEDIUM,system_apps_endpoints.json
+http_api_base,console.peanut.keenonrobot.com (prod) / p-cloud.ikeenon.com (pre) / t-cloud.ikeenon.com (eng) / d-cloud.ikeenon.com (dev),ServiceSystem+RemoteControl assets/domain/domain*.json,CONFIRMED,HIGH,system_apps_endpoints.json
+http_api_path,/api/app/token/getSingleToken,RemoteControl strings,CONFIRMED,HIGH,system_apps_endpoints.json
+http_api_path,"/api/app/encrypt/v1, /api/app/encrypt/random/v1, /api/app/encrypt/aes/safe/v1",RemoteControl strings,CONFIRMED,HIGH,system_apps_endpoints.json
+http_api_path,/api/app/mqtt/secret/v1,RemoteControl strings (MQTTConnectManager),CONFIRMED,HIGH,system_apps_endpoints.json
+http_api_path,"/api/app/robot/info/v2, /checkNewSoftware/v2, /software/package/info[/v2], /version/status/v2, /log/types/v2",RemoteControl strings,CONFIRMED,HIGH,system_apps_endpoints.json
+http_api_path,"/api/app/robot/remote_log/v1/file_list, /upload, /upload_status",RemoteControl strings (log upload),CONFIRMED,HIGH,system_apps_endpoints.json
+http_api_path,"/api/remote/sunlogin/device/session/v2, /status/v2, /service/secret/v2, /device/speed/test_url",RemoteControl strings (Oray session mgmt),CONFIRMED,HIGH,system_apps_endpoints.json
+http_api_path,/api/hotel_app/cloud/config/v1,RemoteControl strings,CONFIRMED,MEDIUM,system_apps_endpoints.json
+http_endpoint,https://iflybot.com.cn/service/sit/manager/v1/device/getLocation,ServiceSystem strings,CONFIRMED,MEDIUM,system_apps_endpoints.json
+http_endpoint,"http://service.iflybot.com.cn (gatewayUrl), ws://robot.iflybot.com.cn/robot/engine/v2_2","ServiceSystem assets/robot.json, robot_test.json",CONFIRMED,HIGH,system_apps_endpoints.json
+http_endpoint,"http://robotnlp.keenonrobot.com:80, http://corrector.keenonrobot.com:80 (and t- test variants)",ServiceSystem strings,CONFIRMED,HIGH,system_apps_endpoints.json
+http_endpoint,"http://iss.openspeech.cn/v, http://openapi.openspeech.cn/webapi/wfr.do, http://wke.openspeech.cn/wakeup/, https://open.xf-yun.com/msp.do, https://log.iflytek.com/log, https://logconf.iflytek.com/hotupdate",ServiceSystem strings (iFlytek cloud SDK),CONFIRMED,HIGH,system_apps_endpoints.json
+http_endpoint,https://api.moonshot.cn/v1/chat/completions (Kimi LLM),ServiceSystem KimiChatApi,CONFIRMED,HIGH,system_apps_endpoints.json
+http_endpoint,https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions (DeepSeek via DashScope),ServiceSystem DeepseekChatApi,CONFIRMED,HIGH,system_apps_endpoints.json
+http_endpoint,"https://<resource>.openai.azure.com/openai/deployments/%s/chat/completions, https://<region>.api.cognitive.microsoft.com (8 regions)",ServiceSystem assets/voiceConfig/micro_resource.json,CONFIRMED,HIGH,system_apps_endpoints.json
+http_endpoint,https://applog.iotcloud.tencentiotcloud.com/api/xp2p_ops/applog ; room://cloud.tencent.com/rtc ; room://rtc.tencent.com,ServiceSystem Tencent LiteAV/GVoice strings,CONFIRMED,MEDIUM,system_apps_endpoints.json
+telemetry_endpoint,"http://<REDACTED_KEY>@sentry.keenonrobot.com/12 (Sentry DSN, cleartext)",ServiceSystem AndroidManifest.xml meta-data io.sentry.dsn,CONFIRMED,HIGH,system_apps_endpoints.json
+ftp_frp_endpoint,frp.keenonrobots.com (latency ping target; actual FRP server/port/token delivered via MQTT frpConfig),RemoteControl AppStateManager.getFrpDelayTime,CONFIRMED,HIGH,system_apps_endpoints.json
+local_socket_or_host,192.168.64.20 (SMB share root + rosbridge-style ws://192.168.64.20:9013),"RemoteControl SMBManager, WebClientManager",CONFIRMED,HIGH,system_apps_endpoints.json
+smb_credentials,"user root, password from SMBInterface.PASS_LIST[0..1] [REDACTED: 2 hard-coded strings]",RemoteControl SMBManager.lambda$init$0,CONFIRMED,HIGH,system_apps_endpoints.json
+adb_tcp_port,"5678 (service.adb.tcp.port, set at ServiceSystem init; also frpc local_port)",ServiceSystem SystemInitializer.init; RemoteControl FrpClientHelper.buildFrpClientConfig,STRONGLY_SUPPORTED,MEDIUM,system_apps_endpoints.json
+websocket,"ws://10.40.53.203/robot/engine (string constant, likely stale/dev default)",ServiceSystem strings,HISTORICAL,LOW,system_apps_endpoints.json
+api_key_location,ServiceSystem assets/voiceConfig/micro_resource.json: 8x openaiKey + 8x speechKey [REDACTED],asset file,CONFIRMED,HIGH,system_apps_endpoints.json
+api_key_location,ServiceSystem KimiChatApi/DeepseekChatApi: hard-coded Bearer sk-... keys [REDACTED],DEX string table,CONFIRMED,HIGH,system_apps_endpoints.json
+api_key_location,ServiceSystem assets/robot.json / robot_test.json: appId+secret for iFlytek robot gateway [REDACTED],asset file,CONFIRMED,HIGH,system_apps_endpoints.json
+private_key_location,"ServiceSystem assets/vtn/privateKey.pem (RSA private key, 1700 bytes) [REDACTED]",asset file,CONFIRMED,HIGH,system_apps_endpoints.json

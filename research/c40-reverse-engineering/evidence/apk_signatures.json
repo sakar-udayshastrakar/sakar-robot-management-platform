@@ -1,0 +1,115 @@
+{
+ "RemoteControl-v3.3.1-0-gfe68b6d-prod-release-p-rk3288-signed.apk": {
+  "v1_files": [
+   "META-INF/MANIFEST.MF",
+   "META-INF/CERT.SF",
+   "META-INF/CERT.RSA"
+  ],
+  "signing_block_ids": [],
+  "v1_certs": [
+   {
+    "from": "META-INF/CERT.RSA",
+    "x509": [
+     "subject=C=US, ST=California, L=Mountain View, O=Android, OU=Android, CN=Android, emailAddress=android@android.com",
+     "issuer=C=US, ST=California, L=Mountain View, O=Android, OU=Android, CN=Android, emailAddress=android@android.com",
+     "notBefore=Dec 23 06:43:41 2014 GMT",
+     "notAfter=May 10 06:43:41 2042 GMT",
+     "sha256 Fingerprint=2D:37:0C:21:F5:DF:D5:53:D2:A7:96:31:4B:70:92:5F:B3:8A:DE:EF:90:86:4C:92:0B:BB:BB:12:88:7D:35:22",
+     "serial=FF0641323CF95512"
+    ]
+   }
+  ]
+ },
+ "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk": {
+  "v1_files": [
+   "META-INF/MANIFEST.MF",
+   "META-INF/CERT.SF",
+   "META-INF/CERT.RSA"
+  ],
+  "signing_block_ids": [],
+  "v1_certs": [
+   {
+    "from": "META-INF/CERT.RSA",
+    "x509": [
+     "subject=C=US, ST=California, L=Mountain View, O=Android, OU=Android, CN=Android, emailAddress=android@android.com",
+     "issuer=C=US, ST=California, L=Mountain View, O=Android, OU=Android, CN=Android, emailAddress=android@android.com",
+     "notBefore=Dec 23 06:43:41 2014 GMT",
+     "notAfter=May 10 06:43:41 2042 GMT",
+     "sha256 Fingerprint=2D:37:0C:21:F5:DF:D5:53:D2:A7:96:31:4B:70:92:5F:B3:8A:DE:EF:90:86:4C:92:0B:BB:BB:12:88:7D:35:22",
+     "serial=FF0641323CF95512"
+    ]
+   }
+  ]
+ },
+ "krlog-v1.2.6-0-g18a40d0-prod-release-p-rk3288-signed.apk": {
+  "v1_files": [
+   "META-INF/MANIFEST.MF",
+   "META-INF/CERT.SF",
+   "META-INF/CERT.RSA"
+  ],
+  "signing_block_ids": [],
+  "v1_certs": [
+   {
+    "from": "META-INF/CERT.RSA",
+    "x509": [
+     "subject=C=US, ST=California, L=Mountain View, O=Android, OU=Android, CN=Android, emailAddress=android@android.com",
+     "issuer=C=US, ST=California, L=Mountain View, O=Android, OU=Android, CN=Android, emailAddress=android@android.com",
+     "notBefore=Dec 23 06:43:41 2014 GMT",
+     "notAfter=May 10 06:43:41 2042 GMT",
+     "sha256 Fingerprint=2D:37:0C:21:F5:DF:D5:53:D2:A7:96:31:4B:70:92:5F:B3:8A:DE:EF:90:86:4C:92:0B:BB:BB:12:88:7D:35:22",
+     "serial=FF0641323CF95512"
+    ]
+   }
+  ]
+ },
+ "peanut-clean-v3.7.8-0-g153214a-prod-release-p.apk": {
+  "v1_files": [
+   "META-INF/CERT.SF",
+   "META-INF/CERT.RSA",
+   "META-INF/MANIFEST.MF"
+  ],
+  "signing_block_ids": [
+   "0x7109871a",
+   "0x504b4453",
+   "0x42726577"
+  ],
+  "v1_certs": [
+   {
+    "from": "META-INF/CERT.RSA",
+    "x509": [
+     "subject=C=US, ST=California, L=Mountain View, O=Android, OU=Android, CN=Android, emailAddress=android@android.com",
+     "issuer=C=US, ST=California, L=Mountain View, O=Android, OU=Android, CN=Android, emailAddress=android@android.com",
+     "notBefore=Dec 23 06:43:41 2014 GMT",
+     "notAfter=May 10 06:43:41 2042 GMT",
+     "sha256 Fingerprint=2D:37:0C:21:F5:DF:D5:53:D2:A7:96:31:4B:70:92:5F:B3:8A:DE:EF:90:86:4C:92:0B:BB:BB:12:88:7D:35:22",
+     "serial=FF0641323CF95512"
+    ]
+   }
+  ]
+ },
+ "robot-installation-assistant-v4.11.0-0-gb7c7c7b-prod-release-p.apk": {
+  "v1_files": [
+   "META-INF/MANIFEST.MF",
+   "META-INF/CERT.RSA",
+   "META-INF/CERT.SF"
+  ],
+  "signing_block_ids": [
+   "0x7109871a",
+   "0x504b4453",
+   "0x42726577"
+  ],
+  "v1_certs": [
+   {
+    "from": "META-INF/CERT.RSA",
+    "x509": [
+     "subject=CN=keenon",
+     "issuer=CN=keenon",
+     "notBefore=Aug  3 06:46:30 2017 GMT",
+     "notAfter=Jul 28 06:46:30 2042 GMT",
+     "sha256 Fingerprint=1F:B4:F7:10:74:8C:F6:ED:87:7B:A5:A8:B5:16:2F:3E:BC:9E:20:0F:96:1D:EF:5F:27:AE:58:AE:9D:02:19:C3",
+     "serial=510BB1D9"
+    ]
+   }
+  ]
+ }
+}

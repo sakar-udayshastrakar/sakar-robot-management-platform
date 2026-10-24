@@ -1,0 +1,818 @@
+[
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk",
+  "analyzed": true,
+  "method": "unzip + v1 cert parse (certinfo.py) + manifest decode (axml.py)",
+  "findings": "Platform system app, sharedUserId android.uid.system; see system_apps.md section for this APK",
+  "status": "CONFIRMED",
+  "limitations": "No apksigner/v2-v4 block parser used"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/classes.dex",
+  "analyzed": true,
+  "method": "dexscan.py per-method index (strings/invokes/fields) + dexdis.py disassembly; JADX/REA decompile for selected high-value methods",
+  "findings": "See system_apps.md; class/method-level citations in system_apps_findings.json",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "Most classes reviewed at bytecode/string level only, not fully decompiled"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/classes2.dex",
+  "analyzed": true,
+  "method": "dexscan.py per-method index (strings/invokes/fields) + dexdis.py disassembly; JADX/REA decompile for selected high-value methods",
+  "findings": "See system_apps.md; class/method-level citations in system_apps_findings.json",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "Most classes reviewed at bytecode/string level only, not fully decompiled"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/classes3.dex",
+  "analyzed": true,
+  "method": "dexscan.py per-method index (strings/invokes/fields) + dexdis.py disassembly; JADX/REA decompile for selected high-value methods",
+  "findings": "See system_apps.md; class/method-level citations in system_apps_findings.json",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "Most classes reviewed at bytecode/string level only, not fully decompiled"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/META-INF/CERT.RSA",
+  "analyzed": true,
+  "method": "certinfo.py (CERT.RSA) / text read (SF, MF)",
+  "findings": "signing certificate / digest manifest, see system_apps.md 5.1",
+  "status": "CONFIRMED",
+  "limitations": "-"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/META-INF/CERT.SF",
+  "analyzed": true,
+  "method": "certinfo.py (CERT.RSA) / text read (SF, MF)",
+  "findings": "signing certificate / digest manifest, see system_apps.md 5.1",
+  "status": "CONFIRMED",
+  "limitations": "-"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/META-INF/MANIFEST.MF",
+  "analyzed": true,
+  "method": "certinfo.py (CERT.RSA) / text read (SF, MF)",
+  "findings": "signing certificate / digest manifest, see system_apps.md 5.1",
+  "status": "CONFIRMED",
+  "limitations": "-"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/assets/actuators.json",
+  "analyzed": true,
+  "method": "read as JSON/text",
+  "findings": "config asset, see system_apps.md section 2.6/2.11",
+  "status": "CONFIRMED",
+  "limitations": "-"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/assets/asr/asr_local_functions.json",
+  "analyzed": true,
+  "method": "read as JSON/text",
+  "findings": "config asset, see system_apps.md section 2.6/2.11",
+  "status": "CONFIRMED",
+  "limitations": "-"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/assets/bi_config.gson",
+  "analyzed": true,
+  "method": "read as JSON/text",
+  "findings": "config asset, see system_apps.md section 2.6/2.11",
+  "status": "CONFIRMED",
+  "limitations": "-"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/assets/domain/domain-dev.json",
+  "analyzed": true,
+  "method": "read as JSON/text",
+  "findings": "config asset, see system_apps.md section 2.6/2.11",
+  "status": "CONFIRMED",
+  "limitations": "-"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/assets/domain/domain-eng.json",
+  "analyzed": true,
+  "method": "read as JSON/text",
+  "findings": "config asset, see system_apps.md section 2.6/2.11",
+  "status": "CONFIRMED",
+  "limitations": "-"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/assets/domain/domain-pre.json",
+  "analyzed": true,
+  "method": "read as JSON/text",
+  "findings": "config asset, see system_apps.md section 2.6/2.11",
+  "status": "CONFIRMED",
+  "limitations": "-"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/assets/domain/domain.json",
+  "analyzed": true,
+  "method": "read as JSON/text",
+  "findings": "config asset, see system_apps.md section 2.6/2.11",
+  "status": "CONFIRMED",
+  "limitations": "-"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/assets/record.json",
+  "analyzed": true,
+  "method": "read as JSON/text",
+  "findings": "config asset, see system_apps.md section 2.6/2.11",
+  "status": "CONFIRMED",
+  "limitations": "-"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/assets/robot.json",
+  "analyzed": true,
+  "method": "read as JSON/text",
+  "findings": "config asset, see system_apps.md section 2.6/2.11",
+  "status": "CONFIRMED",
+  "limitations": "-"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/assets/robot_test.json",
+  "analyzed": true,
+  "method": "read as JSON/text",
+  "findings": "config asset, see system_apps.md section 2.6/2.11",
+  "status": "CONFIRMED",
+  "limitations": "-"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/assets/sensors.json",
+  "analyzed": true,
+  "method": "read as JSON/text",
+  "findings": "config asset, see system_apps.md section 2.6/2.11",
+  "status": "CONFIRMED",
+  "limitations": "-"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/assets/voiceConfig/micro_asr_lang.json",
+  "analyzed": true,
+  "method": "read as JSON/text",
+  "findings": "config asset, see system_apps.md section 2.6/2.11",
+  "status": "CONFIRMED",
+  "limitations": "-"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/assets/voiceConfig/micro_resource.json",
+  "analyzed": true,
+  "method": "read as JSON/text",
+  "findings": "config asset, see system_apps.md section 2.6/2.11",
+  "status": "CONFIRMED",
+  "limitations": "-"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/assets/voiceConfig/micro_tts_timbre.json",
+  "analyzed": true,
+  "method": "read as JSON/text",
+  "findings": "config asset, see system_apps.md section 2.6/2.11",
+  "status": "CONFIRMED",
+  "limitations": "-"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/assets/voiceConfig/voice_config.json",
+  "analyzed": true,
+  "method": "read as JSON/text",
+  "findings": "config asset, see system_apps.md section 2.6/2.11",
+  "status": "CONFIRMED",
+  "limitations": "-"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/assets/voiceConfig/voice_config_oversea.json",
+  "analyzed": true,
+  "method": "read as JSON/text",
+  "findings": "config asset, see system_apps.md section 2.6/2.11",
+  "status": "CONFIRMED",
+  "limitations": "-"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/assets/vtn/privateKey.pem",
+  "analyzed": true,
+  "method": "read PEM header",
+  "findings": "RSA key pair for VTN voice auth (ServiceSystem assets/vtn)",
+  "status": "CONFIRMED",
+  "limitations": "Key material not validated/used"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/assets/vtn/publicKey.pem",
+  "analyzed": true,
+  "method": "read PEM header",
+  "findings": "RSA key pair for VTN voice auth (ServiceSystem assets/vtn)",
+  "status": "CONFIRMED",
+  "limitations": "Key material not validated/used"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/lib/armeabi-v7a/libGVoiceUtils.so",
+  "analyzed": true,
+  "method": "elfinfo.py (sections/dynsym/needed) + soinv.py (string/vendor-marker scan)",
+  "findings": "Tencent GVoice utils",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "No disassembly of native code; exports/imports/strings only"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/lib/armeabi-v7a/libK18SttyCommInterface.so",
+  "analyzed": true,
+  "method": "elfinfo.py (sections/dynsym/needed) + soinv.py (string/vendor-marker scan)",
+  "findings": "Rokid K18 mic-array JNI K18SttyCommAPI",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "No disassembly of native code; exports/imports/strings only"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/lib/armeabi-v7a/libMicrosoft.CognitiveServices.Speech.core.so",
+  "analyzed": true,
+  "method": "elfinfo.py (sections/dynsym/needed) + soinv.py (string/vendor-marker scan)",
+  "findings": "native library, see system_apps_artifacts so_inventory",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "No disassembly of native code; exports/imports/strings only"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/lib/armeabi-v7a/libMicrosoft.CognitiveServices.Speech.extension.audio.sys.so",
+  "analyzed": true,
+  "method": "elfinfo.py (sections/dynsym/needed) + soinv.py (string/vendor-marker scan)",
+  "findings": "native library, see system_apps_artifacts so_inventory",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "No disassembly of native code; exports/imports/strings only"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/lib/armeabi-v7a/libMicrosoft.CognitiveServices.Speech.extension.codec.so",
+  "analyzed": true,
+  "method": "elfinfo.py (sections/dynsym/needed) + soinv.py (string/vendor-marker scan)",
+  "findings": "native library, see system_apps_artifacts so_inventory",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "No disassembly of native code; exports/imports/strings only"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/lib/armeabi-v7a/libMicrosoft.CognitiveServices.Speech.extension.kws.ort.so",
+  "analyzed": true,
+  "method": "elfinfo.py (sections/dynsym/needed) + soinv.py (string/vendor-marker scan)",
+  "findings": "native library, see system_apps_artifacts so_inventory",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "No disassembly of native code; exports/imports/strings only"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/lib/armeabi-v7a/libMicrosoft.CognitiveServices.Speech.extension.kws.so",
+  "analyzed": true,
+  "method": "elfinfo.py (sections/dynsym/needed) + soinv.py (string/vendor-marker scan)",
+  "findings": "native library, see system_apps_artifacts so_inventory",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "No disassembly of native code; exports/imports/strings only"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/lib/armeabi-v7a/libMicrosoft.CognitiveServices.Speech.extension.lu.so",
+  "analyzed": true,
+  "method": "elfinfo.py (sections/dynsym/needed) + soinv.py (string/vendor-marker scan)",
+  "findings": "native library, see system_apps_artifacts so_inventory",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "No disassembly of native code; exports/imports/strings only"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/lib/armeabi-v7a/libMicrosoft.CognitiveServices.Speech.extension.silk_codec.so",
+  "analyzed": true,
+  "method": "elfinfo.py (sections/dynsym/needed) + soinv.py (string/vendor-marker scan)",
+  "findings": "native library, see system_apps_artifacts so_inventory",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "No disassembly of native code; exports/imports/strings only"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/lib/armeabi-v7a/libMicrosoft.CognitiveServices.Speech.java.bindings.so",
+  "analyzed": true,
+  "method": "elfinfo.py (sections/dynsym/needed) + soinv.py (string/vendor-marker scan)",
+  "findings": "native library, see system_apps_artifacts so_inventory",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "No disassembly of native code; exports/imports/strings only"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/lib/armeabi-v7a/libaiui.so",
+  "analyzed": true,
+  "method": "elfinfo.py (sections/dynsym/needed) + soinv.py (string/vendor-marker scan)",
+  "findings": "iFlytek AIUI SDK",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "No disassembly of native code; exports/imports/strings only"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/lib/armeabi-v7a/libalsa-jni.so",
+  "analyzed": true,
+  "method": "elfinfo.py (sections/dynsym/needed) + soinv.py (string/vendor-marker scan)",
+  "findings": "tinyalsa JNI mic capture",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "No disassembly of native code; exports/imports/strings only"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/lib/armeabi-v7a/libcae-jni.so",
+  "analyzed": true,
+  "method": "elfinfo.py (sections/dynsym/needed) + soinv.py (string/vendor-marker scan)",
+  "findings": "iFlytek CAE (AEC/beamforming) JNI",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "No disassembly of native code; exports/imports/strings only"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/lib/armeabi-v7a/libcipher_pack.so",
+  "analyzed": true,
+  "method": "elfinfo.py (sections/dynsym/needed) + soinv.py (string/vendor-marker scan)",
+  "findings": "JNI CipherUtil.get(Context,String): per-package native key/credential lookup table (labels only, values not extracted)",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "No disassembly of native code; exports/imports/strings only"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/lib/armeabi-v7a/libhlw.so",
+  "analyzed": true,
+  "method": "elfinfo.py (sections/dynsym/needed) + soinv.py (string/vendor-marker scan)",
+  "findings": "iFlytek wake-word engine",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "No disassembly of native code; exports/imports/strings only"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/lib/armeabi-v7a/libliteavsdk.so",
+  "analyzed": true,
+  "method": "elfinfo.py (sections/dynsym/needed) + soinv.py (string/vendor-marker scan)",
+  "findings": "Tencent LiteAV SDK (networking, ffmpeg)",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "No disassembly of native code; exports/imports/strings only"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/lib/armeabi-v7a/liblzma.so",
+  "analyzed": true,
+  "method": "elfinfo.py (sections/dynsym/needed) + soinv.py (string/vendor-marker scan)",
+  "findings": "xz/lzma decompression library",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "No disassembly of native code; exports/imports/strings only"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/lib/armeabi-v7a/libmmkv.so",
+  "analyzed": true,
+  "method": "elfinfo.py (sections/dynsym/needed) + soinv.py (string/vendor-marker scan)",
+  "findings": "Tencent MMKV key-value store native core",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "No disassembly of native code; exports/imports/strings only"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/lib/armeabi-v7a/libmsc.so",
+  "analyzed": true,
+  "method": "elfinfo.py (sections/dynsym/needed) + soinv.py (string/vendor-marker scan)",
+  "findings": "iFlytek MSC speech SDK (mbedtls, sockets)",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "No disassembly of native code; exports/imports/strings only"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/lib/armeabi-v7a/libmygvoice.so",
+  "analyzed": true,
+  "method": "elfinfo.py (sections/dynsym/needed) + soinv.py (string/vendor-marker scan)",
+  "findings": "Tencent GVoice wrapper",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "No disassembly of native code; exports/imports/strings only"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/lib/armeabi-v7a/libnative-lib.so",
+  "analyzed": true,
+  "method": "elfinfo.py (sections/dynsym/needed) + soinv.py (string/vendor-marker scan)",
+  "findings": "JNI Recorder.webRtcVadProcess (WebRTC VAD)",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "No disassembly of native code; exports/imports/strings only"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/lib/armeabi-v7a/libpatchutils.so",
+  "analyzed": true,
+  "method": "elfinfo.py (sections/dynsym/needed) + soinv.py (string/vendor-marker scan)",
+  "findings": "JNI PatchUtil.bspatch (bsdiff patch + bzip2)",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "No disassembly of native code; exports/imports/strings only"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/lib/armeabi-v7a/librobotdevice.so",
+  "analyzed": true,
+  "method": "elfinfo.py (sections/dynsym/needed) + soinv.py (string/vendor-marker scan)",
+  "findings": "JNI RobotDeviceNative.getDeviceId (AES helper symbols)",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "No disassembly of native code; exports/imports/strings only"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/lib/armeabi-v7a/libsentry-android.so",
+  "analyzed": true,
+  "method": "elfinfo.py (sections/dynsym/needed) + soinv.py (string/vendor-marker scan)",
+  "findings": "Sentry Android NDK JNI bridge",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "No disassembly of native code; exports/imports/strings only"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/lib/armeabi-v7a/libsentry.so",
+  "analyzed": true,
+  "method": "elfinfo.py (sections/dynsym/needed) + soinv.py (string/vendor-marker scan)",
+  "findings": "Sentry native crash SDK",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "No disassembly of native code; exports/imports/strings only"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/lib/armeabi-v7a/libtxffmpeg.so",
+  "analyzed": true,
+  "method": "elfinfo.py (sections/dynsym/needed) + soinv.py (string/vendor-marker scan)",
+  "findings": "Tencent bundled FFmpeg",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "No disassembly of native code; exports/imports/strings only"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/lib/armeabi-v7a/libtxsoundtouch.so",
+  "analyzed": true,
+  "method": "elfinfo.py (sections/dynsym/needed) + soinv.py (string/vendor-marker scan)",
+  "findings": "SoundTouch audio processing",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "No disassembly of native code; exports/imports/strings only"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/lib/armeabi-v7a/libvadLib.so",
+  "analyzed": true,
+  "method": "elfinfo.py (sections/dynsym/needed) + soinv.py (string/vendor-marker scan)",
+  "findings": "VAD library",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "No disassembly of native code; exports/imports/strings only"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/lib/armeabi-v7a/libvtn.so",
+  "analyzed": true,
+  "method": "elfinfo.py (sections/dynsym/needed) + soinv.py (string/vendor-marker scan)",
+  "findings": "iFlytek VTN voice front-end",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "No disassembly of native code; exports/imports/strings only"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/lib/armeabi-v7a/libydvad.so",
+  "analyzed": true,
+  "method": "elfinfo.py (sections/dynsym/needed) + soinv.py (string/vendor-marker scan)",
+  "findings": "VAD library",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "No disassembly of native code; exports/imports/strings only"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/res/raw/ca.bks",
+  "analyzed": false,
+  "method": "identified by path/extension only",
+  "findings": "BKS keystore for MQTT/TLS client cert pinning (ServiceSystem/RemoteControl)",
+  "status": "NOT_ANALYZED",
+  "limitations": "BKS format not parsed; no tool available in this environment"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/res/raw/client.bks",
+  "analyzed": false,
+  "method": "identified by path/extension only",
+  "findings": "BKS keystore for MQTT/TLS client cert pinning (ServiceSystem/RemoteControl)",
+  "status": "NOT_ANALYZED",
+  "limitations": "BKS format not parsed; no tool available in this environment"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/res/raw/eng_ca.bks",
+  "analyzed": false,
+  "method": "identified by path/extension only",
+  "findings": "BKS keystore for MQTT/TLS client cert pinning (ServiceSystem/RemoteControl)",
+  "status": "NOT_ANALYZED",
+  "limitations": "BKS format not parsed; no tool available in this environment"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/res/raw/eng_client.bks",
+  "analyzed": false,
+  "method": "identified by path/extension only",
+  "findings": "BKS keystore for MQTT/TLS client cert pinning (ServiceSystem/RemoteControl)",
+  "status": "NOT_ANALYZED",
+  "limitations": "BKS format not parsed; no tool available in this environment"
+ },
+ {
+  "relative_path": "ServiceSystem-v2.0.11-0-g94566e5-prod-release-p-rk3288-signed.apk!/resources.arsc",
+  "analyzed": false,
+  "method": "not parsed (binary resource table)",
+  "findings": "referenced only via @0x7f... ids in manifest/axml output",
+  "status": "NOT_ANALYZED",
+  "limitations": "No ARSC parser available; resource string/int values for @0x7f... refs are unresolved"
+ },
+ {
+  "relative_path": "RemoteControl-v3.3.1-0-gfe68b6d-prod-release-p-rk3288-signed.apk",
+  "analyzed": true,
+  "method": "unzip + v1 cert parse (certinfo.py) + manifest decode (axml.py)",
+  "findings": "Platform system app, sharedUserId android.uid.system; see system_apps.md section for this APK",
+  "status": "CONFIRMED",
+  "limitations": "No apksigner/v2-v4 block parser used"
+ },
+ {
+  "relative_path": "RemoteControl-v3.3.1-0-gfe68b6d-prod-release-p-rk3288-signed.apk!/classes.dex",
+  "analyzed": true,
+  "method": "dexscan.py per-method index (strings/invokes/fields) + dexdis.py disassembly; JADX/REA decompile for selected high-value methods",
+  "findings": "See system_apps.md; class/method-level citations in system_apps_findings.json",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "Most classes reviewed at bytecode/string level only, not fully decompiled"
+ },
+ {
+  "relative_path": "RemoteControl-v3.3.1-0-gfe68b6d-prod-release-p-rk3288-signed.apk!/classes2.dex",
+  "analyzed": true,
+  "method": "dexscan.py per-method index (strings/invokes/fields) + dexdis.py disassembly; JADX/REA decompile for selected high-value methods",
+  "findings": "See system_apps.md; class/method-level citations in system_apps_findings.json",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "Most classes reviewed at bytecode/string level only, not fully decompiled"
+ },
+ {
+  "relative_path": "RemoteControl-v3.3.1-0-gfe68b6d-prod-release-p-rk3288-signed.apk!/classes3.dex",
+  "analyzed": true,
+  "method": "dexscan.py per-method index (strings/invokes/fields) + dexdis.py disassembly; JADX/REA decompile for selected high-value methods",
+  "findings": "See system_apps.md; class/method-level citations in system_apps_findings.json",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "Most classes reviewed at bytecode/string level only, not fully decompiled"
+ },
+ {
+  "relative_path": "RemoteControl-v3.3.1-0-gfe68b6d-prod-release-p-rk3288-signed.apk!/META-INF/CERT.RSA",
+  "analyzed": true,
+  "method": "certinfo.py (CERT.RSA) / text read (SF, MF)",
+  "findings": "signing certificate / digest manifest, see system_apps.md 5.1",
+  "status": "CONFIRMED",
+  "limitations": "-"
+ },
+ {
+  "relative_path": "RemoteControl-v3.3.1-0-gfe68b6d-prod-release-p-rk3288-signed.apk!/META-INF/CERT.SF",
+  "analyzed": true,
+  "method": "certinfo.py (CERT.RSA) / text read (SF, MF)",
+  "findings": "signing certificate / digest manifest, see system_apps.md 5.1",
+  "status": "CONFIRMED",
+  "limitations": "-"
+ },
+ {
+  "relative_path": "RemoteControl-v3.3.1-0-gfe68b6d-prod-release-p-rk3288-signed.apk!/META-INF/MANIFEST.MF",
+  "analyzed": true,
+  "method": "certinfo.py (CERT.RSA) / text read (SF, MF)",
+  "findings": "signing certificate / digest manifest, see system_apps.md 5.1",
+  "status": "CONFIRMED",
+  "limitations": "-"
+ },
+ {
+  "relative_path": "RemoteControl-v3.3.1-0-gfe68b6d-prod-release-p-rk3288-signed.apk!/assets/RKUpdateService_v1.8.2.apk",
+  "analyzed": true,
+  "method": "unzip + axml.py manifest decode",
+  "findings": "Rockchip OTA installer helper, package android.rockchip.update.service; exported RKUpdateService + exported Setting activity",
+  "status": "CONFIRMED",
+  "limitations": "classes.dex of this nested APK not separately scanned with dexscan"
+ },
+ {
+  "relative_path": "RemoteControl-v3.3.1-0-gfe68b6d-prod-release-p-rk3288-signed.apk!/assets/domain/domain-dev.json",
+  "analyzed": true,
+  "method": "read as JSON/text",
+  "findings": "config asset, see system_apps.md section 2.6/2.11",
+  "status": "CONFIRMED",
+  "limitations": "-"
+ },
+ {
+  "relative_path": "RemoteControl-v3.3.1-0-gfe68b6d-prod-release-p-rk3288-signed.apk!/assets/domain/domain-eng.json",
+  "analyzed": true,
+  "method": "read as JSON/text",
+  "findings": "config asset, see system_apps.md section 2.6/2.11",
+  "status": "CONFIRMED",
+  "limitations": "-"
+ },
+ {
+  "relative_path": "RemoteControl-v3.3.1-0-gfe68b6d-prod-release-p-rk3288-signed.apk!/assets/domain/domain.json",
+  "analyzed": true,
+  "method": "read as JSON/text",
+  "findings": "config asset, see system_apps.md section 2.6/2.11",
+  "status": "CONFIRMED",
+  "limitations": "-"
+ },
+ {
+  "relative_path": "RemoteControl-v3.3.1-0-gfe68b6d-prod-release-p-rk3288-signed.apk!/assets/speedTest.zip",
+  "analyzed": true,
+  "method": "file-signature check",
+  "findings": "actually a RAR archive despite .zip extension, used for upload speed test",
+  "status": "CONFIRMED",
+  "limitations": "Contents not extracted (RAR, no tool)"
+ },
+ {
+  "relative_path": "RemoteControl-v3.3.1-0-gfe68b6d-prod-release-p-rk3288-signed.apk!/assets/update.zip",
+  "analyzed": true,
+  "method": "unzip + read updater-script/metadata/shell scripts",
+  "findings": "OTA package: target rk3288/Android 6.0.1 userdebug test-keys; replaces SystemUI.apk, patches build.prop, installs rm_slog.sh/set_video_perm.sh",
+  "status": "CONFIRMED",
+  "limitations": "update-binary (541KB) and SystemUI.apk payload not analyzed"
+ },
+ {
+  "relative_path": "RemoteControl-v3.3.1-0-gfe68b6d-prod-release-p-rk3288-signed.apk!/lib/armeabi-v7a/lib3Des.so",
+  "analyzed": true,
+  "method": "elfinfo.py (sections/dynsym/needed) + soinv.py (string/vendor-marker scan)",
+  "findings": "JNI CtrlDesUtil.encrypt (3DES)",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "No disassembly of native code; exports/imports/strings only"
+ },
+ {
+  "relative_path": "RemoteControl-v3.3.1-0-gfe68b6d-prod-release-p-rk3288-signed.apk!/lib/armeabi-v7a/libcipher_pack.so",
+  "analyzed": true,
+  "method": "elfinfo.py (sections/dynsym/needed) + soinv.py (string/vendor-marker scan)",
+  "findings": "JNI CipherUtil.get(Context,String): per-package native key/credential lookup table (labels only, values not extracted)",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "No disassembly of native code; exports/imports/strings only"
+ },
+ {
+  "relative_path": "RemoteControl-v3.3.1-0-gfe68b6d-prod-release-p-rk3288-signed.apk!/lib/armeabi-v7a/libdaemon_api20.so",
+  "analyzed": true,
+  "method": "elfinfo.py (sections/dynsym/needed) + soinv.py (string/vendor-marker scan)",
+  "findings": "marsdaemon native process keep-alive JNI NativeDaemonAPI20.doDaemon",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "No disassembly of native code; exports/imports/strings only"
+ },
+ {
+  "relative_path": "RemoteControl-v3.3.1-0-gfe68b6d-prod-release-p-rk3288-signed.apk!/lib/armeabi-v7a/libdaemon_api21.so",
+  "analyzed": true,
+  "method": "elfinfo.py (sections/dynsym/needed) + soinv.py (string/vendor-marker scan)",
+  "findings": "marsdaemon native keep-alive JNI NativeDaemonAPI21.doDaemon",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "No disassembly of native code; exports/imports/strings only"
+ },
+ {
+  "relative_path": "RemoteControl-v3.3.1-0-gfe68b6d-prod-release-p-rk3288-signed.apk!/lib/armeabi-v7a/liblog.so",
+  "analyzed": true,
+  "method": "elfinfo.py (sections/dynsym/needed) + soinv.py (string/vendor-marker scan)",
+  "findings": "stub liblog bundled as an asset",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "No disassembly of native code; exports/imports/strings only"
+ },
+ {
+  "relative_path": "RemoteControl-v3.3.1-0-gfe68b6d-prod-release-p-rk3288-signed.apk!/lib/armeabi-v7a/libmmkv.so",
+  "analyzed": true,
+  "method": "elfinfo.py (sections/dynsym/needed) + soinv.py (string/vendor-marker scan)",
+  "findings": "Tencent MMKV key-value store native core",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "No disassembly of native code; exports/imports/strings only"
+ },
+ {
+  "relative_path": "RemoteControl-v3.3.1-0-gfe68b6d-prod-release-p-rk3288-signed.apk!/lib/armeabi-v7a/libnativetool.so",
+  "analyzed": true,
+  "method": "elfinfo.py (sections/dynsym/needed) + soinv.py (string/vendor-marker scan)",
+  "findings": "JNI KNNativeTool.nativeCmd; imports socket/sendto/recvfrom (local command proxy, INFERRED); used by FrpClientHelper.handleNginxFile",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "No disassembly of native code; exports/imports/strings only"
+ },
+ {
+  "relative_path": "RemoteControl-v3.3.1-0-gfe68b6d-prod-release-p-rk3288-signed.apk!/lib/armeabi-v7a/liborayinput_agent.so",
+  "analyzed": true,
+  "method": "elfinfo.py (sections/dynsym/needed) + soinv.py (string/vendor-marker scan)",
+  "findings": "Oray input-injection agent, launched from /data/local/tmp",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "No disassembly of native code; exports/imports/strings only"
+ },
+ {
+  "relative_path": "RemoteControl-v3.3.1-0-gfe68b6d-prod-release-p-rk3288-signed.apk!/lib/armeabi-v7a/liborayinput_agent5.so",
+  "analyzed": true,
+  "method": "elfinfo.py (sections/dynsym/needed) + soinv.py (string/vendor-marker scan)",
+  "findings": "Oray input-injection agent variant",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "No disassembly of native code; exports/imports/strings only"
+ },
+ {
+  "relative_path": "RemoteControl-v3.3.1-0-gfe68b6d-prod-release-p-rk3288-signed.apk!/lib/armeabi-v7a/liborayscreen_agentn.so",
+  "analyzed": true,
+  "method": "elfinfo.py (sections/dynsym/needed) + soinv.py (string/vendor-marker scan)",
+  "findings": "Oray screen-capture agent (links libgui/libskia/libbinder/libui)",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "No disassembly of native code; exports/imports/strings only"
+ },
+ {
+  "relative_path": "RemoteControl-v3.3.1-0-gfe68b6d-prod-release-p-rk3288-signed.apk!/lib/armeabi-v7a/liborayservice_sdk.so",
+  "analyzed": true,
+  "method": "elfinfo.py (sections/dynsym/needed) + soinv.py (string/vendor-marker scan)",
+  "findings": "Oray Sunlogin remote-service SDK (25 JNI exports); protocol not analyzed",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "No disassembly of native code; exports/imports/strings only"
+ },
+ {
+  "relative_path": "RemoteControl-v3.3.1-0-gfe68b6d-prod-release-p-rk3288-signed.apk!/lib/armeabi-v7a/libpatchutils.so",
+  "analyzed": true,
+  "method": "elfinfo.py (sections/dynsym/needed) + soinv.py (string/vendor-marker scan)",
+  "findings": "JNI PatchUtil.bspatch (bsdiff patch + bzip2)",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "No disassembly of native code; exports/imports/strings only"
+ },
+ {
+  "relative_path": "RemoteControl-v3.3.1-0-gfe68b6d-prod-release-p-rk3288-signed.apk!/res/raw/ca.bks",
+  "analyzed": false,
+  "method": "identified by path/extension only",
+  "findings": "BKS keystore for MQTT/TLS client cert pinning (ServiceSystem/RemoteControl)",
+  "status": "NOT_ANALYZED",
+  "limitations": "BKS format not parsed; no tool available in this environment"
+ },
+ {
+  "relative_path": "RemoteControl-v3.3.1-0-gfe68b6d-prod-release-p-rk3288-signed.apk!/res/raw/client.bks",
+  "analyzed": false,
+  "method": "identified by path/extension only",
+  "findings": "BKS keystore for MQTT/TLS client cert pinning (ServiceSystem/RemoteControl)",
+  "status": "NOT_ANALYZED",
+  "limitations": "BKS format not parsed; no tool available in this environment"
+ },
+ {
+  "relative_path": "RemoteControl-v3.3.1-0-gfe68b6d-prod-release-p-rk3288-signed.apk!/res/raw/dev_ca.bks",
+  "analyzed": false,
+  "method": "identified by path/extension only",
+  "findings": "BKS keystore for MQTT/TLS client cert pinning (ServiceSystem/RemoteControl)",
+  "status": "NOT_ANALYZED",
+  "limitations": "BKS format not parsed; no tool available in this environment"
+ },
+ {
+  "relative_path": "RemoteControl-v3.3.1-0-gfe68b6d-prod-release-p-rk3288-signed.apk!/res/raw/dev_client.bks",
+  "analyzed": false,
+  "method": "identified by path/extension only",
+  "findings": "BKS keystore for MQTT/TLS client cert pinning (ServiceSystem/RemoteControl)",
+  "status": "NOT_ANALYZED",
+  "limitations": "BKS format not parsed; no tool available in this environment"
+ },
+ {
+  "relative_path": "RemoteControl-v3.3.1-0-gfe68b6d-prod-release-p-rk3288-signed.apk!/res/raw/eng_ca.bks",
+  "analyzed": false,
+  "method": "identified by path/extension only",
+  "findings": "BKS keystore for MQTT/TLS client cert pinning (ServiceSystem/RemoteControl)",
+  "status": "NOT_ANALYZED",
+  "limitations": "BKS format not parsed; no tool available in this environment"
+ },
+ {
+  "relative_path": "RemoteControl-v3.3.1-0-gfe68b6d-prod-release-p-rk3288-signed.apk!/res/raw/eng_client.bks",
+  "analyzed": false,
+  "method": "identified by path/extension only",
+  "findings": "BKS keystore for MQTT/TLS client cert pinning (ServiceSystem/RemoteControl)",
+  "status": "NOT_ANALYZED",
+  "limitations": "BKS format not parsed; no tool available in this environment"
+ },
+ {
+  "relative_path": "RemoteControl-v3.3.1-0-gfe68b6d-prod-release-p-rk3288-signed.apk!/resources.arsc",
+  "analyzed": false,
+  "method": "not parsed (binary resource table)",
+  "findings": "referenced only via @0x7f... ids in manifest/axml output",
+  "status": "NOT_ANALYZED",
+  "limitations": "No ARSC parser available; resource string/int values for @0x7f... refs are unresolved"
+ },
+ {
+  "relative_path": "krlog-v1.2.6-0-g18a40d0-prod-release-p-rk3288-signed.apk",
+  "analyzed": true,
+  "method": "unzip + v1 cert parse (certinfo.py) + manifest decode (axml.py)",
+  "findings": "Platform system app, sharedUserId android.uid.system; see system_apps.md section for this APK",
+  "status": "CONFIRMED",
+  "limitations": "No apksigner/v2-v4 block parser used"
+ },
+ {
+  "relative_path": "krlog-v1.2.6-0-g18a40d0-prod-release-p-rk3288-signed.apk!/classes.dex",
+  "analyzed": true,
+  "method": "dexscan.py per-method index (strings/invokes/fields) + dexdis.py disassembly; JADX/REA decompile for selected high-value methods",
+  "findings": "See system_apps.md; class/method-level citations in system_apps_findings.json",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "Most classes reviewed at bytecode/string level only, not fully decompiled"
+ },
+ {
+  "relative_path": "krlog-v1.2.6-0-g18a40d0-prod-release-p-rk3288-signed.apk!/META-INF/CERT.RSA",
+  "analyzed": true,
+  "method": "certinfo.py (CERT.RSA) / text read (SF, MF)",
+  "findings": "signing certificate / digest manifest, see system_apps.md 5.1",
+  "status": "CONFIRMED",
+  "limitations": "-"
+ },
+ {
+  "relative_path": "krlog-v1.2.6-0-g18a40d0-prod-release-p-rk3288-signed.apk!/META-INF/CERT.SF",
+  "analyzed": true,
+  "method": "certinfo.py (CERT.RSA) / text read (SF, MF)",
+  "findings": "signing certificate / digest manifest, see system_apps.md 5.1",
+  "status": "CONFIRMED",
+  "limitations": "-"
+ },
+ {
+  "relative_path": "krlog-v1.2.6-0-g18a40d0-prod-release-p-rk3288-signed.apk!/META-INF/MANIFEST.MF",
+  "analyzed": true,
+  "method": "certinfo.py (CERT.RSA) / text read (SF, MF)",
+  "findings": "signing certificate / digest manifest, see system_apps.md 5.1",
+  "status": "CONFIRMED",
+  "limitations": "-"
+ },
+ {
+  "relative_path": "krlog-v1.2.6-0-g18a40d0-prod-release-p-rk3288-signed.apk!/lib/arm64-v8a/libpatchutils.so",
+  "analyzed": true,
+  "method": "elfinfo.py (sections/dynsym/needed) + soinv.py (string/vendor-marker scan)",
+  "findings": "JNI PatchUtil.bspatch (bsdiff patch + bzip2)",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "No disassembly of native code; exports/imports/strings only"
+ },
+ {
+  "relative_path": "krlog-v1.2.6-0-g18a40d0-prod-release-p-rk3288-signed.apk!/lib/armeabi-v7a/libpatchutils.so",
+  "analyzed": true,
+  "method": "elfinfo.py (sections/dynsym/needed) + soinv.py (string/vendor-marker scan)",
+  "findings": "JNI PatchUtil.bspatch (bsdiff patch + bzip2)",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "No disassembly of native code; exports/imports/strings only"
+ },
+ {
+  "relative_path": "krlog-v1.2.6-0-g18a40d0-prod-release-p-rk3288-signed.apk!/lib/x86/libpatchutils.so",
+  "analyzed": true,
+  "method": "elfinfo.py (sections/dynsym/needed) + soinv.py (string/vendor-marker scan)",
+  "findings": "JNI PatchUtil.bspatch (bsdiff patch + bzip2)",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "No disassembly of native code; exports/imports/strings only"
+ },
+ {
+  "relative_path": "krlog-v1.2.6-0-g18a40d0-prod-release-p-rk3288-signed.apk!/lib/x86_64/libpatchutils.so",
+  "analyzed": true,
+  "method": "elfinfo.py (sections/dynsym/needed) + soinv.py (string/vendor-marker scan)",
+  "findings": "JNI PatchUtil.bspatch (bsdiff patch + bzip2)",
+  "status": "STRONGLY_SUPPORTED",
+  "limitations": "No disassembly of native code; exports/imports/strings only"
+ },
+ {
+  "relative_path": "krlog-v1.2.6-0-g18a40d0-prod-release-p-rk3288-signed.apk!/resources.arsc",
+  "analyzed": false,
+  "method": "not parsed (binary resource table)",
+  "findings": "referenced only via @0x7f... ids in manifest/axml output",
+  "status": "NOT_ANALYZED",
+  "limitations": "No ARSC parser available; resource string/int values for @0x7f... refs are unresolved"
+ }
+]

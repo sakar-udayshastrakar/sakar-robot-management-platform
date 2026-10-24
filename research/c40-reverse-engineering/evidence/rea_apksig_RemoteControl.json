@@ -1,0 +1,16 @@
+{
+  "code": "COMMAND_NOT_FOUND",
+  "message": "'inspect-apk-signature' is not a command for 'rea'. Did you mean 'inspect-signature'?",
+  "cta": {
+    "description": "Suggested commands:",
+    "commands": [
+      {
+        "command": "rea inspect-signature D:/Sakar Robotics Projects/C40 S-LS-M014C00-RW-F00-V246/RemoteControl-v3.3.1-0-gfe68b6d-prod-release-p-rk3288-signed.apk --json"
+      },
+      {
+        "command": "rea --help",
+        "description": "see all available commands"
+      }
+    ]
+  }
+}

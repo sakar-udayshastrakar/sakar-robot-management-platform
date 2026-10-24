@@ -1,0 +1,106 @@
+[
+  {
+    "relative_path": "gd32f3-c40-chassis-app-v1.1.5-0-g5bec8c6.bin",
+    "analyzed": true,
+    "method": "Raw Cortex-M parsing: vector table, Region$$Table, entropy, strings, constant scan, 8051 probe, tail MD5 recompute, hand decode of BMS frame checksums",
+    "findings": "Base 0x08004000, SP 0x200095F8, Reset 0x08004149; 148-byte tail with verified MD5; plaintext; embedded ~26 KB 8051 blob; BMS ASCII frames; JSON device info; no signature.",
+    "status": "CONFIRMED (layout, tail); INFERRED (8051 blob, peripherals)",
+    "limitations": "No disassembly; bootloader absent; 8051 target unknown; part number inferred."
+  },
+  {
+    "relative_path": "gd32f3-c40-periph-app-v1.1.4-0-g3df9e74.bin",
+    "analyzed": true,
+    "method": "Raw Cortex-M parsing, Region$$Table, strings, tail MD5, RT-Thread name inventory",
+    "findings": "Base 0x08004000, SP 0x2000F6F0; tail MD5 verified; RT-Thread; brushes/vacuum/pump/carpet sensor/CAN names; JSON sub-device entry.",
+    "status": "CONFIRMED (layout); STRONGLY_SUPPORTED (RT-Thread)",
+    "limitations": "No disassembly; peripheral roles inferred from names."
+  },
+  {
+    "relative_path": "base_station-app-v1.1.0-0-gf0ff236/base_station-app-v1.1.0-0-gf0ff236.bin",
+    "analyzed": true,
+    "method": "ESP image parser (header, 5 segments, checksum, SHA-256), app descriptor, string analysis",
+    "findings": "ESP32-S3 IDF v5.1.2 image; checksum+SHA-256 valid; no signature block; dock water/charging logic; ESP-NOW pairing and OTA module; UART console; hard-coded PMK literal (redacted).",
+    "status": "CONFIRMED (format); STRONGLY_SUPPORTED (function); INFERRED (OTA auth weakness)",
+    "limitations": "Xtensa code not disassembled; eFuse security state unknown."
+  },
+  {
+    "relative_path": "base_station-app-v1.1.0-0-gf0ff236/iap_main",
+    "analyzed": true,
+    "method": "ELF parse (sections, symtab, dynsym, PLT), UTF-8 rodata, hand-decoded Thumb (BL targets, movw/movt, immediates), .data read",
+    "findings": "ARM32 hf ELF GCC 4.8.4 unstripped no DWARF; CLI -p -b -f -e -s; frame AA AA..55 55, A5 escape, CRC16 0xA001; PACK_LEN 128; ACK 0x06/NAK 0x15; bootloader checks (MSP, MD5, name) per messages.",
+    "status": "CONFIRMED (symbols/strings); INFERRED (protocol semantics)",
+    "limitations": "No disassembler; command payload meaning and exit-code behaviour not decoded; baud mapping partly decoded."
+  },
+  {
+    "relative_path": "base_station-app-v1.1.0-0-gf0ff236/update_Stm32.sh",
+    "analyzed": true,
+    "method": "Read as UTF-8; Chinese comments translated; flow review",
+    "findings": "Selects single *base_station*.bin, runs iap_main -s -p /dev/ttyUSBSchedule -b 921600; no integrity/version check; ROS stop/start commented out.",
+    "status": "CONFIRMED",
+    "limitations": "Run-as user and caller unknown."
+  },
+  {
+    "relative_path": "base_station-app-v1.1.0-0-gf0ff236/script/upgrade.sh",
+    "analyzed": true,
+    "method": "Read; flow review",
+    "findings": "No shebang; cd package root; chmod -R 777 *; bash update_Stm32.sh.",
+    "status": "CONFIRMED",
+    "limitations": "Caller unknown."
+  },
+  {
+    "relative_path": "schedule-v3.1.1-0-g11c2ad2/bin/Schedule-v3.1.1-0-g11c2ad2.bin",
+    "analyzed": true,
+    "method": "ESP image parser (6 segments, checksum, SHA-256), app descriptor, string analysis",
+    "findings": "ESP32 IDF v4.4.2 espnow_doorbell v3.1.1; UART<->ESP-NOW gateway with text commands and OTA relay; PMK literal (redacted); no signature block.",
+    "status": "CONFIRMED (format); STRONGLY_SUPPORTED (function)",
+    "limitations": "Xtensa code not disassembled; LMK/encryption use unknown."
+  },
+  {
+    "relative_path": "schedule-v3.1.1-0-g11c2ad2/script/ota_set_arm",
+    "analyzed": true,
+    "method": "ELF + DWARF parse (custom), rodata, hand-decoded movw/movt",
+    "findings": "ARM32 hf, unstripped with DWARF (/home/peanut/ota, GCC 4.8.4); text OTA to ESP32; -w MAC relay; tmparr 2,048,000 B.",
+    "status": "CONFIRMED (metadata); STRONGLY_SUPPORTED (behaviour)",
+    "limitations": "Baud and OTA chunking not decoded."
+  },
+  {
+    "relative_path": "schedule-v3.1.1-0-g11c2ad2/script/ota_set_x86",
+    "analyzed": true,
+    "method": "ELF + DWARF parse, rodata",
+    "findings": "x86-64 twin of ota_set_arm; serial.c from /home/litreily/workspace/esp/esp32_serial_tools/ota built with GCC 7.5.0; main.c GCC 4.8.4 in /home/peanut/ota.",
+    "status": "CONFIRMED (metadata)",
+    "limitations": "No disassembly."
+  },
+  {
+    "relative_path": "schedule-v3.1.1-0-g11c2ad2/script/serial_cmd_arm",
+    "analyzed": true,
+    "method": "ELF + DWARF parse, rodata",
+    "findings": "ARM32 hf with DWARF (/root/cmd); sends \"get version\" at given baud.",
+    "status": "CONFIRMED",
+    "limitations": "No disassembly."
+  },
+  {
+    "relative_path": "schedule-v3.1.1-0-g11c2ad2/script/serial_cmd_x86",
+    "analyzed": true,
+    "method": "ELF + DWARF parse, rodata",
+    "findings": "x86-64 twin of serial_cmd_arm.",
+    "status": "CONFIRMED",
+    "limitations": "No disassembly."
+  },
+  {
+    "relative_path": "schedule-v3.1.1-0-g11c2ad2/script/upgrade.sh",
+    "analyzed": true,
+    "method": "Read; flow review",
+    "findings": "Arch-based tool select; get version, ota_set, sleep 2, substring grep success test; updateSuccess/updateFail; unquoted vars; unknown arch continues.",
+    "status": "CONFIRMED",
+    "limitations": "Caller and run-as user unknown."
+  },
+  {
+    "relative_path": "upgradeConfig.json",
+    "analyzed": true,
+    "method": "JSON parse (UTF-8), md5/size comparison with present files, URL pattern check",
+    "findings": "V246 manifest, 10 packages, MD5+size only, https, isForced false; 7 present files verified; 3 zips absent.",
+    "status": "CONFIRMED",
+    "limitations": "URLs not contacted; zip md5 not re-verifiable here."
+  }
+]

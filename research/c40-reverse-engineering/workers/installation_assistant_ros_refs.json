@@ -1,0 +1,4385 @@
+[
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/BusyMap_App_AreaList",
+  "type": "std_msgs/String",
+  "source": "SPA ros table BUSYAREALIST (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/BusyMap_App_Cmd",
+  "type": "std_msgs/String",
+  "source": "SPA ros table BUSYAREAACTION (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/BusyMap_App_ColorMap",
+  "type": "sensor_msgs/CompressedImage",
+  "source": "SPA ros table BUSYAREACOLORMAP (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/BusyMap_App_ImageTime",
+  "type": "std_msgs/String",
+  "source": "SPA ros table BUSYIMAGETIME (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/BusyMap_App_Result",
+  "type": "std_msgs/String",
+  "source": "SPA ros table BUSYMAPRESULT (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/Location/RealtimeStatus",
+  "type": "std_msgs/Bool",
+  "source": "SPA ros table REALTIMESTATUS (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/TaskDispatcher/CurExecTaskInfo",
+  "type": "keenon_task_msgs/TaskInfo",
+  "source": "SPA ros table CUREXECTASKINFO (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/ability/crud",
+  "type": "keenon_ui_msgs/ability_data",
+  "source": "SPA ros table ABILITYDB (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/ability/sync/ability_table",
+  "type": "keenon_ui_msgs/ability_data",
+  "source": "SPA ros table ABILITYSYNC (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/add_label",
+  "type": "keenon_label_msgs/add_label",
+  "source": "SPA ros table ADDLABEL (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/app_cmd_charge",
+  "type": "keenon_database_msgs/poseInfo",
+  "source": "SPA ros table STOPCHARGE (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/app_cmd_clean_action",
+  "type": "std_msgs/Int32",
+  "source": "SPA ros table CLEANACTION (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/app_cmd_clean_dst",
+  "type": "std_msgs/UInt16",
+  "source": "SPA ros table CLEANDST (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/app_cmd_clean_dst_and_pose",
+  "type": "keenon_database_msgs/poseInfo",
+  "source": "SPA ros table CLEANDSTANDPOSE (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/app_cmd_test_run_start",
+  "type": "std_msgs/UInt16",
+  "source": "SPA ros table TESTRUNSTART (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/battery_state",
+  "type": "sensor_msgs/BatteryState",
+  "source": "SPA ros table BATTERYSTATE (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/cfg_param_cmd",
+  "type": "keenon_ui_msgs/cfg_param_info",
+  "source": "SPA ros table GETBUSINESS (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "service_or_topic(srv type)",
+  "name": "/cfg_rosbag_sw_cmd",
+  "type": "keenon_ui_msgs/config_rosbag.srv",
+  "source": "SPA ros table CFGROSBAGSWCMD (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/cfg_side_drive",
+  "type": "keenon_nav_msgs/sideDriveConfig",
+  "source": "SPA ros table CFGSIDEDRIVE (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/charge_report_toUI",
+  "type": "std_msgs/UInt8",
+  "source": "SPA ros table CHARGESTATUS (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "service_or_topic(srv type)",
+  "name": "/check_carpet_with_personal_path",
+  "type": "check_carpet_with_personal_path.srv",
+  "source": "SPA ros table CHECKCARPETWITHPERSONALPATH (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/clean_status",
+  "type": "keenon_clean_msgs/clean_status",
+  "source": "SPA ros table CLEANSTATUS (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/common_area_config",
+  "type": "keenon_database_msgs::commonAreaConfig",
+  "source": "SPA ros table COMMONAREA (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/contourMerge",
+  "type": "keenon_clean_msgs/contour_merge",
+  "source": "SPA ros table AREAMERGE (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/contourMutilMerge",
+  "type": "keenon_clean_msgs/contour_mutil_merge",
+  "source": "SPA ros table CONTOURMUTILMERGE (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/database/config_common_path",
+  "type": "keenon_database_msgs::commonPathInfo",
+  "source": "SPA ros table CONFIGCOMMONPATH (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "service_or_topic(srv type)",
+  "name": "/database/config_dynamic_map",
+  "type": "dynamicMapConfig.srv",
+  "source": "SPA ros table DYNAMICMAP (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/database/config_dynamic_map_info",
+  "type": "keenon_database_msgs/dynamicMapInfo",
+  "source": "SPA ros table SAVEMAPMETADATA (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/database/config_elevator",
+  "type": "keenon_database_msgs/elevatorConfig",
+  "source": "SPA ros table ELEVATORCONFIG (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/database/config_floor_map_type",
+  "type": "keenon_database_msgs/floor_map_type",
+  "source": "SPA ros table FLOORMAPTYPE (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/database/config_gate",
+  "type": "keenon_database_msgs/gateConfig",
+  "source": "SPA ros table GATESERVICE (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/database/config_init_pose",
+  "type": "keenon_database_msgs/initPoseConfig",
+  "source": "SPA ros table CONFIGINITPOSE (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/database/config_keyframe",
+  "type": "keenon_database_msgs/keyframeConfig",
+  "source": "SPA ros table CONFIGKEYFRAME (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/database/config_label",
+  "type": "keenon_database_msgs/labelConfig",
+  "source": "SPA ros table CONFIGLABEL (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/database/config_map",
+  "type": "keenon_database_msgs/mapConfig",
+  "source": "SPA ros table CONFIGMAP (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/database/config_path",
+  "type": "keenon_database_msgs/pathConfig",
+  "source": "SPA ros table CONFIGPATH (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/database/config_pose",
+  "type": "keenon_database_msgs/poseConfig",
+  "source": "SPA ros table CONFIGPOSE (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/database/config_table",
+  "type": "keenon_database_msgs/tableInfo.msg",
+  "source": "SPA ros table CONFIGTABLE (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "service_or_topic(srv type)",
+  "name": "/database/config_user_feature",
+  "type": "userFeatureConfig.srv",
+  "source": "SPA ros table USERSHAPE (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/database/config_vslamKeyframe",
+  "type": "keenon_database_msgs/vslamKeyframeConfig",
+  "source": "SPA ros table CONFIGVSLAMKEYFRAME (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/database/config_web_app_data",
+  "type": "keenon_database_msgs::web_app_data_config",
+  "source": "SPA ros table WEBAPPDATA (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/database/config_zone",
+  "type": "keenon_database_msgs/zoneConfig",
+  "source": "SPA ros table CONFIGZONE (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "service_or_topic(srv type)",
+  "name": "/database/manager",
+  "type": "keenon_database_msgs/manager",
+  "source": "SPA ros table DATABASEMANAGER (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "service_or_topic(srv type)",
+  "name": "/database/sync_feature_map",
+  "type": "syncFeatureMap.srv",
+  "source": "SPA ros table SYNCFEATMAP (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/denoise_with_path",
+  "type": "cartographer_ros_msgs::DenoiseWithPath",
+  "source": "SPA ros table DENOISEWITHPATH (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "service_or_topic(srv type)",
+  "name": "/doorFrameFix",
+  "type": "zoneConfig.srv",
+  "source": "SPA ros table DOORFRAMEFIX (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/elevator_response",
+  "type": "keenon_elevator_msgs/elev_response",
+  "source": "SPA ros table ELEVATORUPDATE (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/elevator_task_status",
+  "type": "keenon_elevator_msgs/elev_task_status",
+  "source": "SPA ros table ELEVATORTASKSTATUS (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/fusion_curr_label",
+  "type": "keenon_label_msgs/label_msg",
+  "source": "SPA ros table FUSIONCURRLABEL (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/fusion_label_array",
+  "type": "keenon_label_msgs/fusion_label_array",
+  "source": "SPA ros table FUSIONLABELARRAY (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "service_or_topic(srv type)",
+  "name": "/generate_elevators_zone",
+  "type": "elevators_zone_generate.srv",
+  "source": "SPA ros table AUTOELEVATOR (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "service_or_topic(srv type)",
+  "name": "/generate_virtual_wall_auto",
+  "type": "generate_virtual_wall_auto.srv",
+  "source": "SPA ros table VIRTUALWALLAUTOSAVE (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/get_mapping_path",
+  "type": "cartographer_ros_msgs/PubMappingPath",
+  "source": "SPA ros table GETMAPPINGPATH (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/get_schedule_version",
+  "type": "std_msgs/String",
+  "source": "SPA ros table SCHEDULEVERSION (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/gmapping_map/to_web/compressed",
+  "type": "sensor_msgs/CompressedImage",
+  "source": "SPA ros table GMAPPINGMAP (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/goal_safety_check",
+  "type": "keenon_nav_msgs/goalsSafetyCheck",
+  "source": "SPA ros table CONFIGSFETY (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/ground_hit_status",
+  "type": "std_msgs/Int8",
+  "source": "SPA ros table GROUNDHITSTATUS (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/init_location_pose",
+  "type": "std_msgs/Int8",
+  "source": "SPA ros table INITLOCALTIONPOSE (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/initialpose",
+  "type": "geometry_msgs/PoseWithCovarianceStamped",
+  "source": "SPA ros table INITIALPOSE (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "service_or_topic(srv type)",
+  "name": "/initialpose_config",
+  "type": "keenon_ui_msgs/initialpose_config_msg.srv",
+  "source": "SPA ros table INITIALPOSECONFIG (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/interactive/startup_finished",
+  "type": "std_msgs/Empty",
+  "source": "SPA ros table STARTUPFINISHED (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/localization/mapLoadStatus",
+  "type": "std_msgs/UInt8",
+  "source": "SPA ros table ROSMAPLOADED (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/map_app_start",
+  "type": "web_backend/map_app_start",
+  "source": "SPA ros table ROSNODELOADER (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/mapping_path",
+  "type": "cartographer_ros_msgs/Path",
+  "source": "SPA ros table MAPPINGPATH (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/motor_air",
+  "type": "std_msgs/UInt8",
+  "source": "SPA ros table MOTORAIR (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/motor_edge",
+  "type": "std_msgs/UInt8",
+  "source": "SPA ros table MOTOREDGE (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/motor_lock",
+  "type": "std_msgs/Bool",
+  "source": "SPA ros table MOTORLOCK (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/motor_lock_status",
+  "type": "keenon_motor_msgs/lock_status",
+  "source": "SPA ros table MOTORLOCKSTATUS (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/motor_roll",
+  "type": "std_msgs/UInt8",
+  "source": "SPA ros table MOTORROLL (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/move_base/local_costmap/footprint",
+  "type": "",
+  "source": "SPA ros table MOVEBASEFOOTPRINT (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/move_base/move_base_global_plan/to_web",
+  "type": "keenon_nav_msgs/SimplePath",
+  "source": "SPA ros table PATHPLANNING (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/notify_goal_adjust",
+  "type": "keenon_nav_msgs/goalAdjust",
+  "source": "SPA ros table GOALADJUST (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "service_or_topic(srv type)",
+  "name": "/notify_map_change",
+  "type": "NotifyMapChange.srv",
+  "source": "SPA ros table NOTIFYMAPCHANGE (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "service_or_topic(srv type)",
+  "name": "/operate_pbstream",
+  "type": "pbstreamConfig.srv",
+  "source": "SPA ros table PBSTREAM (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/pub_final_map",
+  "type": "cartographer_ros_msgs/PubFinalMap",
+  "source": "SPA ros table PUBFINALMAP (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/reboot",
+  "type": "std_msgs/Bool",
+  "source": "SPA ros table REBOOTTOPIC (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/reflector_deployment/action",
+  "type": "std_msgs::UInt8",
+  "source": "SPA ros table REFLECTORACTION (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "service_or_topic(srv type)",
+  "name": "/reflector_deployment/add_safety_pose",
+  "type": "keenon_ui_msgs/add_safe_point.srv",
+  "source": "SPA ros table REFLECTORSAFETYPOSE (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/reflector_deployment/preparation_ready",
+  "type": "std_msgs/Bool",
+  "source": "SPA ros table REFLECTORPREPARATIONREADY (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/reflector_deployment/test_pose_id",
+  "type": "std_msgs::Uint16",
+  "source": "SPA ros table REFLECTORTESTPOSEID (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/reflector_deployment/test_pose_result",
+  "type": "keenon_ui_msgs/reflector_detect_result_to_web",
+  "source": "SPA ros table REFLECTORTESTPOSERESULT (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/requestZoneOrder",
+  "type": "keenon_clean_msgs/zone_order",
+  "source": "SPA ros table REQUESTZONEORDER (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/request_paths",
+  "type": "keenon_clean_msgs/zone_paths_plan",
+  "source": "SPA ros table REQUESTPATHS (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/request_paths_for_carpet",
+  "type": "keenon_clean_msgs/zone_paths_plan",
+  "source": "SPA ros table REQUESTPATHSFORCARPET (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/robot/init_origin_floor",
+  "type": "",
+  "source": "SPA ros table INITORIGINFLOOR (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/robot_current_state/floor",
+  "type": "",
+  "source": "SPA ros table CURRENTSTATEFLOOR (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/robot_current_state/map",
+  "type": "",
+  "source": "SPA ros table CURRENTSTATEMAP (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/robot_current_state/virtual_wall",
+  "type": "",
+  "source": "SPA ros table CURRENTSTATEVIRTUALWALL (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "service_or_topic(srv type)",
+  "name": "/robot_settings/cfg_launch_type_cmd",
+  "type": "robot_settings/launchConfig.srv",
+  "source": "SPA ros table ROBOTTYPE (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "service_or_topic(srv type)",
+  "name": "/robot_settings/cfg_origin_floor_cmd",
+  "type": "robot_settings/launchConfig.srv",
+  "source": "SPA ros table SETORIGINFLOOR (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "service_or_topic(srv type)",
+  "name": "/robot_settings/cfg_schedule_sw_cmd",
+  "type": "robot_settings/launchConfig.srv",
+  "source": "SPA ros table SCHEDULESWITCH (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/robot_state",
+  "type": "web_backend/robot_state",
+  "source": "SPA ros table ROBOTSTATE (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "service_or_topic(srv type)",
+  "name": "/save_combine_map",
+  "type": "saveCombineMap.srv",
+  "source": "SPA ros table SAVECOMBINEMAP (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/save_forbidden_zone",
+  "type": "keenon_database_msgs/zoneConfig",
+  "source": "SPA ros table BANSERVICEINSERT (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/scan_base_map",
+  "type": "web_backend/PointArray",
+  "source": "SPA ros table LASERCLOUD (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "service_or_topic(srv type)",
+  "name": "/schedule_ability_update",
+  "type": "keenon_schedule_msgs.srv",
+  "source": "SPA ros table SCHEDULEUPDATE (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/schedule_config",
+  "type": "keenon_schedule_msgs",
+  "source": "SPA ros table SCHEDULECONFIG (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/schedule_group_num",
+  "type": "std_msgs/UInt8",
+  "source": "SPA ros table SCHEDULEGROUPNUM (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/schedule_group_num_info",
+  "type": "std_msgs/UInt8",
+  "source": "SPA ros table SCHEDULEGROUPNUMINFO (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/schedule_mapbuilder_errorcode",
+  "type": "std_msgs/Bool",
+  "source": "SPA ros table DISPATCHERRCODE (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/schedule_online_info",
+  "type": "std_msgs/String",
+  "source": "SPA ros table SCHEDULEONLINEINFO (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/schedule_robot_sn",
+  "type": "std_msgs/String",
+  "source": "SPA ros table PUBLISHROBOTIDSN (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/segmentSplitByLine",
+  "type": "keenon_clean_msgs/segment_split_line",
+  "source": "SPA ros table AREASPLIT (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "service_or_topic(srv type)",
+  "name": "/segmentation",
+  "type": "segmentation_map.srv",
+  "source": "SPA ros table AREAGENERATOR (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "service_or_topic(srv type)",
+  "name": "/segmentation_with_holes",
+  "type": "segmentation_with_holes.srv",
+  "source": "SPA ros table SEGMENTATIONWITHHOLES (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "service_or_topic(srv type)",
+  "name": "/set_filter_mode",
+  "type": "label_filter/SetFilterMode",
+  "source": "SPA ros table FILTERMODE (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "service_or_topic(srv type)",
+  "name": "/set_no_disturb_mode_srv",
+  "type": "std_srvs::SetBool",
+  "source": "SPA ros table SETNODISTURB (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "service_or_topic(srv type)",
+  "name": "/subarea_merge",
+  "type": "subarea_merge.srv",
+  "source": "SPA ros table SUBAREAMERGE (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "service_or_topic(srv type)",
+  "name": "/subarea_split_line",
+  "type": "subarea_split_line.srv",
+  "source": "SPA ros table SUBAREASPLITLINE (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/switch_dest_floor_map",
+  "type": "keenon_nav_msgs/SwitchMap",
+  "source": "SPA ros table SWITCHDESTFLOOR (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/test_run/generate_path",
+  "type": "keenon_clean_msgs/zone_paths_plan",
+  "source": "SPA ros table GENERATEPATH (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/test_run/get_path",
+  "type": "keenon_clean_msgs/zone_paths_plan",
+  "source": "SPA ros table GETPATH (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/test_run/resume_task",
+  "type": "std_msgs/UInt16",
+  "source": "SPA ros table RESUMETASK (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "action",
+  "name": "/topo_action/feedback",
+  "type": "keenon_schedule_msgs/topuMapActActionFeedback",
+  "source": "SPA ros table TOPOACTIONFEEDBACK (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "action",
+  "name": "/topo_action/goal",
+  "type": "keenon_schedule_msgs/topuMapActActionGoal",
+  "source": "SPA ros table TOPOACTIONGOAL (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "action",
+  "name": "/topo_action/result",
+  "type": "keenon_schedule_msgs/topuMapActActionResult",
+  "source": "SPA ros table TOPOACTIONRESULT (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "service_or_topic(srv type)",
+  "name": "/topo_constraint",
+  "type": "TopoMap.srv",
+  "source": "SPA ros table TARGETPATHCHECK (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "service_or_topic(srv type)",
+  "name": "/topo_direction",
+  "type": "TopoMap.srv",
+  "source": "SPA ros table PATHCONNECTIONCHECK (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/topo_service",
+  "type": "keenon_schedule_msgs/TopoMap",
+  "source": "SPA ros table TOPOMAPSERVE (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/topo_set_param",
+  "type": "keenon_schedule_msgs/TopoMap",
+  "source": "SPA ros table TOPOSETPARAM (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/update_custom_area",
+  "type": "keenon_database_msgs::commonAreaConfig",
+  "source": "SPA ros table UPDATECUSTOMAREA (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "service_or_topic(srv type)",
+  "name": "/update_related_paths",
+  "type": "update_related_paths.srv",
+  "source": "SPA ros table UPDATERELATEDPATHS (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/update_schedule_path",
+  "type": "std_msgs/Bool",
+  "source": "SPA ros table UPDATESCHEDULENOTICE (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/urgency_button_status",
+  "type": "std_msgs/Bool",
+  "source": "SPA ros table URGENCYBUTTON (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "service_or_topic(srv type)",
+  "name": "/user_auto_process",
+  "type": "segmentation_map.srv",
+  "source": "SPA ros table USERAUTOPROCESS (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "service_or_topic(srv type)",
+  "name": "/user_auto_process_with_holes",
+  "type": "segmentation_with_holes.srv",
+  "source": "SPA ros table USERAUTOPROCESSWITHHOLES (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "service_or_topic(srv type)",
+  "name": "/user_cnt_process",
+  "type": "segmentation_map.srv",
+  "source": "SPA ros table USERCNTPROCESS (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "service_or_topic(srv type)",
+  "name": "/user_cnt_process_with_holes",
+  "type": "segmentation_with_holes.srv",
+  "source": "SPA ros table USERCNTPROCESSWITHHOLES (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/version",
+  "type": "keenon_database_msgs/version",
+  "source": "SPA ros table DATABASEVERSION (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/virtual_wall_generator",
+  "type": "keenon_database_msgs/mapConfig",
+  "source": "SPA ros table VIRTUALWALLGENERATOR (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/vslam/mappingService",
+  "type": "keenon_vslam_msgs/VSLAMMapping",
+  "source": "SPA ros table VSLAMMAPPING (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/vslam/mxModuleDataService",
+  "type": "keenon_vslam_msgs/vslam_module",
+  "source": "SPA ros table VSLAMMODULE (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/vslam/rescanningProgress",
+  "type": "std_msgs/Int16",
+  "source": "SPA ros table VSLAMPROGRESS (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/vslam_keyframe_array",
+  "type": "keenon_label_msgs/fusion_label_array",
+  "source": "SPA ros table FUSIONKEYFRAME (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/web_clean_report",
+  "type": "std_msgs/Float64",
+  "source": "SPA ros table CLEANREPORT (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/web_cmd_clean_task",
+  "type": "std_msgs/Bool",
+  "source": "SPA ros table CLEANTASK (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "service_or_topic(srv type)",
+  "name": "/web_command",
+  "type": "web_backend/web_command_srv",
+  "source": "SPA ros table WEBCOMMAND (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/web_database_update",
+  "type": "std_msgs/UInt8",
+  "source": "SPA ros table WEBDATABASEUPDATE (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "service_or_topic(srv type)",
+  "name": "/web_get_param",
+  "type": "keenon_location_msgs/webGetParam",
+  "source": "SPA ros table WEBGETPARAM (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "topic_or_service(unclassified)",
+  "name": "/wheel_vel",
+  "type": "geometry_msgs/Twist",
+  "source": "SPA ros table MOVEVELOCITY (index-32d09e94.js)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "rosbridge_reference",
+  "name": "/rosapi/topics",
+  "type": "rosapi/Topics",
+  "source": "SPA bundle (index/Home chunks)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "rosbridge_reference",
+  "name": "/rosapi/nodes",
+  "type": "rosapi/Nodes",
+  "source": "SPA bundle (index/Home chunks)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "rosbridge_reference",
+  "name": "/rosapi/get_param",
+  "type": "rosapi/GetParam",
+  "source": "SPA bundle (index/Home chunks)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "rosbridge_reference",
+  "name": "/rosapi/set_param",
+  "type": "rosapi/SetParam",
+  "source": "SPA bundle (index/Home chunks)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "rosbridge_reference",
+  "name": "/rosapi/delete_param",
+  "type": "rosapi/DeleteParam",
+  "source": "SPA bundle (index/Home chunks)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "rosbridge_reference",
+  "name": "/rosapi/services",
+  "type": "rosapi/Services",
+  "source": "SPA bundle (index/Home chunks)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "rosbridge_reference",
+  "name": "/rosapi/topic_type",
+  "type": "rosapi/TopicType",
+  "source": "SPA bundle (index/Home chunks)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "rosbridge_reference",
+  "name": "/rosapi/message_details",
+  "type": "rosapi/MessageDetails",
+  "source": "SPA bundle (index/Home chunks)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "rosbridge_reference",
+  "name": "/rosapi/node_details",
+  "type": "rosapi/NodeDetails",
+  "source": "SPA bundle (index/Home chunks)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "rosbridge_reference",
+  "name": "/rosapi/get_param_names",
+  "type": "rosapi/GetParamNames",
+  "source": "SPA bundle (index/Home chunks)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "rosbridge_reference",
+  "name": "/rosapi/action_servers",
+  "type": "rosapi/GetActionServers",
+  "source": "SPA bundle (index/Home chunks)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "rosbridge_reference",
+  "name": "/rosapi/service_type",
+  "type": "rosapi/ServiceType",
+  "source": "SPA bundle (index/Home chunks)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "rosbridge_reference",
+  "name": "/rosapi/services_for_type",
+  "type": "rosapi/ServicesForType",
+  "source": "SPA bundle (index/Home chunks)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "rosbridge_reference",
+  "name": "/rosapi/topics_for_type",
+  "type": "rosapi/TopicsForType",
+  "source": "SPA bundle (index/Home chunks)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "rosbridge_reference",
+  "name": "/rosapi/service_request_details",
+  "type": "rosapi/ServiceRequestDetails",
+  "source": "SPA bundle (index/Home chunks)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "rosbridge_reference",
+  "name": "/rosapi/service_response_details",
+  "type": "rosapi/ServiceResponseDetails",
+  "source": "SPA bundle (index/Home chunks)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "rosbridge_reference",
+  "name": "/tf2_web_republisher",
+  "type": "tf2_web_republisher/RepublishTFs (+TFArray)",
+  "source": "SPA bundle (index/Home chunks)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "rosbridge_reference",
+  "name": "/cmd_vel",
+  "type": "(geometry_msgs/Twist presumed)",
+  "source": "SPA bundle (index/Home chunks)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "rosbridge_reference",
+  "name": "/cmd_vel_smart",
+  "type": "(unknown)",
+  "source": "SPA bundle (index/Home chunks)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "rosbridge_reference",
+  "name": "/persistence_params/move_base/side_drive_status",
+  "type": "(unknown)",
+  "source": "SPA bundle (index/Home chunks)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "rosbridge_reference",
+  "name": "/record_position",
+  "type": "(unknown)",
+  "source": "SPA bundle (index/Home chunks)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "rosbridge_reference",
+  "name": "/manual_loop_closure",
+  "type": "(unknown)",
+  "source": "SPA bundle (index/Home chunks)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "rosbridge_reference",
+  "name": "/base_link",
+  "type": "(tf frame id)",
+  "source": "SPA bundle (index/Home chunks)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "rosbridge_reference",
+  "name": "/cancel",
+  "type": "actionlib_msgs/GoalID",
+  "source": "SPA bundle (index/Home chunks)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "rosbridge_reference",
+  "name": "/status",
+  "type": "actionlib_msgs/GoalStatusArray",
+  "source": "SPA bundle (index/Home chunks)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "rosbridge_reference",
+  "name": "/goal",
+  "type": "(action goal)",
+  "source": "SPA bundle (index/Home chunks)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "rosbridge_reference",
+  "name": "/result",
+  "type": "(action result)",
+  "source": "SPA bundle (index/Home chunks)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "rosbridge_reference",
+  "name": "/home/peanut/rosShare/",
+  "type": "(filesystem path on ROS board, shared via smb://192.168.64.20/home)",
+  "source": "SPA bundle (index/Home chunks)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": ""
+ },
+ {
+  "kind": "rosbridge_proxy_filter",
+  "name": "/switch_dest_floor_map",
+  "type": "",
+  "source": "Android RosSocketClientManager.topic_91/service_91 arrays (routed to port 9091 client)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Messages with these names are sent via the 9091 connection (name matching from clinit strings; exact array assignment INFERRED)"
+ },
+ {
+  "kind": "rosbridge_proxy_filter",
+  "name": "/republish_tfs",
+  "type": "",
+  "source": "Android RosSocketClientManager.topic_91/service_91 arrays (routed to port 9091 client)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Messages with these names are sent via the 9091 connection (name matching from clinit strings; exact array assignment INFERRED)"
+ },
+ {
+  "kind": "rosbridge_proxy_filter",
+  "name": "/scan_base_map",
+  "type": "",
+  "source": "Android RosSocketClientManager.topic_91/service_91 arrays (routed to port 9091 client)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Messages with these names are sent via the 9091 connection (name matching from clinit strings; exact array assignment INFERRED)"
+ },
+ {
+  "kind": "rosbridge_proxy_filter",
+  "name": "/motor_lock",
+  "type": "",
+  "source": "Android RosSocketClientManager.topic_91/service_91 arrays (routed to port 9091 client)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Messages with these names are sent via the 9091 connection (name matching from clinit strings; exact array assignment INFERRED)"
+ },
+ {
+  "kind": "rosbridge_proxy_filter",
+  "name": "/tf2_web_republisher",
+  "type": "",
+  "source": "Android RosSocketClientManager.topic_91/service_91 arrays (routed to port 9091 client)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "HIGH",
+  "note": "Messages with these names are sent via the 9091 connection (name matching from clinit strings; exact array assignment INFERRED)"
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/charge/status",
+  "type": "CON",
+  "source": "SDK com.keenon.sdk.coapapi.api.battery.BatteryInfoApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/charge/auto",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.battery.ChargeAutoApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/charge/default",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.battery.ChargeDefaultApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/charge/manu",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.battery.ChargeManualApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/charge/matchTimes",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.battery.ChargeMatchTimesApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/charge/status",
+  "type": "CON",
+  "source": "SDK com.keenon.sdk.coapapi.api.battery.ChargeStatusApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/charge/stop",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.battery.ChargeStopApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/devices/batteryInfo",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.battery.ScmBatteryInfoApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/clean/cameraCalibration",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.clean.CameraCalibrationApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/clean/cameraCalibrationStatus",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.clean.CameraCalibrationStatusApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/clean/3dPositionStatus",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.clean.Clean3dPositionStatusApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/clean/action",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.clean.CleanActionApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/clean/config",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.clean.CleanConfigApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/clean/current_motor_speed",
+  "type": "CON",
+  "source": "SDK com.keenon.sdk.coapapi.api.clean.CleanCurrentMotorSpeed @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/clean/deviceStatus",
+  "type": "CON",
+  "source": "SDK com.keenon.sdk.coapapi.api.clean.CleanDeviceStatusApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/error/Alert",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.clean.CleanErrorAlertApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/clean/is_cross_carpet",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.clean.CleanIsCrossCarpetApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/clean/motionRecord",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.clean.CleanMotionRecordApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/clean/motionReport",
+  "type": "CON",
+  "source": "SDK com.keenon.sdk.coapapi.api.clean.CleanMotionReportApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/clean/reportSelfClean",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.clean.CleanNeedSelfCleanApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/clean/noDisturbMode",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.clean.CleanNoDisturbModeActionApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/clean/params_config",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.clean.CleanParamsConfigApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/clean/personalPath",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.clean.CleanPersonalPathApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/clean/personalPathStatus",
+  "type": "CON",
+  "source": "SDK com.keenon.sdk.coapapi.api.clean.CleanPersonalPathStatusApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/clean/positionStatus",
+  "type": "CON",
+  "source": "SDK com.keenon.sdk.coapapi.api.clean.CleanPositionStatusApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/clean/relocationPosition",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.clean.CleanRelocationPositionApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/map/savePersonalPath",
+  "type": "POST_LARGE",
+  "source": "SDK com.keenon.sdk.coapapi.api.clean.CleanSavePersonalPathApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/clean/dst",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.clean.CleanStartApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/clean/dstV2",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.clean.CleanStartV2Api @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/clean/status",
+  "type": "CON",
+  "source": "SDK com.keenon.sdk.coapapi.api.clean.CleanStatusApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/clean/taskSelfClean",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.clean.CleanTaskSelfCleanApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/clean/taskSelfCleanStatus",
+  "type": "CON",
+  "source": "SDK com.keenon.sdk.coapapi.api.clean.CleanTaskSelfCleanStatusApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/clean/taskSnapshotAction",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.clean.CleanTaskSnapshotApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/clean/taskSnapshotResult",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.clean.CleanTaskSnapshotResultApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/clean/cleanInfoGet",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.clean.GetCleanInfoApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/through/down",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.device.BottomRawDownApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/through/down",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.device.BottomRawDownNonApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/through/up",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.device.BottomRawUpApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/vendor/throughDown",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.device.BottomVendorUpApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/runtime/danceCmd",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.device.DeviceDanceCmdApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/devices/info",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.device.DeviceInfoApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/devices/list",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.device.DeviceListApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/devices/reboot",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.device.DeviceRebootApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/devices/deviceStatusReport",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.device.DeviceStatusReportApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/devices/version",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.device.DeviceVersionApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/devices/xmanCmd",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.device.DeviceXmanCmdApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/devices/xmanStatus",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.device.DeviceXmanStatusApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/devices/moveControl",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.device.DevicesMoveControlApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/motor/set_speed",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.device.DevicesMoveSetSpeedApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/param/elevator_lock",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.device.ElevatorLockApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/button/enable",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.device.EmergencyBtnEnableApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/button/lock",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.device.EmergencyBtnLockApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/button/status",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.device.EmergencyBtnStatusApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/motor/enable",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.device.MotorEnableApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/motor/manu",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.device.MotorManualApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/motor/speed",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.device.MotorSpeedApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/motor/status",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.device.MotorStatusApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/param/integrate",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.device.ParamIntegrateV1Api @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/param/integrate/v2",
+  "type": "POST_LARGE",
+  "source": "SDK com.keenon.sdk.coapapi.api.device.ParamIntegrateV2Api @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/param/loraChannel",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.device.ParamLoraChannelApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/param/upload",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.device.ParamUploadApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/param/upload_integrate",
+  "type": "GET_LARGE",
+  "source": "SDK com.keenon.sdk.coapapi.api.device.ParamUploadDescInfoApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/diagnosis/realtimeStatus",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.device.RealTimeStatusApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/runtime/currentAppMode",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.device.RuntimeAppModeApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/security/cmd",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.device.SecurityRobotMoveApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/security/result",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.device.SecurityRobotResultApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/devices/upperCoverStatus",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.device.UpperCoverStatusApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/devices/reportCheck",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.diagnosis.DevicesCheckApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/diagnosis/deviceCheck",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.diagnosis.RobotDeviceCheckApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/diagnosis/deviceCheckStatus",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.diagnosis.RobotDeviceCheckStatusApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/diagnosis/deviceCheckStatus/v2",
+  "type": "POST_LARGE",
+  "source": "SDK com.keenon.sdk.coapapi.api.diagnosis.RobotDeviceCheckStatusPostLargeV2Api @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/diagnosis/deviceCheckStatus",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.diagnosis.RobotDeviceCheckStatusV2Api @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/diagnosis/deviceMatch",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.diagnosis.RobotDeviceMatchApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/diagnosis/deviceMatchStatus",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.diagnosis.RobotDeviceMatchStatusApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/diagnosis/robotStatus",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.diagnosis.RobotDeviceTreeStatusApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/diagnosis/environmentCheck",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.diagnosis.RobotEnvironmentCheckApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/diagnosis/environmentCheckStatus",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.diagnosis.RobotEnvironmentCheckStatusApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/diagnosis/robotEvent",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.diagnosis.RobotEventApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/runtime/event_report",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.diagnosis.RuntimeEventReportApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/runtime/eventTrack",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.diagnosis.RuntimeEventTrackApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/runtime/error",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.diagnosis.RuntimeHealthApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/runtime/heartbeat",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.diagnosis.RuntimeHeartbeatApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/runtime/massage_report",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.diagnosis.RuntimeMessageReportApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/devices/selfCheck",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.diagnosis.SelfCheckApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/calib/C30_depth",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.kc01.DepthTopApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/motor/enable",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.kc01.DropEnableApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/motor/enable",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.kc01.LightEnableApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/devices/version",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.kc01.LightStateApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=A0 body=A9 status=00",
+  "type": "KC01_EMOTION/COM",
+  "source": "SDK com.keenon.sdk.coapapi.api.kc01.SCMQueryWorkBankVersionApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=A0 body=A0 status=00",
+  "type": "KC01_EMOTION/COM",
+  "source": "SDK com.keenon.sdk.coapapi.api.kc01.SCMResetWorkBankApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=A0 body=A1 status=00",
+  "type": "KC01_EMOTION/COM",
+  "source": "SDK com.keenon.sdk.coapapi.api.kc01.SCMWorkBankTransApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/detect/image",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.map.DetectImageApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/map/requestZoneOrder",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.map.GetRecommendZoneApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/image/detectStatus",
+  "type": "CON",
+  "source": "SDK com.keenon.sdk.coapapi.api.map.ImageDetectStatusApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/image/detectSwitch",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.map.ImageDetectSwitchApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/map/commandreply",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.map.MapCmdReplyApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/map/commandrequest",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.map.MapCmdRequestApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/map/data",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.map.MapDataGetApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/runtime/download_result",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.map.MapDownLoadStatusV2Api @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/runtime/download_action",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.map.MapDownloadActionV2Api @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/map/downloadmap",
+  "type": "POST_LARGE",
+  "source": "SDK com.keenon.sdk.coapapi.api.map.MapDownloadApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/map/downloadwebmap",
+  "type": "FILE",
+  "source": "SDK com.keenon.sdk.coapapi.api.map.MapDownloadNewApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/map/downloadoptmap",
+  "type": "POST_LARGE",
+  "source": "SDK com.keenon.sdk.coapapi.api.map.MapDownloadOptApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/runtime/download",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.map.MapDownloadV2Api @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/map/list",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.map.MapListApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/map/uploadmap",
+  "type": "GET_LARGE",
+  "source": "SDK com.keenon.sdk.coapapi.api.map.MapUploadApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/map/uploadobs",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.map.MapUploadObsApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/map/uploadoptmap",
+  "type": "GET_LARGE",
+  "source": "SDK com.keenon.sdk.coapapi.api.map.MapUploadOptApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/map/zone",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.map.MapZoneApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/map/zoneList",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.map.MapZoneListApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/runtime/queryId",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.map.NearestTargetApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/position/action",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.map.PositionActionApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/position/location_status",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.map.PositionLocationStatusApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/position/nearestPoseInfo",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.map.PositionNearestPoseInfoApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/position/originJudge",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.map.PositionOriginJudgeActionApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/position/robotPosInfo",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.map.PositionPosInfoApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/position/realtimePositionStatus",
+  "type": "CON",
+  "source": "SDK com.keenon.sdk.coapapi.api.map.PositionRealtimeStatusApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/position/region",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.map.PositionRegionApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/position/report",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.map.PositionReportApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/position/status",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.map.PositionStatusApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/position/relocationPosition",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.map.RelocationPositionApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/runtime/resourceConfig",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.map.ResourceConfigApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/vslam/image",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.map.VslamIdentifyImageApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/vslam/picture",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.map.VslamPictureApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/map/path",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.map.ZonePathApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/map/pathList",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.map.ZonePathListApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/guide/info",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.navigation.GuideInfoApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/guide/dst",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.navigation.GuideSetTargetApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/navigation/action",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.navigation.NavigationActionApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/navigation/all",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.navigation.NavigationAllApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/navigation/avoidAction",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.navigation.NavigationAvoidActionStatusApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/navigation/cruise",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.navigation.NavigationCruiseApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/navigation/destInfo",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.navigation.NavigationDestInfoApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/navigation/dest_poses",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.navigation.NavigationDestPoseApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/navigation/dest_posesV2",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.navigation.NavigationDestPoseV2Api @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/navigation/disinfectAction",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.navigation.NavigationDisinfectActionApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/navigation/disinfectStatus",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.navigation.NavigationDisinfectStatusApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/navigation/disinfectionInfo",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.navigation.NavigationDisinfectionInfoApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/navigation/error_status",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.navigation.NavigationErrorStatusApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/runtime/followCmd",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.navigation.NavigationFollowCmdApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/runtime/followData",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.navigation.NavigationFollowDataApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/navigation/humanDetection_result",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.navigation.NavigationHumanDetectionResultApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/navigation/humanDetection_cmd",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.navigation.NavigationHumanDetectionStatusApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/navigation/path",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.navigation.NavigationPathApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/navigation/patrolChangeGoalAck",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.navigation.NavigationPatrolChangeGoalAckApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/navigation/patrolChangeGoal",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.navigation.NavigationPatrolChangeGoalApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/navigation/robotOnSlope",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.navigation.NavigationRobotOnSlopeApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/navigation/block_state_duration",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.navigation.NavigationSetBlockTimeoutApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/navigation/multi",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.navigation.NavigationSetMultiTargetApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/navigation/dst",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.navigation.NavigationSetTargetApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/navigation/shortest_path_activate",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.navigation.NavigationShortPath @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/navigation/speed",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.navigation.NavigationSpeedApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/navigation/movemodeinfo",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.navigation.NavigationSportModeApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/navigation/speed",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.navigation.NavigationStableModeApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/navigation/status",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.navigation.NavigationStatusApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/navigation/swerveStatus",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.navigation.NavigationSwerveStatusApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/navigation/app_task_info",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.navigation.NavigationTaskInfoApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/schedule/action",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.navigation.ScheduleActionApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/schedule/live",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.navigation.ScheduleLiveApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/schedule/module",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.navigation.ScheduleModuleApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/schedule/statusAction",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.navigation.ScheduleStatusActionApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/schedule/status",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.navigation.ScheduleStatusApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/schedule/quick_origin_switch",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.navigation.ScheduleSubstituteEnableApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/task/status",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.navigation.TaskStatusApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/elevator/cloudElevatorToRobot",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.peripheral.CloudElevatorInformationToRobotApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/elevator/InformationToCloud",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.peripheral.ElevatorInformationToCloudApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/elevator/RequestToCloud",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.peripheral.ElevatorRequestToCloudApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/elevator/status",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.peripheral.ElevatorStatusApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/elevator/forwardToRobot",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.peripheral.ElevatorToRobotApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/elevator/forwardToRobot/v2",
+  "type": "POST_LARGE",
+  "source": "SDK com.keenon.sdk.coapapi.api.peripheral.ElevatorToRobotV2Api @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/elevator/forwardToServer",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.peripheral.ElevatorToServerApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/gate/forwardToRobot",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.peripheral.GateToRobotApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/gate/forwardToServer",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.peripheral.GateToServerApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/navigation/extensionStatus",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.peripheral.NavigationJackingStateApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/navigation/vendorAction",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.peripheral.NavigationVendorActionApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/navigation/exitStatus",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.peripheral.NavigationVendorExitStatusApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/navigation/vendorPosition",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.peripheral.NavigationVendorPositionApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/vendor/industryShelfAction",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.peripheral.VendorIndustryShelfActionApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/vendor/industryShelfStatus",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.peripheral.VendorIndustryShelfStatusApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/vendor/match",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.peripheral.VendorMatchApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/vendor/moveIn",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.peripheral.VendorMoveInApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/vendor/moveOut",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.peripheral.VendorMoveOutApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/vendor/rackSet",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.peripheral.VendorRackSetApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/vendor/dst",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.peripheral.VendorSetTargetApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/runtime/dynamicObstacles",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.sensor.DynamicObjectApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/runtime/object",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.sensor.ObjectPerceptionApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/sensor/fdl",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.sensor.SensorAntiFallLidarApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/sensor/bump",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.sensor.SensorBumpApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/sensor/bumpInfo",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.sensor.SensorBumpInfoApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/sensor/bumpStatus",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.sensor.SensorBumpStatusApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/sensor/depth",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.sensor.SensorDepthApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/sensor/depth_with_type",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.sensor.SensorDepthApiV2 @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/fdl/cmd",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.sensor.SensorFdlCmdApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/fdl/checkStatus",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.sensor.SensorFdlCmdStatusApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/fdl/manu",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.sensor.SensorFdlManualApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/fdl/status",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.sensor.SensorFdlManualStatusApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/sensor/gazer",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.sensor.SensorGazerApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/sensor/imuangle",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.sensor.SensorImuAngleApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/sensor/imu",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.sensor.SensorImuApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/imu/reset",
+  "type": "CON",
+  "source": "SDK com.keenon.sdk.coapapi.api.sensor.SensorImuResetApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/sensor/lidar",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.sensor.SensorLidarApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/sensor/pointCloudSwitch",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.sensor.SensorPointCloudSwitchApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/sensor/psd",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.sensor.SensorPsdApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/sensor/sonar",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.sensor.SensorSonarApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/sensor/status",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.sensor.SensorStatusApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/welcome/switch",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.sensor.WelcomeSwitchApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/runtime/bellConfig",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.system.BellConfigApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/runtime/getDstDistance",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.system.GetDstDistanceApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/position/notify",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.system.PositionNotifyApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/rk/ip",
+  "type": "NON",
+  "source": "SDK com.keenon.sdk.coapapi.api.system.RobotIPApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/runtime/rostime",
+  "type": "NON",
+  "source": "SDK com.keenon.sdk.coapapi.api.system.RuntimeRosTimeApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=E0 body=20 status=None",
+  "type": "BATTERY/COM",
+  "source": "SDK com.keenon.sdk.coapapi.api.system.ScmBatteryInfoApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=E2 body=22 status=None",
+  "type": "BATTERY/COM",
+  "source": "SDK com.keenon.sdk.coapapi.api.system.ScmBatteryStatusApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=04 body=28 status=None",
+  "type": "LIGHT/COM",
+  "source": "SDK com.keenon.sdk.coapapi.api.system.ScmVersionApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/runtime/setScheduleOrigin",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.system.SetScheduleOrigin @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/runtime/workmode",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.system.SetWorkModeApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/runtime/time",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.system.SyncTimeApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/runtime/odo",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.system.SystemOdoApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/devices/powerSavingMode",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.system.SystemPowerSavingMode @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/runtime/wifi",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.system.SystemRobotWifiApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/runtime/startup",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.system.SystemStartUpApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/timestamp/sync",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.system.TimestampSyncApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/update/cancel",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.upgrade.UpdateCancelApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/update/download",
+  "type": "FILE",
+  "source": "SDK com.keenon.sdk.coapapi.api.upgrade.UpdateDownloadApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/update/handle",
+  "type": "GET",
+  "source": "SDK com.keenon.sdk.coapapi.api.upgrade.UpdateHandleApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/update/package",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.upgrade.UpdatePackageApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/update/reboot",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.upgrade.UpdateRebootApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/update/start",
+  "type": "POST",
+  "source": "SDK com.keenon.sdk.coapapi.api.upgrade.UpdateStartApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_coap_resource",
+  "name": "/update/state",
+  "type": "NON",
+  "source": "SDK com.keenon.sdk.coapapi.api.upgrade.UpdateStateApi @CoapCommond (robot-side resource on coap://192.168.64.20:5683 or HTTP 54322)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=04 body=28 status=None",
+  "type": "KC01/COM",
+  "source": "SDK com.keenon.sdk.component.kc01.Kc01AllVersionApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=62 body=71 status=None",
+  "type": "KC01/COM",
+  "source": "SDK com.keenon.sdk.component.kc01.Kc01ArmUpdateApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=04 body=23 status=None",
+  "type": "KC01/COM",
+  "source": "SDK com.keenon.sdk.component.kc01.Kc01ArmVersionApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=62 body=AA status=None",
+  "type": "KC01/COM",
+  "source": "SDK com.keenon.sdk.component.kc01.Kc01DisinfectionLampApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=62 body=AB status=None",
+  "type": "KC01/COM",
+  "source": "SDK com.keenon.sdk.component.kc01.Kc01DustPushApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=62 body=A6 status=None",
+  "type": "KC01/COM",
+  "source": "SDK com.keenon.sdk.component.kc01.Kc01FanGearApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=62 body=A0 status=None",
+  "type": "KC01/COM",
+  "source": "SDK com.keenon.sdk.component.kc01.Kc01LightPlayApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=62 body=AF status=None",
+  "type": "KC01/COM",
+  "source": "SDK com.keenon.sdk.component.kc01.Kc01LightSwitchApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=62 body=34 status=None",
+  "type": "KC01/COM",
+  "source": "SDK com.keenon.sdk.component.kc01.Kc01MotorLockApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=62 body=26 status=None",
+  "type": "KC01/COM",
+  "source": "SDK com.keenon.sdk.component.kc01.Kc01MotorMoveApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=62 body=70 status=None",
+  "type": "KC01/COM",
+  "source": "SDK com.keenon.sdk.component.kc01.Kc01OtaBootApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=62 body=71 status=None",
+  "type": "KC01/COM",
+  "source": "SDK com.keenon.sdk.component.kc01.Kc01OtaProgressApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=62 body=72 status=None",
+  "type": "KC01/COM",
+  "source": "SDK com.keenon.sdk.component.kc01.Kc01OtaResultApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=04 body=30 status=None",
+  "type": "KC01/COM",
+  "source": "SDK com.keenon.sdk.component.kc01.Kc01RobotCodeApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=62 body=A5 status=None",
+  "type": "KC01/COM",
+  "source": "SDK com.keenon.sdk.component.kc01.Kc01RollerBrushApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=62 body=A8 status=None",
+  "type": "KC01/COM",
+  "source": "SDK com.keenon.sdk.component.kc01.Kc01SideBrushApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=62 body=AE status=None",
+  "type": "KC01/COM",
+  "source": "SDK com.keenon.sdk.component.kc01.Kc01Stm32MotorApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=A0 body=A7 status=None",
+  "type": "KC01_EMOTION/COM",
+  "source": "SDK com.keenon.sdk.component.kc01.emotions.EmotionAllApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=A0 body=A3 status=None",
+  "type": "KC01_EMOTION/COM",
+  "source": "SDK com.keenon.sdk.component.kc01.emotions.EmotionFontApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=A0 body=A4 status=None",
+  "type": "KC01_EMOTION/COM",
+  "source": "SDK com.keenon.sdk.component.kc01.emotions.EmotionFontConfigApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=A0 body=AC status=None",
+  "type": "KC01_EMOTION/COM",
+  "source": "SDK com.keenon.sdk.component.kc01.emotions.EmotionFontTransmissionApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=A0 body=AB status=None",
+  "type": "KC01_EMOTION/COM",
+  "source": "SDK com.keenon.sdk.component.kc01.emotions.EmotionFontTransmissionConfigApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=A0 body=A8 status=None",
+  "type": "KC01_EMOTION/COM",
+  "source": "SDK com.keenon.sdk.component.kc01.emotions.EmotionScreenApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=A0 body=A5 status=None",
+  "type": "KC01_EMOTION/COM",
+  "source": "SDK com.keenon.sdk.component.kc01.emotions.EmotionShowApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=04 body=22 status=None",
+  "type": "KC01_EMOTION/COM",
+  "source": "SDK com.keenon.sdk.component.kc01.emotions.EmotionVersionApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=52 body=22 status=None",
+  "type": "/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.disinfect.DisinfectAtomizerApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=52 body=20 status=None",
+  "type": "/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.disinfect.DisinfectCabinApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=52 body=21 status=None",
+  "type": "/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.disinfect.DisinfectDrainageApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=52 body=24 status=None",
+  "type": "/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.disinfect.DisinfectFanApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=53 body=21 status=None",
+  "type": "/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.disinfect.DisinfectLiquidApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=53 body=20 status=None",
+  "type": "/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.disinfect.DisinfectStatusApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=52 body=23 status=None",
+  "type": "/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.disinfect.DisinfectUltravioletApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=66 body=21 status=None",
+  "type": "DOOR/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.door.DoorCloseApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=7A body=20 status=None",
+  "type": "DOOR/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.door.DoorFaultApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=7A body=22 status=None",
+  "type": "DOOR/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.door.DoorFaultCodeApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=7A body=21 status=None",
+  "type": "DOOR/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.door.DoorLimitFaultApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=64 body=23 status=None",
+  "type": "DOOR/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.door.DoorLockAllStatusApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=64 body=22 status=None",
+  "type": "DOOR/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.door.DoorLockSingleStatusApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=64 body=21 status=None",
+  "type": "DOOR/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.door.DoorLockStatusApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=66 body=20 status=None",
+  "type": "DOOR/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.door.DoorOpenApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=64 body=21 status=None",
+  "type": "DOOR/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.door.DoorSingleStatusApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=64 body=20 status=None",
+  "type": "DOOR/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.door.DoorStatusApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=E4 body=20 status=None",
+  "type": "DOOR/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.door.DoorStatusObserveApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=E4 body=21 status=None",
+  "type": "DOOR/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.door.DoorTaskFailStatusApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=74 body=20 status=None",
+  "type": "DOOR/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.door.DoorTypeApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=71 body=20 status=None",
+  "type": "DOOR/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.door.DoorTypeAutoSetApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=71 body=21 status=None",
+  "type": "DOOR/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.door.DoorTypeDoubleSetApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=71 body=24 status=None",
+  "type": "DOOR/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.door.DoorTypeFourSetApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=F4 body=20 status=None",
+  "type": "DOOR/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.door.DoorTypeObserveApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=71 body=23 status=None",
+  "type": "DOOR/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.door.DoorTypeThreeReverseSetApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=71 body=22 status=None",
+  "type": "DOOR/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.door.DoorTypeThreeSetApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=04 body=28 status=None",
+  "type": "DOOR/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.door.DoorVersionNewApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=04 body=27 status=None",
+  "type": "DOOR/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.door.DoorVersionOldApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=67 body=21 status=None",
+  "type": "DOOR/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.door.FanCloseApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=67 body=20 status=None",
+  "type": "DOOR/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.door.FanOpenApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=68 body=24 status=None",
+  "type": "EMOTION/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.emotion.EmotionProgressApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=6a body=20 status=None",
+  "type": "EMOTION/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.emotion.EmotionRunApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=6a body=24 status=None",
+  "type": "EMOTION/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.emotion.EmotionRunLocalApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=6a body=21 status=None",
+  "type": "EMOTION/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.emotion.EmotionSendDataApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=6a body=22 status=None",
+  "type": "EMOTION/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.emotion.EmotionSendEndApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=6a body=20 status=None",
+  "type": "EMOTION/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.emotion.EmotionSendStartApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=69 body=20 status=None",
+  "type": "EMOTION/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.emotion.EmotionSetIdleApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=69 body=25 status=None",
+  "type": "EMOTION/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.emotion.EmotionSetStartUpApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=68 body=25 status=None",
+  "type": "EMOTION/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.emotion.EmotionStatusApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=E0 body=AE status=None",
+  "type": "KC01/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.kc01.Kc01DebugApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=E0 body=AF status=None",
+  "type": "KC01/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.kc01.Kc01Stm32MotorDataApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=6a body=23 status=None",
+  "type": "EMOTION/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.light.LightDisplayApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=04 body=28 status=None",
+  "type": "EMOTION/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.light.LightVersionApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=62 body=72 status=None",
+  "type": "ROLA/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.rola.SCMContainerMotorApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=7c body=20 status=None",
+  "type": "EMOTION/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.scm.SCMThingModelApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=7c body=20 status=None",
+  "type": "DEFAULT/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.scm.SCMThingModelComS1Api @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=7c body=20 status=None",
+  "type": "DEFAULT/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.scm.SCMThingModelComS2Api @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=7c body=20 status=None",
+  "type": "DEFAULT/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.scm.SCMThingModelComS3Api @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=7c body=20 status=None",
+  "type": "DEFAULT/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.scm.SCMThingModelComS4Api @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=07 body=01 status=None",
+  "type": "EMOTION/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.scm.SCMThingModelOldApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=7c body=20 status=None",
+  "type": "LIGHT/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.scm.SCMThingUSBModelApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=20 body=23 status=04",
+  "type": "DOOR/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.scm.SCMUpgradeLastPackApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=20 body=23 status=01",
+  "type": "DOOR/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.scm.SCMUpgradePackInfoApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=20 body=21 status=None",
+  "type": "DOOR/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.scm.SCMUpgradeResetApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=20 body=23 status=02",
+  "type": "DOOR/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.scm.SCMUpgradeTransApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=70 body=21 status=None",
+  "type": "/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.touch.SensorTouchApi @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_serial_command",
+  "name": "action=68 body=2a status=None",
+  "type": "/COM",
+  "source": "SDK com.keenon.sdk.embedded.api.touch.SensorTouchApiOld @SerialCommand",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_subscription_key",
+  "name": "navi.status",
+  "type": "",
+  "source": "NavigationApi observe via PeanutSDK.subscribe; used by RobotManager.onSubscribe (Installation Assistant)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_subscription_key",
+  "name": "battery.charge.status",
+  "type": "",
+  "source": "BatteryComponent/ChargeStatusApi; used by RobotManager.onSubscribe (Installation Assistant)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ },
+ {
+  "kind": "sdk_subscription_key",
+  "name": "diagnosis.error",
+  "type": "",
+  "source": "Diagnosis error report (sub key in WebSocketHelp.onHandleMessage strings); used by RobotManager.onSubscribe (Installation Assistant)",
+  "status": "STATIC_REFERENCE",
+  "confidence": "MEDIUM",
+  "note": ""
+ }
+]
