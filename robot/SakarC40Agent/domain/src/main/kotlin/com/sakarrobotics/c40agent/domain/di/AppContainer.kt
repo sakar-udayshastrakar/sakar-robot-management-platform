@@ -21,6 +21,7 @@ import com.sakarrobotics.c40agent.domain.repository.RobotWorkstationRepository
 import com.sakarrobotics.c40agent.domain.repository.RouteRepository
 import com.sakarrobotics.c40agent.domain.repository.ScheduleRepository
 import com.sakarrobotics.c40agent.domain.repository.SystemMaintenanceRepository
+import com.sakarrobotics.c40agent.domain.voice.VoiceService
 
 /**
  * Aggregates every repository the operator UI needs. :operator-ui depends
@@ -61,6 +62,14 @@ interface AppContainer {
 
     /** Redacting application-event sink; its entries appear in Logs/Diagnostics alongside the SDK call log. */
     val eventLogger: AppEventLogger
+
+    /**
+     * Voice-announcement abstraction. The only implementation today is a labeled mock
+     * ([com.sakarrobotics.c40agent.domain.voice.MockVoiceService]) that produces no audio and
+     * contacts no robot - no verified on-device voice backend exists. Honours the persisted
+     * voice-volume / DND preferences when a caller passes them.
+     */
+    val voiceService: VoiceService
 
     /**
      * Architecture-preparation seam (see docs/architecture/SAKAR_ROBOT_SOFTWARE_ARCHITECTURE.md) -

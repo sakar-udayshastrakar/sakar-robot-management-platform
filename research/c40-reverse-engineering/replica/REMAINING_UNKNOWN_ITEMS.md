@@ -20,3 +20,8 @@ Items the available static evidence cannot resolve. Each names what evidence wou
 
 ## Product / policy decisions (not evidence gaps)
 - Real PIN policy (replacing the any-4-digit placeholder); whether Android voice UI is in scope; elevator/gate/dispatch scope. *Resolve with:* a product decision.
+
+## Update — 2026-10-25 (continuation iteration 2)
+- **Map transform:** the standard ROS/cartographer world↔pixel convention is now implemented and tested (`MapCoordinateTransform`, `:domain`). The original app's exact **OpenLayers** projection parameters remain UNKNOWN (minified JS); the standard convention is used deliberately and only applies to a map that follows it. Still needs a **synced real map** to calibrate/verify.
+- **Voice:** a `VoiceService` + labeled `MockVoiceService` now exist (`:domain`). Still UNKNOWN: the original numbered-prompt spoken text, and any real robot-side voice backend — the mock produces no audio and makes no robot-voice claim.
+- Everything else in this file is unchanged (still requires original app runtime, a physical robot, or JS deobfuscation as noted).

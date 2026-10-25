@@ -105,3 +105,12 @@ See the execution report and `RUNTIME_VERIFICATION_CHECKLIST.md`. The apps are m
 | G8 | Real robot actuation end-to-end | physical robot + HARDWARE_TEST authorization | Blocked (safety) |
 
 **None of G1–G8 can be completed accurately without either an original-robot reference screenshot (G1,G3,G5), a synced real map (G2), rosbridge/robot runtime (G4,G7,G8), or a product decision (G6)** — consistent with the master prompt's own "document missing evidence, do not invent" rule and the project's reference-first policy.
+
+## 8. Update — 2026-10-25 (continuation iteration 2)
+
+Safe, evidence-backed increments (no guessed UI; details + build/test results in `IMPLEMENTATION_STATUS.md`):
+
+- **Build/test status (§6) resolved with real results:** `SakarC40Agent` — project-wide unit tests **BUILD SUCCESSFUL, exit 0** (incl. the two new domain tests). `SakarRobotInstallationAssistant` — `:core:test` + `:app:testDebugUnitTest` **BUILD SUCCESSFUL, exit 0** (its tests had never been run before; instrumentation `androidTest` still needs a device).
+- **G2 (map renderer) — building block added:** `MapCoordinateTransform` + `OccupancyGridInfo` (`:domain`, ROS/cartographer world↔pixel convention, tested). The renderer itself still needs a **synced real map** to verify; the util does not fabricate map data.
+- **Voice (Phase 4) — abstraction added:** `VoiceService` + labeled `MockVoiceService` + event catalog (`:domain`), wired into `AppContainer`/`DefaultAppContainer`, tested. Produces no audio and contacts no robot; honours the existing voice-volume/DND prefs when a caller passes them. Android voice **UI** playback remains a gap (needs reference + a real backend).
+- **Unchanged:** G1, G3, G4, G5, G6, G7, G8 remain blocked on references / synced map / robot runtime / product decisions as above. No existing screens modified; originals and APKs untouched.

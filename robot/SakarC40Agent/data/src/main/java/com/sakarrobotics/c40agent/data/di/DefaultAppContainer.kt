@@ -54,6 +54,8 @@ import com.sakarrobotics.c40agent.domain.repository.RosRobotAdapter
 import com.sakarrobotics.c40agent.domain.repository.RouteRepository
 import com.sakarrobotics.c40agent.domain.repository.ScheduleRepository
 import com.sakarrobotics.c40agent.domain.repository.SystemMaintenanceRepository
+import com.sakarrobotics.c40agent.domain.voice.MockVoiceService
+import com.sakarrobotics.c40agent.domain.voice.VoiceService
 import com.sakarrobotics.c40agent.robot.C40RobotController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -131,6 +133,10 @@ class DefaultAppContainer @JvmOverloads constructor(
     override val localPreferencesRepository: LocalPreferencesRepository = DataStoreLocalPreferencesRepository(appContext)
     override val systemMaintenanceRepository: SystemMaintenanceRepository =
         SystemMaintenanceRepositoryImpl(db, authRepository, localPreferencesRepository)
+
+    // Labeled mock: resolves announcement text only, produces no audio and contacts no robot
+    // (no verified on-device voice backend exists). See MockVoiceService / VoiceService KDoc.
+    override val voiceService: VoiceService = MockVoiceService()
 
     // Architecture-preparation seam (docs/architecture/SAKAR_ROBOT_SOFTWARE_ARCHITECTURE.md) - both
     // new repositories are stubs that always report NOT_AVAILABLE/NOT_VERIFIED (never a fabricated
