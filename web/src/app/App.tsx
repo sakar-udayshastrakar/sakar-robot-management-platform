@@ -39,6 +39,8 @@ import { ErrorsPage } from '../features/errors/ErrorsPage';
 import { AlertsPage } from '../features/alerts/AlertsPage';
 import { TasksPage } from '../features/tasks/TasksPage';
 import { CleaningPage } from '../features/cleaning/CleaningPage';
+import { C40ControlPage } from '../features/cleaning/C40ControlPage';
+import { VoicePage } from '../features/voice/VoicePage';
 import { LogsPage } from '../features/logs/LogsPage';
 import { UsersPage } from '../features/users/UsersPage';
 import { RolesPage } from '../features/roles/RolesPage';
@@ -139,6 +141,8 @@ export function App() {
 
             <Route path="/tasks" element={<TasksPage />} />
             <Route path="/cleaning" element={<CleaningPage />} />
+            <Route path="/c40-control" element={<C40ControlPage />} />
+            <Route path="/voice" element={<VoicePage />} />
             <Route
               path="/telemetry"
               element={

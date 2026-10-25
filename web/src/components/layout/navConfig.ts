@@ -72,6 +72,11 @@ export const NAV_SECTIONS: NavSection[] = [
         dataMode: 'live',
         children: [
           { label: 'Robot List', path: '/robots', icon: Icon.robot, permission: 'ROBOT_VIEW', dataMode: 'live' },
+          // C40 cleaning operator console — composes existing backend-backed
+          // panels (status/battery, task lifecycle with mode+area, history);
+          // 'live' because every action it exposes goes through a real Sakar
+          // backend endpoint.
+          { label: 'C40 Cleaning Control', path: '/c40-control', icon: Icon.spray, permission: 'ROBOT_VIEW', dataMode: 'live' },
           { label: 'Inventory Control', path: '/robots/inventory', icon: Icon.clipboard, permission: 'ROBOT_VIEW', dataMode: 'live' },
           { label: 'Sub-Agent Inventory', path: '/robots/sub-agent-inventory', icon: Icon.building, permission: 'ROBOT_VIEW', dataMode: 'live' },
           // No fleet-wide run-statistics/run-history aggregation endpoint exists on the
@@ -169,6 +174,19 @@ export const NAV_SECTIONS: NavSection[] = [
           { label: 'Store Real-Time Data Statistics', path: '/operational-dashboard/store-realtime', icon: Icon.activity, permission: 'ROBOT_VIEW', dataMode: 'live' },
           { label: 'Use Retention Analytics', path: '/operational-dashboard/retention', icon: Icon.timeline, permission: 'ROBOT_VIEW', dataMode: 'live' },
           { label: 'Hotel Task Record', path: '/operational-dashboard/hotel-task-record', icon: Icon.clipboard, permission: 'ROBOT_VIEW', dataMode: 'live' },
+        ],
+      },
+      {
+        // Voice announcement demo. No Sakar backend voice endpoint exists and
+        // the web app never talks to a robot directly, so playback is in the
+        // operator's own browser (Web Speech API) — marked 'simulated', not
+        // 'live'. See research/.../ui/VOICE_MODULE_ANALYSIS.md.
+        label: 'Voice Announcements',
+        icon: Icon.bell,
+        permission: 'ROBOT_VIEW',
+        dataMode: 'simulated',
+        children: [
+          { label: 'Voice Announcements', path: '/voice', icon: Icon.bell, permission: 'ROBOT_VIEW', dataMode: 'simulated' },
         ],
       },
       {
