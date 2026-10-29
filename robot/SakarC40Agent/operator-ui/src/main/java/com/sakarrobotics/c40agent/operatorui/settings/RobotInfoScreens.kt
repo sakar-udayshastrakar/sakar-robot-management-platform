@@ -27,12 +27,12 @@ import com.sakarrobotics.c40agent.operatorui.common.SectionCard
 import com.sakarrobotics.c40agent.operatorui.theme.SakarColors
 
 @Composable
-fun RobotInfoScreen(onBack: () -> Unit) {
+fun RobotInfoScreen(onBack: () -> Unit, embedded: Boolean = false) {
     val container = LocalAppContainer.current
     var identity by remember { mutableStateOf<RobotIdentity?>(null) }
     LaunchedEffect(Unit) { identity = container.identityRepository.identity() }
 
-    Scaffold(topBar = { SakarTopBar("Robot Information", onBack) }, containerColor = SakarColors.Background) { padding ->
+    SettingsPane("Robot Information", onBack, embedded) { padding ->
         Column(Modifier.fillMaxSize().padding(padding).padding(ScreenPadding)) {
             val info = identity
             if (info == null) {
@@ -53,12 +53,12 @@ fun RobotInfoScreen(onBack: () -> Unit) {
 }
 
 @Composable
-fun SystemInfoScreen(onBack: () -> Unit) {
+fun SystemInfoScreen(onBack: () -> Unit, embedded: Boolean = false) {
     val container = LocalAppContainer.current
     var identity by remember { mutableStateOf<RobotIdentity?>(null) }
     LaunchedEffect(Unit) { identity = container.identityRepository.identity() }
 
-    Scaffold(topBar = { SakarTopBar("System Information", onBack) }, containerColor = SakarColors.Background) { padding ->
+    SettingsPane("System Information", onBack, embedded) { padding ->
         Column(Modifier.fillMaxSize().padding(padding).padding(ScreenPadding)) {
             val info = identity
             if (info == null) {

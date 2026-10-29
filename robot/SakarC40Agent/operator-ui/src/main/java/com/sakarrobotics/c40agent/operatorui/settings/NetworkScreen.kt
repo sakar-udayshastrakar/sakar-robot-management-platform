@@ -48,7 +48,7 @@ import com.sakarrobotics.c40agent.operatorui.theme.SakarColors
  * failing.
  */
 @Composable
-fun NetworkScreen(onBack: () -> Unit) {
+fun NetworkScreen(onBack: () -> Unit, embedded: Boolean = false) {
     val context = LocalContext.current
     var hasLocationPermission by remember {
         mutableStateOf(ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
@@ -61,7 +61,7 @@ fun NetworkScreen(onBack: () -> Unit) {
     val isWifiEnabled = remember { wifiManager.isWifiEnabled }
     val connectionInfo = remember(hasLocationPermission) { if (hasLocationPermission) wifiManager.connectionInfo else null }
 
-    Scaffold(topBar = { SakarTopBar("Wi-Fi / Network", onBack) }, containerColor = SakarColors.Background) { padding ->
+    SettingsPane("Wi-Fi / Network", onBack, embedded) { padding ->
         Column(Modifier.fillMaxSize().padding(padding).padding(ScreenPadding)) {
             SectionCard(title = "Current Connection") {
                 Row(verticalAlignment = androidx.compose.ui.Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {

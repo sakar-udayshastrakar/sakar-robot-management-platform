@@ -30,12 +30,12 @@ import com.sakarrobotics.c40agent.operatorui.common.SectionCard
 import com.sakarrobotics.c40agent.operatorui.theme.SakarColors
 
 @Composable
-fun DisplaySettingsScreen(onBack: () -> Unit) {
+fun DisplaySettingsScreen(onBack: () -> Unit, embedded: Boolean = false) {
     val container = LocalAppContainer.current
     val viewModel: PreferencesViewModel = viewModel(factory = viewModelFactory { initializer { PreferencesViewModel(container) } })
     val prefs by viewModel.preferences.collectAsState()
 
-    Scaffold(topBar = { SakarTopBar("Display", onBack) }, containerColor = SakarColors.Background) { padding ->
+    SettingsPane("Display", onBack, embedded) { padding ->
         Column(Modifier.fillMaxSize().padding(padding).padding(ScreenPadding)) {
             SectionCard(title = "Screen Face") {
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -60,12 +60,12 @@ fun DisplaySettingsScreen(onBack: () -> Unit) {
 }
 
 @Composable
-fun SoundSettingsScreen(onBack: () -> Unit) {
+fun SoundSettingsScreen(onBack: () -> Unit, embedded: Boolean = false) {
     val container = LocalAppContainer.current
     val viewModel: PreferencesViewModel = viewModel(factory = viewModelFactory { initializer { PreferencesViewModel(container) } })
     val prefs by viewModel.preferences.collectAsState()
 
-    Scaffold(topBar = { SakarTopBar("Sound", onBack) }, containerColor = SakarColors.Background) { padding ->
+    SettingsPane("Sound", onBack, embedded) { padding ->
         Column(Modifier.fillMaxSize().padding(padding).padding(ScreenPadding)) {
             SectionCard(title = "Music Volume") {
                 Slider(value = prefs.musicVolume.toFloat(), onValueChange = { v -> viewModel.update { it.copy(musicVolume = v.toInt()) } }, valueRange = 0f..100f)
@@ -92,12 +92,12 @@ fun SoundSettingsScreen(onBack: () -> Unit) {
 }
 
 @Composable
-fun ScreenLockSettingsScreen(onBack: () -> Unit) {
+fun ScreenLockSettingsScreen(onBack: () -> Unit, embedded: Boolean = false) {
     val container = LocalAppContainer.current
     val viewModel: PreferencesViewModel = viewModel(factory = viewModelFactory { initializer { PreferencesViewModel(container) } })
     val prefs by viewModel.preferences.collectAsState()
 
-    Scaffold(topBar = { SakarTopBar("Screen Lock Settings", onBack) }, containerColor = SakarColors.Background) { padding ->
+    SettingsPane("Screen Lock Settings", onBack, embedded) { padding ->
         Column(Modifier.fillMaxSize().padding(padding).padding(ScreenPadding)) {
             SectionCard(title = "Screen Lock Duration") {
                 Slider(

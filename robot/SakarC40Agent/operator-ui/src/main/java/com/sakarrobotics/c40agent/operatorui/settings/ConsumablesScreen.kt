@@ -48,12 +48,12 @@ class ConsumablesViewModel(container: AppContainer) : ViewModel() {
 }
 
 @Composable
-fun ConsumablesScreen(onBack: () -> Unit) {
+fun ConsumablesScreen(onBack: () -> Unit, embedded: Boolean = false) {
     val container = LocalAppContainer.current
     val viewModel: ConsumablesViewModel = viewModel(factory = viewModelFactory { initializer { ConsumablesViewModel(container) } })
     val items by viewModel.items.collectAsState()
 
-    Scaffold(topBar = { SakarTopBar("Consumables", onBack) }, containerColor = SakarColors.Background) { padding ->
+    SettingsPane("Consumables", onBack, embedded) { padding ->
         Column(Modifier.fillMaxSize().padding(padding).padding(ScreenPadding)) {
             InlineBanner("Remaining life is operator-tracked from cleaning runtime, not a wear sensor - the vendored SDK exposes none.", isWarning = false)
             Spacer(Modifier.height(12.dp))

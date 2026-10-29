@@ -30,8 +30,8 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.SmartToy
 import androidx.compose.material.icons.filled.StopCircle
 import androidx.compose.material.icons.filled.VolumeUp
-import androidx.compose.material.icons.outlined.CalendarMonth
-import androidx.compose.material.icons.outlined.CleaningServices
+import androidx.compose.material.icons.outlined.Place
+import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -359,7 +359,7 @@ private fun QuickActionsGrid(
     Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
         BigActionCard(
             title = "Start\nCleaning",
-            icon = { ActionIcon(Icons.Outlined.CleaningServices, size = 40.dp) },
+            icon = { ActionIcon(Icons.Outlined.Place, size = 40.dp) },
             height = Dp.Unspecified,
             contentPadding = 24.dp,
             titleStyle = bigTitleStyle,
@@ -371,7 +371,7 @@ private fun QuickActionsGrid(
         )
         BigActionCard(
             title = "Scheduled\nCleaning",
-            icon = { ActionIcon(Icons.Outlined.CalendarMonth, size = 40.dp) },
+            icon = { ActionIcon(Icons.Outlined.Schedule, size = 40.dp) },
             height = Dp.Unspecified,
             contentPadding = 24.dp,
             titleStyle = bigTitleStyle,

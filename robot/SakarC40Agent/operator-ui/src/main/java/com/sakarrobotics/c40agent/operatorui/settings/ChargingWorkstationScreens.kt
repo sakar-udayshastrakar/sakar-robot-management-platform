@@ -49,12 +49,12 @@ class ChargingSettingsViewModel(private val container: AppContainer) : ViewModel
 }
 
 @Composable
-fun ChargingSettingsScreen(onBack: () -> Unit) {
+fun ChargingSettingsScreen(onBack: () -> Unit, embedded: Boolean = false) {
     val container = LocalAppContainer.current
     val viewModel: ChargingSettingsViewModel = viewModel(factory = viewModelFactory { initializer { ChargingSettingsViewModel(container) } })
     val settings = viewModel.settings
 
-    Scaffold(topBar = { SakarTopBar("Charging Settings", onBack) }, containerColor = SakarColors.Background) { padding ->
+    SettingsPane("Charging Settings", onBack, embedded) { padding ->
         Column(Modifier.fillMaxSize().padding(padding).padding(ScreenPadding)) {
             SectionCard(title = "Idle Battery Protection") {
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
@@ -94,12 +94,12 @@ class WorkstationViewModel(container: AppContainer) : ViewModel() {
 }
 
 @Composable
-fun WorkstationScreen(onBack: () -> Unit) {
+fun WorkstationScreen(onBack: () -> Unit, embedded: Boolean = false) {
     val container = LocalAppContainer.current
     val viewModel: WorkstationViewModel = viewModel(factory = viewModelFactory { initializer { WorkstationViewModel(container) } })
     val state by viewModel.state.collectAsState()
 
-    Scaffold(topBar = { SakarTopBar("Workstation", onBack) }, containerColor = SakarColors.Background) { padding ->
+    SettingsPane("Workstation", onBack, embedded) { padding ->
         Column(Modifier.fillMaxSize().padding(padding).padding(ScreenPadding)) {
             InlineBanner("No smart workstation (auto water refill / drainage / self-docking base) is connected to this robot yet. This screen is a ready interface for when that hardware integration lands.", isWarning = true)
             Spacer(Modifier.height(12.dp))

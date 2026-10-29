@@ -30,12 +30,12 @@ import com.sakarrobotics.c40agent.operatorui.common.SectionCard
 import com.sakarrobotics.c40agent.operatorui.theme.SakarColors
 
 @Composable
-fun GeneralSettingsScreen(onBack: () -> Unit) {
+fun GeneralSettingsScreen(onBack: () -> Unit, embedded: Boolean = false) {
     val container = LocalAppContainer.current
     val viewModel: PreferencesViewModel = viewModel(factory = viewModelFactory { initializer { PreferencesViewModel(container) } })
     val prefs by viewModel.preferences.collectAsState()
 
-    Scaffold(topBar = { SakarTopBar("General Settings", onBack) }, containerColor = SakarColors.Background) { padding ->
+    SettingsPane("General Settings", onBack, embedded) { padding ->
         Column(Modifier.fillMaxSize().padding(padding).padding(ScreenPadding)) {
             SectionCard(title = "Language") {
                 Text(prefs.language, color = SakarColors.TextMuted)
@@ -56,12 +56,12 @@ fun GeneralSettingsScreen(onBack: () -> Unit) {
 }
 
 @Composable
-fun ResourceManagementScreen(onBack: () -> Unit) {
+fun ResourceManagementScreen(onBack: () -> Unit, embedded: Boolean = false) {
     val container = LocalAppContainer.current
     val viewModel: PreferencesViewModel = viewModel(factory = viewModelFactory { initializer { PreferencesViewModel(container) } })
     val prefs by viewModel.preferences.collectAsState()
 
-    Scaffold(topBar = { SakarTopBar("Resource Management", onBack) }, containerColor = SakarColors.Background) { padding ->
+    SettingsPane("Resource Management", onBack, embedded) { padding ->
         Column(Modifier.fillMaxSize().padding(padding).padding(ScreenPadding)) {
             InlineBanner("This selects a Sakar-local operating profile only (cleaning defaults) - not a Keenon-style downloadable resource package.", isWarning = false)
             Spacer(Modifier.height(12.dp))
@@ -78,8 +78,8 @@ fun ResourceManagementScreen(onBack: () -> Unit) {
 }
 
 @Composable
-fun CleaningDataScreen(onBack: () -> Unit) {
-    Scaffold(topBar = { SakarTopBar("Cleaning Data", onBack) }, containerColor = SakarColors.Background) { padding ->
+fun CleaningDataScreen(onBack: () -> Unit, embedded: Boolean = false) {
+    SettingsPane("Cleaning Data", onBack, embedded) { padding ->
         Column(Modifier.fillMaxSize().padding(padding).padding(ScreenPadding)) {
             InlineBanner("Persisted cleaning-history records are not implemented yet - only the current session's live progress (Start Cleaning screen) is tracked.", isWarning = true)
             Spacer(Modifier.height(12.dp))
